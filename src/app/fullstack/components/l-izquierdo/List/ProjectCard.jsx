@@ -1,5 +1,4 @@
 // @/app/fullstack/components/l-izquierdo/list/ProjectCard.jsx
-import styles from '@/app/fullstack/styles/LeftPanel.module.css';
 
 export const ProjectCard = ({ project, onSelect, isActive }) => {
   const threatColors = {
@@ -14,7 +13,7 @@ export const ProjectCard = ({ project, onSelect, isActive }) => {
       className={`
         relative mb-3 p-3 border cursor-pointer transition-all duration-200
         ${isActive ? 'bg-[#00f2ff]/10 border-[#00f2ff] scale-[1.02] z-20' : 'bg-black/40 border-white/5 hover:border-white/20'}
-        ${threatColors[project.threatLevel]}
+        ${threatColors[project.threatLevel] || threatColors.LOW}
       `}
     >
       {/* Indicador de Selección Activa */}
@@ -40,11 +39,11 @@ export const ProjectCard = ({ project, onSelect, isActive }) => {
           <span className="text-[7px] opacity-50 uppercase tracking-tighter">Status: {project.status}</span>
         </div>
         
-        {/* Botón de Link Externo (Solo visible o resaltado en hover/active) */}
         <a 
           href={project.url} 
           target="_blank" 
-          onClick={(e) => e.stopPropagation()} // Evita que el clic en el link cambie el perfil
+          rel="noopener noreferrer" // Seguridad añadida
+          onClick={(e) => e.stopPropagation()} 
           className="material-symbols-outlined text-[12px] hover:text-white transition-colors"
         >
           terminal
