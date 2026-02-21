@@ -2,7 +2,6 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import styles from '@/app/fullstack/styles/LeftPanel.module.css';
 
 export const ArchiveButton = () => {
   const router = useRouter();
