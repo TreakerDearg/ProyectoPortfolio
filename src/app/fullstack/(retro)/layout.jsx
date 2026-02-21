@@ -1,45 +1,28 @@
-// src/app/fullstack/layout.jsx
+// Layout Estructural (Global)
+<div className="min-h-screen bg-[#020617] text-slate-300 font-mono relative overflow-hidden">
+  {/* Capas Atmosféricas */}
+  <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(168,85,247,0.05),transparent)] pointer-events-none" />
+  <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+  
+  {/* Header de Estado */}
+  <header className="border-b border-purple-500/20 p-4 flex justify-between items-center bg-black/40 backdrop-blur-md">
+    <div className="flex items-center gap-3">
+      <div className="size-2 bg-purple-500 animate-pulse shadow-[0_0_8px_#a855f7]" />
+      <span className="text-[10px] tracking-[0.3em] font-bold text-purple-400">SYSTEM_OS_V.2.0</span>
+    </div>
+    <div className="text-[9px] text-slate-500">STATUS: <span className="text-green-500">ONLINE</span></div>
+  </header>
 
-export const metadata = {
-  title: "Combine Overwatch Terminal",
-  description: "C17 Local Node Interface",
-};
+  {/* Contenedor de Contenido */}
+  <main className="max-w-7xl mx-auto p-6 relative z-10">
+    {/* Aquí se inyectarían las páginas */}
+    {children}
+  </main>
 
-export default function FullstackLayout({ children }) {
-  return (
-    <>
-      {/* Next.js inyectará estos links en el HEAD del Root Layout automáticamente */}
-      <link rel="preconnect" href="https://fonts.googleapis.com" />
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-      <link href="https://fonts.googleapis.com/css2?family=Aldrich&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet" />
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-
-      {/* Usamos un contenedor en lugar de <body> */}
-      <div className="bg-black antialiased overflow-hidden selection:bg-[#00f2ff]/30 selection:text-[#00f2ff] min-h-screen">
-        
-        {/* SVG Filter para efecto de grano/ruido */}
-        <svg className="hidden">
-          <filter id="noiseFilter">
-            <feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="3" stitchTiles="stitch" />
-            <feColorMatrix type="saturate" values="0" />
-          </filter>
-        </svg>
-
-        {/* Contenedor Maestro: Ocupa todo el viewport */}
-        <div className="h-screen w-screen flex flex-col overflow-hidden relative font-mono text-[#00f2ff]/80">
-          
-          {/* Capa de atmósfera visual (Decoración) */}
-          <div className="absolute inset-0 pointer-events-none z-[999] opacity-[0.03] mix-blend-overlay" 
-               style={{ filter: 'url(#noiseFilter)' }} />
-          
-          <div className="absolute inset-0 pointer-events-none z-[998] bg-[radial-gradient(circle_at_50%_50%,transparent_20%,rgba(0,0,0,0.4)_100%)]" />
-
-          {/* Contenido Principal */}
-          <main className="relative z-10 flex flex-col h-full w-full">
-            {children}
-          </main>
-        </div>
-      </div>
-    </>
-  );
-}
+  {/* Footer HUD */}
+  <footer className="fixed bottom-0 w-full border-t border-purple-500/10 p-2 bg-black/60 text-[8px] flex justify-center gap-8 text-slate-600">
+    <span>CORE_TEMP: 32°C</span>
+    <span>ENCRYPT: AES-256</span>
+    <span>LOC: POSADAS_AR</span>
+  </footer>
+</div>
