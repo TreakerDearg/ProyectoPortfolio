@@ -1,0 +1,39 @@
+/* BootLogs.module.css */
+.logsWrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 11px;
+  color: #1a8a1a; /* Verde tenue para logs antiguos */
+  overflow: hidden;
+  mask-image: linear-gradient(to bottom, transparent, black 20%);
+}
+
+.logLine {
+  display: flex;
+  gap: 10px;
+  animation: logAppear 0.2s ease-out;
+}
+
+@keyframes logAppear {
+  from { opacity: 0; transform: translateX(-5px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.index {
+  color: #1a331a;
+  user-select: none;
+}
+
+.activeLine {
+  color: #33ff33;
+  text-shadow: 0 0 5px rgba(51, 255, 51, 0.5);
+  background: rgba(51, 255, 51, 0.05);
+}
+
+.systemMsg {
+  color: #ff9900;
+  font-weight: bold;
+}

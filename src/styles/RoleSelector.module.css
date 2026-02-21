@@ -1,0 +1,69 @@
+/* RoleSelector.module.css */
+.selectorGrid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 2rem;
+  padding: 1rem;
+  position: relative;
+}
+
+@media (min-width: 768px) {
+  .selectorGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.roleContainer {
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Efecto de escaneo cuando pasas el mouse */
+.roleContainer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: rgba(51, 255, 51, 0.2);
+  box-shadow: 0 0 10px #33ff33;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 10;
+}
+
+.roleContainer:hover::after {
+  animation: scanVertical 2s infinite linear;
+  opacity: 1;
+}
+
+@keyframes scanVertical {
+  0% { top: 0%; }
+  100% { top: 100%; }
+}
+
+.selectedFrame {
+  border: 1px solid #33ff33;
+  box-shadow: 0 0 20px rgba(51, 255, 51, 0.2);
+  transform: scale(1.02);
+}
+
+.dimmed {
+  opacity: 0.3;
+  filter: grayscale(1) blur(1px);
+  pointer-events: none;
+}
+
+.instructionBox {
+  grid-column: 1 / -1;
+  border: 1px dashed #1a331a;
+  padding: 10px;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10px;
+  color: #1a331a;
+  text-transform: uppercase;
+}

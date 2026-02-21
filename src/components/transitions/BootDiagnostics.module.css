@@ -1,0 +1,57 @@
+/* BootDiagnostics.module.css */
+.diagnosticsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin: 1.5rem 0;
+  border-top: 1px solid #1a331a;
+  border-bottom: 1px solid #1a331a;
+  padding: 1.5rem 0;
+}
+
+.diagCard {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px;
+  border-left: 1px solid #1a331a;
+  position: relative;
+}
+
+.diagCard::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -1px;
+  width: 1px;
+  height: 20%;
+  background: #33ff33;
+}
+
+.label {
+  font-size: 10px;
+  color: #33ff33;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.status {
+  font-size: 12px;
+  color: #33ff33;
+  text-shadow: 0 0 5px rgba(51, 255, 51, 0.5);
+}
+
+.subText {
+  font-size: 8px;
+  color: #1a331a;
+  text-transform: uppercase;
+}
+
+.cpuMap {
+  grid-column: 1 / -1;
+  font-size: 8px;
+  color: #1a331a;
+  margin-top: 10px;
+  line-height: 1;
+  font-family: monospace;
+}

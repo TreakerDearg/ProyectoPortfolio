@@ -1,0 +1,237 @@
+.footerContainer {
+  height: 3.5rem; /* 56px */
+  background-color: #030407;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  position: relative;
+  z-index: 50;
+  overflow: hidden;
+}
+
+.topDataLine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(14, 165, 233, 0.3), transparent);
+}
+
+.sectionCell {
+  padding: 0 1.5rem;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.01);
+}
+
+.labelTech {
+  font-size: 7px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #475569;
+}
+
+.statusValue {
+  color: #10b981;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-shadow: 0 0 8px rgba(16, 185, 129, 0.3);
+}
+
+.statusDotLarge {
+  width: 6px;
+  height: 6px;
+  background-color: #10b981;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #10b981;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.mainframeId {
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.5em;
+  color: #1e293b;
+}
+
+.bracketDecoration {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.line { width: 40px; height: 1px; background: #1e293b; }
+.dot { width: 2px; height: 2px; background: #1e293b; border-radius: 50%; }
+
+.geoValue {
+  font-size: 10px;
+  color: #cbd5e1;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+}
+
+/* TIME BLOCK */
+.timeBlock {
+  height: 100%;
+  padding: 0 2rem;
+  background: rgba(14, 165, 233, 0.05);
+  border-left: 2px solid rgba(14, 165, 233, 0.2);
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.timeGlow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(14, 165, 233, 0.05) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+.timeValue {
+  font-size: 16px;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 10px rgba(14, 165, 233, 0.4);
+}
+
+.timeSpinner {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px dashed rgba(14, 165, 233, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.spinnerCore {
+  width: 0.4rem;
+  height: 0.4rem;
+  background-color: #0ea5e9;
+  border-radius: 50%;
+  box-shadow: 0 0 12px #0ea5e9;
+  animation: corePulse 1s infinite alternate;
+}
+
+@keyframes corePulse {
+  from { transform: scale(0.8); opacity: 0.6; }
+  to { transform: scale(1.2); opacity: 1; }
+}
+
+/* --- CONTENEDOR DE NODOS SOCIALES --- */
+.socialCell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 1.5rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
+  height: 100%;
+  justify-content: center;
+  background: linear-gradient(
+    180deg, 
+    rgba(14, 165, 233, 0.03) 0%, 
+    transparent 100%
+  );
+  position: relative;
+}
+
+/* Decoración de tornillo técnico en la esquina de la celda */
+.socialCell::before {
+  content: '+';
+  position: absolute;
+  top: 2px;
+  left: 4px;
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.1);
+  font-weight: bold;
+}
+
+/* --- ENLACES ESTILO "DATA NODE" --- */
+.socialLink {
+  color: #64748b;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 2px;
+}
+
+/* Efecto de Brackets Angulares al hacer Hover */
+.socialLink::before,
+.socialLink::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  opacity: 0;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+/* Bracket superior izquierdo */
+.socialLink::before {
+  top: -2px;
+  left: -2px;
+  border-top: 1.5px solid currentColor;
+  border-left: 1.5px solid currentColor;
+}
+
+/* Bracket inferior derecho */
+.socialLink::after {
+  bottom: -2px;
+  right: -2px;
+  border-bottom: 1.5px solid currentColor;
+  border-right: 1.5px solid currentColor;
+  /* Eliminamos el círculo anterior y lo cambiamos por este bracket */
+  border-radius: 0; 
+  transform: scale(1.5);
+}
+
+.socialLink:hover {
+  background: rgba(14, 165, 233, 0.05);
+  color: #f8fafc; /* Blanco técnico en hover */
+  border-color: rgba(14, 165, 233, 0.3);
+  filter: drop-shadow(0 0 5px rgba(14, 165, 233, 0.4));
+}
+
+.socialLink:hover::before,
+.socialLink:hover::after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Animación de parpadeo rápido tipo "Glitch" al entrar */
+.socialLink:hover svg {
+  animation: glitch-mini 0.3s ease-out;
+}
+
+@keyframes glitch-mini {
+  0% { transform: translate(0); }
+  20% { transform: translate(-1.5px, 1px); opacity: 0.8; }
+  40% { transform: translate(1.5px, -1px); opacity: 0.9; }
+  60% { transform: translate(-1px, 0); }
+  100% { transform: translate(0); }
+}
+

@@ -1,0 +1,31 @@
+/* @/app/fullstack/components/l-derecho/RightPanel.module.css */
+
+.rightFrame {
+  background: linear-gradient(270deg, #05070a 0%, #0a1114 100%);
+  border-left: 1px solid #1a2a35;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.sectionHeader {
+  color: #00f2ff;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  padding: 12px;
+  border-bottom: 1px solid rgba(0, 242, 255, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.neuralGrid {
+  background-image: radial-gradient(#00f2ff 0.5px, transparent 0.5px);
+  background-size: 10px 10px;
+  opacity: 0.1;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}

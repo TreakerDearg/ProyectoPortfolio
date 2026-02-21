@@ -1,0 +1,93 @@
+/* ModuleCard.module.css */
+.card {
+  position: relative;
+  background: rgba(10, 15, 10, 0.9);
+  border: 1px solid #1a331a;
+  padding: 24px;
+  cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  min-height: 220px;
+  transition: border-color 0.3s ease;
+}
+
+/* Esquinas reforzadas (estilo industrial) */
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 10px; height: 10px;
+  border-top: 3px solid #1a331a;
+  border-left: 3px solid #1a331a;
+}
+
+.icon {
+  font-size: 2rem;
+  color: #33ff33;
+  opacity: 0.8;
+  text-shadow: 0 0 10px rgba(51, 255, 51, 0.3);
+}
+
+.title {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #33ff33;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.lines {
+  flex: 1;
+  font-size: 0.8rem;
+  color: #1a8a1a;
+  font-family: monospace;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.7rem;
+  color: #33ff33;
+  opacity: 0.6;
+  border-top: 1px solid #1a331a;
+  padding-top: 10px;
+  letter-spacing: 1px;
+}
+
+/* ESTADOS */
+.selected {
+  border-color: #33ff33;
+  background: rgba(51, 255, 51, 0.05);
+  box-shadow: 0 0 20px rgba(51, 255, 51, 0.1);
+}
+
+.locked {
+  border-color: #441111;
+  background: rgba(20, 5, 5, 0.8);
+  cursor: not-allowed;
+}
+
+.locked .icon, .locked .title {
+  color: #660000;
+  text-shadow: none;
+}
+
+.locked .lines {
+  color: #441111;
+}
+
+/* Efecto de ruido de fondo sutil */
+.noise {
+  position: absolute;
+  inset: 0;
+  background-image: url("https://www.transparenttextures.com/patterns/carbon-fibre.png");
+  opacity: 0.05;
+  pointer-events: none;
+}

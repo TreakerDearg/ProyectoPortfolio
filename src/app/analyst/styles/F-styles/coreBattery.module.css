@@ -1,0 +1,91 @@
+.batteryRoot {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding-left: 1.5rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
+  font-family: var(--font-mono);
+}
+
+.labelTech {
+  font-size: 7px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #475569;
+}
+
+.valueTech {
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  transition: color 0.3s ease;
+}
+
+/* Rejilla de celdas digitales */
+.energyGrid {
+  display: flex;
+  gap: 2px;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin-right: 12px;
+}
+
+.cell {
+  width: 4px;
+  height: 12px;
+  border-radius: 0.5px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Chasis de batería estilo industrial (Horizontal) */
+.batteryChassis {
+  width: 40px;
+  height: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  position: relative;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 1px;
+  border-radius: 1px;
+}
+
+.chassisCap {
+  position: absolute;
+  right: -3px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 0 1px 1px 0;
+}
+
+.liquidLevel {
+  height: 100%;
+  transition: width 0.5s ease, background-color 0.5s ease;
+  box-shadow: 0 0 10px rgba(14, 165, 233, 0.3);
+}
+
+/* Efecto de cristal/reflejo sobre el chasis */
+.chassisGlass {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  pointer-events: none;
+}
+
+/* Animación para el Core cuando está bajo */
+@keyframes criticalPulse {
+  from { filter: brightness(1); }
+  to { filter: brightness(1.5) drop-shadow(0 0 5px #f43f5e); }
+}
+
+.critical {
+  animation: criticalPulse 0.5s ease-in-out infinite alternate;
+}

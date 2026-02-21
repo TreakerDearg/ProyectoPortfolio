@@ -1,0 +1,92 @@
+.monitorRoot {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 100%;
+  padding: 0 1rem;
+  font-family: var(--font-mono);
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  min-width: 110px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.tag {
+  font-size: 7px;
+  font-weight: 900;
+  color: #475569;
+  letter-spacing: 0.1em;
+}
+
+.percentage {
+  font-size: 9px;
+  font-weight: 900;
+  color: #0ea5e9;
+  transition: color 0.3s ease;
+}
+
+/* Rejilla de bloques */
+.blockGrid {
+  display: flex;
+  gap: 2px;
+  height: 10px;
+  align-items: flex-end;
+}
+
+.block {
+  flex: 1;
+  height: 100%;
+  width: 6px;
+  border-radius: 0.5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.blockGlow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 30%;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Estados de color */
+.criticalText { color: #f43f5e !important; text-shadow: 0 0 8px rgba(244, 63, 94, 0.4); }
+.warningText { color: #fbbf24 !important; text-shadow: 0 0 8px rgba(251, 191, 36, 0.4); }
+
+/* Detalles estéticos laterales */
+.processDetail {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
+  padding-left: 10px;
+}
+
+.lineGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 24px;
+}
+
+.miniBar {
+  height: 1px;
+  background: #0ea5e9;
+}
+
+.smallId {
+  font-size: 6px;
+  font-weight: 900;
+  color: #334155;
+}

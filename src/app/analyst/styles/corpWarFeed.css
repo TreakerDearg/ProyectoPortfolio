@@ -1,0 +1,238 @@
+/* src/app/analyst/styles/corpWarFeed.css */
+
+/* --- MAIN CONTAINER --- */
+.corp-war-container {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    margin: 1.5rem 0.5rem 0.5rem 0.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: linear-gradient(180deg, #050505 0%, #0a0000 100%);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* --- CRITICAL SYSTEM STATES --- */
+
+/* State: Hacked/Breached */
+.is-hacked {
+    border: 1px solid #ff0000 !important;
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.2), inset 0 0 15px rgba(255, 0, 0, 0.1);
+    animation: intense-shake 0.15s steps(2) infinite;
+    z-index: 60;
+}
+
+/* State: System Failure / Blackout */
+.system-blackout {
+    background: #000 !important;
+    filter: brightness(0);
+    pointer-events: none;
+    cursor: wait;
+    animation: screen-flicker 0.1s infinite;
+}
+
+/* --- OVERLAYS & TEXTURES --- */
+
+/* Moving Red Scanline (Hack in progress) */
+.scanner-line {
+    position: absolute;
+    width: 100%;
+    height: 30px;
+    background: linear-gradient(to bottom, 
+        transparent 0%, 
+        rgba(255, 0, 0, 0.15) 50%, 
+        transparent 100%);
+    z-index: 101;
+    pointer-events: none;
+    animation: scan-move 2.5s linear infinite;
+}
+
+/* Static Grain/Noise */
+.corp-war-container::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.02;
+    pointer-events: none;
+    z-index: 5;
+}
+
+/* --- REBOOT VISUALS (Blue Spiral) --- */
+
+.reboot-spiral-container {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Fixed typo from justify-center */
+    pointer-events: none;
+    z-index: 100;
+}
+
+.spiral-ring {
+    position: absolute;
+    border: 1px solid rgba(59, 130, 246, 0.4);
+    border-radius: 2px;
+    width: 20px;
+    height: 20px;
+    animation: tunnel-out 3s ease-in infinite;
+}
+
+/* Delay rings to create the tunnel depth */
+.spiral-ring:nth-child(2) { animation-delay: 1s; }
+.spiral-ring:nth-child(3) { animation-delay: 2s; }
+
+/* --- TYPOGRAPHY EFFECTS --- */
+
+.is-breached-text {
+    color: #fff;
+    font-size: 11px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    font-weight: 900;
+    text-shadow: 2px 0 #f00, -2px 0 #0ff;
+    animation: text-glitch 0.3s infinite;
+}
+
+.glitch-text {
+    animation: glitch-simple 500ms infinite;
+}
+
+/* --- ANIMATIONS --- */
+
+@keyframes intense-shake {
+    0% { transform: translate(1px, 1px); }
+    50% { transform: translate(-1px, -1px); }
+    100% { transform: translate(0); }
+}
+
+@keyframes scan-move {
+    from { top: -20%; }
+    to { top: 120%; }
+}
+
+@keyframes tunnel-out {
+    0% { transform: scale(0.5); opacity: 0; }
+    20% { opacity: 1; }
+    100% { transform: scale(12); opacity: 0; }
+}
+
+@keyframes text-glitch {
+    0% { transform: translate(0); clip-path: inset(0 0 0 0); }
+    25% { transform: translate(-1px, 1px); clip-path: inset(20% 0 50% 0); }
+    50% { transform: translate(1px, -1px); clip-path: inset(40% 0 10% 0); }
+    100% { transform: translate(0); }
+}
+
+@keyframes glitch-simple {
+    0% { text-shadow: 1px 0 red; }
+    50% { text-shadow: -1px -1px blue; }
+    100% { text-shadow: 1px 1px green; }
+}
+
+/* --- SCROLLBAR --- */
+.cyber-scrollbar::-webkit-scrollbar {
+    width: 2px;
+}
+
+.cyber-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Contenedor Principal */
+.emergency-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;      /* Centrado vertical */
+  justify-content: center;   /* Centrado horizontal */
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(12px);
+  overflow: hidden;
+}
+
+.status-container {
+  position: relative;
+  z-index: 101;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-center-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Estilos de Texto */
+.status-text {
+  margin-top: 1.5rem;
+  font-family: 'JetBrains Mono', monospace; /* O cualquier mono */
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.breach-text {
+  color: #ff0000;
+  letter-spacing: 0.8em;
+  text-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
+  animation: glitch 1s infinite;
+}
+
+.restore-text {
+  color: #3b82f6;
+  letter-spacing: 0.3em;
+  font-size: 0.75rem;
+  text-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+}
+
+/* Iconos y Barras */
+.icon-breach {
+  color: #dc2626;
+  filter: drop-shadow(0 0 12px rgba(220, 38, 38, 0.8));
+}
+
+.icon-restore {
+  color: #3b82f6;
+  filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.6));
+}
+
+.status-bar {
+  margin-top: 0.75rem;
+  height: 2px;
+  width: 150px;
+  background: linear-gradient(90deg, transparent, #ff0000, transparent);
+}
+
+/* Animación de Scanner Line */
+.scanner-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 0, 0, 0.2);
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+  animation: scan 3s linear infinite;
+}
+
+@keyframes scan {
+  0% { top: 0%; }
+  100% { top: 100%; }
+}
+
+@keyframes glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(-2px, -2px); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(2px, -2px); }
+  100% { transform: translate(0); }
+}

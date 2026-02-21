@@ -1,0 +1,108 @@
+/* src/app/analyst/(analista)/layout.css */
+
+/* 1. RESET RADICAL DE VARIABLES GLOBALES */
+.analyst-terminal-root {
+  /* Anulamos la variable del global para que no afecte a componentes internos */
+  --terminal-green: transparent !important;
+  --cyber-purple: #a855f7;
+  --cyber-sky: #0ea5e9;
+  --cyber-gold: #fbbf24;
+  --bg-dark: #0a0a0c;
+  --border-glow: rgba(139, 92, 246, 0.2);
+
+  /* Bloqueo de herencia del body */
+  background-color: var(--bg-dark) !important;
+  color: #cbd5e1 !important;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace !important;
+  text-shadow: none !important; /* Mata el glow verde del global */
+  
+  position: fixed;
+  inset: 0;
+  z-index: 9999; /* Asegura estar por encima de cualquier otro elemento del home */
+  display: flex;
+  flex-direction: column;
+}
+
+/* 2. LIMPIEZA QUIRÚRGICA DE ELEMENTOS INTERNOS */
+/* Forzamos que nada dentro de la terminal herede el glow verde del global */
+.analyst-terminal-root *:not(.text-shadow-retro) {
+  text-shadow: none !important;
+  box-shadow: none;
+}
+
+/* Anulamos bordes verdes que Tailwind o el global puedan inyectar */
+.analyst-terminal-root div, 
+.analyst-terminal-root header, 
+.analyst-terminal-root footer, 
+.analyst-terminal-root aside {
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+/* 3. SCROLLBARS (Cyber-Scroll) */
+.analyst-terminal-root .cyber-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+.analyst-terminal-root .cyber-scroll::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+}
+.analyst-terminal-root .cyber-scroll::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, var(--cyber-purple), var(--cyber-sky));
+  border-radius: 10px;
+}
+
+/* 4. CAPAS DEL SISTEMA */
+.analyst-terminal-root .main-system-container {
+  background-color: var(--bg-dark);
+  background-image: 
+    linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%),
+    linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
+  background-size: 100% 4px, 3px 100%;
+}
+
+/* 5. BORDES CYBERPUNK */
+.analyst-terminal-root .border-cyber {
+  border: 1px solid var(--border-glow) !important;
+  box-shadow: inset 0 0 10px rgba(139, 92, 246, 0.05) !important;
+  backdrop-filter: blur(8px);
+}
+
+/* 6. RADAR SWEEP */
+.analyst-terminal-root .radar-sweep {
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  top: -50%;
+  left: -50%;
+  background: conic-gradient(
+    from 0deg at 50% 50%,
+    transparent 0deg,
+    rgba(14, 165, 233, 0.05) 180deg,
+    rgba(14, 165, 233, 0.1) 360deg
+  );
+  animation: radar-rotate 10s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes radar-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* 7. GRADIENTES DE TEXTO */
+.analyst-terminal-root .text-gradient-gold {
+  background: linear-gradient(to right, #f59e0b, #fbbf24, #fef3c7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+.analyst-terminal-root button:active {
+  transform: scale(0.98);
+  filter: brightness(1.2) saturate(1.2);
+  transition: all 0.1s ease;
+}
+
+.analyst-terminal-root button:hover {
+  box-shadow: 0 0 15px rgba(14, 165, 233, 0.2);
+  border-color: var(--cyber-sky) !important;
+}

@@ -1,0 +1,60 @@
+/* BootProgress.module.css */
+.progressContainer {
+  margin: 2rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-family: monospace;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #33ff33;
+  letter-spacing: 2px;
+  text-shadow: 0 0 5px rgba(51, 255, 51, 0.5);
+}
+
+.barTrack {
+  height: 24px;
+  background: rgba(26, 51, 26, 0.2);
+  border: 1px solid #1a331a;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 2px;
+  overflow: hidden;
+}
+
+/* El efecto de rejilla sobre la barra */
+.barGrid {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(90deg, transparent 90%, rgba(0, 0, 0, 0.5) 90%);
+  background-size: 15px 100%; /* Tamaño de cada bloque */
+  z-index: 5;
+}
+
+.barFill {
+  height: 100%;
+  background: #33ff33;
+  box-shadow: 0 0 15px #33ff33, inset 0 0 10px rgba(255, 255, 255, 0.5);
+  position: relative;
+  z-index: 1;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 9px;
+  color: #1a331a;
+  text-transform: uppercase;
+}
+
+.percentage {
+  font-weight: bold;
+  background: #33ff33;
+  color: #000;
+  padding: 0 5px;
+}

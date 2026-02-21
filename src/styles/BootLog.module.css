@@ -1,0 +1,48 @@
+/* BootLog.module.css */
+.container {
+  margin-bottom: 2rem;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.title {
+  color: #33ff33;
+  font-size: 1.5rem;
+  font-weight: bold;
+  letter-spacing: -1px;
+  text-shadow: 0 0 10px rgba(51, 255, 51, 0.7);
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.logContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.line {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  display: flex;
+  gap: 10px;
+}
+
+.ok { color: #1a8a1a; } /* Verde oscuro para el OK */
+.msg { color: #33ff33; opacity: 0.9; }
+.warn { 
+  color: #ff9900; 
+  background: rgba(255, 153, 0, 0.1);
+  padding: 0 4px;
+  text-shadow: 0 0 5px #ff9900;
+}
+
+/* Animación de parpadeo para líneas nuevas */
+.newLine {
+  animation: flickerLine 0.1s i;
+}
+
+@keyframes flickerLine {
+  0% { opacity: 0; }
+  50% { opacity: 1; transform: translateX(2px); }
+  100% { opacity: 1; transform: translateX(0); }
+}

@@ -1,0 +1,33 @@
+.overviewContainer {
+  max-width: 250px;
+  max-height: 180px;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 5px;
+  z-index: 200;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  overflow: hidden; /* Asegura que el contenido SVG se recorte */
+  pointer-events: auto; /* Para poder interactuar con el drag del viewBox */
+}
+
+.overviewSvg {
+  display: block; /* Elimina espacio extra debajo del SVG */
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 2px;
+}
+
+.viewBox {
+  fill: rgba(234, 179, 8, 0.1);
+  stroke: #eab308;
+  stroke-width: 0.8px;
+  pointer-events: auto; /* Para que el drag funcione */
+  cursor: grab;
+}
+
+.viewBox:active {
+  cursor: grabbing;
+}

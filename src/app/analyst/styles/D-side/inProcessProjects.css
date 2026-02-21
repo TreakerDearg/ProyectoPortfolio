@@ -1,0 +1,138 @@
+/* MODULE: DATA_BUILD_SEQUENCER (ACTIVE_PROCESS) */
+
+.data-build-screen {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(180deg, 
+        rgba(10, 20, 35, 0.98) 0%, 
+        rgba(5, 10, 15, 1) 100%);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(56, 189, 248, 0.15);
+    box-shadow: 
+        inset 0 0 40px rgba(56, 189, 248, 0.03),
+        0 15px 35px rgba(0, 0, 0, 0.6);
+    min-height: 240px; /* Consistencia con el módulo de borrado */
+    display: flex;
+    flex-direction: column;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Rejilla de bits: Detalle de ingeniería */
+.bit-grid-overlay {
+    position: absolute;
+    inset: 0;
+    background-image: 
+        radial-gradient(circle, rgba(56, 189, 248, 0.08) 1px, transparent 1px),
+        linear-gradient(rgba(56, 189, 248, 0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(56, 189, 248, 0.015) 1px, transparent 1px);
+    background-size: 16px 16px;
+    opacity: 0.8;
+    pointer-events: none;
+    z-index: 0;
+    mask-image: radial-gradient(ellipse at center, black 40%, transparent 90%);
+}
+
+/* Barra Segmentada de Alta Definición */
+.progress-segment-container {
+    display: flex;
+    gap: 3px;
+    height: 10px; /* Ajustado para el padding interno */
+    width: 100%;
+    padding: 2px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    border-radius: 2px;
+    position: relative;
+    z-index: 10;
+}
+
+.progress-segment {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 1px;
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.progress-segment.active {
+    background: #38bdf8;
+    box-shadow: 
+        0 0 12px rgba(56, 189, 248, 0.6),
+        0 0 2px rgba(255, 255, 255, 0.8);
+    animation: segment-pulse 2s infinite alternate;
+}
+
+@keyframes segment-pulse {
+    from { opacity: 0.8; filter: brightness(1); }
+    to { opacity: 1; filter: brightness(1.3); }
+}
+
+/* Barras de Datos (Data Flow Monitor) */
+.data-bar {
+    width: 3px;
+    background: linear-gradient(to top, rgba(56, 189, 248, 0.1), #38bdf8);
+    border-radius: 1px 1px 0 0;
+    box-shadow: 0 0 5px rgba(56, 189, 248, 0.2);
+    transition: background 0.3s ease;
+}
+
+/* Glimmer Cinético */
+.build-glimmer {
+    position: absolute;
+    top: 0;
+    width: 250px;
+    height: 100%;
+    background: linear-gradient(
+        90deg, 
+        transparent, 
+        rgba(56, 189, 248, 0.01), 
+        rgba(56, 189, 248, 0.08), 
+        transparent
+    );
+    transform: skewX(-25deg);
+    animation: build-glimmer-run 6s infinite cubic-bezier(0.445, 0.05, 0.55, 0.95);
+    pointer-events: none;
+    z-index: 1;
+}
+
+@keyframes build-glimmer-run {
+    0% { left: -150%; }
+    100% { left: 200%; }
+}
+
+/* --- ADAPTACIÓN A OVERCLOCK (PÚRPURA) --- */
+
+.overclock-active .data-build-screen {
+    border-color: rgba(168, 85, 247, 0.3);
+    background: linear-gradient(180deg, rgba(20, 10, 35, 0.98) 0%, #050308 100%);
+    box-shadow: inset 0 0 40px rgba(168, 85, 247, 0.05), 0 15px 35px rgba(0, 0, 0, 0.8);
+}
+
+.overclock-active .progress-segment.active {
+    background: #a855f7;
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.8), 0 0 2px rgba(255, 255, 255, 0.9);
+}
+
+.overclock-active .data-bar {
+    background: linear-gradient(to top, rgba(168, 85, 247, 0.1), #a855f7);
+    box-shadow: 0 0 8px rgba(168, 85, 247, 0.4);
+}
+
+.overclock-active .build-glimmer {
+    background: linear-gradient(
+        90deg, 
+        transparent, 
+        rgba(168, 85, 247, 0.1), 
+        transparent
+    );
+    animation-duration: 2s; /* Más rápido en OC */
+}
+
+/* Utilidades de animación */
+.animate-spin-slow {
+    animation: spin-slow 15s linear infinite;
+}
+
+@keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}

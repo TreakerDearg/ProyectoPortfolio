@@ -1,0 +1,14 @@
+.statusBars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 15px;
+  padding: 2px;
+  border-left: 1px solid #a855f7;
+}
+
+.bar {
+  width: 3px;
+  background: #a855f7;
+  box-shadow: 0 0 5px #a855f7;
+}

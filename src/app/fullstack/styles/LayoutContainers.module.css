@@ -1,0 +1,41 @@
+/* src/app/fullstack/styles/LayoutContainers.module.css */
+
+.sideContainer {
+  height: 100%;
+  background: rgba(5, 5, 5, 0.8);
+  border: 4px solid #333;
+  /* Efecto de biselado industrial */
+  border-color: #444 #111 #111 #444; 
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+.centerContainer {
+  height: 100%;
+  background: #000;
+  border: 6px solid #222;
+  /* El contenedor central suele ser el "monitor" principal */
+  border-color: #333 #1a1a1a #1a1a1a #333;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 1);
+}
+
+/* Decoración de tornillos en las esquinas para el look industrial */
+.screw {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: #222;
+  border-radius: 50%;
+  border: 1px solid #444;
+}
+
+.topL { top: 5px; left: 5px; }
+.topR { top: 5px; right: 5px; }
+.botL { bottom: 5px; left: 5px; }
+.botR { bottom: 5px; right: 5px; }

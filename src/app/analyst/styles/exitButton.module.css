@@ -1,0 +1,130 @@
+.exitContainer {
+    display: flex;
+    align-items: center;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    position: relative;
+    height: 32px;
+}
+
+.buttonBody {
+    background: rgba(244, 63, 94, 0.03); /* Un rojo casi imperceptible */
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    height: 100%;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.exitContainer:hover .buttonBody {
+    background: rgba(244, 63, 94, 0.08);
+    border-color: rgba(244, 63, 94, 0.3);
+}
+
+.topLabel {
+    font-family: var(--font-mono);
+    font-size: 7px;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-weight: 800;
+}
+
+.mainLabel {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 900;
+    color: #cbd5e1;
+    letter-spacing: -0.02em;
+    transition: color 0.3s ease;
+}
+
+.exitContainer:hover .mainLabel {
+    color: #f43f5e;
+    text-shadow: 0 0 10px rgba(244, 63, 94, 0.4);
+}
+
+/* Iconos y Decoraciones */
+.iconBox {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+}
+
+.powerIcon {
+    color: #f43f5e;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+}
+
+.shieldIcon {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    color: #64748b;
+}
+
+.exitContainer:hover .powerIcon {
+    opacity: 1;
+    filter: drop-shadow(0 0 5px #f43f5e);
+}
+
+/* Brackets Laterales Tácticos */
+.bracketLeft {
+    width: 4px;
+    height: 100%;
+    border-left: 2px solid rgba(244, 63, 94, 0.2);
+    border-top: 2px solid rgba(244, 63, 94, 0.2);
+    border-bottom: 2px solid rgba(244, 63, 94, 0.2);
+}
+
+.bracketRight {
+    width: 12px;
+    height: 100%;
+    border-right: 2px solid rgba(244, 63, 94, 0.2);
+    border-top: 2px solid rgba(244, 63, 94, 0.2);
+    border-bottom: 2px solid rgba(244, 63, 94, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+}
+
+.exitContainer:hover .bracketLeft,
+.exitContainer:hover .bracketRight {
+    border-color: #f43f5e;
+}
+
+/* Franjas de Advertencia ASCII en el bracket derecho */
+.warningStripes {
+    width: 4px;
+    height: 80%;
+    background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 2px,
+        rgba(244, 63, 94, 0.2) 2px,
+        rgba(244, 63, 94, 0.2) 4px
+    );
+}
+
+.exitContainer:hover .warningStripes {
+    background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 2px,
+        rgba(244, 63, 94, 0.5) 2px,
+        rgba(244, 63, 94, 0.5) 4px
+    );
+}

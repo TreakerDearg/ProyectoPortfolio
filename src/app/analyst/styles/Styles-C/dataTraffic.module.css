@@ -1,0 +1,147 @@
+.dataTrafficWidget {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 1.5rem;
+  z-index: 30;
+  width: 17rem;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  background: rgba(3, 4, 7, 0.75);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(56, 189, 248, 0.15);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+}
+
+.glassReflection {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.4), transparent);
+}
+
+.widgetScanline {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent, rgba(56, 189, 248, 0.04) 50%, transparent);
+  background-size: 100% 200%;
+  animation: scanVertical 4s linear infinite;
+  pointer-events: none;
+}
+
+.trafficTitle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 800;
+  color: #38bdf8;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+}
+
+.latencyBadge {
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  padding: 1px 10px;
+  border-radius: 4px;
+  color: #7dd3fc;
+}
+
+.statusDotBlink {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #38bdf8;
+  animation: pulseAlpha 2s infinite ease-in-out;
+}
+
+.barsContainer {
+  display: flex;
+  align-items: flex-end;
+  gap: 2.5px;
+  height: 64px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(56, 189, 248, 0.08);
+}
+
+.barWrapper {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+}
+
+.barFill {
+  width: 100%;
+  background: linear-gradient(to top, rgba(14, 165, 233, 0.1), rgba(14, 165, 233, 0.5));
+  position: relative;
+  border-radius: 1px 1px 0 0;
+}
+
+.barCap {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1.5px;
+  background: #ffffff;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 1);
+}
+
+.dataGridMini {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding-top: 10px;
+  gap: 8px;
+}
+
+.label {
+  display: block;
+  font-size: 8px;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+.value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.unit {
+  font-size: 8px;
+  opacity: 0.4;
+}
+
+.widgetFooter {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 6px 16px;
+  border-top: 1px solid rgba(56, 189, 248, 0.05);
+  display: flex;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  color: #475569;
+}
+
+/* ESTADO CRÍTICO */
+.stateCritical {
+  border-color: rgba(244, 63, 94, 0.4);
+}
+
+.stateCritical .trafficTitle { color: #f43f5e; text-shadow: 0 0 10px rgba(244, 63, 94, 0.5); }
+.stateCritical .barFill {
+  background: linear-gradient(to top, rgba(244, 63, 94, 0.2), rgba(244, 63, 94, 0.6));
+}
+.stateCritical .barCap {
+  background: #ff7e8e;
+  box-shadow: 0 0 15px #f43f5e;
+}
+
+/* ANIMACIONES */
+@keyframes scanVertical {
+  0% { background-position: 0 -100%; }
+  100% { background-position: 0 100%; }
+}
+
+@keyframes pulseAlpha {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.15); }
+}

@@ -1,0 +1,115 @@
+/* src/app/analyst/styles/sidebarLeft.css */
+
+:root {
+    --cyber-purple: #8b5cf6;
+    --cyber-blue: #0ea5e9;
+    --cyber-green: #22c55e;
+    --cyber-bg: #07050a;
+}
+
+.sidebar-cyber {
+    background: var(--cyber-bg);
+    box-shadow: inset -20px 0 40px rgba(0, 0, 0, 0.9);
+    position: relative;
+    padding: 1rem 0.75rem;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid rgba(139, 92, 246, 0.15);
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* El grid de fondo ahora es más sutil */
+.bg-scan-grid {
+    position: absolute;
+    inset: 0;
+    background-image: 
+        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%),
+        linear-gradient(90deg, rgba(139, 92, 246, 0.02), transparent, rgba(14, 165, 233, 0.02));
+    background-size: 100% 4px, 4px 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.nav-item-cyber {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 0.6rem 0.8rem;
+    margin-bottom: 0.5rem;
+    /* Corte angular más definido para botones pequeños */
+    clip-path: polygon(0 0, 100% 0, 100% 70%, 90% 100%, 0 100%);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.nav-item-cyber:hover {
+    background: rgba(14, 165, 233, 0.06);
+    border-color: rgba(14, 165, 233, 0.3);
+    color: #fff;
+    transform: translateX(4px);
+}
+
+.nav-item-cyber.active {
+    background: linear-gradient(90deg, rgba(139, 92, 246, 0.1) 0%, transparent 100%);
+    border-color: rgba(139, 92, 246, 0.4);
+    color: #fff;
+}
+
+/* Indicador lateral mejorado */
+.nav-item-cyber.active::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 20%; bottom: 20%;
+    width: 2px;
+    background: var(--cyber-purple);
+    box-shadow: 0 0 10px var(--cyber-purple);
+}
+
+.nav-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 4px;
+}
+
+.nav-label-text {
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--cyber-green);
+    box-shadow: 0 0 8px var(--cyber-green);
+}
+
+/* Añade esto a tu sidebarLeft.css si no lo tienes */
+
+.nav-container-fixed {
+    /* Mantiene la navegación compacta */
+    flex-shrink: 0;
+}
+
+/* Opcional: Una pequeña línea sutil que conecte visualmente ROOT con el terminal */
+.terminal-popup-container::before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    width: 1px;
+    height: 10px;
+    background: linear-gradient(to bottom, rgba(139, 92, 246, 0.3), transparent);
+}

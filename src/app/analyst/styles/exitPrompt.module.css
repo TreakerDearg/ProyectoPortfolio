@@ -1,0 +1,173 @@
+.overlay {
+  position: fixed;
+  /* Forzamos que cubra todo el viewport */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  
+  /* Centrado absoluto */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* Capas */
+  z-index: 99999; /* Valor altísimo */
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(12px);
+  
+  /* Aseguramos que ignore transformaciones del padre */
+  transform: none !important;
+}
+
+.asciiWrapper {
+  position: relative;
+  z-index: 100000;
+  pointer-events: auto;
+}
+
+@keyframes modalAppear {
+  0% { 
+    opacity: 0; 
+    transform: scale(0.8) translateY(20px); 
+    filter: hue-rotate(90deg) brightness(2);
+  }
+  100% { 
+    opacity: 1; 
+    transform: scale(1) translateY(0); 
+    filter: hue-rotate(0deg) brightness(1);
+  }
+}
+
+.asciiFrame {
+  background: #08080a;
+  border: 1px solid rgba(244, 63, 94, 0.6);
+  position: relative;
+  padding: 4px;
+  /* Sombra industrial pesada */
+  box-shadow: 
+    0 0 0 1px rgba(0, 0, 0, 1),
+    0 30px 60px rgba(0, 0, 0, 0.8),
+    0 0 20px rgba(244, 63, 94, 0.15);
+}
+
+/* Esquinas de caracteres ASCII Estilizadas */
+.asciiCornerTopL, .asciiCornerTopR, .asciiCornerBotL, .asciiCornerBotR {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 20px; /* Un poco más grandes para resaltar */
+  color: #f43f5e;
+  background: #08080a;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  font-weight: 900;
+  text-shadow: 0 0 8px rgba(244, 63, 94, 0.8);
+}
+
+.asciiCornerTopL { top: -11px; left: -11px; }
+.asciiCornerTopR { top: -11px; right: -11px; }
+.asciiCornerBotL { bottom: -11px; left: -11px; }
+.asciiCornerBotR { bottom: -11px; right: -11px; }
+
+.terminalContent {
+  /* Borde de puntos para look de impresora antigua */
+  border: 1px dashed rgba(244, 63, 94, 0.3);
+  padding: 2rem;
+  min-width: 340px;
+  max-width: 450px;
+  background: linear-gradient(to bottom, rgba(244, 63, 94, 0.03), transparent);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.asciiDivider {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: rgba(244, 63, 94, 0.3);
+  letter-spacing: 1px;
+  text-align: center;
+  margin: 10px 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.statusLine {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  margin: 6px 0;
+  letter-spacing: 0.02em;
+}
+
+.buttonGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 2rem;
+}
+
+.asciiBtnConfirm, .asciiBtnCancel {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 900;
+  padding: 12px;
+  text-align: center;
+  transition: all 0.1s steps(2); /* Transición brusca estilo terminal */
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.asciiBtnConfirm {
+  background: rgba(244, 63, 94, 0.08);
+  color: #f43f5e;
+  border: 1px solid rgba(244, 63, 94, 0.4);
+}
+
+.asciiBtnConfirm:hover {
+  background: #f43f5e;
+  color: #fff;
+  box-shadow: 0 0 15px rgba(244, 63, 94, 0.4);
+  transform: translateY(-1px);
+}
+
+.asciiBtnCancel {
+  background: transparent;
+  color: #64748b;
+  border: 1px solid rgba(100, 116, 139, 0.2);
+}
+
+.asciiBtnCancel:hover {
+  color: #f1f5f9;
+  border-color: #f1f5f9;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.footer {
+  margin-top: 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: #334155;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.blinkingCursor {
+  animation: blink 0.8s step-end infinite;
+  color: #f43f5e;
+  font-weight: bold;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}

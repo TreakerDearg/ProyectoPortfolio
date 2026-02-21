@@ -1,0 +1,66 @@
+.combineBtn {
+  position: relative;
+  background: rgba(0, 242, 255, 0.05);
+  border: 1px solid rgba(0, 242, 255, 0.3);
+  color: #00f2ff;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
+}
+
+.combineBtn:hover {
+  background: rgba(0, 242, 255, 0.15);
+  border-color: #00f2ff;
+  box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
+  text-shadow: 0 0 8px #00f2ff;
+}
+
+.corner {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-color: #00f2ff;
+  pointer-events: none;
+}
+
+.topL {
+  top: 2px;
+  left: 2px;
+  border-top: 2px solid;
+  border-left: 2px solid;
+}
+
+.botR {
+  bottom: 2px;
+  right: 2px;
+  border-bottom: 2px solid;
+  border-right: 2px solid;
+}
+
+.scanline {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    transparent 50%,
+    rgba(0, 242, 255, 0.05) 50%
+  );
+  background-size: 100% 4px;
+  pointer-events: none;
+}
+
+/* Efecto de parpadeo al estilo HUD de Half-Life */
+@keyframes flicker {
+  0% { opacity: 0.8; }
+  5% { opacity: 0.5; }
+  10% { opacity: 0.9; }
+  100% { opacity: 1; }
+}
+
+.combineBtn span {
+  animation: flicker 4s infinite;
+}

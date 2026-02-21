@@ -1,0 +1,167 @@
+/* MODULE: DELETED_ARCHIVES (FORENSIC_VIEW)
+   REFINEMENT: HIGH_DENSITY_UI 
+*/
+
+.deleted-archives-screen {
+    background: linear-gradient(180deg, 
+        rgba(25, 10, 10, 0.95) 0%, 
+        rgba(10, 5, 5, 1) 100%);
+    position: relative;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    box-shadow: 
+        inset 0 0 30px rgba(239, 68, 68, 0.05),
+        0 10px 30px rgba(0, 0, 0, 0.5);
+    min-height: 240px;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Rejilla de datos técnica */
+.data-grid-overlay {
+    position: absolute;
+    inset: 0;
+    background-image: 
+        radial-gradient(rgba(239, 68, 68, 0.08) 1px, transparent 1px);
+    background-size: 12px 12px;
+    opacity: 0.5;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Escaneo vertical refinado */
+.red-scan-bar {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to bottom,
+        transparent,
+        rgba(239, 68, 68, 0.12) 50%,
+        transparent
+    );
+    background-size: 100% 200%;
+    animation: red-scan-move 8s linear infinite;
+    pointer-events: none;
+    z-index: 2;
+}
+
+@keyframes red-scan-move {
+    0% { background-position: 0% -100%; }
+    100% { background-position: 0% 100%; }
+}
+
+/* Efecto de texto tachado "Wiped" */
+.wiped-filename {
+    color: rgba(239, 68, 68, 0.7);
+    text-shadow: 0 0 8px rgba(239, 68, 68, 0.4);
+    position: relative;
+    display: inline-block;
+    transition: all 0.2s ease;
+}
+
+.wiped-filename::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 55%;
+    width: 100%;
+    height: 1.5px;
+    background: #ef4444;
+    box-shadow: 0 0 10px #ef4444;
+    transform: scaleX(1.05);
+    transition: all 0.2s ease;
+}
+
+/* Mapa de Sectores de Memoria */
+.memory-sectors-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 3px;
+    padding: 10px;
+    background: rgba(239, 68, 68, 0.03);
+    border: 1px solid rgba(239, 68, 68, 0.1);
+    border-radius: 4px;
+    margin-top: auto;
+}
+
+.sector-block {
+    height: 8px;
+    background: rgba(239, 68, 68, 0.1);
+    border-radius: 1px;
+    transition: background 0.1s ease;
+}
+
+.sector-block.corrupt {
+    background: #ef4444;
+    box-shadow: 0 0 6px rgba(239, 68, 68, 0.6);
+    animation: sector-glitch 2s infinite steps(2);
+}
+
+/* --- OVERCLOCK / SYSTEM FAIL STATE --- */
+
+.system-fail-mode {
+    border-color: #f43f5e !important;
+    background: rgba(40, 5, 5, 0.9) !important;
+    /* Vibración de hardware */
+    animation: hardware-vibrate 0.1s infinite;
+}
+
+@keyframes hardware-vibrate {
+    0% { transform: translate(0,0); }
+    50% { transform: translate(0.5px, 0.5px); }
+    100% { transform: translate(-0.5px, -0.5px); }
+}
+
+/* Scan bar se vuelve loco en Overclock */
+.system-fail-mode .red-scan-bar {
+    background: rgba(255, 255, 255, 0.2);
+    animation: red-scan-move 0.5s linear infinite;
+    filter: blur(4px);
+}
+
+/* Los sectores de memoria parpadean erráticamente */
+.system-fail-mode .sector-block {
+    animation: erratic-flicker 0.15s infinite alternate;
+}
+
+@keyframes erratic-flicker {
+    0% { background: #ef4444; opacity: 1; }
+    100% { background: transparent; opacity: 0.1; }
+}
+
+/* Texto corrupto durante el Overclock */
+.system-fail-mode .wiped-filename {
+    color: #fff;
+    text-shadow: 2px 0 #00ffff, -2px 0 #ff00ff;
+    animation: text-shake 0.2s infinite;
+}
+
+@keyframes text-shake {
+    0% { transform: skew(0deg); }
+    50% { transform: skew(5deg) translateX(1px); }
+    100% { transform: skew(-5deg) translateX(-1px); }
+}
+
+.system-fail-mode .wiped-filename::after {
+    background: white;
+    box-shadow: 0 0 15px white;
+    height: 2px;
+}
+
+/* Hover effect para las filas */
+.group\/item:hover .wiped-filename {
+    color: #ef4444;
+    text-shadow: 0 0 12px rgba(239, 68, 68, 0.8);
+}
+
+.err-tag {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    padding: 2px 5px;
+    font-size: 7px;
+    font-family: monospace;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 1px;
+}

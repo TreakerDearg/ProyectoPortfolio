@@ -1,0 +1,52 @@
+/* BootFooter.module.css */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-top: 1px double #1a331a;
+  color: #1a8a1a;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 9px;
+  letter-spacing: 1px;
+  margin-top: auto;
+}
+
+.dataGroup {
+  display: flex;
+  gap: 15px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.value {
+  color: #33ff33;
+  font-weight: bold;
+}
+
+.criticalValue {
+  color: #ff9900;
+  text-shadow: 0 0 5px #ff9900;
+}
+
+.blink {
+  width: 6px;
+  height: 10px;
+  background: #33ff33;
+  display: inline-block;
+  animation: cursorBlink 1s infinite steps(1);
+  vertical-align: middle;
+}
+
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.separator {
+  color: #1a331a;
+}

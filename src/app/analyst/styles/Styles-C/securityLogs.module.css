@@ -1,0 +1,194 @@
+.logContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* --- HEADER --- */
+.logHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+  padding-bottom: 1rem;
+}
+
+.titleGroup {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.brandIcon {
+  width: 40px;
+  height: 40px;
+  background: rgba(168, 85, 247, 0.1);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #a855f7;
+  clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+}
+
+.mainTitle {
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  font-style: italic;
+  background: linear-gradient(to right, #facc15, #eab308);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.subTitle {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: #64748b;
+  letter-spacing: 0.2em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pulseDot {
+  width: 6px;
+  height: 6px;
+  background: #22c55e;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #22c55e;
+  animation: pulse 2s infinite;
+}
+
+/* --- TABLE --- */
+.tableViewport {
+  position: relative;
+  background: rgba(2, 6, 23, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.cyberTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
+.cyberTable th {
+  background: rgba(168, 85, 247, 0.05);
+  padding: 12px 16px;
+  text-align: left;
+  color: #94a3b8;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  border-bottom: 1px solid rgba(168, 85, 247, 0.1);
+}
+
+.logRow {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+  transition: all 0.2s;
+}
+
+.logRow:hover {
+  background: rgba(168, 85, 247, 0.03);
+}
+
+.logRow td {
+  padding: 14px 16px;
+}
+
+.idCell { color: #a855f7; font-weight: bold; }
+.hashPrefix { opacity: 0.3; margin-right: 2px; }
+.timeCell { color: #475569; }
+
+.eventWrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #cbd5e1;
+}
+
+.criticalText {
+  color: #ef4444;
+  font-weight: bold;
+  text-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+}
+
+.originCell {
+  color: #38bdf8;
+  font-style: italic;
+  opacity: 0.8;
+}
+
+.statusTag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 2px;
+  font-size: 9px;
+  font-weight: 900;
+  border: 1px solid transparent;
+}
+
+.CRITICAL { background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.3); color: #ef4444; }
+.WARNING { background: rgba(234, 179, 8, 0.1); border-color: rgba(234, 179, 8, 0.3); color: #eab308; }
+.STABLE { background: rgba(56, 189, 248, 0.1); border-color: rgba(56, 189, 248, 0.3); color: #38bdf8; }
+
+/* --- SCANNER EFFECT --- */
+.tableScanner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.5), transparent);
+  animation: scanDown 4s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes scanDown {
+  0% { top: 0%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+/* --- FOOTER --- */
+.logFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stats { display: flex; gap: 2rem; }
+.statBox { display: flex; flex-direction: column; }
+.statLabel { font-size: 7px; color: #475569; letter-spacing: 0.2em; }
+.statValue { font-size: 12px; font-weight: 900; color: #f8fafc; font-family: var(--font-mono); }
+
+.reportBtn {
+  position: relative;
+  background: transparent;
+  border: 1px solid #eab308;
+  padding: 8px 20px;
+  color: #eab308;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 900;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+
+.reportBtn:hover {
+  background: #eab308;
+  color: #000;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.2); opacity: 0.7; }
+  100% { transform: scale(1); opacity: 1; }
+}

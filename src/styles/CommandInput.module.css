@@ -1,0 +1,51 @@
+/* CommandInput.module.css */
+.inputForm {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-family: 'Courier New', Courier, monospace;
+  position: relative;
+  width: 100%;
+}
+
+.prompt {
+  color: #33ff33;
+  white-space: nowrap;
+  font-weight: bold;
+  text-shadow: 0 0 5px rgba(51, 255, 255, 0.3);
+}
+
+.inputWrapper {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.nativeInput {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #33ff33;
+  width: 100%;
+  font-family: inherit;
+  font-size: 14px;
+  /* Ocultamos el caret nativo para usar nuestro componente Cursor */
+  caret-color: transparent; 
+  text-shadow: 0 0 8px rgba(51, 255, 51, 0.5);
+}
+
+.nativeInput::placeholder {
+  color: rgba(51, 255, 51, 0.2);
+  font-style: italic;
+}
+
+/* Efecto visual de "línea de comando activa" */
+.activeLine {
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, #1a331a 0%, transparent 100%);
+}
