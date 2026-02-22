@@ -1,0 +1,176 @@
+/* CAPA DE FONDO (Overlay) */
+.metroOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+
+/* CONTENEDOR DE LA TERMINAL */
+.terminalContainer {
+  background: #0a0a0a;
+  border: 1px solid #333;
+  width: 100%;
+  max-width: 420px;
+  position: relative;
+  box-shadow: 
+    0 0 50px rgba(0, 0, 0, 1),
+    0 0 20px rgba(255, 179, 0, 0.05);
+  overflow: hidden;
+}
+
+/* EFECTO CRT / SCANLINES */
+.terminalContainer::before {
+  content: " ";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.15) 50%
+  ), 
+  linear-gradient(
+    90deg, 
+    rgba(255, 0, 0, 0.03), 
+    rgba(0, 255, 0, 0.01), 
+    rgba(0, 0, 255, 0.03)
+  );
+  background-size: 100% 3px, 3px 100%;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* HEADER DE LA VENTANA */
+.terminalHeader {
+  background: #151515;
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid #222;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: #ffb300;
+  letter-spacing: 0.2em;
+}
+
+.headerLine {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, #333, transparent);
+}
+
+/* CUERPO DEL MENSAJE */
+.terminalBody {
+  padding: 2.5rem 1.5rem;
+  position: relative;
+  z-index: 5;
+}
+
+.warningBox {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.warningText {
+  color: #eee;
+  font-weight: 900;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+}
+
+.subText {
+  color: #ff3c00;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  opacity: 0.8;
+  animation: pulseOpacity 2s infinite ease-in-out;
+}
+
+/* BOTONES DE ACCIÓN */
+.actionGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.confirmBtn, .cancelBtn {
+  width: 100%;
+  padding: 12px 15px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  background: transparent;
+}
+
+.confirmBtn {
+  border: 1px solid #444;
+  color: #ff3c00;
+}
+
+.confirmBtn:hover {
+  background: #ff3c00;
+  color: #000;
+  border-color: #ff3c00;
+  box-shadow: 0 0 15px rgba(255, 60, 0, 0.3);
+}
+
+.cancelBtn {
+  border: 1px solid #222;
+  color: #666;
+}
+
+.cancelBtn:hover {
+  border-color: #555;
+  color: #eee;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.btnKey {
+  color: inherit;
+  opacity: 0.5;
+  margin-right: 12px;
+  font-weight: 900;
+}
+
+/* FOOTER TÉCNICO */
+.terminalFooter {
+  padding: 0.5rem 1.5rem;
+  border-top: 1px dashed #222;
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  color: #333;
+}
+
+/* ANIMACIONES */
+@keyframes pulseOpacity {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+@keyframes glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(-2px, -2px); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(2px, -2px); }
+  100% { transform: translate(0); }
+}
+
+/* Si el usuario prefiere reducir movimiento, quitamos la animación */
+@media (prefers-reduced-motion) {
+  .subText { animation: none; }
+}

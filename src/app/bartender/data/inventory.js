@@ -27,7 +27,7 @@ export const INVENTORY_DATA = [
     unit: '500ml', 
     code: 'H-CRM',
     flavorText: "BASE: Baileys Irish Cream. MOD: Licor de avellana (Frangelico) y café de malta frío. NOTA: Dulce, denso, oculta el sabor del agua reciclada.",
-    metadata: { sector: 'HANSA_HUB', stability: 'STABLE', radiation: '0.00 mSv', lastCheck: '2026.02.15' },
+    metadata: { sector: 'HANSA_HUB', stability: 'CRITICAL', radiation: '0.00 mSv', lastCheck: '2026.02.15' },
     atomicSpecs: [
       { label: 'BLY', val: '60%', desc: 'Baileys_Base', critical: false, type: 'drop' },
       { label: 'HAZ', val: '20%', desc: 'Frangelico_Mod', critical: false, type: 'drop' },
@@ -93,7 +93,7 @@ export const INVENTORY_DATA = [
     unit: '1000ml', 
     code: 'TAU-9',
     flavorText: "BASE: Hendrick's Gin (infusión pepino). MOD: Agua tónica salina y esencia de eucalipto. NOTA: Frío extremo, deja un rastro metálico en el paladar.",
-    metadata: { sector: 'TAU', stability: 'STABLE', radiation: '0.02 mSv', lastCheck: '2026.02.19' },
+    metadata: { sector: 'TAU', stability: 'CRITICAL', radiation: '0.02 mSv', lastCheck: '2026.02.19' },
     atomicSpecs: [
       { label: 'GIN', val: ' Hendrick', desc: 'Hendricks_Base', critical: false, type: 'drop' },
       { label: 'EUC', val: '0.05', desc: 'Eucalyptus_Oil', critical: false, type: 'atom' }
@@ -142,11 +142,115 @@ export const INVENTORY_DATA = [
     unit: '1500ml', 
     code: 'IND-B',
     flavorText: "BASE: Vodka Smirnoff. MOD: Blue Curaçao, licor de menta blanca y tónica. NOTA: Sabor a mentol industrial, excelente digestivo post-combate.",
-    metadata: { sector: 'GRID_086', stability: 'STABLE', radiation: '0.10 mSv', lastCheck: '2026.02.18' },
+    metadata: { sector: 'GRID_086', stability: 'CRITICAL', radiation: '0.10 mSv', lastCheck: '2026.02.18' },
     atomicSpecs: [
       { label: 'VDK', val: 'Smirn', desc: 'Smirnoff_Base', critical: false, type: 'drop' },
       { label: 'MNT', val: '12%', desc: 'Peppermint_Ext', critical: false, type: 'atom' },
       { label: 'FRZ', val: 'ICE', desc: 'Menthol_Effect', critical: false, type: 'alert' }
+    ]
+  }
+
+/* bartender/data/inventory.js */
+
+  // --- EXPANSIÓN METRO SERIES ---
+,{ 
+    id: 'metro-bitter-01', 
+    name: "Library Dust", 
+    universe: 'metro',
+    category: 'Bitter', 
+    qty: 18, 
+    unit: '750ml', 
+    code: 'LIB-D',
+    flavorText: "BASE: Campari e infusión de té negro ahumado. MOD: Vermut rojo casero y esencia de papel viejo. NOTA: Amargura profunda, como el conocimiento perdido en la Gran Biblioteca.",
+    metadata: { sector: 'POLIS', stability: 'DEGRADING', radiation: '0.01 mSv', lastCheck: '2026.02.21' },
+    atomicSpecs: [
+      { label: 'CMP', val: '35%', desc: 'Campari_Base', critical: false, type: 'drop' },
+      { label: 'SMK', val: 'HIGH', desc: 'Smoked_Tea', critical: false, type: 'atom' },
+      { label: 'TAN', val: 'MED', desc: 'Tannin_Level', critical: false, type: 'drop' }
+    ]
+  },
+  { 
+    id: 'metro-ghost-01', 
+    name: "Dark One's Kiss", 
+    universe: 'metro',
+    category: 'Ghost', 
+    qty: 7, 
+    unit: '500ml', 
+    code: 'D1-KSS',
+    flavorText: "BASE: Everclear (95%) rectificado. MOD: Sirope de flor de saúco y jugo de lichi aclarado. NOTA: El alcohol es imperceptible. Induce alucinaciones auditivas de voces infantiles.",
+    metadata: { sector: 'DEAD_CITY', stability: 'UNSTABLE', radiation: '0.88 mSv', lastCheck: '2026.02.21' },
+    atomicSpecs: [
+      { label: 'ALC', val: '95.0', desc: 'Pure_Ethanol', critical: true, type: 'skull' },
+      { label: 'MSK', val: 'MAX', desc: 'Flavor_Masking', critical: false, type: 'atom' },
+      { label: 'PSY', val: 'POS', desc: 'Neural_Effect', critical: true, type: 'zap' }
+    ]
+  },
+
+  // --- EXPANSIÓN SOMA ---
+  { 
+    id: 'soma-cream-01', 
+    name: "Cortex Slurry", 
+    universe: 'soma',
+    category: 'Creamy', 
+    qty: 11, 
+    unit: '600ml', 
+    code: 'THETA-C',
+    flavorText: "BASE: Licor de Amarula y Baileys. MOD: Puré de taro (malanga) púrpura y polvo de galleta Oreo. NOTA: Extremadamente denso y dulce. Parece un nutriente biotecnológico.",
+    metadata: { sector: 'THETA', stability: 'STABLE', radiation: '0.00 mSv', lastCheck: '2026.02.20' },
+    atomicSpecs: [
+      { label: 'AMR', val: '50%', desc: 'Amarula_Base', critical: false, type: 'drop' },
+      { label: 'LPD', val: 'HIGH', desc: 'Lipid_Content', critical: false, type: 'atom' },
+      { label: 'SUG', val: '45g', desc: 'Glucose_Batch', critical: false, type: 'drop' }
+    ]
+  },
+  { 
+    id: 'soma-bitter-01', 
+    name: "Upsilon Brine", 
+    universe: 'soma',
+    category: 'Bitter', 
+    qty: 22, 
+    unit: '750ml', 
+    code: 'UPS-B',
+    flavorText: "BASE: Mezcal (sabor ahumado industrial). MOD: Fernet Branca y esencia de algas marinas. NOTA: Amargo, salino y aceitoso. Sabe a la maquinaria oxidada bajo el mar.",
+    metadata: { sector: 'UPSILON', stability: 'DEGRADING', radiation: '0.02 mSv', lastCheck: '2026.02.17' },
+    atomicSpecs: [
+      { label: 'MZC', val: '42.0', desc: 'Mezcal_Base', critical: false, type: 'drop' },
+      { label: 'FRN', val: '30.0', desc: 'Fernet_Branca', critical: false, type: 'drop' },
+      { label: 'SLT', val: 'HIGH', desc: 'Sodium_Level', critical: false, type: 'atom' }
+    ]
+  },
+
+  // --- EXPANSIÓN ARMORED CORE ---
+  { 
+    id: 'ac-strong-01', 
+    name: "Assault Armor", 
+    universe: 'ac',
+    category: 'Overdrive', 
+    qty: 4, 
+    unit: '250ml', 
+    code: 'V.IV-R',
+    flavorText: "BASE: Tequila Sierra Spiced. MOD: Licor de canela (Fireball) y Red Bull concentrado. NOTA: Diseñado para detener paros cardíacos en pilotos de la escala Vesper.",
+    metadata: { sector: 'ARQUEBUS', stability: 'VOLATILE', radiation: '2.40 mSv', lastCheck: '2026.02.21' },
+    atomicSpecs: [
+      { label: 'TQL', val: '50.0', desc: 'Sierra_Base', critical: false, type: 'drop' },
+      { label: 'CIN', val: 'MAX', desc: 'Cinnamon_Heat', critical: true, type: 'zap' },
+      { label: 'ADR', val: 'POS', desc: 'Adrenaline_Sync', critical: true, type: 'zap' }
+    ]
+  },
+  { 
+    id: 'ac-ghost-01', 
+    name: "Ayre's Whisper", 
+    universe: 'ac',
+    category: 'Ghost', 
+    qty: 9, 
+    unit: '400ml', 
+    code: 'SOL-644',
+    flavorText: "BASE: Sake ultra-premium (Dassai 23). MOD: Sirope de pera blanca y aire de rosas. NOTA: Tan ligero como el vacío espacial. Te emborracha antes de que termines de sentir el sabor.",
+    metadata: { sector: 'INSTITUTE', stability: 'DEGRADING', radiation: '0.00 mSv', lastCheck: '2026.02.19' },
+    atomicSpecs: [
+      { label: 'SAK', val: '16.0', desc: 'Sake_Premium', critical: false, type: 'drop' },
+      { label: 'AIR', val: 'MAX', desc: 'Aeration_Level', critical: false, type: 'atom' },
+      { label: 'ETH', val: 'LOW', desc: 'Ethanol_Sense', critical: false, type: 'alert' }
     ]
   }
 ];

@@ -1,0 +1,13 @@
+.acContainer {
+  background: radial-gradient(circle at top right, #1a0500, #050000);
+  min-height: 100vh;
+  color: #fff;
+}
+.hudFrame {
+  border: 1px solid rgba(255, 60, 0, 0.3);
+  position: relative;
+  clip-path: polygon(0 0, 95% 0, 100% 5%, 100% 100%, 5% 100%, 0 95%);
+}
+.coralGlow {
+  box-shadow: 0 0 20px rgba(255, 60, 0, 0.2);
+}

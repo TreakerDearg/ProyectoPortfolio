@@ -1,40 +1,49 @@
+/* bartender/styles/footer.module.css */
+
 .footerContainer {
-  flex-shrink: 0; /* Evita que el footer se colapse */
+  flex-shrink: 0;
   width: 100%;
-  padding: 10rem 0 8rem 0;
-  margin-top: 4rem; /* Espacio de seguridad con el contenido */
-  border-top: 1px solid rgba(255, 179, 0, 0.1);
-  background: linear-gradient(to bottom, rgba(5, 5, 5, 0) 0%, rgba(5, 5, 5, 1) 100%);
+  /* Padding dinámico para evitar espacios vacíos masivos en móviles */
+  padding: clamp(3rem, 10vh, 6rem) 0 2rem 0;
+  margin-top: auto; /* Empuja al fondo en el flex-container del layout */
+  border-top: 1px solid rgba(255, 179, 0, 0.08);
+  background: linear-gradient(to bottom, transparent 0%, rgba(5, 5, 5, 0.8) 100%);
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
   position: relative;
-  z-index: 90; /* Por encima de todo en el wrapper */
+  z-index: 90;
 }
 
-/* Detalle visual de línea de carga */
+/* Detalle visual: Línea de carga láser animada */
 .footerContainer::before {
   content: "";
   position: absolute;
   top: -1px;
   left: 0;
-  width: 15%;
-  height: 1px;
+  width: 120px;
+  height: 2px;
   background: #ffb300;
-  box-shadow: 0 0 10px #ffb300;
+  box-shadow: 0 0 15px #ffb300, 0 0 5px #fff;
+  animation: scanLine 8s infinite linear;
+}
+
+@keyframes scanLine {
+  0% { left: 0; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { left: calc(100% - 120px); opacity: 0; }
 }
 
 .sensorGrid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  /* Mínimo 140px por sensor para evitar colapsos de texto */
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 1.5rem;
-  padding: 0 1rem;
-}
-
-@media (min-width: 768px) {
-  .sensorGrid {
-    grid-template-columns: repeat(4, 1fr);
-  }
+  padding: 0 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .deployInfo {
@@ -42,11 +51,12 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 1.5rem;
+  padding: 1.25rem 1.5rem;
   border-top: 1px solid rgba(255, 255, 255, 0.03);
   border-bottom: 1px solid rgba(255, 255, 255, 0.03);
   background: rgba(255, 255, 255, 0.01);
   gap: 1.5rem;
+  backdrop-filter: blur(4px); /* Efecto sutil de terminal */
 }
 
 @media (min-width: 768px) {
@@ -60,19 +70,41 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  background: rgba(0, 0, 0, 0.5);
-  padding: 0.5rem 1rem;
-  border: 1px solid rgba(255, 179, 0, 0.2);
+  background: rgba(0, 0, 0, 0.6);
+  padding: 0.6rem 1.2rem;
+  border: 1px solid rgba(255, 179, 0, 0.15);
+  /* Esquina cortada estilo militar */
+  clip-path: polygon(0 0, 95% 0, 100% 30%, 100% 100%, 5% 100%, 0 70%);
 }
 
 .bottomBar {
   display: flex;
+  flex-direction: column; /* Apilar en móvil */
   justify-content: space-between;
   align-items: center;
-  padding: 0 1rem;
+  padding: 0 1.5rem;
+  gap: 1rem;
   font-size: 9px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
   text-transform: uppercase;
-  color: #333; /* Color oscuro para que parezca grabado en metal */
+  color: #444; /* Gris oscuro metálico */
   letter-spacing: 0.2em;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .bottomBar {
+    flex-direction: row;
+  }
+}
+
+/* Helper para el texto en negrita del footer */
+.bottomBar span {
+  transition: color 0.3s ease;
+}
+
+.bottomBar span:hover {
+  color: #666; /* Efecto interactivo sutil */
 }

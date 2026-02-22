@@ -1,80 +1,134 @@
 /* bartender/styles/inventory.module.css */
 
 .inventoryContainer {
-  padding: 4rem;
+  /* Usamos padding dinámico basado en el ancho de pantalla */
+  padding: clamp(1rem, 5vw, 4rem);
   min-height: 100vh;
+  width: 100%;
+  max-width: 1800px;
+  margin: 0 auto;
   position: relative;
   z-index: 1;
+  display: flex;
+  flex-direction: column;
 }
 
+/* HEADER ADAPTATIVO */
 .manifestHeader {
   display: flex;
+  flex-wrap: wrap; /* Permite que búsqueda y título se apilen en móviles */
   justify-content: space-between;
   align-items: flex-end;
-  margin-bottom: 5rem;
-  border-bottom: 4px solid var(--metro-metal-border);
+  gap: 2rem;
+  margin-bottom: clamp(2rem, 8vw, 5rem);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.05);
   padding-bottom: 2rem;
 }
 
+.titleGroup {
+  flex: 1 1 300px; /* Crece y se achica según necesidad */
+}
+
+/* GRID INTELIGENTE */
 .itemGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 2.5rem;
+  /* Crea tantas columnas como quepan, con un mínimo de 300px */
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+  gap: clamp(1rem, 2vw, 2.5rem);
+  width: 100%;
 }
 
+/* CARD DE ALTO RENDIMIENTO */
 .itemCard {
-  background: var(--iron-plate);
-  border: 1px solid var(--metro-metal-border);
-  padding: 2rem;
+  --u-color: #ffb300;
+  background: linear-gradient(165deg, #0d0d0d 0%, #050505 100%);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: clamp(1.2rem, 3vw, 2rem);
   position: relative;
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 8px 8px 0px #000;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 15px 15px 40px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
 }
 
+/* UNIVERSOS DINÁMICOS */
+.itemCard[data-universe="metro"] { --u-color: #ffb300; }
+.itemCard[data-universe="soma"]  { --u-color: #00f2ff; }
+.itemCard[data-universe="ac"]    { --u-color: #ff3c00; }
+
+.itemCard:hover {
+  transform: translateY(-8px) scale(1.01);
+  border-color: color-mix(in srgb, var(--u-color), transparent 60%);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 
+              0 0 15px color-mix(in srgb, var(--u-color), transparent 90%);
+}
+
+/* INDICADOR LATERAL */
 .itemCard::before {
   content: "";
   position: absolute;
   top: 0;
   left: 0;
-  width: 6px;
+  width: 4px;
   height: 100%;
   background: #151515;
-  transition: all 0.3s;
-}
-
-.itemCard:hover {
-  transform: translate(-6px, -6px);
-  box-shadow: 14px 14px 0px rgba(0, 0, 0, 1);
-  border-color: var(--metro-amber);
+  transition: all 0.4s ease;
 }
 
 .itemCard:hover::before {
-  background: var(--metro-amber);
-  box-shadow: 0 0 20px var(--metro-amber-glow);
+  background: var(--u-color);
+  box-shadow: 0 0 20px var(--u-color);
 }
 
-/* Barras de Estado */
+/* CONTENEDOR DE METADATOS */
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* BARRA DE PROGRESO INDUSTRIAL */
 .quantityBarContainer {
-  height: 8px;
+  height: 6px;
   background: #000;
-  border: 1px solid #111;
-  margin-top: 1rem;
+  border-radius: 10px;
+  margin-top: auto; /* Empuja la barra al final de la card */
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.03);
 }
 
-.quantityBar {
-  height: 100%;
-  background: var(--metro-amber);
-  box-shadow: 0 0 15px var(--metro-amber-glow);
+/* FOOTER INFORMATIVO */
+.cardFooter {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.03);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.lowStock {
-  background: var(--metro-red) !important;
-  box-shadow: 0 0 15px var(--metro-red-glow) !important;
-  animation: pulseWarning 1s infinite;
+/* MEDIA QUERIES PARA DETALLES FINOS */
+@media (max-width: 480px) {
+  .inventoryContainer {
+    padding: 1rem;
+  }
+  
+  .manifestHeader {
+    text-align: center;
+    justify-content: center;
+  }
+  
+  .titleGroup h2 {
+    font-size: 1.8rem;
+  }
 }
 
-@keyframes pulseWarning {
-  0%, 100% { opacity: 1; filter: brightness(1); }
-  50% { opacity: 0.6; filter: brightness(1.5); }
+/* Soporte para pantallas táctiles (desactiva transformaciones pesadas) */
+@media (hover: none) {
+  .itemCard:hover {
+    transform: none;
+  }
 }

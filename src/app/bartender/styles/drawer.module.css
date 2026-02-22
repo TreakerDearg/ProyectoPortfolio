@@ -28,13 +28,15 @@
   --universe-glow: rgba(255, 60, 0, 0.4);
 }
 
-/* ESTRUCTURA PRINCIPAL */
+/* ESTRUCTURA PRINCIPAL DEL OVERLAY */
 .drawerOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(15px) grayscale(100%);
-  z-index: 1000;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(12px) grayscale(50%);
+  -webkit-backdrop-filter: blur(12px) grayscale(50%);
+  /* Z-index superior al Header (50-100) */
+  z-index: 2000; 
   display: flex;
   justify-content: flex-end;
   touch-action: none;
@@ -42,18 +44,21 @@
   cursor: zoom-out;
 }
 
+/* EL PANEL LATERAL */
 .drawerContent {
-  width: 100%;
-  max-width: 650px;
-  background: #020202;
-  height: 100vh;
-  border-left: 2px solid var(--universe-color);
   position: relative;
+  width: 100%;
+  max-width: 600px;
+  height: 100vh;
+  background: #020202;
+  border-left: 2px solid var(--universe-color);
   display: flex;
   flex-direction: column;
-  box-shadow: -20px 0 100px rgba(0, 0, 0, 1);
-  transition: border-color 0.5s ease;
+  box-shadow: -30px 0 80px rgba(0, 0, 0, 0.9);
   cursor: default;
+  overflow: hidden; /* Importante para que el escaneo no se salga */
+  
+  /* Textura de líneas de terminal */
   background-image: repeating-linear-gradient(
     0deg,
     rgba(255, 255, 255, 0.01) 0px,
@@ -63,7 +68,7 @@
   );
 }
 
-/* LÍNEA DE ESCANEO (Color dinámico) */
+/* LÍNEA DE ESCANEO LÁSER */
 .drawerContent::before {
   content: "";
   position: absolute;
@@ -72,29 +77,30 @@
   width: 100%;
   height: 2px;
   background: linear-gradient(90deg, transparent, var(--universe-color), transparent);
-  opacity: 0.4;
+  opacity: 0.6;
   z-index: 100;
   pointer-events: none;
-  animation: scanLine 6s linear infinite;
+  animation: scanLine 8s linear infinite;
 }
 
+/* CAPA DE RUIDO VISUAL */
 .grainOverlay {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  z-index: 2;
-  opacity: 0.04;
+  z-index: 5;
+  opacity: 0.03;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* CUERPO TÉCNICO Y SCROLLBAR */
+/* CUERPO TÉCNICO CON SCROLLBAR PERSONALIZADA */
 .technicalBody {
-  padding: 4rem 3.5rem;
+  padding: 3rem 2.5rem;
   flex-grow: 1;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 2.5rem;
+  gap: 2rem;
   scrollbar-width: thin;
   scrollbar-color: var(--universe-color) transparent;
 }
@@ -105,62 +111,63 @@
 /* CAMPOS DE DATOS */
 .dataField {
   position: relative;
-  padding: 1.5rem;
+  padding: 1.25rem;
   background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.03);
-  border-left: 4px solid #111;
+  border: 1px solid rgba(255, 255, 255, 0.05);
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.fieldDecoration {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  background: var(--universe-color);
+  opacity: 0.3;
+  transition: opacity 0.3s;
+}
+
 .dataField:hover {
-  background: color-mix(in srgb, var(--universe-color), transparent 95%);
-  border-left-color: var(--universe-color);
-  transform: translateX(-8px);
+  background: color-mix(in srgb, var(--universe-color), transparent 96%);
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateX(-5px);
+}
+
+.dataField:hover .fieldDecoration {
+  opacity: 1;
 }
 
 .label {
   display: block;
-  font-size: 10px;
+  font-size: 9px;
   color: var(--universe-color);
   text-transform: uppercase;
   letter-spacing: 0.3em;
   font-weight: 900;
-  margin-bottom: 10px;
-  opacity: 0.7;
+  margin-bottom: 8px;
+  opacity: 0.8;
 }
 
 .value {
   display: block;
-  font-size: clamp(1.8rem, 6vw, 2.5rem);
+  font-size: clamp(1.5rem, 5vw, 2.2rem);
   color: #fff;
   font-family: var(--font-mono);
   font-weight: 900;
   line-height: 1;
-  letter-spacing: -0.05em;
-  animation: textFlicker 8s infinite;
+  letter-spacing: -0.02em;
+  animation: textFlicker 10s infinite;
 }
 
-/* UNIDADES DINÁMICAS */
-.unit {
-  font-size: 10px;
-  font-weight: 900;
-  padding: 2px 6px;
-  border-radius: 3px;
-  color: var(--universe-color);
-  border: 1px solid var(--universe-color);
-  background: color-mix(in srgb, var(--universe-color), transparent 90%);
-  text-transform: uppercase;
-  margin-left: 8px;
-}
-
-/* BOTÓN EJECT ( TIRADOR ) */
+/* BOTÓN EJECT (TIRADOR INDUSTRIAL) */
 .ejectHandle {
   position: absolute;
-  left: -35px;
+  left: -40px;
   top: 50%;
   transform: translateY(-50%);
-  width: 35px;
-  height: 200px;
+  width: 40px;
+  height: 180px;
   background: #080808;
   border: 1px solid #222;
   border-right: none;
@@ -168,41 +175,42 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px 0 0 8px;
+  border-radius: 12px 0 0 12px;
   transition: all 0.3s ease;
-  z-index: 2000;
-  pointer-events: auto;
+  z-index: 2100;
+  /* El clip-path le da la forma de pestaña mecánica */
+  clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 25% 100%, 0% 50%);
 }
 
 .ejectHandle:hover {
+  left: -45px;
   background: #111;
   border-color: var(--universe-color);
-  left: -40px;
 }
 
 .handleTrack {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1.2rem;
 }
 
 .handleText {
   writing-mode: vertical-lr;
   transform: rotate(180deg);
-  font-size: 9px;
+  font-size: 8px;
   font-weight: 900;
   color: #444;
-  letter-spacing: 0.4em;
+  letter-spacing: 0.3em;
   text-transform: uppercase;
 }
 
 .handleLed {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
   background: #222;
   border-radius: 50%;
-  transition: background 0.3s ease;
+  transition: background 0.3s, box-shadow 0.3s;
 }
 
 .ejectHandle:hover .handleLed {
@@ -210,75 +218,85 @@
   box-shadow: 0 0 10px var(--universe-glow);
 }
 
+/* FOOTER DE ACCIONES */
+.actionFooter {
+  position: sticky;
+  bottom: 0;
+  padding: 1.5rem 2.5rem;
+  background: linear-gradient(to top, #020202 85%, transparent);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  z-index: 20;
+}
+
+.mainActionButton {
+  width: 100%;
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  font-weight: 900;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+  clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%);
+}
+
+.btnAmber {
+  background: var(--metro-amber);
+  color: #000;
+}
+
+.btnAmber:hover {
+  background: #fff;
+  box-shadow: 0 0 20px rgba(255, 179, 0, 0.4);
+}
+
 /* ESTADOS CRÍTICOS */
-.criticalOverlay {
-  background: linear-gradient(to right, rgba(220, 38, 38, 0.08), transparent) !important;
-  border-left-color: var(--metro-red) !important;
+.criticalOverlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border: 2px solid rgba(220, 38, 38, 0.2);
+  background: linear-gradient(to right, rgba(220, 38, 38, 0.05), transparent);
+  animation: alarmPulse 2s infinite ease-in-out;
 }
 
-.textCritical { color: var(--metro-red) !important; }
-
-/* LOGS */
-.logContainer {
-  background: rgba(0, 0, 0, 0.4);
-  padding: 1rem;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: #666;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  line-height: 1.6;
-}
-
-/* ANIMACIONES */
-@keyframes scanLine {
-  0% { top: -5%; }
-  100% { top: 105%; }
-}
-
-@keyframes textFlicker {
-  0%, 92%, 94%, 96%, 100% { opacity: 1; }
-  93% { opacity: 0.6; }
-  95% { opacity: 0.8; }
+@keyframes alarmPulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.7; }
 }
 
 /* RESPONSIVIDAD */
 @media (max-width: 768px) {
   .drawerContent {
-    max-width: 90%;
+    max-width: 85%;
   }
 
   .technicalBody {
     padding: 5rem 1.5rem 2rem 1.5rem;
-    gap: 1.5rem;
   }
 
   .ejectHandle {
     left: auto;
-    right: 15px;
-    top: 15px;
+    right: 20px;
+    top: 20px;
     height: 45px;
     width: auto;
     padding: 0 15px;
     transform: none;
     border: 1px solid var(--universe-color);
     border-radius: 4px;
-    background: rgba(0, 0, 0, 0.95);
+    clip-path: none;
+    background: rgba(0, 0, 0, 0.9);
   }
 
-  .handleTrack {
-    flex-direction: row;
-    gap: 10px;
-  }
-
-  .handleText {
-    writing-mode: horizontal-tb;
-    transform: none;
-    color: var(--universe-color);
-  }
-
-  .dataField:hover {
-    transform: none;
-  }
+  .handleTrack { flex-direction: row; gap: 8px; }
+  .handleText { writing-mode: horizontal-tb; transform: none; color: var(--universe-color); }
 }
 
 @media (max-width: 480px) {

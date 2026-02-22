@@ -1,103 +1,167 @@
+/* bartender/styles/header.module.css */
+
 .headerContainer {
   position: relative;
   width: 100%;
-  padding-top: 2rem;
-  margin-bottom: 3rem;
+  padding-top: 1.5rem;
+  margin-bottom: 2.5rem;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  z-index: 100; /* Siempre por encima de los efectos de fondo */
+  z-index: 50; /* Por debajo del Portal del Drawer (2000) */
+  transition: opacity 0.4s ease, filter 0.4s ease;
+  isolation: isolate;
 }
 
-/* Barra de Telemetría Superior */
+/* Estado atenuado cuando el Drawer está abierto */
+.headerDimmed {
+  opacity: 0.4;
+  filter: grayscale(1) blur(2px);
+  pointer-events: none; /* Evita clics accidentales en el header mientras el drawer está abierto */
+}
+
 .telemetryBar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  font-family: 'JetBrains Mono', monospace;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  font-family: var(--font-mono);
   font-size: 9px;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.1em;
   color: #444;
-  text-transform: uppercase;
 }
 
 .activeSensor {
-  color: var(--metro-amber);
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  text-shadow: 0 0 8px var(--metro-amber-glow);
+  color: #ffb300;
+  font-weight: 800;
+  text-shadow: 0 0 12px rgba(255, 179, 0, 0.2);
+  font-size: 8px;
+  letter-spacing: 0.2em;
 }
 
-/* Sección de Logo y Nav */
 .mainNavRow {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-}
-
-.logoArea {
-  position: relative;
-  display: flex;
-  flex-direction: column;
+  margin-top: 1.25rem;
+  gap: 2rem;
 }
 
 .logoMain {
-  font-size: 3.5rem;
-  font-weight: 900;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 950;
   line-height: 0.8;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.06em;
   text-transform: uppercase;
   color: #eee;
   font-style: italic;
 }
 
 .logoMix {
-  color: #ffb300;
-  font-weight: 300;
+  color: transparent;
+  -webkit-text-stroke: 1px #ffb300;
+  font-weight: 900;
   font-style: normal;
+  margin-left: 4px;
 }
 
-/* Botones de Navegación Estilo Módulo */
 .navModuleContainer {
   display: flex;
-  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 0.25rem;
+  border-radius: 2px;
 }
 
 .navLink {
   padding: 0.5rem 1.25rem;
-  background: rgba(20, 20, 20, 0.6);
-  border: 1px solid #222;
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: #666;
-  transition: all 0.3s ease;
+  color: #555;
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  flex-direction: column;
+  transition: all 0.2s ease;
+  border-radius: 1px;
+}
+
+.navNumber {
+  font-size: 7px;
+  color: #333;
+  margin-bottom: 2px;
+  font-family: var(--font-mono);
 }
 
 .navLink:hover {
-  border-color: #ffb300;
   color: #ffb300;
   background: rgba(255, 179, 0, 0.05);
-  box-shadow: inset 0 0 10px rgba(255, 179, 0, 0.1);
+}
+
+.navLink:hover .navNumber {
+  color: #ffb300;
 }
 
 .radioBtn {
-  padding: 0.5rem;
+  position: relative;
+  width: 42px;
+  height: 42px;
   background: #ffb300;
-  color: #000;
   border: none;
+  display: grid;
+  place-items: center;
   cursor: pointer;
-  box-shadow: 0 0 15px rgba(255, 179, 0, 0.3);
-  transition: transform 0.2s active;
+  box-shadow: 0 0 15px rgba(255, 179, 0, 0.1);
+  clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
 }
 
-.radioBtn:active {
-  transform: scale(0.95);
+.radioPing {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 6px;
+  height: 6px;
+  background: #ff3c00;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #ff3c00;
+  animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes ping {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .mainNavRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+  .navModuleContainer {
+    width: 100%;
+  }
+  .navLink {
+    flex: 1;
+    align-items: center;
+  }
+}
+
+/* Asegura que la navegación se mantenga alineada y no se rompa con el nuevo botón */
+.mainNavRow nav {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap; /* Evita que el botón de salida salte a otra línea */
+}
+
+@media (max-width: 1024px) {
+  .logoMain {
+    font-size: 2rem;
+  }
+  .navLink {
+    padding: 0.5rem 0.75rem;
+    font-size: 9px;
+  }
 }

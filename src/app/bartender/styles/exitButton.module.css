@@ -1,0 +1,119 @@
+.metroExitBtn {
+  background: #111;
+  border: 1px solid #333;
+  padding: 6px 6px 6px 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
+  min-height: 42px;
+}
+
+.metroExitBtn:hover {
+  border-color: #ff3c00;
+  background: #1a0500;
+}
+
+/* Tornillos industriales */
+.bolt {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: #444;
+  border-radius: 50%;
+  box-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+}
+
+.textContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  transition: all 0.3s ease;
+}
+
+.systemTag {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  color: #ff3c00;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.mainAction {
+  font-weight: 900;
+  font-size: 10px;
+  color: #eee;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.emergencyIconBox {
+  background: #000;
+  border: 1px solid #222;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border-radius: 2px;
+}
+
+.powerIcon {
+  color: #555;
+  z-index: 2;
+  transition: color 0.3s ease;
+}
+
+.metroExitBtn:hover .powerIcon {
+  color: #ff3c00;
+}
+
+.redGlow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(255, 60, 0, 0.15) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.metroExitBtn:hover .redGlow {
+  opacity: 1;
+}
+
+/* --- RESPONSIVIDAD --- */
+
+@media (max-width: 768px) {
+  .textContainer {
+    display: none; /* Ocultamos el texto en tablets/móviles */
+  }
+  
+  .metroExitBtn {
+    padding: 4px;
+    gap: 0;
+  }
+
+  .bolt {
+    display: none; /* Limpiamos el diseño en móvil */
+  }
+}
+
+@media (max-width: 480px) {
+  .metroExitBtn {
+    border: none;
+    background: transparent;
+    box-shadow: none;
+  }
+  
+  .emergencyIconBox {
+    background: rgba(255, 60, 0, 0.1);
+    border-color: rgba(255, 60, 0, 0.2);
+  }
+
+  .powerIcon {
+    color: #ff3c00;
+  }
+}

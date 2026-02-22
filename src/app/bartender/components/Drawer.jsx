@@ -1,42 +1,50 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { History, Zap, ShieldCheck, Activity, ChevronLeft, Terminal } from 'lucide-react';
 import styles from '../styles/drawer.module.css';
 
+// Componentes internos
 import { ScannerHeader } from './Draw-Comple/ScannerHeader';
 import { SignalGraph } from './Draw-Comple/SignalGraph';
 import { AtomicStructure } from './Draw-Comple/AtomicStructure';
 
 const panelVariants = {
-  hidden: { x: '100%', opacity: 0.5, filter: 'brightness(2) blur(10px)' },
+  hidden: { x: '100%', opacity: 0.8 },
   visible: { 
     x: 0, 
     opacity: 1,
-    filter: 'brightness(1) blur(0px)',
     transition: {
       type: 'spring',
-      damping: 20,
-      stiffness: 100,
+      damping: 25,
+      stiffness: 120,
       when: "beforeChildren",
-      staggerChildren: 0.1
+      staggerChildren: 0.08
     }
   },
   exit: { 
     x: '100%', 
     opacity: 0,
-    transition: { duration: 0.4, ease: "circIn" }
+    transition: { duration: 0.3, ease: "easeInOut" }
   }
 };
 
 export const Drawer = ({ item, isOpen, onClose }) => {
-  
+  const [mounted, setMounted] = useState(false);
+
+  // Evitar errores de SSR (Server Side Rendering)
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
+
+  // Gestión de bloqueo de scroll y ancho de barra
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
-      // Calculamos el ancho de la scrollbar para evitar saltos de layout
       const scrollWidth = window.innerWidth - document.documentElement.clientWidth;
-      document.body.style.paddingRight = `${scrollWidth}px`; 
+      document.body.style.overflow = 'hidden';
+      document.body.style.paddingRight = `${scrollWidth}px`;
     } else {
       document.body.style.overflow = 'unset';
       document.body.style.paddingRight = '0px';
@@ -47,15 +55,11 @@ export const Drawer = ({ item, isOpen, onClose }) => {
     };
   }, [isOpen]);
 
-  if (!item) return null;
+  if (!mounted || !item) return null;
 
-  // Lógica de criticidad
   const isCritical = item.metadata?.stability === 'CRITICAL' || item.qty < 15;
-  
-  // Clase dinámica según el universo (metro, soma, ac)
-  const universeClass = styles[item.universe] || '';
 
-  return (
+  const drawerJSX = (
     <AnimatePresence>
       {isOpen && (
         <div className={styles.drawerOverlay} onClick={onClose}>
@@ -65,37 +69,36 @@ export const Drawer = ({ item, isOpen, onClose }) => {
             initial="hidden"
             animate="visible"
             exit="exit"
-            /* Aplicamos data-universe para el CSS dinámico */
             data-universe={item.universe}
-            className={`${styles.drawerContent} ${universeClass} ${isCritical ? styles.criticalOverlay : ''}`}
+            className={`${styles.drawerContent} ${isCritical ? styles.criticalOverlay : ''}`}
             onClick={(e) => e.stopPropagation()}
           >
-            {/* BOTÓN DE CIERRE TIPO TIRADOR INDUSTRIAL */}
-            <button className={styles.ejectHandle} onClick={onClose} title="TERMINATE_SESSION">
+            {/* 1. BOTÓN DE CIERRE (TIRADOR MECÁNICO) */}
+            <button className={styles.ejectHandle} onClick={onClose}>
               <div className={styles.handleTrack}>
-                <ChevronLeft size={16} className={styles.handleArrow} />
+                <ChevronLeft size={16} />
                 <span className={styles.handleText}>EJECT_PANEL</span>
                 <div className={styles.handleLed} />
               </div>
             </button>
 
-            {/* CAPA DE RUIDO VISUAL */}
+            {/* 2. CAPAS VISUALES: RUIDO Y ESCANEO */}
             <div className={styles.grainOverlay} />
 
             <div className={styles.technicalBody}>
-              {/* 1. Header con Metadata */}
+              {/* SECCIÓN 01: IDENTIFICACIÓN */}
               <ScannerHeader 
                 name={item.name} 
                 id={item.id} 
                 metadata={item.metadata} 
               />
 
-              {/* 2. Métricas de Stock Primarias */}
-              <div className="flex gap-4 mt-2">
-                <div className={`${styles.dataField} flex-1`}>
+              {/* SECCIÓN 02: MÉTRICAS DE VOLUMEN */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className={styles.dataField}>
                   <div className={styles.fieldDecoration} />
                   <span className={styles.label}>Inventory_Volume</span>
-                  <div className="flex items-baseline gap-2">
+                  <div className="flex items-baseline">
                     <span className={`${styles.value} ${isCritical ? styles.textCritical : ''}`}>
                       {item.qty}
                     </span>
@@ -103,17 +106,17 @@ export const Drawer = ({ item, isOpen, onClose }) => {
                   </div>
                 </div>
                 
-                <div className={`${styles.dataField} flex-1`}>
+                <div className={styles.dataField}>
                   <div className={styles.fieldDecoration} />
                   <span className={styles.label}>Registry_UID</span>
-                  <span className={styles.value}>{item.code}</span>
+                  <span className={styles.value} style={{fontSize: '1.2rem'}}>{item.code}</span>
                 </div>
               </div>
 
-              {/* 3. NARRATIVE LOG: Receta y Componentes Reales */}
+              {/* SECCIÓN 03: REGISTRO MOLECULAR */}
               <div className={styles.logContainer}>
                 <div className="flex items-center gap-2 mb-2 border-b border-white/5 pb-1">
-                  <Terminal size={12} className={styles.textAmber} />
+                  <Terminal size={12} className="text-amber-500" />
                   <span className={styles.label} style={{marginBottom: 0}}>Composition_Log</span>
                 </div>
                 <p className="text-[11px] leading-relaxed font-mono opacity-80 italic">
@@ -121,72 +124,65 @@ export const Drawer = ({ item, isOpen, onClose }) => {
                 </p>
               </div>
 
-              {/* 4. Estructura Atómica Adaptativa */}
+              {/* SECCIÓN 04: VISUALIZACIÓN ATÓMICA */}
               <AtomicStructure 
                 category={item.category} 
                 specs={item.atomicSpecs} 
                 universe={item.universe}
               />
 
-              {/* 5. Gráfico de Señal Dinámico */}
-              <div className="mt-2">
-                <SignalGraph 
-                  label="Molecular_Stability_Wave" 
-                  percentage={item.qty} 
-                  variant={isCritical ? 'danger' : 'normal'} 
-                />
-              </div>
+              {/* SECCIÓN 05: ESTABILIDAD DE SEÑAL */}
+              <SignalGraph 
+                label="Molecular_Stability_Wave" 
+                percentage={item.qty} 
+              />
 
-              {/* 6. Telemetría de Sistema */}
-              <div className={styles.telemetrySection}>
-                <div className="flex justify-between items-center mb-3">
-                  <div className="flex items-center gap-2 text-stone-500">
-                    <Activity size={12} className="animate-pulse" />
-                    <span className="text-[9px] font-black tracking-[0.2em] uppercase">Telemetry_Stream</span>
+              {/* SECCIÓN 06: TELEMETRÍA SECUNDARIA */}
+              <div className="mt-auto">
+                <div className="flex justify-between items-center mb-2">
+                  <div className="flex items-center gap-2 text-stone-600">
+                    <Activity size={10} className="animate-pulse" />
+                    <span className="text-[8px] font-bold tracking-widest uppercase">Telemetry_Stream</span>
                   </div>
-                  <div className="flex items-center gap-1.5 text-amber-900/40">
-                    <History size={10} />
-                    <span className="text-[8px] font-mono">REv_2.026</span>
-                  </div>
+                  <span className="text-[8px] font-mono text-stone-800 italic">REV_2.026.4</span>
                 </div>
                 
-                <div className={`${styles.logContainer} !bg-black/40`}>
-                  <p>{`> [SYSTEM] ORIGIN: ${item.metadata?.sector || 'UNKNOWN'}`}</p>
-                  <p>{`> [DATA] RAD_LEVEL: ${item.metadata?.radiation}`}</p>
-                  <p className={isCritical ? "text-red-500/40" : "text-amber-500/20"}>
-                    {`> [STATUS] STABILITY_${item.metadata?.stability}`}
-                  </p>
+                <div className={`${styles.logContainer} !bg-black/20 !border-none text-stone-500`}>
+                  <p className="text-[9px]">{`> [SYSTEM] ORIGIN: ${item.metadata?.sector || 'SEC_UNKNOWN'}`}</p>
+                  <p className="text-[9px]">{`> [DATA] RAD_LEVEL: ${item.metadata?.radiation}`}</p>
                 </div>
               </div>
 
-              {/* 7. Protocolo de Seguridad (Sticky Bottom) */}
-              <div className={`${styles.securityProtocol} ${isCritical ? styles.protocolAlert : ''}`}>
-                <div className="flex items-center gap-3 mb-2">
-                  <ShieldCheck size={18} />
-                  <span className="font-black text-[10px] tracking-tighter uppercase">
-                    Protocol_D6 // {isCritical ? 'LEVEL_RED_LOCKDOWN' : 'LEVEL_CLEARANCE_OK'}
+              {/* SECCIÓN 07: PROTOCOLO DE SEGURIDAD */}
+              <div className={`${styles.securityProtocol} ${isCritical ? styles.protocolAlert : ''} p-4 bg-white/5 border border-white/5 rounded-sm`}>
+                <div className="flex items-center gap-3 mb-1">
+                  <ShieldCheck size={16} className={isCritical ? 'text-red-500' : 'text-stone-400'} />
+                  <span className="font-black text-[9px] tracking-widest uppercase">
+                    Protocol_D6 // {isCritical ? 'LOCKDOWN' : 'CLEARANCE_OK'}
                   </span>
                 </div>
-                <p className="text-[10px] opacity-60 leading-relaxed font-mono">
+                <p className="text-[9px] opacity-50 font-mono">
                   {isCritical 
-                    ? "CRITICAL: Biohazard detected. Atomic bonds degrading. Automated containment system active."
+                    ? "CRITICAL: Biohazard detected. Atomic bonds degrading. Automated containment active."
                     : "STABLE: Registry verified. standard molecular batch ready for dispensing."}
                 </p>
               </div>
             </div>
 
-            {/* 8. Footer de Acciones */}
+            {/* SECCIÓN 08: ACCIÓN PRINCIPAL */}
             <div className={styles.actionFooter}>
-              <button 
-                className={`${styles.mainActionButton} ${isCritical ? styles.btnCritical : styles.btnAmber}`}
-              >
-                <Zap size={20} fill="currentColor" />
-                {isCritical ? 'BYPASS_SAFETY_LOCK' : 'DISPENSE_BATCH'}
+              <button className={`${styles.mainActionButton} ${isCritical ? styles.btnCritical : styles.btnAmber}`}>
+                <Zap size={18} fill="currentColor" />
+                <span>{isCritical ? 'BYPASS_SAFETY_LOCK' : 'DISPENSE_BATCH'}</span>
               </button>
             </div>
+
           </motion.div>
         </div>
       )}
     </AnimatePresence>
   );
+
+  // Renderizamos el Drawer en el Portal (document.body)
+  return createPortal(drawerJSX, document.body);
 };
