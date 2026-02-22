@@ -1,0 +1,82 @@
+/* bartender/styles/metro-globals.css */
+
+:root {
+  /* Colores de Fósforo Metro */
+  --metro-amber: #ffb300;
+  --metro-amber-dim: rgba(255, 179, 0, 0.15);
+  --metro-amber-glow: rgba(255, 179, 0, 0.4);
+  --metro-red: #ff3c3c;
+  --metro-red-glow: rgba(255, 60, 60, 0.4);
+  
+  /* Superficies de Metal y Oscuridad */
+  --terminal-bg: #020202;
+  --iron-plate: #0a0a0a;
+  --metro-metal-border: #1a1a1a;
+  
+  /* Tipografía */
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+/* Reseteo y Base Estética */
+body {
+  background-color: var(--terminal-bg);
+  color: #e0e0e0;
+  font-family: var(--font-mono);
+  margin: 0;
+  overflow-x: hidden;
+}
+
+/* Capa Global de Scanlines (Efecto Monitor Viejo) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.1) 50%
+  );
+  background-size: 100% 4px;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* Efecto de Viñeta (Sombra en las esquinas de la pantalla) */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle, transparent 50%, rgba(0,0,0,0.8) 150%);
+  z-index: 9998;
+  pointer-events: none;
+}
+
+/* Scrollbar Industrial */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #000;
+}
+::-webkit-scrollbar-thumb {
+  background: #111;
+  border: 1px solid var(--metro-metal-border);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--metro-amber);
+}
+
+/* Animación Global de Glitch */
+@keyframes terminalFlicker {
+  0% { opacity: 0.97; }
+  5% { opacity: 0.95; }
+  10% { opacity: 0.9; }
+  15% { opacity: 1; }
+  70% { opacity: 0.98; }
+  80% { opacity: 0.95; }
+  100% { opacity: 1; }
+}
+
+.terminal-active {
+  animation: terminalFlicker 0.1s infinite;
+}

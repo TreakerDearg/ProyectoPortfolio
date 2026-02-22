@@ -1,0 +1,110 @@
+.baseContainer {
+  --metro-bg: #050505;
+  --metro-amber: #ffb300;
+  --metro-amber-glow: rgba(255, 179, 0, 0.4);
+  --metro-amber-dim: rgba(255, 179, 0, 0.1);
+  --metro-metal-dark: #121212;
+  --metro-metal-border: #2a2a2a;
+  --metro-text-main: #d1d1d1;
+  --metro-text-muted: #4a4a4a;
+  
+  background-color: var(--metro-bg);
+  color: var(--metro-text-main);
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+  /* El scroll lo maneja el contenedor principal */
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Capas HUD: Mantener z-index bajos (1-10) */
+.baseContainer::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 50%,
+    rgba(255, 179, 0, 0.02) 50%
+  );
+  background-size: 100% 4px;
+  z-index: 5; 
+  pointer-events: none;
+}
+
+.baseContainer::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(
+    circle at center, 
+    transparent 40%, 
+    rgba(0, 0, 0, 0.8) 150%
+  );
+  box-shadow: inset 0 0 100px rgba(255, 179, 0, 0.05);
+  pointer-events: none;
+  z-index: 6;
+}
+
+.backgroundTitle {
+  position: fixed;
+  bottom: -2rem;
+  left: -1rem;
+  font-size: 20vw;
+  font-weight: 900;
+  color: var(--metro-amber);
+  opacity: 0.02; 
+  text-transform: uppercase;
+  line-height: 0.7;
+  pointer-events: none;
+  z-index: 0;
+  white-space: nowrap;
+  filter: blur(4px);
+}
+
+/* El Content Wrapper es el "escenario" */
+.contentWrapper {
+  position: relative;
+  /* z-index 20 es suficiente para estar sobre HUD, 
+     pero debajo de los componentes con z-index 100 (Header/Footer) */
+  z-index: 20; 
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Utilidades de Animación */
+@keyframes amberFlicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.95; }
+}
+
+.flicker {
+  animation: amberFlicker 0.1s infinite;
+}
+
+/* Divisor para separar secciones dentro del main */
+.metalDivider {
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(
+    90deg, 
+    transparent, 
+    var(--metro-metal-border), 
+    transparent
+  );
+  margin: 2rem 0;
+  opacity: 0.5;
+}
+
+/* Scrollbar personalizado */
+.baseContainer::-webkit-scrollbar { width: 4px; }
+.baseContainer::-webkit-scrollbar-track { background: var(--metro-bg); }
+.baseContainer::-webkit-scrollbar-thumb { background: var(--metro-metal-border); }
+.baseContainer::-webkit-scrollbar-thumb:hover { background: var(--metro-amber); }

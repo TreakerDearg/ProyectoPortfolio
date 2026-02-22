@@ -1,0 +1,290 @@
+/* bartender/styles/drawer.module.css */
+
+:root {
+  /* Colores base de sistema */
+  --metro-amber: #ffb300;
+  --metro-red: #dc2626;
+  --metro-amber-glow: rgba(255, 179, 0, 0.4);
+  --metro-red-glow: rgba(220, 38, 38, 0.4);
+  
+  /* Fallback de color de universo */
+  --universe-color: var(--metro-amber);
+  --universe-glow: var(--metro-amber-glow);
+}
+
+/* ASIGNACIÓN DINÁMICA DE UNIVERSOS */
+.drawerContent[data-universe="metro"] {
+  --universe-color: var(--metro-amber);
+  --universe-glow: var(--metro-amber-glow);
+}
+
+.drawerContent[data-universe="soma"] {
+  --universe-color: #00f2ff;
+  --universe-glow: rgba(0, 242, 255, 0.4);
+}
+
+.drawerContent[data-universe="ac"] {
+  --universe-color: #ff3c00;
+  --universe-glow: rgba(255, 60, 0, 0.4);
+}
+
+/* ESTRUCTURA PRINCIPAL */
+.drawerOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(15px) grayscale(100%);
+  z-index: 1000;
+  display: flex;
+  justify-content: flex-end;
+  touch-action: none;
+  overscroll-behavior: contain;
+  cursor: zoom-out;
+}
+
+.drawerContent {
+  width: 100%;
+  max-width: 650px;
+  background: #020202;
+  height: 100vh;
+  border-left: 2px solid var(--universe-color);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -20px 0 100px rgba(0, 0, 0, 1);
+  transition: border-color 0.5s ease;
+  cursor: default;
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 0.01) 0px,
+    rgba(255, 255, 255, 0.01) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+
+/* LÍNEA DE ESCANEO (Color dinámico) */
+.drawerContent::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--universe-color), transparent);
+  opacity: 0.4;
+  z-index: 100;
+  pointer-events: none;
+  animation: scanLine 6s linear infinite;
+}
+
+.grainOverlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* CUERPO TÉCNICO Y SCROLLBAR */
+.technicalBody {
+  padding: 4rem 3.5rem;
+  flex-grow: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--universe-color) transparent;
+}
+
+.technicalBody::-webkit-scrollbar { width: 4px; }
+.technicalBody::-webkit-scrollbar-thumb { background: var(--universe-color); }
+
+/* CAMPOS DE DATOS */
+.dataField {
+  position: relative;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-left: 4px solid #111;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dataField:hover {
+  background: color-mix(in srgb, var(--universe-color), transparent 95%);
+  border-left-color: var(--universe-color);
+  transform: translateX(-8px);
+}
+
+.label {
+  display: block;
+  font-size: 10px;
+  color: var(--universe-color);
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  font-weight: 900;
+  margin-bottom: 10px;
+  opacity: 0.7;
+}
+
+.value {
+  display: block;
+  font-size: clamp(1.8rem, 6vw, 2.5rem);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  animation: textFlicker 8s infinite;
+}
+
+/* UNIDADES DINÁMICAS */
+.unit {
+  font-size: 10px;
+  font-weight: 900;
+  padding: 2px 6px;
+  border-radius: 3px;
+  color: var(--universe-color);
+  border: 1px solid var(--universe-color);
+  background: color-mix(in srgb, var(--universe-color), transparent 90%);
+  text-transform: uppercase;
+  margin-left: 8px;
+}
+
+/* BOTÓN EJECT ( TIRADOR ) */
+.ejectHandle {
+  position: absolute;
+  left: -35px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 35px;
+  height: 200px;
+  background: #080808;
+  border: 1px solid #222;
+  border-right: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px 0 0 8px;
+  transition: all 0.3s ease;
+  z-index: 2000;
+  pointer-events: auto;
+}
+
+.ejectHandle:hover {
+  background: #111;
+  border-color: var(--universe-color);
+  left: -40px;
+}
+
+.handleTrack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.handleText {
+  writing-mode: vertical-lr;
+  transform: rotate(180deg);
+  font-size: 9px;
+  font-weight: 900;
+  color: #444;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+}
+
+.handleLed {
+  width: 5px;
+  height: 5px;
+  background: #222;
+  border-radius: 50%;
+  transition: background 0.3s ease;
+}
+
+.ejectHandle:hover .handleLed {
+  background: var(--universe-color);
+  box-shadow: 0 0 10px var(--universe-glow);
+}
+
+/* ESTADOS CRÍTICOS */
+.criticalOverlay {
+  background: linear-gradient(to right, rgba(220, 38, 38, 0.08), transparent) !important;
+  border-left-color: var(--metro-red) !important;
+}
+
+.textCritical { color: var(--metro-red) !important; }
+
+/* LOGS */
+.logContainer {
+  background: rgba(0, 0, 0, 0.4);
+  padding: 1rem;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: #666;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  line-height: 1.6;
+}
+
+/* ANIMACIONES */
+@keyframes scanLine {
+  0% { top: -5%; }
+  100% { top: 105%; }
+}
+
+@keyframes textFlicker {
+  0%, 92%, 94%, 96%, 100% { opacity: 1; }
+  93% { opacity: 0.6; }
+  95% { opacity: 0.8; }
+}
+
+/* RESPONSIVIDAD */
+@media (max-width: 768px) {
+  .drawerContent {
+    max-width: 90%;
+  }
+
+  .technicalBody {
+    padding: 5rem 1.5rem 2rem 1.5rem;
+    gap: 1.5rem;
+  }
+
+  .ejectHandle {
+    left: auto;
+    right: 15px;
+    top: 15px;
+    height: 45px;
+    width: auto;
+    padding: 0 15px;
+    transform: none;
+    border: 1px solid var(--universe-color);
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.95);
+  }
+
+  .handleTrack {
+    flex-direction: row;
+    gap: 10px;
+  }
+
+  .handleText {
+    writing-mode: horizontal-tb;
+    transform: none;
+    color: var(--universe-color);
+  }
+
+  .dataField:hover {
+    transform: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .drawerContent {
+    max-width: 100%;
+    border-left: none;
+    border-top: 4px solid var(--universe-color);
+  }
+}

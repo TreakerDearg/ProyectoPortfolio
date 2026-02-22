@@ -1,0 +1,80 @@
+/* bartender/styles/inventory.module.css */
+
+.inventoryContainer {
+  padding: 4rem;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+.manifestHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 5rem;
+  border-bottom: 4px solid var(--metro-metal-border);
+  padding-bottom: 2rem;
+}
+
+.itemGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2.5rem;
+}
+
+.itemCard {
+  background: var(--iron-plate);
+  border: 1px solid var(--metro-metal-border);
+  padding: 2rem;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 8px 8px 0px #000;
+}
+
+.itemCard::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 6px;
+  height: 100%;
+  background: #151515;
+  transition: all 0.3s;
+}
+
+.itemCard:hover {
+  transform: translate(-6px, -6px);
+  box-shadow: 14px 14px 0px rgba(0, 0, 0, 1);
+  border-color: var(--metro-amber);
+}
+
+.itemCard:hover::before {
+  background: var(--metro-amber);
+  box-shadow: 0 0 20px var(--metro-amber-glow);
+}
+
+/* Barras de Estado */
+.quantityBarContainer {
+  height: 8px;
+  background: #000;
+  border: 1px solid #111;
+  margin-top: 1rem;
+}
+
+.quantityBar {
+  height: 100%;
+  background: var(--metro-amber);
+  box-shadow: 0 0 15px var(--metro-amber-glow);
+}
+
+.lowStock {
+  background: var(--metro-red) !important;
+  box-shadow: 0 0 15px var(--metro-red-glow) !important;
+  animation: pulseWarning 1s infinite;
+}
+
+@keyframes pulseWarning {
+  0%, 100% { opacity: 1; filter: brightness(1); }
+  50% { opacity: 0.6; filter: brightness(1.5); }
+}

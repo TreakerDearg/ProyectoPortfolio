@@ -1,35 +1,44 @@
-// src/app/bartender/(Bar)/layout.jsx
+'use client';
+
+import React from 'react';
+import styles from '../styles/bartender.module.css';
+import { Header } from '../layout/Header';
+import { Footer } from '../layout/Footer';
+import { motion } from 'framer-motion';
+import '../styles/metro-globals.css';
 
 export default function BartenderLayout({ children }) {
   return (
-    <div className="min-h-screen bg-[#020617] text-slate-300 font-mono relative overflow-hidden">
-      {/* Capas Atmosféricas */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(168,85,247,0.05),transparent)] pointer-events-none" />
-      <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
-      
-      {/* Header de Estado */}
-      <header className="border-b border-purple-500/20 p-4 flex justify-between items-center bg-black/40 backdrop-blur-md">
-        <div className="flex items-center gap-3">
-          <div className="size-2 bg-purple-500 animate-pulse shadow-[0_0_8px_#a855f7]" />
-          <span className="text-[10px] tracking-[0.3em] font-bold text-purple-400">SYSTEM_OS_V.2.0</span>
-        </div>
-        <div className="text-[9px] text-slate-500">
-          STATUS: <span className="text-green-500">ONLINE</span>
-        </div>
-      </header>
+    <div className={styles.baseContainer}>
+      {/* Título de Fondo (Capa 0) */}
+      <div className={styles.backgroundTitle}>METRO_MIX</div>
 
-      {/* Contenedor de Contenido */}
-      <main className="max-w-7xl mx-auto p-6 relative z-10">
-        {/* Aquí es donde Next.js inyecta el contenido de page.jsx */}
-        {children}
-      </main>
+      {/* ESTRUCTURA DE FLUJO: 
+          min-h-screen en el contenedor relativo asegura que el footer 
+          se posicione al final del viewport o más abajo si hay mucho contenido.
+      */}
+      <div className="relative z-20 flex flex-col min-h-screen">
+        
+        <div className={styles.contentWrapper}>
+          <Header />
 
-      {/* Footer HUD */}
-      <footer className="fixed bottom-0 w-full border-t border-purple-500/10 p-2 bg-black/60 text-[8px] flex justify-center gap-8 text-slate-600">
-        <span>CORE_TEMP: 32°C</span>
-        <span>ENCRYPT: AES-256</span>
-        <span>LOC: POSADAS_AR</span>
-      </footer>
+          {/* MAIN: flex-grow permite que esta sección ocupe todo el espacio 
+              sobrante, "anclando" el footer al fondo.
+          */}
+          <motion.main 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex-grow flex flex-col pt-4"
+          >
+            {children}
+          </motion.main>
+
+          <Footer />
+        </div>
+      </div>
+
+      {/* Línea de acento fija */}
+      <div className="fixed top-0 left-0 w-full h-1 bg-amber-600/30 z-[100]" />
     </div>
   );
 }

@@ -13,11 +13,13 @@
     "@fontsource/press-start-2p": "^5.2.7",
     "@fontsource/vt323": "^5.2.7",
     "@tailwindcss/forms": "^0.5.11",
+    "clsx": "^2.1.1",
     "framer-motion": "^12.27.5",
     "lucide-react": "^0.574.0",
     "next": "16.1.4",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
