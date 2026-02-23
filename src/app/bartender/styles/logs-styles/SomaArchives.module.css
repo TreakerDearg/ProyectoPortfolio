@@ -1,0 +1,267 @@
+/* SomaArchives.module.css */
+
+.archivesContainer {
+  --win-gray: #c0c0c0;
+  --win-white: #ffffff;
+  --win-dark: #808080;
+  --win-blue: #000080;
+  --soma-teal: #76b5b5;
+
+  height: 100%;
+  width: 100%;
+  background: var(--win-gray);
+  border: 1px solid #000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: inset 1px 1px var(--win-white);
+  color: #000;
+}
+
+/* HEADER DEL EXPLORADOR */
+.archivesHeader {
+  height: 35px;
+  background: var(--win-gray);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+  border-bottom: 1px solid var(--win-dark);
+}
+
+.archivesTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.headerText {
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.archiveSearchBox {
+  background: #fff;
+  border: 1.5px solid var(--win-dark);
+  box-shadow: inset 1px 1px #444;
+  display: flex;
+  align-items: center;
+  padding: 2px 6px;
+  gap: 5px;
+  max-width: 200px;
+}
+
+.archiveSearchBox input {
+  background: transparent;
+  border: none;
+  font-size: 10px;
+  outline: none;
+  width: 100%;
+  color: #000;
+}
+
+/* EXPLORER LAYOUT */
+.archivesExplorer {
+  flex: 1;
+  display: flex;
+  margin: 2px;
+  background: #fff;
+  border: 1.5px solid var(--win-dark);
+  box-shadow: inset 1px 1px #000;
+  position: relative;
+  overflow: hidden;
+}
+
+/* SIDEBAR (TREE) */
+.explorerTree {
+  width: 160px;
+  background: #ececec;
+  border-right: 1.5px solid var(--win-dark);
+  padding: 8px;
+  font-size: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 10;
+}
+
+.treeLabel {
+  color: var(--win-dark);
+  font-weight: bold;
+  margin-bottom: 5px;
+  font-size: 9px;
+}
+
+.treeItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 4px;
+  cursor: pointer;
+}
+
+.treeItemActive {
+  background: var(--win-blue);
+  color: #fff;
+}
+
+/* STORAGE BAR (SOMA VIBE) */
+.systemInfoBox {
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid #ccc;
+}
+
+.storageBar {
+  height: 10px;
+  background: #ddd;
+  border: 1px solid var(--win-dark);
+  margin: 4px 0;
+}
+
+.storageFill {
+  height: 100%;
+  background: var(--soma-teal);
+}
+
+.storageMeta {
+  font-size: 8px;
+  text-align: right;
+}
+
+/* LISTA DE ARCHIVOS */
+.explorerList {
+  flex: 1;
+  overflow-y: auto;
+  position: relative;
+}
+
+.archivesTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.archivesTable th {
+  position: sticky;
+  top: 0;
+  background: var(--win-gray);
+  border-bottom: 1px solid var(--win-dark);
+  border-right: 1px solid var(--win-dark);
+  padding: 4px 8px;
+  font-size: 9px;
+  text-align: left;
+  box-shadow: inset 1px 1px var(--win-white);
+  z-index: 2;
+}
+
+.archivesTable tr {
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.archivesTable tr:hover {
+  background: #e5f3ff;
+}
+
+.rowActive {
+  background: #cce8ff !important;
+}
+
+.fileNameCell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+}
+
+.fileInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.fileTitle {
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.fileTag {
+  font-size: 8px;
+  color: var(--win-dark);
+  text-transform: uppercase;
+}
+
+/* BOTONES */
+.explorerBtn {
+  background: var(--win-gray);
+  border: 1px solid #000;
+  box-shadow: inset 1px 1px var(--win-white), inset -1px -1px var(--win-dark);
+  padding: 3px 8px;
+  font-size: 9px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.explorerBtn:active {
+  box-shadow: inset -1px -1px var(--win-white), inset 1px 1px var(--win-dark);
+}
+
+/* FOOTER */
+.archivesFooter {
+  height: 22px;
+  background: var(--win-gray);
+  border-top: 1px solid var(--win-dark);
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  justify-content: space-between;
+  font-size: 9px;
+  font-family: monospace;
+}
+
+/* MOBILE OPTIMIZATION */
+.mobileMenuBtn {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobileMenuBtn {
+    display: flex;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+
+  .desktopOnlyIcon, .desktopOnly {
+    display: none;
+  }
+
+  .explorerTree {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+
+  .treeVisible {
+    transform: translateX(0);
+    box-shadow: 5px 0 15px rgba(0,0,0,0.3);
+  }
+
+  .archiveSearchBox {
+    max-width: 120px;
+  }
+
+  .fileTitle {
+    font-size: 10px;
+  }
+}
+
+/* UTILS */
+.textDanger { color: #cc0000; font-weight: bold; }
+.textSuccess { color: #006600; font-weight: bold; }
+.iconCorrupt { color: #cc0000; }
+.iconNormal { color: var(--win-blue); }

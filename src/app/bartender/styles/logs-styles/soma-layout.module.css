@@ -1,0 +1,288 @@
+/* soma-layout.module.css */
+
+.terminalWrapper {
+  --soma-turq: #5a8f8f;
+  --soma-turq-bright: #76b5b5;
+  --case-metal: #121415;
+  --inner-bezel: #080a0a;
+  --status-black: #050708;
+  
+  min-height: 100vh;
+  width: 100%;
+  background: radial-gradient(circle at center, #1a2022 0%, #050505 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 2000px;
+  overflow: hidden;
+  padding: 10px; /* Espacio mínimo para que el chasis no toque los bordes */
+}
+
+.ambientShadow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 50%, rgba(0,0,0,0.9) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* CHASIS EXTERIOR - ESCALABLE */
+.monitorFrame {
+  background: var(--case-metal);
+  border: 2px solid #222;
+  border-radius: clamp(20px, 5vw, 60px); 
+  position: relative;
+  box-shadow: 
+    0 80px 150px -40px rgba(0,0,0,1),
+    inset 0 4px 10px rgba(255,255,255,0.05);
+  
+  width: 100%;
+  max-width: 1300px;
+  height: 95vh;
+  max-height: 900px;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  background-image: 
+    url("https://www.transparenttextures.com/patterns/dark-matter.png"),
+    linear-gradient(180deg, #1a1c1d 0%, #0f1112 100%);
+}
+
+/* MARCO SUPERIOR (Usa flex para distribuir componentes) */
+.topHardwareFrame {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  flex-shrink: 0;
+}
+
+.topHardwareLeft, .topHardwareRight {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.serialNumber {
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  color: var(--soma-turq);
+  opacity: 0.5;
+  letter-spacing: 1px;
+}
+
+.topConsoleCenter {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* EL BISEL (AJUSTE DINÁMICO) */
+.screenBezel {
+  background: var(--inner-bezel);
+  border-radius: clamp(10px, 3vw, 30px);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  flex: 1; 
+  border: clamp(6px, 1.5vw, 15px) solid #0d0f10;
+  margin: 0 10px;
+  box-shadow: inset 0 20px 60px rgba(0,0,0,1);
+}
+
+.assetTagWrapper {
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  opacity: 0.8;
+}
+
+/* CONTENEDOR DE LA PANTALLA */
+.pageContainer {
+  flex: 1;
+  position: relative;
+  background: #020202;
+  overflow: hidden;
+  display: flex;
+}
+
+.contentView {
+  position: relative;
+  z-index: 5;
+  height: 100%;
+  width: 100%;
+  overflow-y: auto; /* Permite scroll interno si el contenido crece */
+}
+
+/* CAPAS ÓPTICAS */
+.glassCurvature, .scanlineOverlay, .staticNoise {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.glassCurvature {
+  z-index: 100;
+  background: radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.4) 100%);
+  box-shadow: inset 0 0 100px rgba(0,0,0,0.9);
+}
+
+.scanlineOverlay {
+  z-index: 101;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
+  background-size: 100% 3px;
+  opacity: 0.6;
+}
+
+.staticNoise {
+  z-index: 102;
+  opacity: 0.02;
+  background-image: url("https://www.transparenttextures.com/patterns/stardust.png");
+  animation: noiseGrain 0.2s infinite steps(2);
+}
+
+/* PANEL INFERIOR RESPONSIVO */
+.bottomNavPanel {
+  background: var(--soma-turq);
+  min-height: 65px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  z-index: 110;
+  border-top: 4px solid #000;
+  background-image: linear-gradient(to bottom, rgba(255,255,255,0.1) 0%, transparent 100%);
+}
+
+.navControls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.separator {
+  width: 1px;
+  height: 25px;
+  background: rgba(0,0,0,0.2);
+}
+
+.centralSpeaker {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  max-width: 200px;
+  opacity: 0.4;
+  margin: 0 10px;
+}
+
+.hardwareStatus {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.pulseContainer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.syncPulse {
+  width: 6px;
+  height: 6px;
+  background: #000;
+  border-radius: 50%;
+  animation: pulseStatus 1.5s infinite;
+}
+
+.statusLabel {
+  font-family: monospace;
+  font-size: 8px;
+  color: rgba(0,0,0,0.7);
+}
+
+.statusValue {
+  font-family: monospace;
+  font-size: 10px;
+  color: #000;
+  font-weight: 900;
+}
+
+/* BASE */
+.baseFrameDetails {
+  height: 30px;
+  background: linear-gradient(to bottom, #121415, #000);
+  border-bottom-left-radius: clamp(20px, 5vw, 60px);
+  border-bottom-right-radius: clamp(20px, 5vw, 60px);
+  display: flex;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.baseCenterGrip {
+  width: 30%;
+  max-width: 150px;
+  height: 6px;
+  background: #000;
+  margin-top: 8px;
+  border-radius: 3px;
+}
+
+/* --- MEDIA QUERIES PARA MÓVIL --- */
+
+@media (max-width: 768px) {
+  .monitorFrame {
+    height: 98vh;
+    border-radius: 20px;
+  }
+
+  .topConsoleCenter, .centralSpeaker, .warningWrapper, .serialNumber {
+    display: none; /* Escondemos elementos decorativos pesados */
+  }
+
+  .topHardwareFrame {
+    height: 35px;
+    padding: 0 15px;
+  }
+
+  .bottomNavPanel {
+    flex-direction: column;
+    height: auto;
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .navControls {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .hardwareStatus {
+    align-items: center;
+    width: 100%;
+  }
+
+  .screenBezel {
+    border-width: 6px;
+    margin: 0 5px;
+  }
+}
+
+@keyframes noiseGrain {
+  0% { transform: translate(0,0); }
+  100% { transform: translate(1px, 1px); }
+}
+
+@keyframes pulseStatus {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(0.8); }
+}
+
+.ledRed { width: 8px; height: 8px; background: #ff4444; border-radius: 50%; box-shadow: 0 0 5px #ff4444; }
+.ledGreen { width: 8px; height: 8px; background: #44ff44; border-radius: 50%; box-shadow: 0 0 5px #44ff44; }
+.ledLabel { font-size: 7px; color: rgba(118,181,181,0.5); font-family: monospace; }
+.ledGroup { display: flex; flex-direction: column; align-items: center; gap: 2px; }

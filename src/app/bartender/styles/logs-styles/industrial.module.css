@@ -1,0 +1,286 @@
+/* --- TORNILLOS HEXAGONALES --- */
+.boltContainer {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.5));
+}
+
+.boltHead {
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 30% 30%, #444, #1a1a1a);
+  border-radius: 50%;
+  border: 1px solid #000;
+  position: relative;
+  box-shadow: inset 0 1px 2px rgba(255,255,255,0.2);
+}
+
+.allenKeySlot {
+  position: absolute;
+  inset: 6px;
+  background: #080808;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.8);
+}
+
+.boltRust {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(139, 69, 19, 0.4), transparent);
+  opacity: 0.6;
+}
+
+/* --- ETIQUETA DE ACTIVO --- */
+.assetTagContainer {
+  background: #d1ccb0; /* Plástico viejo amarillento */
+  padding: 6px 10px;
+  border-radius: 2px;
+  width: 130px;
+  position: relative;
+  box-shadow: 1px 2px 5px rgba(0,0,0,0.8);
+  transform: rotate(-0.5deg);
+  border: 1px solid rgba(0,0,0,0.2);
+}
+
+.tagContent {
+  font-family: 'Courier New', monospace;
+  color: #222;
+  position: relative;
+  z-index: 2;
+}
+
+.companyName {
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+}
+
+.barcodeStrip {
+  height: 12px;
+  background: rgba(0,0,0,0.05);
+  display: flex;
+  gap: 1px;
+  align-items: center;
+  overflow: hidden;
+}
+
+.tagGrime {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom right, rgba(0,0,0,0.1), rgba(0,0,0,0.3));
+  pointer-events: none;
+}
+
+/* --- REJILLAS DE VENTILACIÓN --- */
+.ventContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.ventBar {
+  height: 6px;
+  background: #000;
+  position: relative;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.ventMetal {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, #111, #222 50%, #050505);
+}
+
+.dustLayer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background: rgba(255,255,255,0.03);
+  filter: blur(1px);
+}
+
+/* --- ETIQUETA DE ADVERTENCIA --- */
+.warningLabel {
+  background: #1a1a1a;
+  border: 2px solid #ffcc00;
+  color: #ffcc00;
+  padding: 5px 12px;
+  font-family: 'Courier New', monospace;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 15px rgba(255, 204, 0, 0.1);
+}
+
+.warningStripes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: repeating-linear-gradient(
+    45deg,
+    #ffcc00,
+    #ffcc00 10px,
+    #000 10px,
+    #000 20px
+  );
+}
+
+.warningHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.warningIcon {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.warningTitle {
+  font-size: 9px;
+  font-weight: 900;
+}
+
+.warningText {
+  font-size: 8px;
+  margin-top: 2px;
+  opacity: 0.8;
+  white-space: nowrap;
+}
+
+/* --- ETIQUETA DE ACTIVO MEJORADA --- */
+.assetTagContainer {
+  background: #d1ccb0;
+  padding: 8px 12px;
+  border-radius: 1px;
+  /* Cambio clave: ajusta al contenido */
+  width: fit-content;
+  min-width: 140px; 
+  max-width: 240px; 
+  position: relative;
+  box-shadow: 2px 2px 0px rgba(0,0,0,0.2), 4px 4px 10px rgba(0,0,0,0.4);
+  border: 1px solid rgba(0,0,0,0.3);
+  display: inline-block;
+}
+
+.tagContent {
+  font-family: 'Courier New', monospace;
+  color: #1a1a1a;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tagHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+.companyName {
+  font-size: 8px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.tagSecurityHole {
+  width: 10px;
+  height: 10px;
+  background: #050808;
+  border-radius: 50%;
+  box-shadow: inset 1px 1px 2px #000;
+  flex-shrink: 0;
+}
+
+.barcodeStrip {
+  height: 16px;
+  background: rgba(0,0,0,0.05);
+  display: flex;
+  align-items: flex-end;
+  gap: 1.5px;
+  padding: 0 4px;
+  overflow: hidden;
+}
+
+.barcodeLine {
+  background: #000;
+}
+
+.tagFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-top: 1px solid rgba(0,0,0,0.2);
+  padding-top: 4px;
+  gap: 10px;
+}
+
+.assetCodeGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.footerLabel {
+  font-size: 6px;
+  font-weight: bold;
+  opacity: 0.6;
+}
+
+.assetCode {
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  white-space: nowrap; /* Evita que el ID salte de línea */
+}
+
+.versionLabel {
+  font-size: 8px;
+  background: #000;
+  color: #d1ccb0;
+  padding: 1px 4px;
+  font-weight: bold;
+}
+
+.tagGrime {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.2) 100%);
+  pointer-events: none;
+}
+
+/* --- REJILLAS Y OTROS --- */
+.ventContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ventBar {
+  height: 6px;
+  background: #000;
+  position: relative;
+  overflow: hidden;
+}
+
+.ventMetal {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #111 0%, #222 50%, #050505 100%);
+}
+
+.dustLayer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  background: rgba(255,255,255,0.05);
+}

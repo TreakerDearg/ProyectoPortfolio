@@ -1,50 +1,58 @@
 'use client';
 import { useRouter } from 'next/navigation';
-import { ChevronLeft, ArrowLeftCircle, Terminal } from 'lucide-react';
+import { Power, X, LogOut, Terminal } from 'lucide-react';
 import { motion } from 'framer-motion';
+import styles from '../../styles/components/back-to-home.module.css';
 
 export default function BackToHome({ variant = 'metro' }) {
   const router = useRouter();
-  
-  // Ruta destino dentro de la carpeta bartender
-  const destination = '/bartender'; // Ajusta según tu estructura de rutas
+  const destination = '/bartender';
 
-  const configs = {
-    metro: {
-      style: "border-amber-900/50 text-amber-600 hover:bg-amber-950/30",
-      label: "RETURN_TO_STATION",
-      icon: <ChevronLeft size={16} />
-    },
-    soma: {
-      style: "border-cyan-900/50 text-cyan-400 hover:bg-cyan-950/30 font-light tracking-[0.2em]",
-      label: "RECONNECT_TO_HUB",
-      icon: <Terminal size={14} className="animate-pulse" />
-    },
-    ac: {
-      style: "border-red-900/50 text-red-500 hover:bg-red-950/30 italic font-bold skew-x-[-10deg]",
-      label: "RTB_SEQUENCE", // Return to Base
-      icon: <ArrowLeftCircle size={16} />
+  const renderContent = () => {
+    switch (variant) {
+      case 'metro':
+        return (
+          <div className={styles.btnMetro}>
+            <div className={styles.innerMetro}>
+              <X size={16} />
+              <span className="text-[10px] font-mono tracking-tighter">CLOSE_VALVE</span>
+            </div>
+          </div>
+        );
+      case 'soma':
+        return (
+          <div className={styles.btnSoma}>
+            <div className={styles.innerSoma}>
+              <div className="flex items-center gap-2">
+                 <Power size={14} className="text-[#76b5b5]" strokeWidth={3} />
+                 <div className={styles.ledPulse} /> {/* LED al lado del icono */}
+              </div>
+              <span className={styles.somaLabel}>TERMINATE_LINK</span>
+            </div>
+          </div>
+        );
+      case 'ac':
+        return (
+          <div className={styles.btnAC}>
+            <div className={styles.warningStripes}>! EMERGENCY !</div>
+            <div className={styles.innerAC}>
+              <LogOut size={16} />
+              <span className="font-black italic text-sm tracking-tighter">EJECT</span>
+            </div>
+          </div>
+        );
+      default:
+        return <span>BACK</span>;
     }
   };
 
-  const current = configs[variant] || configs.metro;
-
   return (
     <motion.button
-      whileHover={{ x: -8, scale: 1.02 }}
       whileTap={{ scale: 0.95 }}
       onClick={() => router.push(destination)}
-      className={`flex items-center gap-3 px-5 py-2 border mb-10 transition-all backdrop-blur-sm ${current.style}`}
+      className="block outline-none"
     >
-      {current.icon}
-      <span className="text-[10px] uppercase font-mono tracking-widest">
-        {current.label}
-      </span>
-      
-      {/* Decoración extra para AC */}
-      {variant === 'ac' && (
-        <div className="absolute -right-1 top-0 h-full w-1 bg-red-600 shadow-[0_0_10px_#ff3c00]" />
-      )}
+      {renderContent()}
     </motion.button>
   );
 }

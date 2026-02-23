@@ -1,0 +1,554 @@
+/* soma-page.module.css */
+
+:root {
+  --soma-bg: #050808;
+  --soma-teal: #76b5b5;
+  --soma-teal-dim: rgba(118, 181, 181, 0.2);
+  --win-gray: #c0c0c0;
+  --win-white: #ffffff;
+  --win-dark: #808080;
+  --win-blue: #000080;
+  --hazard-red: #ff4444;
+  --hazard-yellow: #d4af37;
+}
+
+/* --- ESTRUCTURA BASE --- */
+.systemContainer {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background: var(--soma-bg);
+  color: var(--soma-teal);
+  font-family: 'Courier New', Courier, monospace;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  image-rendering: pixelated;
+}
+
+/* --- TOP HEADER --- */
+.topHeader {
+  height: 32px;
+  background: #000;
+  border-bottom: 2px solid var(--win-dark);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  z-index: 1000;
+  flex-shrink: 0;
+}
+
+.headerLeft, .headerRight {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 10px;
+}
+
+.ledDotGreen {
+  width: 6px;
+  height: 6px;
+  background: #22c55e;
+  border-radius: 50%;
+  box-shadow: 0 0 5px #22c55e;
+  animation: ledPulse 2s infinite;
+}
+
+/* --- MAIN CONTENT & BENTO GRID --- */
+.mainWrapper {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  position: relative;
+}
+
+.desktopArea {
+  flex: 1;
+  overflow-y: auto;
+  background: radial-gradient(circle at center, #0d1a1a 0%, #050808 100%);
+  padding: 15px;
+  /* Scanline effect */
+  background-image: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
+                    linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
+  background-size: 100% 4px, 3px 100%;
+}
+
+.viewContainer {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.bentoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-auto-rows: minmax(220px, auto);
+  gap: 15px;
+}
+
+.spanTwo {
+  grid-column: span 2;
+}
+
+/* --- BENTO ITEM (Closed State) --- */
+.bentoItem {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--win-dark);
+  box-shadow: inset 1px 1px var(--win-white), 2px 2px 10px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.1s, border-color 0.2s;
+  padding: 20px;
+  text-align: center;
+}
+
+.bentoItem:hover {
+  border-color: var(--soma-teal);
+  background: rgba(118, 181, 181, 0.05);
+}
+
+.bentoItem:active {
+  transform: scale(0.98);
+}
+
+.bentoIconInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: var(--accent); /* Injected via inline style in React */
+}
+
+.bentoLabel {
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-shadow: 1px 1px #000;
+}
+
+/* --- WINDOWS (Open State) --- */
+.win95Container {
+  background: var(--win-gray);
+  padding: 2px;
+  border: 1px solid #000;
+  box-shadow: inset 1px 1px var(--win-white), inset -1px -1px var(--win-dark), 5px 5px 15px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 250px;
+}
+
+.windowFocused {
+  z-index: 10;
+  box-shadow: inset 1px 1px var(--win-white), inset -1px -1px var(--win-dark), 10px 10px 25px rgba(0,0,0,0.6);
+}
+
+.win95Header {
+  height: 22px;
+  background: var(--win-dark);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px;
+}
+
+.win95HeaderActive {
+  background: var(--win-blue);
+}
+
+.headerTitleBox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  overflow: hidden;
+}
+
+.windowTitle {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.winButton {
+  width: 16px;
+  height: 14px;
+  background: var(--win-gray);
+  border: 1px solid #000;
+  box-shadow: inset 1px 1px var(--win-white), inset -1px -1px var(--win-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.winButton:active {
+  box-shadow: inset -1px -1px var(--win-white), inset 1px 1px var(--win-dark);
+}
+
+.win95Body {
+  flex: 1;
+  background: #020404;
+  margin: 1px;
+  border: 1px solid #000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.windowContent {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.contentScrollArea {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+.metaHeader {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #222;
+  padding-bottom: 6px;
+  margin-bottom: 10px;
+  font-size: 9px;
+  text-transform: uppercase;
+}
+
+.metaItem label {
+  color: var(--win-dark);
+  margin-right: 4px;
+}
+
+.textContent {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #a0c0c0;
+}
+
+.contentFooter {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 8px;
+  border-top: 1px solid #111;
+}
+
+.tagPill {
+  font-size: 9px;
+  background: rgba(118, 181, 181, 0.1);
+  padding: 2px 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* --- ANALYZE BUTTON --- */
+.analyzeBtn {
+  background: #000;
+  border: 1px solid var(--soma-teal);
+  color: var(--soma-teal);
+  padding: 4px 10px;
+  font-size: 9px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.analyzeBtn:hover {
+  background: var(--soma-teal);
+  color: #000;
+  box-shadow: 0 0 10px var(--soma-teal-dim);
+}
+
+/* --- SIDEBAR --- */
+.sidebar {
+  width: 75px;
+  background: rgba(0, 0, 0, 0.85);
+  border-right: 2px solid var(--win-dark);
+  display: flex;
+  flex-direction: column;
+  z-index: 1100;
+  transition: transform 0.3s ease;
+}
+
+.desktopIconContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 15px 5px;
+  background: none;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+}
+
+.iconBase {
+  width: 36px;
+  height: 36px;
+  background: var(--win-gray);
+  border: 1px solid #000;
+  box-shadow: inset 1.5px 1.5px var(--win-white), inset -1.5px -1.5px var(--win-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #111;
+}
+
+.iconActive {
+  background: #a0a0a0;
+  box-shadow: inset 2px 2px #000, inset -1px -1px var(--win-white);
+}
+
+.iconLabel {
+  font-size: 8px;
+  color: #fff;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+/* --- TASKBAR --- */
+.taskbar {
+  height: 35px;
+  background: var(--win-gray);
+  border-top: 2px solid var(--win-white);
+  padding: 2px 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  z-index: 1200;
+  flex-shrink: 0;
+}
+
+.startButton {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--win-gray);
+  border: 1px solid #000;
+  box-shadow: inset 1.5px 1.5px var(--win-white), inset -1.5px -1.5px var(--win-dark);
+  padding: 0 10px;
+  height: 26px;
+  font-weight: bold;
+  font-size: 11px;
+}
+
+.taskItemsContainer {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+  overflow-x: auto;
+}
+
+.taskItem {
+  height: 26px;
+  min-width: 100px;
+  max-width: 160px;
+  background: var(--win-gray);
+  border: 1px solid #000;
+  box-shadow: inset 1px 1px var(--win-white), inset -1px -1px var(--win-dark);
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  gap: 6px;
+  font-size: 10px;
+}
+
+.taskItemActive {
+  background: #d4d4d4;
+  box-shadow: inset 2px 2px #000, inset -1px -1px var(--win-white);
+}
+
+.systemTray {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 10px;
+  height: 26px;
+  border: 1px solid var(--win-dark);
+  box-shadow: inset -1px -1px var(--win-white), inset 1px 1px #444;
+  font-size: 10px;
+}
+
+/* --- CORRUPCIÓN & ANIMACIONES --- */
+.corruptedOverlay {
+  background: rgba(40, 0, 0, 0.9);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--hazard-red);
+  padding: 20px;
+  text-align: center;
+}
+
+.repairBtn {
+  margin-top: 15px;
+  background: transparent;
+  border: 1px solid var(--hazard-red);
+  color: var(--hazard-red);
+  padding: 5px 15px;
+  font-family: monospace;
+  cursor: pointer;
+}
+
+.repairBtn:hover {
+  background: var(--hazard-red);
+  color: white;
+}
+
+@keyframes ledPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+@keyframes flicker {
+  0% { opacity: 0.8; }
+  100% { opacity: 1; }
+}
+
+/* --- MOBILE RESPONSIVE --- */
+@media (max-width: 768px) {
+  .sidebar {
+    position: absolute;
+    height: calc(100% - 35px);
+    transform: translateX(-100%);
+    width: 200px; /* Wider for touch */
+  }
+
+  .sidebarOpen {
+    transform: translateX(0);
+  }
+
+  .bentoGrid {
+    grid-template-columns: 1fr; /* Una sola columna en móvil */
+    grid-auto-rows: auto;
+  }
+
+  .spanTwo {
+    grid-column: span 1;
+  }
+
+  .taskItemLabel, .startText {
+    display: none; /* Hide text to save space */
+  }
+
+  .taskItem {
+    min-width: 35px;
+    justify-content: center;
+  }
+
+  .win95Container {
+    height: auto;
+    min-height: 300px;
+  }
+}
+
+/* Custom Scrollbar for SOMA look */
+::-webkit-scrollbar {
+  width: 12px;
+}
+::-webkit-scrollbar-track {
+  background: #111;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--win-dark);
+  border: 2px solid #111;
+}
+
+/* page.module.css */
+
+.somaTerminalRoot {
+  /* Cursor de mira técnica: limpio, preciso y muy "ingeniería" */
+  cursor: crosshair;
+  
+  /* Evita la selección de texto accidental para que se sienta como una máquina física */
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* --- INTERACCIONES DE CURSOR --- */
+
+/* Cuando pasas sobre botones, iconos o elementos clickeables */
+.somaTerminalRoot button,
+.somaTerminalRoot a,
+.somaTerminalRoot [role="button"],
+.somaTerminalRoot input {
+  /* Cambiamos a puntero, pero podemos forzar que mantenga la cruz 
+     si queremos una estética 100% de terminal de diagnóstico */
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Efecto visual de "Focus" al pasar el cursor (Hover) */
+.somaTerminalRoot button:hover {
+  /* Simula la retroalimentación de las pantallas de SOMA */
+  filter: brightness(1.2) drop-shadow(0 0 5px var(--soma-teal));
+}
+
+/* Cursor para archivos corruptos o bloqueados */
+.somaTerminalRoot .fileCorrupted {
+  cursor: not-allowed !important;
+}
+
+/* --- REFINAMIENTO CRT / SOMA --- */
+
+.systemContainer {
+  position: relative;
+  background-color: #050707; /* El negro profundo de SOMA */
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  color: #76b5b5; /* Soma Teal */
+  font-family: 'JetBrains Mono', monospace; /* O cualquier fuente tech */
+}
+
+/* Línea de escaneo sutil que recorre la pantalla */
+.scanlineEffect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.1) 50%
+  ), 
+  linear-gradient(
+    90deg, 
+    rgba(255, 0, 0, 0.02), 
+    rgba(0, 255, 0, 0.01), 
+    rgba(0, 0, 255, 0.02)
+  );
+  background-size: 100% 4px, 3px 100%;
+  pointer-events: none; /* No bloquea el cursor */
+  z-index: 100;
+}
+
+/* Animación de parpadeo para los iconos de estado */
+.pulseIcon {
+  animation: somaPulse 2s infinite ease-in-out;
+}
+
+@keyframes somaPulse {
+  0% { opacity: 1; filter: brightness(1); }
+  50% { opacity: 0.6; filter: brightness(0.8); }
+  100% { opacity: 1; filter: brightness(1); }
+}
