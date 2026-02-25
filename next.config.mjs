@@ -1,32 +1,30 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Activa el compilador de React para optimizar memorización (useMemo/useCallback) automáticamente
+  // El compilador de React 19 es clave para tus puzzles de inventario
   experimental: {
     reactCompiler: true,
   },
 
-  // Ignora errores de linting durante el build para evitar que fallos estéticos detengan el despliegue
+  // Mantenemos esto para que el build no se detenga por avisos menores
   eslint: {
     ignoreDuringBuilds: true,
   },
 
-  // Optimización de imágenes (útil si vas a cargar posters o texturas del Metro)
+  // Configuración de imágenes para tus texturas de búnker y posters
   images: {
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: '**', // Permite imágenes de cualquier origen seguro
+        hostname: '**',
       },
     ],
   },
 
-  // Asegura que las librerías de iconos no inflen el bundle final
-  modularizeImports: {
-    'lucide-react': {
-      transform: 'lucide-react/dist/esm/icons/{{member}}',
-    },
-  },
+  /* ELIMINADO: modularizeImports. 
+     Next.js 15/16 y Lucide-React ya optimizan esto de forma nativa. 
+     Forzar la ruta 'dist/esm/icons' rompe el build en versiones nuevas.
+  */
 };
 
 export default nextConfig;
