@@ -1,16 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // El compilador de React 19 es clave para tus puzzles de inventario
-  experimental: {
-    reactCompiler: true,
-  },
+  // En Next.js 15+/16, el compilador ya no es experimental
+  reactCompiler: true,
 
-  // Mantenemos esto para que el build no se detenga por avisos menores
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-
-  // Configuración de imágenes para tus texturas de búnker y posters
+  // Configuración de imágenes
   images: {
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [
@@ -20,11 +13,9 @@ const nextConfig = {
       },
     ],
   },
-
-  /* ELIMINADO: modularizeImports. 
-     Next.js 15/16 y Lucide-React ya optimizan esto de forma nativa. 
-     Forzar la ruta 'dist/esm/icons' rompe el build en versiones nuevas.
-  */
+  
+  /* Nota: ESLint ya no se configura aquí en las versiones más nuevas. 
+     Se recomienda usar el archivo .eslintrc o configurarlo vía CLI. */
 };
 
 export default nextConfig;
