@@ -2,12 +2,13 @@
   "name": "portfolio-os",
   "version": "0.1.0",
   "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
-  },
+"scripts": {
+  "dev": "next dev",
+  "build": "next build",
+  "clean-build": "rd /s /q .next && next build", 
+  "start": "next start",
+  "lint": "next lint"
+},
   "dependencies": {
     "@fontsource/fira-mono": "^5.2.7",
     "@fontsource/press-start-2p": "^5.2.7",

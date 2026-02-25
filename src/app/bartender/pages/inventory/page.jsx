@@ -15,13 +15,10 @@ import styles from '../../styles/inventory-styles/bunker.module.css';
 import { METRO_FOLDERS, METRO_DRINKS, D6_SYSTEM_CONFIG } from './data/dataMetro';
 
 // --- COMPONENTES DINÁMICOS (Protección total contra ReferenceError: Terminal) ---
-const TerminalPuzzle = dynamic(
-  () => import('./components/TerminalPuzzle').then(mod => mod.TerminalPuzzle),
-  { 
-    ssr: false, 
-    loading: () => <div className={styles.loadingPlaceholder}>ENLAZANDO CONSOLA...</div> 
-  }
-);
+const TerminalPuzzle = dynamic(() => import('./components/TerminalPuzzle').then(mod => mod.TerminalPuzzle), { 
+  ssr: false,
+  loading: () => <div className={styles.loadingPlaceholder}>INICIALIZANDO_NODO_D6...</div>
+});
 
 const FileGrid = dynamic(
   () => import('./components/FileGrid').then(mod => mod.FileGrid),
