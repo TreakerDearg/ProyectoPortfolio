@@ -1,8 +1,9 @@
 'use client';
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { 
-  Search, X, Activity, Database, 
-  Globe, ShieldCheck, Filter, ChevronDown
+  Search, X, Activity, Globe, 
+  ShieldCheck, Filter
 } from 'lucide-react';
 import styles from '../../../styles/inventory-styles/SearchBar.module.css';
 
@@ -16,13 +17,24 @@ export const SearchBar = ({
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const categories = ['ALL', 'MILITARY', 'ENGINEERING', 'BIOMEDICAL', 'INTEL', 'COMMERCE', 'LOGISTICS'];
+  const [mounted, setMounted] = useState(false);
 
-  // Función para cerrar modal y cambiar categoría
+  const categories = [
+    'ALL', 'MILITARY', 'ENGINEERING', 
+    'BIOMEDICAL', 'INTEL', 'COMMERCE', 'LOGISTICS'
+  ];
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Cerrar modal y cambiar categoría
   const handleSelectCategory = (cat) => {
     setActiveCategory(cat);
     setIsFilterOpen(false);
   };
+
+  if (!mounted) return null;
 
   return (
     <div className={`${styles.masterWrapper} ${isMobile ? styles.mobileMaster : ''}`}>
@@ -32,7 +44,7 @@ export const SearchBar = ({
         ${isUnlocked ? styles.unlockedBorder : ''}
       `}>
         
-        {/* LADO IZQUIERDO: Estado de Conexión */}
+        {/* INDICADOR DE SEGURIDAD RED */}
         <div className={styles.connectionStatus}>
           {isUnlocked ? (
             <Globe size={isMobile ? 14 : 16} className={styles.globeIcon} />
@@ -46,7 +58,7 @@ export const SearchBar = ({
           )}
         </div>
 
-        {/* CENTRO: Entrada de Datos */}
+        {/* INPUT DE BÚSQUEDA */}
         <div className={styles.searchInterface}>
           <div className={styles.inputWrapper}>
             <Search 
@@ -55,7 +67,7 @@ export const SearchBar = ({
             />
             <input 
               type="text" 
-              placeholder={isMobile ? "SEARCH..." : "ANALYZING_DATABANK..."} 
+              placeholder={isMobile ? "BUSCAR..." : "ANALIZANDO_BANCO_DATOS..."} 
               value={searchTerm}
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
@@ -65,9 +77,10 @@ export const SearchBar = ({
           </div>
         </div>
 
-        {/* BOTÓN FILTRO (Solo Móvil) */}
+        {/* SELECTOR PDA MÓVIL */}
         {isMobile && (
           <button 
+            type="button"
             className={`${styles.mobileFilterToggle} ${activeCategory !== 'ALL' ? styles.filterActive : ''}`}
             onClick={() => setIsFilterOpen(true)}
           >
@@ -76,7 +89,7 @@ export const SearchBar = ({
           </button>
         )}
 
-        {/* METADATA (Solo Desktop) */}
+        {/* TELEMETRÍA DE BÚSQUEDA (Desktop) */}
         {!isMobile && (
           <div className={styles.metaData}>
             <div className={styles.dataBit}>
@@ -87,29 +100,37 @@ export const SearchBar = ({
         )}
       </div>
 
-      {/* FILTROS DESKTOP (Horizontal) */}
+      {/* BARRA DE FILTROS HORIZONTAL (Desktop) */}
       {!isMobile && (
         <div className={styles.filterBar}>
           {categories.map(cat => (
             <button
               key={cat}
+              type="button"
               onClick={() => setActiveCategory(cat)}
               className={`${styles.filterBtn} ${activeCategory === cat ? styles.filterBtnActive : ''}`}
             >
+              <div className={styles.btnGlow} />
               {cat}
             </button>
           ))}
         </div>
       )}
 
-      {/* MODAL DE FILTRADO MÓVIL (PDA Overlay) */}
+      {/* MODAL PDA OVERLAY (Móvil) */}
       {isMobile && isFilterOpen && (
         <div className={styles.mobileModalOverlay} onClick={() => setIsFilterOpen(false)}>
           <div className={styles.mobileModalContent} onClick={e => e.stopPropagation()}>
             <div className={styles.modalHeader}>
               <div className={styles.modalTitle}>[ SECTOR_SELECTOR ]</div>
-              <button onClick={() => setIsFilterOpen(false)}><X size={20} /></button>
+              <button 
+                className={styles.closeBtn} 
+                onClick={() => setIsFilterOpen(false)}
+              >
+                <X size={20} />
+              </button>
             </div>
+            
             <div className={styles.modalGrid}>
               {categories.map(cat => (
                 <button
@@ -122,7 +143,10 @@ export const SearchBar = ({
                 </button>
               ))}
             </div>
-            <div className={styles.modalFooter}>SELECT_TARGET_SECTOR_TO_SCAN</div>
+            
+            <div className={styles.modalFooter}>
+              <span>STATUS: ESPERANDO_SELECCIÓN_SECTOR</span>
+            </div>
           </div>
         </div>
       )}

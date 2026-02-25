@@ -1,6 +1,5 @@
 'use client';
 import React, { useMemo } from 'react';
-import { motion } from 'framer-motion';
 import styles from '../../styles/inventory-styles/metro-layout.module.css';
 
 // Componentes de Hardware
