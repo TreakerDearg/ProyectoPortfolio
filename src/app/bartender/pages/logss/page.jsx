@@ -13,7 +13,7 @@ import { NoiseOverlay } from './components/NoiseOverlay';
 import { 
   Activity as ActivityIcon, Trash2, RefreshCw,  
   Search, Database, Globe, Cpu, Scan, X,
-  Minimize2, AlertTriangle, Terminal, Layers, Menu, ShieldAlert
+ Layers, Menu, ShieldAlert
 } from 'lucide-react';
 
 export default function LogsPage() {

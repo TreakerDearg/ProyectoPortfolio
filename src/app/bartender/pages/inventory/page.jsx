@@ -1,21 +1,25 @@
 'use client';
+
 import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  Activity, Cpu as CpuIcon, Thermometer, Radio, X, 
+  ShieldAlert, Lock, Zap, Database
+} from 'lucide-react';
+
 import styles from '../../styles/inventory-styles/bunker.module.css';
 
-// Componentes Modularizados
+// Componentes modularizados
 import { BriefcaseModal } from './components/BriefcaseModal';
 import { TerminalPuzzle } from './components/TerminalPuzzle';
 import { SearchBar } from './components/SearchBar';
 import { FileGrid } from './components/FileGrid';
 
-// Datos e Iconos
+// Datos e iconos
 import { METRO_FOLDERS, METRO_DRINKS, D6_SYSTEM_CONFIG } from './data/dataMetro';
-import { 
-  Activity, Cpu as CpuIcon, Scan, 
-  Database, Thermometer, X, Radio, Terminal,
-  ShieldAlert, Lock, Zap
-} from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+
+// Opciones para evitar hidratación
+const isBrowser = typeof window !== 'undefined';
 
 export default function InventoryPage() {
   // --- ESTADOS DE INTERFAZ ---
@@ -29,19 +33,21 @@ export default function InventoryPage() {
   const [isMobile, setIsMobile] = useState(false);
   
   // --- TELEMETRÍA (solo cliente) ---
-  const [systemLog, setSystemLog] = useState(['>> INIT_AMBER_PROTOCOL_V10.0...']);
-  const [cpuLoad, setCpuLoad] = useState(12);
-  const [temp, setTemp] = useState(38.5);
-  const [mounted, setMounted] = useState(false); // Para evitar hidratación
+  const [systemLog, setSystemLog] = useState(() => 
+    isBrowser ? ['>> INIT_AMBER_PROTOCOL_V10.0...'] : []
+  );
+  const [cpuLoad, setCpuLoad] = useState(() => isBrowser ? 12 : 0);
+  const [temp, setTemp] = useState(() => isBrowser ? 38.5 : 0);
+  const [mounted, setMounted] = useState(false);
   const mainScrollRef = useRef(null);
 
-  // Asegurar que los valores aleatorios se generen solo en cliente
+  // Asegurar montaje en cliente
   useEffect(() => {
     setMounted(true);
   }, []);
 
   const addLogEntry = useCallback((entry) => {
-    if (!mounted) return; // No ejecutar en servidor
+    if (!mounted) return;
     const timestamp = new Date().toLocaleTimeString('en-GB', { 
       hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' 
     });
@@ -50,6 +56,7 @@ export default function InventoryPage() {
 
   // --- DETECCIÓN DE BREAKPOINTS ---
   useEffect(() => {
+    if (!mounted) return;
     const handleResize = () => {
       const mobile = window.innerWidth < 1024;
       setIsMobile(mobile);
@@ -58,7 +65,7 @@ export default function InventoryPage() {
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, [mounted]);
 
   // --- SIMULACIÓN DE HARDWARE DINÁMICO (solo cliente) ---
   useEffect(() => {
@@ -95,23 +102,42 @@ export default function InventoryPage() {
     const term = searchTerm.toUpperCase().trim();
     return METRO_FOLDERS.map(folder => ({
       ...folder,
-      // Metadatos deterministas basados en id (para evitar aleatoriedad en servidor)
+      // Metadatos deterministas basados en id (evita aleatoriedad en servidor)
       integrity: 90 + (folder.id.charCodeAt(0) % 10),
       sector: D6_SYSTEM_CONFIG.radiation_level > 0.4 ? "HOT_ZONE" : "D6_ARCHIVE"
     })).filter(f => {
       const matchesSearch = !term || 
         f.title.toUpperCase().includes(term) || 
         f.id.toUpperCase().includes(term) ||
-        f.ingredients?.some(i => i.toUpperCase().includes(term));
+        (f.ingredients && f.ingredients.some(i => i.toUpperCase().includes(term)));
       
       const matchesCategory = activeCategory === 'ALL' || f.category === activeCategory;
       return matchesSearch && matchesCategory;
     });
   }, [searchTerm, activeCategory]);
 
+  // --- HANDLER PARA RESETEAR BÚSQUEDA ---
+  const handleResetSearch = useCallback(() => {
+    setSearchTerm('');
+    setActiveCategory('ALL');
+  }, []);
+
+  // --- HANDLER PARA SELECCIONAR FOLDER ---
+  const handleSelectFolder = useCallback((folder) => {
+    setSelectedFolder(folder);
+    addLogEntry(`ACCESSING_FILE: ${folder.title}`);
+  }, [addLogEntry]);
+
+  // --- HANDLER PARA DESBLOQUEO ---
+  const handleUnlock = useCallback((val) => {
+    setIsUnlocked(val);
+    addLogEntry(val ? "CRITICAL: SECURITY_BYPASS_DETECTED" : "SIGNAL_RESTORED");
+    if (isMobile && val) setTimeout(() => setSidebarOpen(false), 800);
+  }, [addLogEntry, isMobile]);
+
+  // Renderizado condicional para evitar hidratación
   if (!mounted) {
-    // Renderizar un esqueleto o nada durante la hidratación
-    return null; // O un loader simple
+    return null; // O un esqueleto simple
   }
 
   if (bootSequence) {
@@ -120,6 +146,7 @@ export default function InventoryPage() {
         <motion.div 
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
           className={styles.bootTerminal}
         >
           <div className={styles.bootBrand}>D6_SYSTEM_LOADER_v10.0</div>
@@ -132,16 +159,20 @@ export default function InventoryPage() {
             />
           </div>
           <div className={styles.bootLogs}>
-            {systemLog.map((log, i) => (
-              <motion.div 
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                key={i} 
-                className={styles.bootLogLine}
-              >
-                {log}
-              </motion.div>
-            ))}
+            <AnimatePresence>
+              {systemLog.map((log, i) => (
+                <motion.div 
+                  key={i}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ delay: i * 0.1 }}
+                  className={styles.bootLogLine}
+                >
+                  {log}
+                </motion.div>
+              ))}
+            </AnimatePresence>
           </div>
         </motion.div>
       </div>
@@ -155,7 +186,7 @@ export default function InventoryPage() {
       ${isUnlocked ? styles.systemBypassed : ''}
     `}>
       
-      {/* CAPAS DE AMBIENTE CRT - ÁMBAR */}
+      {/* CAPAS DE AMBIENTE CRT */}
       <div className={styles.hardwareOverlays}>
         <div className={styles.amberScanline} />
         <div className={styles.crtStatic} />
@@ -207,7 +238,7 @@ export default function InventoryPage() {
       </header>
 
       <div className={styles.workspaceWrapper}>
-        {/* SIDEBAR PERSISTENTE (ESCRITORIO) */}
+        {/* SIDEBAR PERSISTENTE (puzzle + logs) */}
         <aside className={`${styles.sidebar} ${sidebarOpen ? styles.sidebarOpen : ''}`}>
           <div className={styles.sidebarInner}>
             <div className={styles.sidebarModule}>
@@ -218,17 +249,15 @@ export default function InventoryPage() {
               <div className={styles.modBody}>
                 <TerminalPuzzle 
                   isUnlocked={isUnlocked} 
-                  onUnlock={(val) => {
-                    setIsUnlocked(val);
-                    addLogEntry(val ? "CRITICAL: SECURITY_BYPASS_DETECTED" : "SIGNAL_RESTORED");
-                    if (isMobile && val) setTimeout(() => setSidebarOpen(false), 800);
-                  }} 
+                  onUnlock={handleUnlock} 
                 />
               </div>
             </div>
 
             <div className={`${styles.sidebarModule} ${styles.kernelModule}`}>
-              <div className={styles.modHeader}><Activity size={14} /> <span>KERNEL_D6_LOGS</span></div>
+              <div className={styles.modHeader}>
+                <Activity size={14} /> <span>KERNEL_D6_LOGS</span>
+              </div>
               <div className={styles.kernelLog}>
                 {systemLog.map((log, i) => (
                   <div key={i} className={styles.logLine}>
@@ -240,20 +269,18 @@ export default function InventoryPage() {
           </div>
         </aside>
 
-        {/* CONTENEDOR DE SCROLL DE ARCHIVOS */}
+        {/* EXPLORADOR DE ARCHIVOS */}
         <main ref={mainScrollRef} className={styles.fileExplorer}>
           <FileGrid 
             items={filteredFolders} 
             isUnlocked={isUnlocked} 
-            onSelectItem={(folder) => {
-              setSelectedFolder(folder);
-              addLogEntry(`ACCESSING_FILE: ${folder.title}`);
-            }} 
+            onSelectItem={handleSelectFolder}
+            onResetSearch={handleResetSearch} // Pasamos el reset para vista vacía
           />
         </main>
       </div>
 
-      {/* FLOATING ACTION BUTTON (SOLO MÓVIL/TABLET) */}
+      {/* FLOATING ACTION BUTTON (MÓVIL) */}
       <AnimatePresence>
         {isMobile && (
           <motion.button
@@ -262,8 +289,9 @@ export default function InventoryPage() {
             exit={{ scale: 0, y: 100 }}
             className={`${styles.floatingSecurityBtn} ${sidebarOpen ? styles.fabActive : ''}`}
             onClick={() => setSidebarOpen(!sidebarOpen)}
+            aria-label={sidebarOpen ? "Cerrar panel" : "Abrir panel de seguridad"}
           >
-            {sidebarOpen ? <X /> : (
+            {sidebarOpen ? <X size={24} /> : (
               <div className={styles.fabIcon}>
                 <ShieldAlert className={!isUnlocked ? styles.pulseIcon : ''} />
                 {!isUnlocked && <span className={styles.fabNotify}>!</span>}
@@ -296,7 +324,7 @@ export default function InventoryPage() {
         </div>
       </footer>
 
-      {/* MODALES DE CAPA SUPERIOR */}
+      {/* MODAL DEL BRIEFCASE */}
       <AnimatePresence>
         {selectedFolder && (
           <BriefcaseModal 

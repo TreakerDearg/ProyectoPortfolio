@@ -1,8 +1,8 @@
 // dataSoma.js
 import { 
   Activity, Droplet, Zap, Waves, FlaskConical, 
-  ShieldAlert, Thermometer, Radio, Eye, Boxes,
-  Biohazard, Beaker, Wine, Droplets, Terminal, Lock
+  ShieldAlert, Radio,
+  Biohazard, Droplets,  
 } from 'lucide-react';
 
 export const SOMA_APPS = [
