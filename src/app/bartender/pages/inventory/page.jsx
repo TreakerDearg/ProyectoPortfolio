@@ -1,25 +1,26 @@
 'use client';
 
-import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Activity, Cpu as CpuIcon, Scan, Database, 
-  Thermometer, X, Radio, ShieldAlert, Lock, Zap, 
-  Terminal as TerminalIcon, AlertTriangle, Menu,
-  HardDrive, Wifi, Eye
+  Activity, Cpu as CpuIcon, Scan, Thermometer, X, 
+  Lock, Zap, AlertTriangle, Menu, HardDrive, Wifi 
 } from 'lucide-react';
 
-// Estilos (Asegúrate de tener estos archivos o sus equivalentes)
+// Estilos
 import styles from '../../styles/inventory-styles/bunker.module.css';
 
-// Datos (Verifica las rutas de tus archivos de datos)
+// Datos
 import { METRO_FOLDERS, METRO_DRINKS, D6_SYSTEM_CONFIG } from './data/dataMetro';
 
-// --- COMPONENTES DINÁMICOS (SOLUCIÓN AL ERROR DE PRERENDER) ---
+// --- COMPONENTES DINÁMICOS (Protección total contra ReferenceError: Terminal) ---
 const TerminalPuzzle = dynamic(
   () => import('./components/TerminalPuzzle').then(mod => mod.TerminalPuzzle),
-  { ssr: false, loading: () => <div className={styles.loadingPlaceholder}>INITIALIZING_NEURAL_LINK...</div> }
+  { 
+    ssr: false, 
+    loading: () => <div className={styles.loadingPlaceholder}>ENLAZANDO CONSOLA...</div> 
+  }
 );
 
 const FileGrid = dynamic(
@@ -38,53 +39,53 @@ const SearchBar = dynamic(
 );
 
 export default function InventoryPage() {
-  // --- ESTADOS DE SISTEMA ---
+  // --- ESTADOS DE NÚCLEO ---
   const [mounted, setMounted] = useState(false);
   const [bootSequence, setBootSequence] = useState(true);
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [glitchActive, setGlitchActive] = useState(false);
   
-  // --- NAVEGACIÓN Y FILTROS ---
+  // --- NAVEGACIÓN ---
   const [searchTerm, setSearchTerm] = useState('');
   const [activeCategory, setActiveCategory] = useState('ALL');
   const [selectedFolder, setSelectedFolder] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
-  // --- TELEMETRÍA DINÁMICA ---
+  // --- TELEMETRÍA ---
   const [systemLog, setSystemLog] = useState([]);
   const [metrics, setMetrics] = useState({
     cpu: 12,
     temp: 38.5,
     rad: parseFloat(D6_SYSTEM_CONFIG?.radiation_level || 0.44),
-    integrity: 98
   });
 
-  // --- LOGICA DE LOGS ---
+  // --- MANEJO DE LOGS ---
   const addLogEntry = useCallback((entry) => {
     const time = new Date().toLocaleTimeString('ru-RU', { hour12: false });
-    setSystemLog(prev => [`[${time}] ${entry}`, ...prev].slice(0, 50));
+    setSystemLog(prev => [`[${time}] ${entry}`, ...prev].slice(0, 40));
   }, []);
 
-  // --- EFECTO DE MONTAJE INICIAL ---
+  // --- EFECTO DE INICIALIZACIÓN ---
   useEffect(() => {
     setMounted(true);
+    
     const handleResize = () => {
       const mobile = window.innerWidth < 1024;
       setIsMobile(mobile);
       if (!mobile) setSidebarOpen(false);
     };
     
-    handleResize();
     window.addEventListener('resize', handleResize);
+    handleResize();
 
-    // Secuencia de arranque simulada
+    // Simulación de arranque de D6
     const bootSteps = [
-      "SISTEMA: Iniciando secuencia de arranque...",
-      "KERNEL: VOS-DARK-33 detectado",
-      "AUTH: Escaneo biométrico Artyom...",
-      "NET: Enlace con el búnker D6 establecido",
-      "SUCCESS: Acceso al archivo concedido"
+      "SYSTEM: VOS-33 Kernel Loaded",
+      "AUTH: Biometrics Confirmed (Artyom)",
+      "NET: D6 Mesh Connection Established",
+      "STORAGE: Archive /mnt/d6_records mounted",
+      "READY: Command Line Interface Active"
     ];
 
     bootSteps.forEach((step, i) => {
@@ -99,35 +100,34 @@ export default function InventoryPage() {
     };
   }, [addLogEntry]);
 
-  // --- BUCLE DE HARDWARE (METRICAS VIVAS) ---
+  // --- BUCLE DE TELEMETRÍA VIVA ---
   useEffect(() => {
     if (!mounted || bootSequence) return;
 
     const interval = setInterval(() => {
       setMetrics(prev => {
-        const newCpu = Math.max(5, Math.min(99, prev.cpu + (Math.random() * 20 - 10)));
-        const newRad = parseFloat((prev.rad + (Math.random() * 0.02 - 0.01)).toFixed(3));
+        const jitterCpu = Math.floor(Math.random() * 10) - 5;
+        const newCpu = Math.max(8, Math.min(99, prev.cpu + jitterCpu));
         
-        // Disparar Glitch si la radiación o el CPU suben mucho
-        if (newCpu > 90 || Math.random() > 0.97) {
+        // Probabilidad de Glitch ante CPU alta
+        if (newCpu > 90 || Math.random() > 0.98) {
           setGlitchActive(true);
-          setTimeout(() => setGlitchActive(false), 120);
-          addLogEntry("ALERTA: Interferencia electromagnética detectada");
+          setTimeout(() => setGlitchActive(false), 150);
+          addLogEntry("WARNING: EMP Interference Detected");
         }
 
         return {
-          cpu: Math.floor(newCpu),
-          rad: newRad,
-          temp: 38 + (newCpu / 10),
-          integrity: isUnlocked ? 100 : 98
+          cpu: newCpu,
+          rad: parseFloat((prev.rad + (Math.random() * 0.01 - 0.005)).toFixed(3)),
+          temp: 38 + (newCpu / 15)
         };
       });
     }, 4000);
 
     return () => clearInterval(interval);
-  }, [mounted, bootSequence, isUnlocked, addLogEntry]);
+  }, [mounted, bootSequence, addLogEntry]);
 
-  // --- FILTRADO DE CONTENIDO ---
+  // --- MOTOR DE BÚSQUEDA ---
   const filteredFolders = useMemo(() => {
     const term = searchTerm.toLowerCase().trim();
     return METRO_FOLDERS.filter(folder => {
@@ -138,22 +138,22 @@ export default function InventoryPage() {
     });
   }, [searchTerm, activeCategory]);
 
-  // --- PREVENCIÓN DE ERRORES SSR ---
+  // Bloqueo de hidratación para Next.js
   if (!mounted) return null;
 
-  // --- PANTALLA DE BOOT ---
+  // --- PANTALLA DE ARRANQUE (BOOT) ---
   if (bootSequence) {
     return (
       <div className={styles.bootingScreen}>
         <div className={styles.scanlineOverlay} />
         <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           className={styles.bootTerminal}
         >
           <div className={styles.bootHeader}>
-            <span className={styles.blink}>[ LOADING_D6_OS ]</span>
-            <span>v2033.4.1</span>
+            <span className={styles.blink}>[ INIT_D6_SEQUENCE ]</span>
+            <span>v.2033.4</span>
           </div>
           <div className={styles.bootLogContainer}>
             {systemLog.map((log, i) => (
@@ -179,25 +179,23 @@ export default function InventoryPage() {
       ${glitchActive ? styles.glitchActive : ''}
       ${isUnlocked ? styles.unlockedMode : ''}
     `}>
-      {/* CAPAS ATMOSFÉRICAS */}
+      {/* CAPAS DE ATMÓSFERA CRT */}
       <div className={styles.crtEffectLayer}>
         <div className={styles.scanlines} />
         <div className={styles.vignette} />
       </div>
 
-      {/* HEADER: HUD DE COMANDO */}
+      {/* HEADER: HUD PRINCIPAL */}
       <header className={styles.hudHeader}>
         <div className={styles.hudMain}>
           <div className={styles.brandGroup}>
             <div className={styles.d6Logo}>D6</div>
             <div className={styles.statusInfo}>
               <div className={styles.statusRow}>
-                <Wifi size={10} className={styles.iconDim} /> 
-                <span>ENLACE: ESTABLE</span>
+                <Wifi size={10} /> <span>NET_LINK: STABLE</span>
               </div>
               <div className={styles.statusRow}>
-                <HardDrive size={10} className={styles.iconDim} /> 
-                <span>DRIVE: /MNT/D6_ARCHIVE</span>
+                <HardDrive size={10} /> <span>VOL: /ARCHIVE</span>
               </div>
             </div>
           </div>
@@ -207,16 +205,16 @@ export default function InventoryPage() {
             setSearchTerm={setSearchTerm} 
             activeCategory={activeCategory}
             setActiveCategory={setActiveCategory}
+            isUnlocked={isUnlocked}
+            isMobile={isMobile}
           />
 
           <div className={styles.telemetryGroup}>
-            <div className={`${styles.teleBox} ${metrics.cpu > 80 ? styles.warn : ''}`}>
-              <CpuIcon size={14} />
-              <span>{metrics.cpu}%</span>
+            <div className={`${styles.teleBox} ${metrics.cpu > 85 ? styles.warn : ''}`}>
+              <CpuIcon size={14} /> <span>{metrics.cpu}%</span>
             </div>
             <div className={styles.teleBox}>
-              <Thermometer size={14} />
-              <span>{metrics.temp.toFixed(1)}°C</span>
+              <Thermometer size={14} /> <span>{metrics.temp.toFixed(1)}°C</span>
             </div>
           </div>
         </div>
@@ -224,35 +222,35 @@ export default function InventoryPage() {
 
       {/* ÁREA DE TRABAJO */}
       <div className={styles.workspace}>
-        <AnimatePresence>
+        <AnimatePresence mode="wait">
           {(sidebarOpen || !isMobile) && (
             <motion.aside 
-              initial={{ x: -320 }}
-              animate={{ x: 0 }}
-              exit={{ x: -320 }}
+              initial={{ x: -320, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: -320, opacity: 0 }}
               className={styles.sidebar}
             >
-              {/* MODULO DE SEGURIDAD (PUZZLE) */}
+              {/* MÓDULO DE SEGURIDAD */}
               <section className={styles.sidebarSection}>
                 <div className={styles.sectionTitle}>
                   {isUnlocked ? <Zap size={14} className={styles.textAmber} /> : <Lock size={14} />}
-                  <span>CONTROL_DE_ACCESO</span>
+                  <span>SECURITY_OVERRIDE</span>
                 </div>
                 <div className={styles.puzzleContainer}>
                   <TerminalPuzzle 
                     isUnlocked={isUnlocked} 
                     onUnlock={(val) => {
                       setIsUnlocked(val);
-                      addLogEntry(val ? "CRITICAL: ACCESO TOTAL CONCEDIDO" : "SEG: CIFRADO RESTAURADO");
+                      addLogEntry(val ? "CRITICAL: AUTH_BYPASS_ENABLED" : "SEC: ENCRYPTION_RESTORED");
                     }} 
                   />
                 </div>
               </section>
 
-              {/* STREAM DE DATOS DEL KERNEL */}
+              {/* LIVE LOG STREAM */}
               <section className={`${styles.sidebarSection} ${styles.flexFill}`}>
                 <div className={styles.sectionTitle}>
-                  <Activity size={14} /> <span>DATALOG_STREAM</span>
+                  <Activity size={14} /> <span>KERNEL_STREAM</span>
                 </div>
                 <div className={styles.logContainer}>
                   {systemLog.map((log, i) => (
@@ -272,10 +270,10 @@ export default function InventoryPage() {
           <div className={styles.explorerHeader}>
             <div className={styles.pathDisplay}>
               <Scan size={14} />
-              <span>ROOT / ARCHIVOS / {activeCategory}</span>
+              <span>ROOT://DATA/{activeCategory}</span>
             </div>
             <div className={styles.itemCount}>
-              {filteredFolders.length} OBJETOS ENCONTRADOS
+              {filteredFolders.length} NODES_FOUND
             </div>
           </div>
 
@@ -285,7 +283,7 @@ export default function InventoryPage() {
               isUnlocked={isUnlocked} 
               onSelectItem={(folder) => {
                 setSelectedFolder(folder);
-                addLogEntry(`I/O: ACCEDIENDO A SECTOR ${folder.id}`);
+                addLogEntry(`I/O: ACCESS_SECTOR_${folder.id}`);
               }} 
             />
           </div>
@@ -296,25 +294,25 @@ export default function InventoryPage() {
       <footer className={styles.hudFooter}>
         <div className={styles.footerLeft}>
           <div className={`${styles.statusLed} ${isUnlocked ? styles.ledGreen : styles.ledAmber}`} />
-          <span>MODO: {isUnlocked ? 'OVERRIDE_ACTIVO' : 'LECTURA_SOLO'}</span>
+          <span>MODE: {isUnlocked ? 'ADMIN_OVERRIDE' : 'READ_ONLY'}</span>
         </div>
 
         <div className={styles.footerCenter}>
           <div className={`${styles.radSensor} ${metrics.rad > 0.5 ? styles.radCritical : ''}`}>
             <AlertTriangle size={12} />
-            <span>RADIACIÓN: {metrics.rad} Sv/h</span>
+            <span>RAD: {metrics.rad.toFixed(3)} Sv/h</span>
           </div>
         </div>
 
         <div className={styles.footerRight}>
-          <div className={styles.locationTag}>D6_SEC_G_ARCHIVE</div>
+          <div className={styles.locationTag}>BUNKER_D6_SEC_G</div>
           <div className={styles.timestamp}>
             {new Date().toLocaleDateString('ru-RU')}
           </div>
         </div>
       </footer>
 
-      {/* MODAL DE DETALLES */}
+      {/* MODAL DE EXPEDIENTES */}
       <AnimatePresence>
         {selectedFolder && (
           <BriefcaseModal 
@@ -326,7 +324,7 @@ export default function InventoryPage() {
         )}
       </AnimatePresence>
 
-      {/* BOTÓN MÓVIL (SÓLO MOBILE) */}
+      {/* BOTÓN TOGGLE PDA (Móvil) */}
       {isMobile && (
         <button 
           className={styles.mobileToggle}
