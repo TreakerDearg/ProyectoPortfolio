@@ -1,6 +1,6 @@
 // src/app/layout.jsx
-import { SystemProvider } from '@/hooks/useSystemContext'
-import '@/styles/globals.css'
+import { SystemProvider } from '../hooks/useSystemContext'
+import '../styles/globals.css'
 
 export default function RootLayout({ children }) {
   return (

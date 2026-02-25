@@ -12,6 +12,38 @@
   --hazard-yellow: #d4af37;
 }
 
+/* --- BASE GLOBAL --- */
+.somaTerminalRoot {
+  cursor: crosshair;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.somaTerminalRoot button,
+.somaTerminalRoot a,
+.somaTerminalRoot [role="button"],
+.somaTerminalRoot input {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.somaTerminalRoot button:hover {
+  filter: brightness(1.2) drop-shadow(0 0 5px var(--soma-teal));
+}
+
+.somaTerminalRoot .fileCorrupted {
+  cursor: not-allowed !important;
+}
+
+/* Focus visible para accesibilidad */
+.somaTerminalRoot button:focus-visible,
+.somaTerminalRoot a:focus-visible,
+.somaTerminalRoot [role="button"]:focus-visible,
+.somaTerminalRoot input:focus-visible {
+  outline: 2px solid var(--soma-teal);
+  outline-offset: 2px;
+}
+
 /* --- ESTRUCTURA BASE --- */
 .systemContainer {
   position: relative;
@@ -24,6 +56,67 @@
   flex-direction: column;
   overflow: hidden;
   image-rendering: pixelated;
+  padding-bottom: 35px; /* Espacio para la taskbar fija */
+  box-sizing: border-box;
+}
+
+/* --- CRT EFFECTS --- */
+.crtEffects {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1000;
+  mix-blend-mode: overlay;
+}
+
+.crtScanlines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%,
+    rgba(0, 0, 0, 0.15) 50%
+  );
+  background-size: 100% 4px;
+  animation: scanMove 8s linear infinite;
+}
+
+.crtFlicker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.4) 100%);
+  opacity: 0.2;
+  animation: flicker 3s infinite;
+}
+
+.crtNoise {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxmaWx0ZXIgaWQ9Im5vaXNlIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC44IiBudW1PY3RhdmVzPSIzIiAvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbHRlcj0idXJsKCNub2lzZSkiIG9wYWNpdHk9IjAuMDYiIC8+PC9zdmc+');
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+}
+
+@keyframes scanMove {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 20px; }
+}
+
+@keyframes flicker {
+  0% { opacity: 0.2; }
+  50% { opacity: 0.3; }
+  100% { opacity: 0.2; }
 }
 
 /* --- TOP HEADER --- */
@@ -39,11 +132,20 @@
   flex-shrink: 0;
 }
 
-.headerLeft, .headerRight {
+.headerLeft,
+.headerRight {
   display: flex;
   align-items: center;
   gap: 10px;
   font-size: 10px;
+}
+
+.stationLabel,
+.nodeText,
+.systemMetrics span,
+.sessionType span,
+.batteryStatus span {
+  color: var(--soma-teal);
 }
 
 .ledDotGreen {
@@ -55,21 +157,29 @@
   animation: ledPulse 2s infinite;
 }
 
+.batteryStatus {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--soma-teal);
+}
+
 /* --- MAIN CONTENT & BENTO GRID --- */
 .mainWrapper {
   flex: 1;
   display: flex;
   overflow: hidden;
   position: relative;
+  min-height: 0;
 }
 
 .desktopArea {
   flex: 1;
   overflow-y: auto;
+  min-height: 0;
   background: radial-gradient(circle at center, #0d1a1a 0%, #050808 100%);
-  padding: 15px;
-  /* Scanline effect */
-  background-image: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
+  padding: 20px 15px;
+  background-image: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%),
                     linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
   background-size: 100% 4px, 3px 100%;
 }
@@ -77,14 +187,16 @@
 .viewContainer {
   width: 100%;
   max-width: 1400px;
-  margin: 0 auto;
+  margin: 0 0 0 5px;
 }
 
+/* --- BENTO GRID (ventanas abiertas + iconos cerrados) --- */
 .bentoGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   grid-auto-rows: minmax(220px, auto);
   gap: 15px;
+  justify-items: start;
 }
 
 .spanTwo {
@@ -95,7 +207,7 @@
 .bentoItem {
   background: rgba(0, 0, 0, 0.4);
   border: 1px solid var(--win-dark);
-  box-shadow: inset 1px 1px var(--win-white), 2px 2px 10px rgba(0,0,0,0.5);
+  box-shadow: inset 1px 1px var(--win-white), 2px 2px 10px rgba(0, 0, 0, 0.5);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -104,6 +216,7 @@
   transition: transform 0.1s, border-color 0.2s;
   padding: 20px;
   text-align: center;
+  width: 100%;
 }
 
 .bentoItem:hover {
@@ -120,7 +233,7 @@
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  color: var(--accent); /* Injected via inline style in React */
+  color: var(--accent);
 }
 
 .bentoLabel {
@@ -130,21 +243,24 @@
   text-shadow: 1px 1px #000;
 }
 
-/* --- WINDOWS (Open State) --- */
+/* --- VENTANAS WINDOWS 95 (Open State) --- */
 .win95Container {
   background: var(--win-gray);
   padding: 2px;
   border: 1px solid #000;
-  box-shadow: inset 1px 1px var(--win-white), inset -1px -1px var(--win-dark), 5px 5px 15px rgba(0,0,0,0.5);
+  box-shadow: inset 1px 1px var(--win-white), inset -1px -1px var(--win-dark),
+    5px 5px 15px rgba(0, 0, 0, 0.5);
   display: flex;
   flex-direction: column;
   height: 100%;
-  min-height: 250px;
+  min-height: 200px;
+  width: 100%;
 }
 
 .windowFocused {
   z-index: 10;
-  box-shadow: inset 1px 1px var(--win-white), inset -1px -1px var(--win-dark), 10px 10px 25px rgba(0,0,0,0.6);
+  box-shadow: inset 1px 1px var(--win-white), inset -1px -1px var(--win-dark),
+    10px 10px 25px rgba(0, 0, 0, 0.6);
 }
 
 .win95Header {
@@ -176,6 +292,11 @@
   overflow: hidden;
 }
 
+.windowControls {
+  display: flex;
+  gap: 2px;
+}
+
 .winButton {
   width: 16px;
   height: 14px;
@@ -186,6 +307,10 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  padding: 0;
+  color: #000;
+  font-size: 10px;
+  line-height: 1;
 }
 
 .winButton:active {
@@ -275,9 +400,9 @@
   box-shadow: 0 0 10px var(--soma-teal-dim);
 }
 
-/* --- SIDEBAR --- */
+/* --- SIDEBAR (estilo vintage) --- */
 .sidebar {
-  width: 75px;
+  width: 60px;
   background: rgba(0, 0, 0, 0.85);
   border-right: 2px solid var(--win-dark);
   display: flex;
@@ -286,12 +411,30 @@
   transition: transform 0.3s ease;
 }
 
+.sidebarContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  padding: 10px 0;
+}
+
+.sidebarGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.sidebarFooter {
+  margin-top: auto;
+}
+
 .desktopIconContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  padding: 15px 5px;
+  padding: 10px 2px;
   background: none;
   border: none;
   width: 100%;
@@ -299,8 +442,8 @@
 }
 
 .iconBase {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   background: var(--win-gray);
   border: 1px solid #000;
   box-shadow: inset 1.5px 1.5px var(--win-white), inset -1.5px -1.5px var(--win-dark);
@@ -315,15 +458,25 @@
   box-shadow: inset 2px 2px #000, inset -1px -1px var(--win-white);
 }
 
+.iconDanger {
+  color: var(--hazard-red);
+}
+
 .iconLabel {
-  font-size: 8px;
+  font-size: 7px;
   color: #fff;
   text-transform: uppercase;
   text-align: center;
+  line-height: 1.2;
+  word-break: break-word;
 }
 
-/* --- TASKBAR --- */
+/* --- TASKBAR (fija en la parte inferior) --- */
 .taskbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
   height: 35px;
   background: var(--win-gray);
   border-top: 2px solid var(--win-white);
@@ -331,8 +484,7 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  z-index: 1200;
-  flex-shrink: 0;
+  z-index: 10000; /* Muy alto para estar sobre todo */
 }
 
 .startButton {
@@ -346,6 +498,8 @@
   height: 26px;
   font-weight: bold;
   font-size: 11px;
+  cursor: pointer;
+  color: #000;
 }
 
 .taskItemsContainer {
@@ -367,11 +521,21 @@
   padding: 0 8px;
   gap: 6px;
   font-size: 10px;
+  cursor: pointer;
+  color: #000;
 }
 
 .taskItemActive {
   background: #d4d4d4;
   box-shadow: inset 2px 2px #000, inset -1px -1px var(--win-white);
+}
+
+.taskItemMinimized {
+  opacity: 0.7;
+  font-style: italic;
+}
+.taskItemMinimized:hover {
+  opacity: 1;
 }
 
 .systemTray {
@@ -384,9 +548,25 @@
   border: 1px solid var(--win-dark);
   box-shadow: inset -1px -1px var(--win-white), inset 1px 1px #444;
   font-size: 10px;
+  color: #000;
 }
 
-/* --- CORRUPCIÓN & ANIMACIONES --- */
+.trayIcon {
+  color: #000;
+  filter: drop-shadow(0 0 2px var(--soma-teal));
+}
+
+.trayDivider {
+  width: 1px;
+  height: 16px;
+  background: var(--win-dark);
+}
+
+.pulseIcon {
+  animation: pulseIcon 2s infinite ease-in-out;
+}
+
+/* --- CORRUPTION & ANIMATIONS --- */
 .corruptedOverlay {
   background: rgba(40, 0, 0, 0.9);
   height: 100%;
@@ -397,6 +577,24 @@
   color: var(--hazard-red);
   padding: 20px;
   text-align: center;
+}
+
+.errorText {
+  font-size: 12px;
+  margin: 10px 0;
+  color: var(--hazard-red);
+  text-transform: uppercase;
+}
+
+.flickerRed {
+  animation: flickerRed 1s infinite;
+  color: var(--hazard-red);
+}
+
+@keyframes flickerRed {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
 }
 
 .repairBtn {
@@ -419,49 +617,13 @@
   50% { opacity: 0.3; }
 }
 
-@keyframes flicker {
-  0% { opacity: 0.8; }
-  100% { opacity: 1; }
+@keyframes pulseIcon {
+  0% { opacity: 1; filter: brightness(1); }
+  50% { opacity: 0.6; filter: brightness(0.8); }
+  100% { opacity: 1; filter: brightness(1); }
 }
 
-/* --- MOBILE RESPONSIVE --- */
-@media (max-width: 768px) {
-  .sidebar {
-    position: absolute;
-    height: calc(100% - 35px);
-    transform: translateX(-100%);
-    width: 200px; /* Wider for touch */
-  }
-
-  .sidebarOpen {
-    transform: translateX(0);
-  }
-
-  .bentoGrid {
-    grid-template-columns: 1fr; /* Una sola columna en móvil */
-    grid-auto-rows: auto;
-  }
-
-  .spanTwo {
-    grid-column: span 1;
-  }
-
-  .taskItemLabel, .startText {
-    display: none; /* Hide text to save space */
-  }
-
-  .taskItem {
-    min-width: 35px;
-    justify-content: center;
-  }
-
-  .win95Container {
-    height: auto;
-    min-height: 300px;
-  }
-}
-
-/* Custom Scrollbar for SOMA look */
+/* --- SCROLL PERSONALIZADO --- */
 ::-webkit-scrollbar {
   width: 12px;
 }
@@ -473,82 +635,250 @@
   border: 2px solid #111;
 }
 
-/* page.module.css */
-
-.somaTerminalRoot {
-  /* Cursor de mira técnica: limpio, preciso y muy "ingeniería" */
-  cursor: crosshair;
-  
-  /* Evita la selección de texto accidental para que se sienta como una máquina física */
-  user-select: none;
-  -webkit-user-select: none;
+/* --- VISTA DE ICONOS (escritorio compacto) --- */
+.iconGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 10px;
+  padding: 15px;
+  justify-items: center;
+  align-items: start;
 }
 
-/* --- INTERACCIONES DE CURSOR --- */
+.iconGridItem {
+  list-style: none;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
 
-/* Cuando pasas sobre botones, iconos o elementos clickeables */
-.somaTerminalRoot button,
-.somaTerminalRoot a,
-.somaTerminalRoot [role="button"],
-.somaTerminalRoot input {
-  /* Cambiamos a puntero, pero podemos forzar que mantenga la cruz 
-     si queremos una estética 100% de terminal de diagnóstico */
+.iconItem {
+  background: transparent;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   cursor: pointer;
-  transition: all 0.2s ease;
+  padding: 8px;
+  transition: background 0.1s;
+  width: 100%;
+}
+.iconItem:hover {
+  background: rgba(118, 181, 181, 0.1);
+  border: 1px dashed var(--soma-teal);
+}
+.iconItemInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.iconItemLabel {
+  font-size: 9px;
+  text-align: center;
+  color: #fff;
+  text-shadow: 1px 1px #000;
 }
 
-/* Efecto visual de "Focus" al pasar el cursor (Hover) */
-.somaTerminalRoot button:hover {
-  /* Simula la retroalimentación de las pantallas de SOMA */
-  filter: brightness(1.2) drop-shadow(0 0 5px var(--soma-teal));
+/* --- SEARCH OVERLAY --- */
+.searchOverlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 600px;
+  background: #000;
+  border: 2px solid var(--soma-teal);
+  padding: 20px;
+  z-index: 2000;
+  box-shadow: 0 0 30px var(--soma-teal);
 }
 
-/* Cursor para archivos corruptos o bloqueados */
-.somaTerminalRoot .fileCorrupted {
-  cursor: not-allowed !important;
+/* --- DECORACIONES SOMA (posiciones) --- */
+.decorTopRight {
+  position: absolute;
+  top: 40px;
+  right: 10px;
+  z-index: 1500;
+  pointer-events: none;
+}
+.decorLeft {
+  position: absolute;
+  left: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1500;
+  pointer-events: none;
+}
+.decorBottomLeft {
+  position: absolute;
+  bottom: 45px;
+  left: 10px;
+  z-index: 1500;
+  pointer-events: none;
+}
+.decorBottomRight {
+  position: absolute;
+  bottom: 45px;
+  right: 10px;
+  z-index: 1500;
+  pointer-events: none;
 }
 
-/* --- REFINAMIENTO CRT / SOMA --- */
-
-.systemContainer {
-  position: relative;
-  background-color: #050707; /* El negro profundo de SOMA */
-  height: 100vh;
-  width: 100vw;
+/* --- NOISE OVERLAY (FX) --- */
+.fxContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1000;
+  mix-blend-mode: overlay;
   overflow: hidden;
-  color: #76b5b5; /* Soma Teal */
-  font-family: 'JetBrains Mono', monospace; /* O cualquier fuente tech */
 }
 
-/* Línea de escaneo sutil que recorre la pantalla */
-.scanlineEffect {
+.grainLayer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxmaWx0ZXIgaWQ9Im5vaXNlIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC44IiBudW1PY3RhdmVzPSIzIiAvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbHRlcj0idXJsKCNub2lzZSkiIG9wYWNpdHk9IjAuMDYiIC8+PC9zdmc+');
+  opacity: calc(0.06 * var(--noise-intensity, 0.7));
+  mix-blend-mode: overlay;
+  animation: grainShift 0.2s infinite steps(2);
+}
+
+.scanlineLayer {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   background: linear-gradient(
-    rgba(18, 16, 16, 0) 50%, 
-    rgba(0, 0, 0, 0.1) 50%
-  ), 
-  linear-gradient(
-    90deg, 
-    rgba(255, 0, 0, 0.02), 
-    rgba(0, 255, 0, 0.01), 
-    rgba(0, 0, 255, 0.02)
+    rgba(18, 16, 16, 0) 50%,
+    rgba(0, 0, 0, calc(0.15 * var(--scanline-intensity, 0.5))) 50%
   );
-  background-size: 100% 4px, 3px 100%;
-  pointer-events: none; /* No bloquea el cursor */
-  z-index: 100;
+  background-size: 100% 4px;
+  animation: scanMove 8s linear infinite;
+  opacity: calc(0.8 * var(--scanline-intensity, 0.5));
 }
 
-/* Animación de parpadeo para los iconos de estado */
-.pulseIcon {
-  animation: somaPulse 2s infinite ease-in-out;
+.voltageFlicker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.4) 100%);
+  opacity: 0.2;
+  animation: flicker var(--flicker-duration, 2.4s) infinite;
 }
 
-@keyframes somaPulse {
-  0% { opacity: 1; filter: brightness(1); }
-  50% { opacity: 0.6; filter: brightness(0.8); }
-  100% { opacity: 1; filter: brightness(1); }
+.vignette {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, transparent 60%, rgba(0,0,0,0.3) 100%);
+  pointer-events: none;
+  z-index: 1001;
+}
+
+.chromaticAberration {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(255, 0, 0, 0.02) 0px,
+    rgba(0, 255, 0, 0.01) 1px,
+    rgba(0, 0, 255, 0.02) 2px,
+    transparent 3px
+  );
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.colorNoise {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxmaWx0ZXIgaWQ9ImNvbG9yTm9pc2UiPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIwLjgiIG51bU9jdGF2ZXM9IjMiIC8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI2NvbG9yTm9pc2UpIiBvcGFjaXR5PSIwLjAzIiAvPjwvc3ZnPg==');
+  opacity: 0.03;
+  mix-blend-mode: overlay;
+  animation: grainShift 0.3s infinite steps(3);
+}
+
+.screenDoor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    transparent 0px,
+    rgba(0, 0, 0, 0.02) 1px,
+    transparent 2px
+  );
+  background-size: 100% 3px;
+  pointer-events: none;
+  opacity: 0.1;
+}
+
+@keyframes grainShift {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(2px, 2px); }
+}
+
+/* --- MOBILE RESPONSIVE --- */
+@media (max-width: 768px) {
+  .systemContainer {
+    padding-bottom: 35px; /* Se mantiene */
+  }
+
+  .sidebar {
+    position: absolute;
+    height: calc(100% - 35px);
+    transform: translateX(-100%);
+    width: 200px;
+  }
+
+  .sidebarOpen {
+    transform: translateX(0);
+  }
+
+  .bentoGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .spanTwo {
+    grid-column: span 1;
+  }
+
+  .taskItemLabel,
+  .startText {
+    display: none;
+  }
+
+  .taskItem {
+    min-width: 35px;
+    justify-content: center;
+  }
+
+  .win95Container {
+    min-height: 200px;
+  }
+
+  .searchOverlay {
+    width: 95%;
+    padding: 15px;
+  }
 }

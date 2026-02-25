@@ -6,7 +6,6 @@ import {
   FolderOpen, Terminal, Search,
   Unlock, Database, Menu, X
 } from 'lucide-react';
-// Importamos el nuevo CSS exclusivo
 import archiveStyles from '../../../styles/logs-styles/SomaArchives.module.css';
 
 export const SomaArchives = ({ apps, openApps, onToggleApp, onOpenBriefcase }) => {
@@ -24,12 +23,13 @@ export const SomaArchives = ({ apps, openApps, onToggleApp, onOpenBriefcase }) =
       animate={{ opacity: 1, scale: 1 }}
       className={archiveStyles.archivesContainer}
     >
-      {/* TOOLBAR SUPERIOR */}
+      {/* TOOLBAR SUPERIOR - STICKY */}
       <div className={archiveStyles.archivesHeader}>
         <div className={archiveStyles.archivesTitle}>
           <button 
             className={archiveStyles.mobileMenuBtn}
             onClick={() => setShowSidebar(!showSidebar)}
+            aria-label={showSidebar ? "Cerrar menú" : "Abrir menú"}
           >
             {showSidebar ? <X size={14} /> : <Menu size={14} />}
           </button>
@@ -49,8 +49,10 @@ export const SomaArchives = ({ apps, openApps, onToggleApp, onOpenBriefcase }) =
       </div>
       
       <div className={archiveStyles.archivesExplorer}>
-        {/* SIDEBAR - Overlay en móvil, Fijo en Desktop */}
-        <aside className={`${archiveStyles.explorerTree} ${showSidebar ? archiveStyles.treeVisible : ''}`}>
+        {/* SIDEBAR - Sticky en desktop, overlay en móvil */}
+        <aside 
+          className={`${archiveStyles.explorerTree} ${showSidebar ? archiveStyles.treeVisible : ''}`}
+        >
           <div className={archiveStyles.treeLabel}>FileSystem_Root</div>
           <div className={archiveStyles.treeItem}>
             <ChevronRight size={10} />
@@ -70,7 +72,7 @@ export const SomaArchives = ({ apps, openApps, onToggleApp, onOpenBriefcase }) =
           </div>
         </aside>
 
-        {/* LISTA DE ARCHIVOS */}
+        {/* LISTA DE ARCHIVOS - SCROLL INTERNO */}
         <div className={archiveStyles.explorerList}>
           <table className={archiveStyles.archivesTable}>
             <thead>
@@ -89,11 +91,13 @@ export const SomaArchives = ({ apps, openApps, onToggleApp, onOpenBriefcase }) =
                     key={app.id} 
                     className={openApps.includes(app.id) ? archiveStyles.rowActive : ''}
                     onDoubleClick={() => onToggleApp(app.id)}
+                    whileHover={{ scale: 1.01, backgroundColor: 'rgba(118, 181, 181, 0.1)' }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                   >
                     <td>
                       <div className={archiveStyles.fileNameCell}>
                         <div className={app.corruption > 0.6 ? archiveStyles.iconCorrupt : archiveStyles.iconNormal}>
-                          {app.security_clearance.includes('4') ? <Lock size={14}/> : <FileText size={14}/>}
+                          {app.security_clearance?.includes('4') ? <Lock size={14}/> : <FileText size={14}/>}
                         </div>
                         <div className={archiveStyles.fileInfo}>
                           <span className={archiveStyles.fileTitle}>{app.title}.dat</span>
@@ -116,6 +120,7 @@ export const SomaArchives = ({ apps, openApps, onToggleApp, onOpenBriefcase }) =
                         <button 
                           onClick={() => onOpenBriefcase(app)} 
                           className={archiveStyles.explorerBtn}
+                          title="Decrypt file"
                         >
                           <Unlock size={10} /> 
                           <span className={archiveStyles.btnText}>DECRYPT</span>

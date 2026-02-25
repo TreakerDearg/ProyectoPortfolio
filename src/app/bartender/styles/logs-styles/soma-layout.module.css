@@ -1,40 +1,51 @@
-/* soma-layout.module.css */
+/* soma-layout.module.css - Versión mejorada - Estética SOMA (oscura, industrial, desgastada) */
 
+/* ============================================
+   VARIABLES Y CONFIGURACIÓN GLOBAL
+   ============================================ */
 .terminalWrapper {
-  --soma-turq: #5a8f8f;
-  --soma-turq-bright: #76b5b5;
-  --case-metal: #121415;
-  --inner-bezel: #080a0a;
-  --status-black: #050708;
+  --color-turquoise-dim: #3a6b6b;      /* Turquesa apagado, menos brillante */
+  --color-turquoise-deep: #1f3f3f;     /* Más oscuro para detalles */
+  --color-metal-dark: #0e1113;          /* Chasis principal muy oscuro */
+  --color-metal-light: #1e2326;         /* Para bordes o relieves */
+  --color-bezel: #040608;               /* Bisel interior casi negro */
+  --color-accent-red: #8b3f3f;           /* Rojo apagado para LED error */
+  --color-accent-green: #2f6b4f;         /* Verde apagado para LED power */
+  --color-text-dim: #547e7e;             /* Texto tenue */
+  --color-status-bg: #111a1a;            /* Fondo del panel de estado */
   
   min-height: 100vh;
   width: 100%;
-  background: radial-gradient(circle at center, #1a2022 0%, #050505 100%);
+  background: radial-gradient(circle at 50% 30%, #1e2628 0%, #030405 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   perspective: 2000px;
   overflow: hidden;
-  padding: 10px; /* Espacio mínimo para que el chasis no toque los bordes */
+  padding: 12px; /* Mínimo para que el monitor no toque bordes */
+  font-family: 'Courier New', monospace;
 }
 
+/* Sombra ambiental muy sutil (más realista) */
 .ambientShadow {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at center, transparent 50%, rgba(0,0,0,0.9) 100%);
+  background: radial-gradient(circle at 50% 70%, rgba(0, 20, 20, 0.3) 0%, rgba(0, 0, 0, 1) 90%);
   pointer-events: none;
   z-index: 1;
 }
 
-/* CHASIS EXTERIOR - ESCALABLE */
+/* ============================================
+   MONITOR (CHASIS PRINCIPAL)
+   ============================================ */
 .monitorFrame {
-  background: var(--case-metal);
-  border: 2px solid #222;
-  border-radius: clamp(20px, 5vw, 60px); 
+  background: var(--color-metal-dark);
+  border: 2px solid #2a2f32;
+  border-radius: clamp(24px, 5vw, 70px); /* Más suave que el original */
   position: relative;
   box-shadow: 
-    0 80px 150px -40px rgba(0,0,0,1),
-    inset 0 4px 10px rgba(255,255,255,0.05);
+    0 50px 100px -40px rgba(0, 0, 0, 1),
+    inset 0 2px 6px rgba(255, 255, 255, 0.03); /* Reflejo muy sutil */
   
   width: 100%;
   max-width: 1300px;
@@ -45,215 +56,358 @@
   z-index: 10;
   background-image: 
     url("https://www.transparenttextures.com/patterns/dark-matter.png"),
-    linear-gradient(180deg, #1a1c1d 0%, #0f1112 100%);
+    linear-gradient(180deg, #1c2124 0%, #0b0f10 100%);
 }
 
-/* MARCO SUPERIOR (Usa flex para distribuir componentes) */
+/* ============================================
+   MARCO SUPERIOR (HARDWARE)
+   ============================================ */
 .topHardwareFrame {
-  height: 50px;
+  height: 56px; /* Un poco más alto para dar presencia */
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 20px;
+  padding: 0 24px;
   flex-shrink: 0;
+  background: linear-gradient(180deg, #2d3338 0%, #1b1f22 100%);
+  border-bottom: 1px solid #000;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
 }
 
 .topHardwareLeft, .topHardwareRight {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 18px;
 }
 
 .serialNumber {
   font-family: 'Courier New', monospace;
-  font-size: 10px;
-  color: var(--soma-turq);
-  opacity: 0.5;
-  letter-spacing: 1px;
+  font-size: 11px;
+  color: var(--color-turquoise-dim);
+  opacity: 0.7;
+  letter-spacing: 2px;
+  text-shadow: 0 0 5px rgba(90, 143, 143, 0.3);
 }
 
+/* Centro: ventilación y LEDs */
 .topConsoleCenter {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 24px;
 }
 
-/* EL BISEL (AJUSTE DINÁMICO) */
+/* Contenedor de LEDs */
+.statusLedsContainer {
+  display: flex;
+  gap: 16px;
+}
+
+.ledGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.ledRed {
+  width: 10px;
+  height: 10px;
+  background: var(--color-accent-red);
+  border-radius: 50%;
+  box-shadow: 0 0 8px #8b3f3f, inset 0 0 4px rgba(0,0,0,0.5);
+  opacity: 0.9;
+  animation: pulseRed 2s infinite;
+}
+
+.ledGreen {
+  width: 10px;
+  height: 10px;
+  background: var(--color-accent-green);
+  border-radius: 50%;
+  box-shadow: 0 0 8px #2f6b4f, inset 0 0 4px rgba(0,0,0,0.5);
+  opacity: 0.9;
+  animation: pulseGreen 2s infinite;
+}
+
+@keyframes pulseRed {
+  0%, 100% { opacity: 0.8; box-shadow: 0 0 8px #8b3f3f; }
+  50% { opacity: 0.4; box-shadow: 0 0 4px #8b3f3f; }
+}
+
+@keyframes pulseGreen {
+  0%, 100% { opacity: 0.9; box-shadow: 0 0 10px #2f6b4f; }
+  50% { opacity: 0.5; box-shadow: 0 0 5px #2f6b4f; }
+}
+
+.ledLabel {
+  font-size: 8px;
+  color: var(--color-turquoise-dim);
+  opacity: 0.6;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ============================================
+   BEZEL Y PANTALLA
+   ============================================ */
 .screenBezel {
-  background: var(--inner-bezel);
-  border-radius: clamp(10px, 3vw, 30px);
+  background: var(--color-bezel);
+  border-radius: clamp(14px, 3vw, 32px);
   position: relative;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  flex: 1; 
-  border: clamp(6px, 1.5vw, 15px) solid #0d0f10;
-  margin: 0 10px;
-  box-shadow: inset 0 20px 60px rgba(0,0,0,1);
+  flex: 1;
+  border: clamp(8px, 1.8vw, 18px) solid #111618; /* Bisel grueso */
+  margin: 0 14px;
+  box-shadow: inset 0 20px 50px rgba(0, 0, 0, 1);
 }
 
+/* Etiqueta de activo centrada encima del bezel */
 .assetTagWrapper {
   position: absolute;
-  top: 5px;
+  top: -10px; /* Para que sobresalga ligeramente */
   left: 50%;
   transform: translateX(-50%);
-  z-index: 50;
-  opacity: 0.8;
+  z-index: 60;
+  opacity: 0.9;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.7));
 }
 
-/* CONTENEDOR DE LA PANTALLA */
+/* Contenedor de la pantalla (donde va el contenido) */
 .pageContainer {
   flex: 1;
   position: relative;
-  background: #020202;
+  background: #010101; /* Fondo negro puro para el contenido */
   overflow: hidden;
   display: flex;
+  border-radius: 6px; /* Pequeño radio interior */
 }
 
 .contentView {
   position: relative;
-  z-index: 5;
+  z-index: 10;
   height: 100%;
   width: 100%;
-  overflow-y: auto; /* Permite scroll interno si el contenido crece */
+  overflow-y: auto;
+  color: var(--color-turquoise-dim);
+  font-size: 14px;
+  line-height: 1.5;
+  padding: 20px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-turquoise-dim) #1a1e20;
 }
 
-/* CAPAS ÓPTICAS */
-.glassCurvature, .scanlineOverlay, .staticNoise {
+.contentView::-webkit-scrollbar {
+  width: 8px;
+}
+.contentView::-webkit-scrollbar-track {
+  background: #1a1e20;
+}
+.contentView::-webkit-scrollbar-thumb {
+  background: var(--color-turquoise-dim);
+  border-radius: 4px;
+  box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+}
+
+/* ============================================
+   CAPAS CRT (efectos visuales)
+   ============================================ */
+.glassCurvature,
+.scanlineOverlay,
+.staticNoise {
   position: absolute;
   inset: 0;
   pointer-events: none;
+  z-index: 50; /* Por encima del contenido pero por debajo de interacciones */
 }
 
 .glassCurvature {
-  z-index: 100;
-  background: radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.4) 100%);
-  box-shadow: inset 0 0 100px rgba(0,0,0,0.9);
+  background: radial-gradient(circle at 50% 50%, transparent 40%, rgba(0, 0, 0, 0.7) 100%);
+  box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.9);
+  mix-blend-mode: multiply;
 }
 
 .scanlineOverlay {
-  z-index: 101;
-  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
-  background-size: 100% 3px;
-  opacity: 0.6;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 255, 255, 0.02) 0px,
+    rgba(0, 0, 0, 0.1) 1px,
+    transparent 2px
+  );
+  background-size: 100% 4px;
+  opacity: 0.3;
+  animation: scanMove 8s linear infinite;
+}
+
+@keyframes scanMove {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 20px; }
 }
 
 .staticNoise {
-  z-index: 102;
-  opacity: 0.02;
-  background-image: url("https://www.transparenttextures.com/patterns/stardust.png");
+  opacity: 0.03;
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxmaWx0ZXIgaWQ9Im5vaXNlIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC44IiBudW1PY3RhdmVzPSIzIiAvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbHRlcj0idXJsKCNub2lzZSkiIG9wYWNpdHk9IjAuMDYiIC8+PC9zdmc+');
   animation: noiseGrain 0.2s infinite steps(2);
 }
 
-/* PANEL INFERIOR RESPONSIVO */
+@keyframes noiseGrain {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(0.5px, 0.5px); }
+}
+
+/* ============================================
+   PANEL INFERIOR (BOTTOM NAV)
+   ============================================ */
 .bottomNavPanel {
-  background: var(--soma-turq);
-  min-height: 65px;
+  background: var(--color-turquoise-deep);
+  min-height: 68px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 20px;
+  padding: 12px 24px;
   z-index: 110;
-  border-top: 4px solid #000;
-  background-image: linear-gradient(to bottom, rgba(255,255,255,0.1) 0%, transparent 100%);
+  border-top: 3px solid #000;
+  background-image: linear-gradient(to bottom, rgba(255,255,255,0.08) 0%, transparent 100%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
 }
 
 .navControls {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 20px;
 }
 
 .separator {
-  width: 1px;
-  height: 25px;
-  background: rgba(0,0,0,0.2);
+  width: 2px;
+  height: 28px;
+  background: rgba(0, 0, 0, 0.4);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.5);
+}
+
+.warningWrapper {
+  /* Se deja para posibles ajustes */
 }
 
 .centralSpeaker {
   flex: 1;
   display: flex;
   justify-content: center;
-  max-width: 200px;
-  opacity: 0.4;
-  margin: 0 10px;
+  max-width: 180px;
+  opacity: 0.5;
+  margin: 0 16px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
 }
 
 .hardwareStatus {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  background: var(--color-status-bg);
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(90, 143, 143, 0.3);
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.6);
 }
 
 .pulseContainer {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 
 .syncPulse {
-  width: 6px;
-  height: 6px;
-  background: #000;
+  width: 8px;
+  height: 8px;
+  background: var(--color-turquoise-dim);
   border-radius: 50%;
+  box-shadow: 0 0 10px var(--color-turquoise-dim);
   animation: pulseStatus 1.5s infinite;
 }
 
+@keyframes pulseStatus {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.7); }
+}
+
 .statusLabel {
-  font-family: monospace;
-  font-size: 8px;
-  color: rgba(0,0,0,0.7);
+  font-family: 'Courier New', monospace;
+  font-size: 9px;
+  color: var(--color-turquoise-dim);
+  letter-spacing: 1px;
 }
 
 .statusValue {
-  font-family: monospace;
-  font-size: 10px;
-  color: #000;
-  font-weight: 900;
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  color: #aadddd; /* Un poco más claro pero sin ser brillante */
+  font-weight: 600;
+  text-shadow: 0 0 5px rgba(90, 143, 143, 0.4);
 }
 
-/* BASE */
+/* ============================================
+   BASE DEL MONITOR
+   ============================================ */
 .baseFrameDetails {
-  height: 30px;
-  background: linear-gradient(to bottom, #121415, #000);
-  border-bottom-left-radius: clamp(20px, 5vw, 60px);
-  border-bottom-right-radius: clamp(20px, 5vw, 60px);
+  height: 34px;
+  background: linear-gradient(to bottom, #23292e, #090c0e);
+  border-bottom-left-radius: clamp(24px, 5vw, 70px);
+  border-bottom-right-radius: clamp(24px, 5vw, 70px);
   display: flex;
   justify-content: center;
   flex-shrink: 0;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
 }
 
 .baseCenterGrip {
   width: 30%;
-  max-width: 150px;
-  height: 6px;
-  background: #000;
+  max-width: 160px;
+  height: 8px;
+  background: #1d2528;
   margin-top: 8px;
-  border-radius: 3px;
+  border-radius: 6px;
+  box-shadow: 
+    inset 0 2px 4px rgba(0,0,0,0.8),
+    0 0 6px rgba(90, 143, 143, 0.2);
 }
 
-/* --- MEDIA QUERIES PARA MÓVIL --- */
+.gripTexture {
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(90deg, 
+    #2e3b3b 0px, #2e3b3b 2px, 
+    #131a1a 2px, #131a1a 5px);
+  border-radius: 6px;
+  opacity: 0.5;
+}
 
+/* ============================================
+   MEDIA QUERIES (RESPONSIVE)
+   ============================================ */
 @media (max-width: 768px) {
   .monitorFrame {
     height: 98vh;
     border-radius: 20px;
   }
 
-  .topConsoleCenter, .centralSpeaker, .warningWrapper, .serialNumber {
-    display: none; /* Escondemos elementos decorativos pesados */
+  /* Ocultamos elementos puramente decorativos que ocupan espacio */
+  .topConsoleCenter,
+  .centralSpeaker,
+  .warningWrapper,
+  .serialNumber {
+    display: none;
   }
 
   .topHardwareFrame {
-    height: 35px;
-    padding: 0 15px;
+    height: 40px;
+    padding: 0 16px;
   }
 
   .bottomNavPanel {
     flex-direction: column;
     height: auto;
-    padding: 12px;
-    gap: 10px;
+    padding: 16px;
+    gap: 12px;
   }
 
   .navControls {
@@ -267,22 +421,34 @@
   }
 
   .screenBezel {
-    border-width: 6px;
-    margin: 0 5px;
+    border-width: 8px;
+    margin: 0 8px;
+  }
+
+  .contentView {
+    padding: 12px;
+    font-size: 13px;
   }
 }
 
-@keyframes noiseGrain {
-  0% { transform: translate(0,0); }
-  100% { transform: translate(1px, 1px); }
+@media (max-width: 480px) {
+  .topHardwareFrame {
+    height: 36px;
+  }
+  
+  .bottomNavPanel {
+    padding: 12px;
+  }
+  
+  .hardwareStatus {
+    padding: 4px 8px;
+  }
+  
+  .statusLabel {
+    font-size: 8px;
+  }
+  
+  .statusValue {
+    font-size: 9px;
+  }
 }
-
-@keyframes pulseStatus {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.3; transform: scale(0.8); }
-}
-
-.ledRed { width: 8px; height: 8px; background: #ff4444; border-radius: 50%; box-shadow: 0 0 5px #ff4444; }
-.ledGreen { width: 8px; height: 8px; background: #44ff44; border-radius: 50%; box-shadow: 0 0 5px #44ff44; }
-.ledLabel { font-size: 7px; color: rgba(118,181,181,0.5); font-family: monospace; }
-.ledGroup { display: flex; flex-direction: column; align-items: center; gap: 2px; }

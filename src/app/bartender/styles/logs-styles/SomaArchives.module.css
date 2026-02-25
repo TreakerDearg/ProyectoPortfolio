@@ -6,6 +6,7 @@
   --win-dark: #808080;
   --win-blue: #000080;
   --soma-teal: #76b5b5;
+  --soma-teal-dim: rgba(118, 181, 181, 0.2);
 
   height: 100%;
   width: 100%;
@@ -14,8 +15,9 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  box-shadow: inset 1px 1px var(--win-white);
+  box-shadow: inset 1px 1px var(--win-white), 0 4px 8px rgba(0, 0, 0, 0.3);
   color: #000;
+  font-family: 'Courier New', Courier, monospace;
 }
 
 /* HEADER DEL EXPLORADOR */
@@ -27,6 +29,8 @@
   justify-content: space-between;
   padding: 0 8px;
   border-bottom: 1px solid var(--win-dark);
+  box-shadow: inset 0 -1px 0 var(--win-white);
+  flex-shrink: 0;
 }
 
 .archivesTitle {
@@ -38,12 +42,13 @@
 .headerText {
   font-size: 11px;
   font-weight: bold;
+  letter-spacing: 0.5px;
 }
 
 .archiveSearchBox {
   background: #fff;
   border: 1.5px solid var(--win-dark);
-  box-shadow: inset 1px 1px #444;
+  box-shadow: inset 1px 1px #444, 0 1px 0 var(--win-white);
   display: flex;
   align-items: center;
   padding: 2px 6px;
@@ -58,6 +63,12 @@
   outline: none;
   width: 100%;
   color: #000;
+  font-family: 'Courier New', monospace;
+}
+
+.archiveSearchBox input::placeholder {
+  color: #666;
+  font-style: italic;
 }
 
 /* EXPLORER LAYOUT */
@@ -67,7 +78,7 @@
   margin: 2px;
   background: #fff;
   border: 1.5px solid var(--win-dark);
-  box-shadow: inset 1px 1px #000;
+  box-shadow: inset 1px 1px #000, 0 2px 4px rgba(0,0,0,0.2);
   position: relative;
   overflow: hidden;
 }
@@ -83,6 +94,7 @@
   flex-direction: column;
   gap: 4px;
   z-index: 10;
+  box-shadow: inset -1px 0 0 var(--win-white);
 }
 
 .treeLabel {
@@ -90,19 +102,30 @@
   font-weight: bold;
   margin-bottom: 5px;
   font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .treeItem {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 2px 4px;
+  padding: 4px 4px;
   cursor: pointer;
+  border: 1px solid transparent;
+  transition: background 0.1s, border-color 0.1s;
+}
+
+.treeItem:hover {
+  background: rgba(0, 0, 128, 0.1);
+  border-color: var(--win-blue);
 }
 
 .treeItemActive {
   background: var(--win-blue);
   color: #fff;
+  border-color: #000;
+  box-shadow: inset 1px 1px var(--win-white);
 }
 
 /* STORAGE BAR (SOMA VIBE) */
@@ -112,21 +135,34 @@
   border-top: 1px solid #ccc;
 }
 
+.storageLabel {
+  font-size: 8px;
+  font-weight: bold;
+  color: var(--win-dark);
+  margin-bottom: 2px;
+}
+
 .storageBar {
   height: 10px;
   background: #ddd;
   border: 1px solid var(--win-dark);
   margin: 4px 0;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
 }
 
 .storageFill {
   height: 100%;
   background: var(--soma-teal);
+  width: 0%;
+  transition: width 0.3s ease;
+  box-shadow: inset 0 1px 2px rgba(255,255,255,0.5);
 }
 
 .storageMeta {
   font-size: 8px;
   text-align: right;
+  color: #333;
+  font-weight: bold;
 }
 
 /* LISTA DE ARCHIVOS */
@@ -134,11 +170,26 @@
   flex: 1;
   overflow-y: auto;
   position: relative;
+  scrollbar-width: thin;
+  scrollbar-color: var(--win-dark) #111;
+}
+
+/* Scroll estilo CRT */
+.explorerList::-webkit-scrollbar {
+  width: 12px;
+}
+.explorerList::-webkit-scrollbar-track {
+  background: #111;
+}
+.explorerList::-webkit-scrollbar-thumb {
+  background: var(--win-dark);
+  border: 2px solid #111;
 }
 
 .archivesTable {
   width: 100%;
   border-collapse: collapse;
+  font-size: 11px;
 }
 
 .archivesTable th {
@@ -147,16 +198,29 @@
   background: var(--win-gray);
   border-bottom: 1px solid var(--win-dark);
   border-right: 1px solid var(--win-dark);
-  padding: 4px 8px;
-  font-size: 9px;
+  padding: 6px 8px;
+  font-size: 10px;
   text-align: left;
   box-shadow: inset 1px 1px var(--win-white);
-  z-index: 2;
+  z-index: 20;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.archivesTable th:last-child {
+  border-right: none;
+}
+
+.archivesTable td {
+  padding: 4px 8px;
+  border-bottom: 1px solid #f0f0f0;
+  border-right: 1px solid #f0f0f0;
 }
 
 .archivesTable tr {
   cursor: pointer;
-  border-bottom: 1px solid #f0f0f0;
+  transition: background 0.1s;
 }
 
 .archivesTable tr:hover {
@@ -167,11 +231,15 @@
   background: #cce8ff !important;
 }
 
+.rowActive td {
+  border-bottom-color: #a0c0e0;
+}
+
 .fileNameCell {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 8px;
+  padding: 4px 0;
 }
 
 .fileInfo {
@@ -182,12 +250,27 @@
 .fileTitle {
   font-size: 11px;
   font-weight: bold;
+  color: #000;
 }
 
 .fileTag {
   font-size: 8px;
   color: var(--win-dark);
   text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.originTag {
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border: 1px solid var(--win-dark);
+  font-size: 9px;
+  font-family: monospace;
+}
+
+.integrityCell {
+  font-weight: bold;
+  font-size: 10px;
 }
 
 /* BOTONES */
@@ -195,16 +278,30 @@
   background: var(--win-gray);
   border: 1px solid #000;
   box-shadow: inset 1px 1px var(--win-white), inset -1px -1px var(--win-dark);
-  padding: 3px 8px;
+  padding: 4px 10px;
   font-size: 9px;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   cursor: pointer;
+  transition: all 0.1s;
+  color: #000;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
 }
 
 .explorerBtn:active {
   box-shadow: inset -1px -1px var(--win-white), inset 1px 1px var(--win-dark);
+  transform: translate(1px, 1px);
+}
+
+.explorerBtn:hover {
+  background: #d0d0d0;
+  border-color: var(--win-blue);
+}
+
+.btnText {
+  display: inline-block;
 }
 
 /* FOOTER */
@@ -218,6 +315,12 @@
   justify-content: space-between;
   font-size: 9px;
   font-family: monospace;
+  box-shadow: inset 0 1px 0 var(--win-white);
+}
+
+.pathLabel {
+  color: #333;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.5);
 }
 
 /* MOBILE OPTIMIZATION */
@@ -231,6 +334,12 @@
     background: transparent;
     border: none;
     cursor: pointer;
+    padding: 4px;
+    border: 1px solid transparent;
+  }
+  .mobileMenuBtn:hover {
+    background: rgba(0,0,0,0.05);
+    border-color: var(--win-dark);
   }
 
   .desktopOnlyIcon, .desktopOnly {
@@ -244,11 +353,13 @@
     bottom: 0;
     transform: translateX(-100%);
     transition: transform 0.3s ease;
+    z-index: 30;
+    width: 180px;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.3);
   }
 
   .treeVisible {
     transform: translateX(0);
-    box-shadow: 5px 0 15px rgba(0,0,0,0.3);
   }
 
   .archiveSearchBox {
@@ -258,10 +369,46 @@
   .fileTitle {
     font-size: 10px;
   }
+
+  .archivesTable th {
+    font-size: 9px;
+    padding: 4px;
+  }
+
+  .explorerBtn .btnText {
+    display: none; /* Ocultar texto en móvil, solo icono */
+  }
+
+  .explorerBtn {
+    padding: 4px 6px;
+  }
 }
 
 /* UTILS */
-.textDanger { color: #cc0000; font-weight: bold; }
-.textSuccess { color: #006600; font-weight: bold; }
-.iconCorrupt { color: #cc0000; }
-.iconNormal { color: var(--win-blue); }
+.textDanger {
+  color: #cc0000;
+  font-weight: bold;
+  animation: blinkWarning 1s infinite;
+}
+.textSuccess {
+  color: #006600;
+  font-weight: bold;
+}
+.iconCorrupt {
+  color: #cc0000;
+  animation: flicker 0.5s infinite;
+}
+.iconNormal {
+  color: var(--win-blue);
+}
+
+@keyframes blinkWarning {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes flicker {
+  0% { opacity: 1; }
+  50% { opacity: 0.6; }
+  100% { opacity: 1; }
+}

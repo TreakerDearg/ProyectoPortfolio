@@ -1,226 +1,158 @@
-/* --- TORNILLOS HEXAGONALES --- */
+/* ============================================
+   VARIABLES GLOBALES (opcional, para coherencia)
+   ============================================ */
+:root {
+  --color-metal-base: #2a2a2a;
+  --color-metal-light: #4a4a4a;
+  --color-metal-dark: #1a1a1a;
+  --color-cyan-glow: #0ff;
+  --color-warning-red: #ff3a3a;
+  --color-warning-yellow: #ffaa00;
+  --color-warning-blue: #3a9fff;
+  --shadow-hard: 0 4px 8px rgba(0, 0, 0, 0.6);
+  --shadow-soft: 0 2px 4px rgba(0, 0, 0, 0.3);
+  --font-mono: 'Courier New', Courier, monospace;
+}
+
+/* ============================================
+   HEXBOLT – Tornillo hexagonal
+   ============================================ */
 .boltContainer {
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
-  filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.5));
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.7));
+  transition: filter 0.2s ease;
+}
+
+.boltContainer:hover {
+  filter: drop-shadow(0 4px 8px rgba(0, 255, 255, 0.3));
 }
 
 .boltHead {
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle at 30% 30%, #444, #1a1a1a);
+  background: radial-gradient(circle at 35% 35%, #777, #222);
   border-radius: 50%;
-  border: 1px solid #000;
+  border: 1px solid #111;
   position: relative;
-  box-shadow: inset 0 1px 2px rgba(255,255,255,0.2);
+  box-shadow: 
+    inset 0 2px 3px rgba(255, 255, 255, 0.3),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.8);
 }
 
 .allenKeySlot {
   position: absolute;
-  inset: 6px;
-  background: #080808;
+  inset: 5px;
+  background: #0a0a0a;
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.8);
+  box-shadow: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.9),
+    0 0 2px rgba(255, 255, 255, 0.2);
 }
 
 .boltRust {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle, rgba(139, 69, 19, 0.4), transparent);
-  opacity: 0.6;
+  background: radial-gradient(circle at 70% 30%, rgba(160, 82, 45, 0.3), transparent 70%);
+  border-radius: 50%;
+  opacity: 0.5;
+  mix-blend-mode: multiply;
 }
 
-/* --- ETIQUETA DE ACTIVO --- */
-.assetTagContainer {
-  background: #d1ccb0; /* Plástico viejo amarillento */
-  padding: 6px 10px;
-  border-radius: 2px;
-  width: 130px;
-  position: relative;
-  box-shadow: 1px 2px 5px rgba(0,0,0,0.8);
-  transform: rotate(-0.5deg);
-  border: 1px solid rgba(0,0,0,0.2);
-}
-
-.tagContent {
-  font-family: 'Courier New', monospace;
-  color: #222;
-  position: relative;
-  z-index: 2;
-}
-
-.companyName {
-  font-size: 7px;
-  font-weight: 900;
-  letter-spacing: 0.5px;
-}
-
-.barcodeStrip {
-  height: 12px;
-  background: rgba(0,0,0,0.05);
-  display: flex;
-  gap: 1px;
-  align-items: center;
-  overflow: hidden;
-}
-
-.tagGrime {
+.metalHighlight {
   position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom right, rgba(0,0,0,0.1), rgba(0,0,0,0.3));
+  top: 2px;
+  left: 2px;
+  width: 8px;
+  height: 8px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.4), transparent 80%);
+  border-radius: 50%;
+  opacity: 0.6;
   pointer-events: none;
 }
 
-/* --- REJILLAS DE VENTILACIÓN --- */
-.ventContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  width: 100%;
-}
-
-.ventBar {
-  height: 6px;
-  background: #000;
-  position: relative;
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.ventMetal {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, #111, #222 50%, #050505);
-}
-
-.dustLayer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 2px;
-  background: rgba(255,255,255,0.03);
-  filter: blur(1px);
-}
-
-/* --- ETIQUETA DE ADVERTENCIA --- */
-.warningLabel {
-  background: #1a1a1a;
-  border: 2px solid #ffcc00;
-  color: #ffcc00;
-  padding: 5px 12px;
-  font-family: 'Courier New', monospace;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 0 15px rgba(255, 204, 0, 0.1);
-}
-
-.warningStripes {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 4px;
-  background: repeating-linear-gradient(
-    45deg,
-    #ffcc00,
-    #ffcc00 10px,
-    #000 10px,
-    #000 20px
-  );
-}
-
-.warningHeader {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 4px;
-}
-
-.warningIcon {
-  font-size: 16px;
-  font-weight: bold;
-}
-
-.warningTitle {
-  font-size: 9px;
-  font-weight: 900;
-}
-
-.warningText {
-  font-size: 8px;
-  margin-top: 2px;
-  opacity: 0.8;
-  white-space: nowrap;
-}
-
-/* --- ETIQUETA DE ACTIVO MEJORADA --- */
+/* ============================================
+   ASSETTAG – Etiqueta de activo industrial
+   ============================================ */
 .assetTagContainer {
-  background: #d1ccb0;
+  background: #e0d8b0; /* base amarillenta */
   padding: 8px 12px;
-  border-radius: 1px;
-  /* Cambio clave: ajusta al contenido */
+  border-radius: 2px;
   width: fit-content;
-  min-width: 140px; 
-  max-width: 240px; 
+  min-width: 150px;
+  max-width: 260px;
   position: relative;
-  box-shadow: 2px 2px 0px rgba(0,0,0,0.2), 4px 4px 10px rgba(0,0,0,0.4);
-  border: 1px solid rgba(0,0,0,0.3);
-  display: inline-block;
+  box-shadow: 
+    2px 2px 0 rgba(0, 0, 0, 0.2),
+    4px 4px 12px rgba(0, 0, 0, 0.5),
+    inset 0 1px 2px rgba(255, 255, 255, 0.5);
+  border: 1px solid #887e5e;
+  transform: rotate(-0.3deg);
+  font-family: var(--font-mono);
 }
 
 .tagContent {
-  font-family: 'Courier New', monospace;
-  color: #1a1a1a;
   display: flex;
   flex-direction: column;
   gap: 6px;
+  position: relative;
+  z-index: 2;
 }
 
 .tagHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
 }
 
 .companyName {
-  font-size: 8px;
+  font-size: 9px;
   font-weight: 900;
+  letter-spacing: 0.8px;
+  color: #2d2d1c;
+  text-transform: uppercase;
   white-space: nowrap;
 }
 
 .tagSecurityHole {
-  width: 10px;
-  height: 10px;
-  background: #050808;
+  width: 12px;
+  height: 12px;
+  background: #2a2a1c;
   border-radius: 50%;
-  box-shadow: inset 1px 1px 2px #000;
+  box-shadow: 
+    inset 0 2px 3px #000,
+    0 1px 2px rgba(255, 255, 255, 0.3);
   flex-shrink: 0;
 }
 
 .barcodeStrip {
-  height: 16px;
-  background: rgba(0,0,0,0.05);
+  height: 20px;
+  background: #bdb48b;
   display: flex;
   align-items: flex-end;
-  gap: 1.5px;
+  gap: 2px;
   padding: 0 4px;
-  overflow: hidden;
+  border-radius: 1px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .barcodeLine {
-  background: #000;
+  background: #1e2b2b;
+  width: 2px;
+  height: 100%;
+  min-height: 4px;
 }
 
 .tagFooter {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  border-top: 1px solid rgba(0,0,0,0.2);
-  padding-top: 4px;
+  border-top: 1px dashed #887e5e;
+  padding-top: 5px;
   gap: 10px;
 }
 
@@ -230,57 +162,261 @@
 }
 
 .footerLabel {
-  font-size: 6px;
+  font-size: 7px;
   font-weight: bold;
-  opacity: 0.6;
+  color: #4a3f2a;
+  letter-spacing: 0.3px;
 }
 
 .assetCode {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 900;
-  letter-spacing: 0.5px;
-  white-space: nowrap; /* Evita que el ID salte de línea */
+  color: #1a1a0a;
+  white-space: nowrap;
 }
 
 .versionLabel {
   font-size: 8px;
-  background: #000;
-  color: #d1ccb0;
-  padding: 1px 4px;
+  background: #2d2d1c;
+  color: #e0d8b0;
+  padding: 2px 6px;
+  border-radius: 1px;
   font-weight: bold;
+  letter-spacing: 0.3px;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.1);
 }
 
 .tagGrime {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.2) 100%);
+  background: radial-gradient(circle at 80% 20%, rgba(0, 0, 0, 0.1), transparent 60%),
+              linear-gradient(135deg, rgba(0, 0, 0, 0.05) 20%, transparent 50%);
   pointer-events: none;
+  mix-blend-mode: multiply;
+  border-radius: 2px;
 }
 
-/* --- REJILLAS Y OTROS --- */
+/* ============================================
+   VENTGRILL – Rejilla de ventilación
+   ============================================ */
 .ventContainer {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  width: 100%;
 }
 
 .ventBar {
-  height: 6px;
-  background: #000;
+  height: 8px;
+  background: #111;
   position: relative;
+  border-radius: 4px;
   overflow: hidden;
+  box-shadow: 
+    inset 0 2px 3px rgba(0, 0, 0, 0.8),
+    inset 0 -1px 2px rgba(255, 255, 255, 0.1);
 }
 
 .ventMetal {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, #111 0%, #222 50%, #050505 100%);
+  background: linear-gradient(180deg, #3a3a3a 0%, #1e1e1e 50%, #0a0a0a 100%);
+  border-radius: inherit;
 }
 
 .dustLayer {
   position: absolute;
   bottom: 0;
   width: 100%;
+  height: 2px;
+  background: rgba(200, 180, 150, 0.15);
+  filter: blur(2px);
+  mix-blend-mode: overlay;
+}
+
+/* Animación opcional de vibración (para cuando animate=true) */
+.ventAnimated .ventBar {
+  animation: ventVibrate 0.3s infinite;
+}
+
+@keyframes ventVibrate {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(-0.5px); }
+  40% { transform: translateX(0.5px); }
+  60% { transform: translateX(-0.3px); }
+  80% { transform: translateX(0.3px); }
+  100% { transform: translateX(0); }
+}
+
+/* ============================================
+   WARNINGLABEL – Etiqueta de advertencia
+   ============================================ */
+.warningLabel {
+  background: #1a1a1a;
+  border-width: 2px;
+  border-style: solid;
+  padding: 8px 16px;
+  font-family: var(--font-mono);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 15px rgba(255, 204, 0, 0.2);
+  transition: box-shadow 0.2s ease;
+  border-radius: 2px;
+  min-width: 200px;
+}
+
+.warningLabel.danger {
+  border-color: #ff3a3a;
+  color: #ff8a8a;
+  box-shadow: 0 0 20px rgba(255, 58, 58, 0.3);
+}
+
+.warningLabel.warning {
+  border-color: #ffaa00;
+  color: #ffdd88;
+}
+
+.warningLabel.info {
+  border-color: #3a9fff;
+  color: #aad0ff;
+}
+
+.warningStripes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: repeating-linear-gradient(
+    45deg,
+    currentColor,
+    currentColor 8px,
+    transparent 8px,
+    transparent 16px
+  );
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.warningContent {
+  position: relative;
+  z-index: 2;
+}
+
+.warningHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.warningIcon {
+  font-size: 20px;
+  font-weight: 900;
+  line-height: 1;
+  animation: warningPulse 1.2s infinite;
+}
+
+.danger .warningIcon {
+  color: #ff3a3a;
+  text-shadow: 0 0 10px #ff3a3a;
+}
+
+.warning .warningIcon {
+  color: #ffaa00;
+  text-shadow: 0 0 10px #ffaa00;
+}
+
+.info .warningIcon {
+  color: #3a9fff;
+  text-shadow: 0 0 10px #3a9fff;
+}
+
+@keyframes warningPulse {
+  0% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.1); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.warningTitle {
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.warningText {
+  font-size: 9px;
+  margin-top: 4px;
+  opacity: 0.9;
+  white-space: nowrap;
+  text-transform: uppercase;
+  border-top: 1px solid currentColor;
+  padding-top: 4px;
+}
+
+/* ============================================
+   TECHSPEC – Especificación técnica
+   ============================================ */
+.techSpecBox {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  background: rgba(10, 20, 20, 0.6);
+  padding: 6px 12px;
+  border-radius: 2px;
+  border-left: 3px solid #0ff;
+  box-shadow: inset 0 1px 3px rgba(0, 255, 255, 0.1), 0 2px 4px rgba(0, 0, 0, 0.5);
+  font-family: var(--font-mono);
+  backdrop-filter: blur(1px);
+  width: fit-content;
+}
+
+.specLabel {
+  font-size: 11px;
+  font-weight: 600;
+  color: #9cf;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.specDivider {
+  width: 20px;
   height: 1px;
-  background: rgba(255,255,255,0.05);
+  background: linear-gradient(90deg, #0ff, transparent);
+  flex-shrink: 0;
+}
+
+.specValue {
+  font-size: 12px;
+  font-weight: 900;
+  color: #0ff;
+  text-shadow: 0 0 5px cyan;
+  white-space: nowrap;
+}
+
+/* ============================================
+   MEDIA QUERIES (ajustes responsive)
+   ============================================ */
+@media (max-width: 600px) {
+  .assetTagContainer {
+    min-width: 120px;
+    padding: 6px 8px;
+  }
+  .companyName {
+    font-size: 7px;
+  }
+  .assetCode {
+    font-size: 9px;
+  }
+  .warningLabel {
+    min-width: 160px;
+    padding: 6px 12px;
+  }
+  .warningTitle {
+    font-size: 8px;
+  }
+  .warningText {
+    font-size: 7px;
+  }
 }
