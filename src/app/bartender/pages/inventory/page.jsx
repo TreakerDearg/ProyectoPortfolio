@@ -1,148 +1,147 @@
 'use client';
-
-import React, { useState, useMemo, useEffect, useCallback } from 'react';
-import dynamic from 'next/dynamic';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Activity, Cpu as CpuIcon, Scan, Thermometer, X, Lock, Zap, 
-  AlertTriangle, Menu, HardDrive, Wifi, ChevronRight
-} from 'lucide-react';
-
-// Estilos
+import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import styles from '../../styles/inventory-styles/bunker.module.css';
 
-// Datos - Asegura que estas rutas existan
+// Componentes Modularizados
+import { BriefcaseModal } from './components/BriefcaseModal';
+import { TerminalPuzzle } from './components/TerminalPuzzle';
+import { SearchBar } from './components/SearchBar';
+import { FileGrid } from './components/FileGrid';
+
+// Datos e Iconos
 import { METRO_FOLDERS, METRO_DRINKS, D6_SYSTEM_CONFIG } from './data/dataMetro';
-
-// --- COMPONENTES DINÁMICOS (BLINDAJE TOTAL SSR) ---
-const TerminalPuzzle = dynamic(
-  () => import('./components/TerminalPuzzle').then(mod => mod.TerminalPuzzle),
-  { ssr: false, loading: () => <div className="p-4 animate-pulse text-metro-amber">INICIALIZANDO_NODO_D6...</div> }
-);
-
-const FileGrid = dynamic(() => import('./components/FileGrid').then(mod => mod.FileGrid), { ssr: false });
-const BriefcaseModal = dynamic(() => import('./components/BriefcaseModal').then(mod => mod.BriefcaseModal), { ssr: false });
-const SearchBar = dynamic(() => import('./components/SearchBar').then(mod => mod.SearchBar), { ssr: false });
+import { 
+  Activity, Cpu as CpuIcon, Scan, 
+  Database, Thermometer, X, Radio, Terminal,
+  ShieldAlert, Lock, Zap
+} from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function InventoryPage() {
-  const [mounted, setMounted] = useState(false);
-  const [bootSequence, setBootSequence] = useState(true);
-  const [isUnlocked, setIsUnlocked] = useState(false);
-  const [glitchActive, setGlitchActive] = useState(false);
-  
+  // --- ESTADOS DE INTERFAZ ---
   const [searchTerm, setSearchTerm] = useState('');
   const [activeCategory, setActiveCategory] = useState('ALL');
   const [selectedFolder, setSelectedFolder] = useState(null);
+  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [bootSequence, setBootSequence] = useState(true);
+  const [glitchActive, setGlitchActive] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  
+  // --- TELEMETRÍA (solo cliente) ---
+  const [systemLog, setSystemLog] = useState(['>> INIT_AMBER_PROTOCOL_V10.0...']);
+  const [cpuLoad, setCpuLoad] = useState(12);
+  const [temp, setTemp] = useState(38.5);
+  const [mounted, setMounted] = useState(false); // Para evitar hidratación
+  const mainScrollRef = useRef(null);
 
-  const [systemLog, setSystemLog] = useState([]);
-  const [metrics, setMetrics] = useState({
-    cpu: 12,
-    temp: 38.5,
-    rad: parseFloat(D6_SYSTEM_CONFIG?.radiation_level || 0.44),
-    integrity: 98
-  });
-
-  const addLogEntry = useCallback((entry) => {
-    const time = new Date().toLocaleTimeString('ru-RU', { hour12: false });
-    setSystemLog(prev => [`[${time}] ${entry}`, ...prev].slice(0, 30));
-  }, []);
-
-  // --- MANEJO DE MONTAJE E INTERFAZ ---
+  // Asegurar que los valores aleatorios se generen solo en cliente
   useEffect(() => {
     setMounted(true);
+  }, []);
+
+  const addLogEntry = useCallback((entry) => {
+    if (!mounted) return; // No ejecutar en servidor
+    const timestamp = new Date().toLocaleTimeString('en-GB', { 
+      hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' 
+    });
+    setSystemLog(prev => [`[${timestamp}] ${entry}`, ...prev].slice(0, 30));
+  }, [mounted]);
+
+  // --- DETECCIÓN DE BREAKPOINTS ---
+  useEffect(() => {
     const handleResize = () => {
       const mobile = window.innerWidth < 1024;
       setIsMobile(mobile);
       if (!mobile) setSidebarOpen(false);
     };
-    
     handleResize();
     window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
-    // Boot Sequence
-    const bootSteps = [
-      "SISTEMA: Iniciando secuencia de arranque...",
-      "KERNEL: VOS-DARK-33 detectado",
-      "AUTH: Escaneo biométrico Artyom...",
-      "SUCCESS: Enlace D6 establecido"
-    ];
-
-    bootSteps.forEach((step, i) => {
-      setTimeout(() => addLogEntry(step), 700 * i);
-    });
-
-    const timer = setTimeout(() => setBootSequence(false), 3500);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      clearTimeout(timer);
-    };
-  }, [addLogEntry]);
-
-  // --- SIMULACIÓN DE TELEMETRÍA ---
+  // --- SIMULACIÓN DE HARDWARE DINÁMICO (solo cliente) ---
   useEffect(() => {
-    if (!mounted || bootSequence) return;
-
+    if (!mounted) return;
     const interval = setInterval(() => {
-      setMetrics(prev => {
-        const newCpu = Math.floor(Math.random() * (45 - 12 + 1) + 12);
-        const shouldGlitch = Math.random() > 0.95;
-        
-        if (shouldGlitch) {
-          setGlitchActive(true);
-          setTimeout(() => setGlitchActive(false), 150);
-          addLogEntry("ALERTA: Fluctuación en red de alta tensión");
-        }
-
-        return {
-          ...prev,
-          cpu: newCpu,
-          temp: 38 + (newCpu / 15),
-          rad: parseFloat((prev.rad + (Math.random() * 0.01 - 0.005)).toFixed(3))
-        };
-      });
-    }, 5000);
-
+      setCpuLoad(prev => Math.floor(Math.random() * (prev > 60 ? 30 : 50)) + 10);
+      setTemp(prev => prev + (Math.random() > 0.5 ? 0.02 : -0.02));
+      
+      if (Math.random() > 0.97) {
+        setGlitchActive(true);
+        setTimeout(() => setGlitchActive(false), 150);
+        addLogEntry("WARNING: VOLTAGE_INSTABILITY_IN_SECTOR_D6");
+      }
+    }, 4000);
     return () => clearInterval(interval);
-  }, [mounted, bootSequence, addLogEntry]);
+  }, [addLogEntry, mounted]);
 
+  // --- SECUENCIA DE ARRANQUE D6 ---
+  useEffect(() => {
+    if (!mounted) return;
+    const steps = [
+      "LOADING_HARDWARE_DRIVERS...",
+      "AUTHENTICATING_USER: ARTYOM...",
+      "MOUNTING_ENCRYPTED_VOLUMES...",
+      "CORE_SYSTEM_READY_V10.0"
+    ];
+    steps.forEach((step, i) => setTimeout(() => addLogEntry(step), 600 * i));
+    const timer = setTimeout(() => setBootSequence(false), 2800);
+    return () => clearTimeout(timer);
+  }, [addLogEntry, mounted]);
+
+  // --- MOTOR DE FILTRADO (sin aleatoriedad) ---
   const filteredFolders = useMemo(() => {
-    const term = searchTerm.toLowerCase().trim();
-    return METRO_FOLDERS.filter(folder => {
-      const matchesSearch = folder.title.toLowerCase().includes(term) || folder.id.toLowerCase().includes(term);
-      const matchesCat = activeCategory === 'ALL' || folder.category === activeCategory;
-      return matchesSearch && matchesCat;
+    const term = searchTerm.toUpperCase().trim();
+    return METRO_FOLDERS.map(folder => ({
+      ...folder,
+      // Metadatos deterministas basados en id (para evitar aleatoriedad en servidor)
+      integrity: 90 + (folder.id.charCodeAt(0) % 10),
+      sector: D6_SYSTEM_CONFIG.radiation_level > 0.4 ? "HOT_ZONE" : "D6_ARCHIVE"
+    })).filter(f => {
+      const matchesSearch = !term || 
+        f.title.toUpperCase().includes(term) || 
+        f.id.toUpperCase().includes(term) ||
+        f.ingredients?.some(i => i.toUpperCase().includes(term));
+      
+      const matchesCategory = activeCategory === 'ALL' || f.category === activeCategory;
+      return matchesSearch && matchesCategory;
     });
   }, [searchTerm, activeCategory]);
 
-  // Prevenir desajustes de hidratación
-  if (!mounted) return <div className="bg-black min-h-screen" />;
+  if (!mounted) {
+    // Renderizar un esqueleto o nada durante la hidratación
+    return null; // O un loader simple
+  }
 
   if (bootSequence) {
     return (
       <div className={styles.bootingScreen}>
-        <div className={styles.scanlineOverlay} />
         <motion.div 
-          initial={{ opacity: 0 }} 
-          animate={{ opacity: 1 }} 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
           className={styles.bootTerminal}
         >
-          <div className={styles.bootHeader}>
-            <span className="animate-pulse">[ INICIALIZANDO_D6_OS ]</span>
-          </div>
-          <div className={styles.bootLogContainer}>
-            {systemLog.map((log, i) => (
-              <div key={i} className={styles.bootLogLine}>{log}</div>
-            ))}
-          </div>
-          <div className={styles.bootProgressBase}>
+          <div className={styles.bootBrand}>D6_SYSTEM_LOADER_v10.0</div>
+          <div className={styles.bootProgressContainer}>
             <motion.div 
-              className={styles.bootProgressBar}
-              initial={{ width: "0%" }}
+              initial={{ width: 0 }}
               animate={{ width: "100%" }}
-              transition={{ duration: 3 }}
+              transition={{ duration: 2.5, ease: "easeInOut" }}
+              className={styles.bootProgressBar} 
             />
+          </div>
+          <div className={styles.bootLogs}>
+            {systemLog.map((log, i) => (
+              <motion.div 
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                key={i} 
+                className={styles.bootLogLine}
+              >
+                {log}
+              </motion.div>
+            ))}
           </div>
         </motion.div>
       </div>
@@ -150,118 +149,154 @@ export default function InventoryPage() {
   }
 
   return (
-    <div className={`${styles.terminalContainer} ${glitchActive ? styles.glitchActive : ''}`}>
-      <div className={styles.crtEffectLayer}>
-        <div className={styles.scanlines} />
+    <div className={`
+      ${styles.terminalContainer} 
+      ${glitchActive ? styles.terminalGlitch : ''}
+      ${isUnlocked ? styles.systemBypassed : ''}
+    `}>
+      
+      {/* CAPAS DE AMBIENTE CRT - ÁMBAR */}
+      <div className={styles.hardwareOverlays}>
+        <div className={styles.amberScanline} />
+        <div className={styles.crtStatic} />
         <div className={styles.vignette} />
       </div>
 
-      {/* HUD SUPERIOR */}
+      {/* HEADER TÁCTICO */}
       <header className={styles.hudHeader}>
-        <div className={styles.hudMain}>
-          <div className={styles.brandGroup}>
-            <div className={styles.d6Logo}>D6</div>
-            <div className={styles.statusInfo}>
-              <div className="flex items-center gap-2 opacity-60">
-                <Wifi size={10} /> <span>ENLACE: ESTABLE</span>
-              </div>
-              <div className="flex items-center gap-2 opacity-60">
-                <HardDrive size={10} /> <span>SCTR_G_ARCHIVE</span>
-              </div>
+        <div className={styles.headerMainRow}>
+          <div className={styles.headerLeft}>
+            <div className={styles.brandingGroup}>
+              <div className={styles.d6LogoAmber}>D6</div>
+              {!isMobile && (
+                <div className={styles.sysMeta}>
+                  <span className={styles.sysId}>NODE_{D6_SYSTEM_CONFIG.terminal_id}</span>
+                  <span className={styles.opStatus}>USER: {D6_SYSTEM_CONFIG.operator}</span>
+                </div>
+              )}
             </div>
           </div>
 
-          <SearchBar 
-            searchTerm={searchTerm} 
-            setSearchTerm={setSearchTerm} 
-            activeCategory={activeCategory}
-            setActiveCategory={setActiveCategory}
-          />
+          <div className={styles.headerCenter}>
+            <SearchBar 
+              searchTerm={searchTerm} 
+              setSearchTerm={setSearchTerm} 
+              isUnlocked={isUnlocked}
+              activeCategory={activeCategory}
+              setActiveCategory={setActiveCategory}
+              isMobile={isMobile} 
+            />
+          </div>
 
-          <div className={styles.telemetryGroup}>
-            <div className={styles.teleBox}>
-              <CpuIcon size={14} className={metrics.cpu > 80 ? 'text-red-500' : ''} />
-              <span>{metrics.cpu}%</span>
-            </div>
-            <div className={styles.teleBox}>
-              <Thermometer size={14} />
-              <span>{metrics.temp.toFixed(1)}°C</span>
+          <div className={styles.headerRight}>
+            <div className={styles.telemetryGroup}>
+              <div className={styles.telItem}>
+                <CpuIcon size={14} /> 
+                <span className={cpuLoad > 40 ? styles.textHazard : ''}>{cpuLoad}%</span>
+              </div>
+              <div className={styles.telItem}>
+                <Thermometer size={14} /> 
+                <span>{temp.toFixed(1)}°C</span>
+              </div>
+              <div className={styles.telItem}>
+                <Radio size={14} className={styles.radioPulse} />
+              </div>
             </div>
           </div>
         </div>
       </header>
 
-      {/* WORKSPACE PRINCIPAL */}
-      <div className={styles.workspace}>
-        <aside className={`${styles.sidebar} ${isMobile && !sidebarOpen ? 'hidden' : 'flex'}`}>
-          <section className={styles.sidebarSection}>
-            <div className={styles.sectionTitle}>
-              {isUnlocked ? <Zap size={14} className="text-yellow-500" /> : <Lock size={14} />}
-              <span>ACCESO_SISTEMA</span>
+      <div className={styles.workspaceWrapper}>
+        {/* SIDEBAR PERSISTENTE (ESCRITORIO) */}
+        <aside className={`${styles.sidebar} ${sidebarOpen ? styles.sidebarOpen : ''}`}>
+          <div className={styles.sidebarInner}>
+            <div className={styles.sidebarModule}>
+              <div className={styles.modHeader}>
+                {isUnlocked ? <Zap size={14} /> : <Lock size={14} />}
+                <span>{isUnlocked ? 'ENCRYPTION_BYPASSED' : 'SECURITY_OVERRIDE'}</span>
+              </div>
+              <div className={styles.modBody}>
+                <TerminalPuzzle 
+                  isUnlocked={isUnlocked} 
+                  onUnlock={(val) => {
+                    setIsUnlocked(val);
+                    addLogEntry(val ? "CRITICAL: SECURITY_BYPASS_DETECTED" : "SIGNAL_RESTORED");
+                    if (isMobile && val) setTimeout(() => setSidebarOpen(false), 800);
+                  }} 
+                />
+              </div>
             </div>
-            <TerminalPuzzle 
-              isUnlocked={isUnlocked} 
-              onUnlock={(val) => {
-                setIsUnlocked(val);
-                addLogEntry(val ? "OVERRIDE: ACCESO CONCEDIDO" : "SEG: CIFRADO ACTIVO");
-              }} 
-            />
-          </section>
 
-          <section className={`${styles.sidebarSection} flex-1 overflow-hidden`}>
-            <div className={styles.sectionTitle}>
-              <Activity size={14} /> <span>LOG_STREAM</span>
+            <div className={`${styles.sidebarModule} ${styles.kernelModule}`}>
+              <div className={styles.modHeader}><Activity size={14} /> <span>KERNEL_D6_LOGS</span></div>
+              <div className={styles.kernelLog}>
+                {systemLog.map((log, i) => (
+                  <div key={i} className={styles.logLine}>
+                    <span className={styles.logTimestamp}>[{i}]</span> {log}
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className={styles.logContainer}>
-              {systemLog.map((log, i) => (
-                <div key={i} className={styles.logLine}>
-                  <span className="opacity-40">{log.substring(0, 10)}</span>
-                  <span className="ml-2">{log.substring(10)}</span>
-                </div>
-              ))}
-            </div>
-          </section>
+          </div>
         </aside>
 
-        <main className={styles.mainContent}>
-          <div className={styles.explorerHeader}>
-            <div className="flex items-center gap-2">
-              <Scan size={14} className="text-metro-amber" />
-              <span className="uppercase tracking-widest">D6://ROOT/{activeCategory}</span>
-            </div>
-          </div>
-
-          <div className={styles.scrollArea}>
-            <FileGrid 
-              items={filteredFolders} 
-              isUnlocked={isUnlocked} 
-              onSelectItem={(folder) => {
-                setSelectedFolder(folder);
-                addLogEntry(`I/O: LECTURA SECTOR ${folder.id}`);
-              }} 
-            />
-          </div>
+        {/* CONTENEDOR DE SCROLL DE ARCHIVOS */}
+        <main ref={mainScrollRef} className={styles.fileExplorer}>
+          <FileGrid 
+            items={filteredFolders} 
+            isUnlocked={isUnlocked} 
+            onSelectItem={(folder) => {
+              setSelectedFolder(folder);
+              addLogEntry(`ACCESSING_FILE: ${folder.title}`);
+            }} 
+          />
         </main>
       </div>
 
-      {/* HUD INFERIOR */}
-      <footer className={styles.hudFooter}>
-        <div className="flex items-center gap-4">
-          <div className={`${styles.statusLed} ${isUnlocked ? styles.ledGreen : styles.ledAmber}`} />
-          <span className="text-[10px] uppercase opacity-60">SISTEMA: {isUnlocked ? 'OVERRIDE' : 'READ_ONLY'}</span>
-        </div>
+      {/* FLOATING ACTION BUTTON (SOLO MÓVIL/TABLET) */}
+      <AnimatePresence>
+        {isMobile && (
+          <motion.button
+            initial={{ scale: 0, y: 100 }}
+            animate={{ scale: 1, y: 0 }}
+            exit={{ scale: 0, y: 100 }}
+            className={`${styles.floatingSecurityBtn} ${sidebarOpen ? styles.fabActive : ''}`}
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+          >
+            {sidebarOpen ? <X /> : (
+              <div className={styles.fabIcon}>
+                <ShieldAlert className={!isUnlocked ? styles.pulseIcon : ''} />
+                {!isUnlocked && <span className={styles.fabNotify}>!</span>}
+              </div>
+            )}
+          </motion.button>
+        )}
+      </AnimatePresence>
 
-        <div className={`${styles.radSensor} ${metrics.rad > 0.5 ? 'text-red-500' : 'text-metro-amber'}`}>
-          <AlertTriangle size={12} />
-          <span>RADIACIÓN: {metrics.rad} Sv/h</span>
+      {/* BARRA DE ESTADO INFERIOR */}
+      <footer className={styles.systemFooter}>
+        <div className={styles.statusBox}>
+          <div className={`${styles.statusIndicator} ${isUnlocked ? styles.statusUnlocked : ''}`} />
+          <span className={isUnlocked ? styles.glowGreen : ''}>
+            OS_STATUS: {isUnlocked ? 'SYSTEM_OVERRIDE' : 'ENCRYPTED_MODE'}
+          </span>
         </div>
+        
+        {!isMobile && (
+          <div className={styles.footerCenterInfo}>
+            <span className={styles.radBadge}>RAD_LEVEL: {D6_SYSTEM_CONFIG.radiation_level}</span>
+            <div className={styles.separator} />
+            <span className={styles.locBadge}>SECTOR: G_STATION</span>
+          </div>
+        )}
 
-        <div className="flex items-center gap-4 text-[10px] opacity-40">
-          <span>D6_SEC_G_ARCHIVE</span>
+        <div className={styles.footerTime}>
+          <Database size={12} />
           <span>{new Date().toLocaleDateString('ru-RU')}</span>
         </div>
       </footer>
 
+      {/* MODALES DE CAPA SUPERIOR */}
       <AnimatePresence>
         {selectedFolder && (
           <BriefcaseModal 
@@ -272,12 +307,6 @@ export default function InventoryPage() {
           />
         )}
       </AnimatePresence>
-
-      {isMobile && (
-        <button className={styles.mobileToggle} onClick={() => setSidebarOpen(!sidebarOpen)}>
-          {sidebarOpen ? <X /> : <Menu />}
-        </button>
-      )}
     </div>
   );
 }

@@ -2,219 +2,277 @@
 import React, { useMemo, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  X, Zap, Beaker, ClipboardList, 
-  Lock, ShieldCheck, FileSearch, 
-  ChevronRight, Share2, Printer, Fingerprint
+  X, Zap, Beaker, ScrollText, ClipboardList, 
+  Lock, AlertTriangle, Fingerprint, ShieldCheck,
+  FileSearch, ChevronRight, Share2, Printer
 } from 'lucide-react';
 import { REAL_RECIPES } from '../data/RecipesReal'; 
 import styles from '../../../styles/inventory-styles/briefcase.module.css';
 
+/**
+ * BRIEFCASE MODAL V8.2 - D6 SPECIAL OPERATIONS
+ * Versión con navegación móvil mejorada (iconos + texto)
+ */
 export const BriefcaseModal = ({ folder, drinks = [], isUnlocked, onClose }) => {
-  const [activeTab, setActiveTab] = useState('INTELLIGENCE');
-  const [mounted, setMounted] = useState(false);
+  const [activeTab, setActiveTab] = useState('INTELLIGENCE'); // 'EVIDENCE' o 'INTELLIGENCE'
 
-  // --- ESCUDO DE MONTAJE Y BLOQUEO DE SCROLL ---
   useEffect(() => {
-    setMounted(true);
-    const originalStyle = window.getComputedStyle(document.body).overflow;
     document.body.style.overflow = 'hidden';
-    
-    // Cleanup: Restaura el scroll al desmontar
-    return () => { 
-      document.body.style.overflow = originalStyle; 
-    };
+    return () => { document.body.style.overflow = 'unset'; };
   }, []);
 
   const hasDrinks = drinks && drinks.length > 0;
   
-  // Memorización de datos del sujeto
   const drink = useMemo(() => {
     if (hasDrinks) return drinks[0];
     return { 
       name: "RESTRICTED_PROTOCOL", 
-      desc: "CRITICAL: Physical file missing or incinerated during Station 4 purge.",
+      desc: "CRITICAL: Physical file missing or incinerated during Station 4 purge. Attempting to recover data from secondary D6 buffers...",
       id: "ERR_404",
       toxicity: 99,
       ingredients: ["REDACTED", "REDACTED", "REDACTED"],
       flavor: "UNKNOWN",
-      alcohol: "N/A"
+      alcohol: "N/A",
+      image: null
     };
   }, [hasDrinks, drinks]);
 
-  const realRecipe = useMemo(() => REAL_RECIPES[drink.id] || null, [drink.id]);
+  const realRecipe = REAL_RECIPES[drink.id];
 
-  // Animaciones optimizadas
   const containerVariants = {
-    hidden: { y: 50, opacity: 0, scale: 0.95 },
+    hidden: { y: 100, opacity: 0, scale: 0.9, rotateX: -15 },
     visible: { 
       y: 0, 
       opacity: 1, 
-      scale: 1,
-      transition: { type: "spring", damping: 20, stiffness: 100 }
+      scale: 1, 
+      rotateX: 0,
+      transition: { type: "spring", damping: 25, stiffness: 120 }
     },
-    exit: { y: 100, opacity: 0, scale: 0.9, transition: { duration: 0.2 } }
+    exit: { y: 150, opacity: 0, scale: 0.8, rotateX: 20, transition: { duration: 0.3 } }
   };
 
-  // Evitar renderizado SSR para prevenir errores de hidratación con Framer Motion
-  if (!mounted) return null;
-
   return (
-    <div className={`${styles.modalOverlay} ${isUnlocked ? styles.unlockedTheme : ''}`} onClick={onClose}>
-      
-      {/* GLOW DINÁMICO SEGÚN ACCESO */}
-      <div className={`${styles.ambientGlow} ${isUnlocked ? styles.glowGreen : styles.glowAmber}`} />
-
-      <motion.div 
-        className={styles.documentFolder}
-        onClick={(e) => e.stopPropagation()}
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        exit="exit"
+    <AnimatePresence>
+      <div 
+        className={`${styles.modalOverlay} ${isUnlocked ? styles.unlockedTheme : ''}`} 
+        onClick={onClose}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Expediente D6"
       >
-        {/* BARRA DE ESTADO SUPERIOR */}
-        <div className={styles.folderHeader}>
-          <div className={styles.topBar}>
-            <div className={styles.systemInfo}>
-              <ShieldCheck size={14} className={styles.pulseIcon} />
-              <span>D6_ENCLAVE // {folder.id || 'NODE_ERR'}</span>
-            </div>
-            <div className={styles.windowControls}>
-              <button onClick={() => window.print()} className={styles.iconBtn}><Printer size={16} /></button>
-              <button className={styles.iconBtn}><Share2 size={16} /></button>
-              <button className={styles.closeBtn} onClick={onClose}><X size={22} /></button>
+        <div className={`${styles.ambientGlow} ${isUnlocked ? styles.glowGreen : styles.glowAmber}`} />
+
+        <motion.div 
+          className={styles.documentFolder}
+          onClick={(e) => e.stopPropagation()}
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+        >
+          {/* HEADER TÉCNICO */}
+          <div className={styles.folderHeader}>
+            <div className={styles.topBar}>
+              <div className={styles.systemInfo}>
+                <ShieldCheck size={14} className={styles.pulseIcon} />
+                <span>D6_SECURE_ENCLAVE // {folder.id || 'NODE_UNKNOWN'}</span>
+              </div>
+              <div className={styles.windowControls}>
+                <button 
+                  onClick={() => window.print()} 
+                  className={styles.iconBtn} 
+                  title="Print Dossier"
+                  aria-label="Imprimir expediente"
+                >
+                  <Printer size={16} />
+                </button>
+                <button 
+                  className={styles.iconBtn} 
+                  title="Share Link"
+                  aria-label="Compartir enlace"
+                >
+                  <Share2 size={16} />
+                </button>
+                <button 
+                  className={styles.closeBtn} 
+                  onClick={onClose}
+                  aria-label="Cerrar"
+                >
+                  <X size={22} />
+                </button>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className={styles.mainExpediente}>
-          <div className={styles.folderSpine} />
-          <div className={styles.tabEar}>{folder.category || 'DATA'}</div>
+          <div className={styles.mainExpediente}>
+            {/* LOMO Y CLIPS */}
+            <div className={styles.folderSpine} />
+            <div className={styles.tabEar}>{folder.category || 'DATA'}</div>
 
-          <div className={styles.gridContainer}>
-            
-            {/* PANEL IZQUIERDO: EVIDENCIA ANALÓGICA */}
-            <section className={`${styles.evidencePanel} ${activeTab === 'EVIDENCE' ? styles.tabActive : ''}`}>
-              <div className={styles.paperInner}>
-                <div className={styles.photoContainer}>
-                  <div className={styles.tape} />
-                  
-                  {drink.image ? (
-                    <div className={styles.imageWrapper}>
-                      <img src={drink.image} alt={drink.name} className={styles.subjectImage} />
-                      <div className={styles.imageOverlay} />
-                    </div>
-                  ) : (
-                    <div className={styles.placeholderVisual}>
-                      <Fingerprint size={60} strokeWidth={1} />
-                      <p>NO_VISUAL_DATA</p>
-                    </div>
-                  )}
-                  <div className={styles.handwrittenID}>LOG_{drink.id}</div>
+            <div className={styles.gridContainer}>
+              
+              {/* PANEL EVIDENCIA (IZQUIERDA) */}
+              <section 
+                className={`${styles.evidencePanel} ${activeTab === 'EVIDENCE' ? styles.tabActive : ''}`}
+                aria-hidden={activeTab !== 'EVIDENCE'}
+              >
+                <div className={styles.paperInner}>
+                  <div className={styles.photoContainer}>
+                    <div className={styles.tape} />
+                    <div className={styles.tape} style={{ bottom: '-5px', right: '10px', transform: 'rotate(45deg)' }} />
+                    
+                    {drink.image ? (
+                      <div className={styles.imageWrapper}>
+                        <img 
+                          src={drink.image} 
+                          alt={`Fotografía de ${drink.name}`} 
+                          className={styles.subjectImage}
+                          loading="lazy"
+                        />
+                        <div className={styles.imageOverlay} />
+                      </div>
+                    ) : (
+                      <div className={styles.placeholderVisual}>
+                        <Fingerprint size={80} strokeWidth={1} />
+                        <p>CORRUPTED_VISUAL_STREAM</p>
+                      </div>
+                    )}
+                    <div className={styles.handwrittenID}>SUBJ_LOG: {drink.id}</div>
+                  </div>
+
+                  {/* RECETA ANTIGUA */}
+                  <div className={styles.ancientRecipeArea}>
+                    {isUnlocked && realRecipe ? (
+                      <motion.div 
+                        className={styles.realPaper}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                      >
+                        <h4 className={styles.paperTitle}>
+                          <ClipboardList size={16} /> ANALOG_INSTRUCTIONS
+                        </h4>
+                        <div className={styles.recipeScroll}>
+                          <ul className={styles.ingList}>
+                            {realRecipe.ingredients?.map((ing, i) => (
+                              <li key={i}>{ing}</li>
+                            ))}
+                          </ul>
+                          <p className={styles.instructionsText}>{realRecipe.instructions}</p>
+                        </div>
+                        <div className={styles.bottomStamp}>VERIFIED_BY_POLIS</div>
+                      </motion.div>
+                    ) : (
+                      <div className={styles.lockedIntel}>
+                        <Lock size={32} />
+                        <p>ENCRYPTION_LAYER_02_ACTIVE</p>
+                        <div className={styles.progressMini} />
+                      </div>
+                    )}
+                  </div>
                 </div>
+              </section>
 
-                <div className={styles.ancientRecipeArea}>
-                  {isUnlocked && realRecipe ? (
-                    <motion.div 
-                      className={styles.realPaper}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
+              {/* PANEL INTELIGENCIA (DERECHA) */}
+              <section 
+                className={`${styles.dataPanel} ${activeTab === 'INTELLIGENCE' ? styles.tabActive : ''}`}
+                aria-hidden={activeTab !== 'INTELLIGENCE'}
+              >
+                <div className={styles.dossierContent}>
+                  <div className={styles.headerInfo}>
+                    <div className={styles.classification}>UNCLASSIFIED_STATION_RECORD</div>
+                    <h2 className={styles.drinkTitle}>{drink.name?.replace(/_/g, ' ')}</h2>
+                    <div className={styles.tagCloud}>
+                      <span className={styles.flavorTag}>{drink.flavor}</span>
+                      <span className={styles.alcoholTag}>{drink.alcohol} ABV</span>
+                    </div>
+                  </div>
+
+                  <div className={styles.infoBlock}>
+                    <h3><FileSearch size={16} /> LOG_SUMMARY</h3>
+                    <p className={styles.descText}>
+                      {isUnlocked ? drink.desc : drink.desc.substring(0, 50) + " [REDACTED] ".repeat(5)}
+                    </p>
+                  </div>
+
+                  <div className={styles.infoBlock}>
+                    <h3><Beaker size={16} /> CHEMICAL_ANALYSIS</h3>
+                    <div className={styles.chemicalGrid}>
+                      {drink.ingredients?.map((ing, i) => (
+                        <div key={i} className={styles.chemItem}>
+                          <ChevronRight size={10} /> {isUnlocked ? ing : "••••••••"}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* TOXICIDAD */}
+                  <div className={styles.toxicityScanner}>
+                    <div className={styles.scannerHeader}>
+                      <span>RAD_TOXICITY_SCAN</span>
+                      <span className={drink.toxicity > 50 ? styles.highRisk : ''}>{drink.toxicity}%</span>
+                    </div>
+                    <div className={styles.barContainer}>
+                      <motion.div 
+                        className={styles.barFill}
+                        initial={{ width: 0 }}
+                        animate={{ width: `${drink.toxicity}%` }}
+                        transition={{ delay: 0.5, duration: 1.5 }}
+                        style={{ 
+                          backgroundColor: drink.toxicity > 40 ? 'var(--hazard-red)' : '#00ff66'
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className={styles.actionArea}>
+                    <div className={styles.officialStamps}>
+                      <div className={styles.circularStamp}>D6_APPROVED</div>
+                      {drink.toxicity > 60 && <div className={styles.warningStamp}>BIO_HAZARD</div>}
+                    </div>
+                    
+                    <button 
+                      className={styles.dispenseButton}
+                      disabled={!isUnlocked}
+                      onClick={() => alert("PREPARING_RATION...")}
+                      aria-label="Preparar ración"
                     >
-                      <h4 className={styles.paperTitle}><ClipboardList size={14} /> ANALOG_INSTRUCTIONS</h4>
-                      <div className={styles.recipeScroll}>
-                        <ul className={styles.ingList}>
-                          {realRecipe.ingredients?.map((ing, i) => <li key={i}>{ing}</li>)}
-                        </ul>
-                        <p className={styles.instructionsText}>{realRecipe.instructions}</p>
+                      <Zap size={20} />
+                      <div className={styles.btnLabel}>
+                        <span className={styles.btnMain}>PREPARE_RATION</span>
+                        <span className={styles.btnSub}>Execute D6-Protocol</span>
                       </div>
-                    </motion.div>
-                  ) : (
-                    <div className={styles.lockedIntel}>
-                      <Lock size={24} />
-                      <p>CIFRADO_NIVEL_2</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </section>
-
-            {/* PANEL DERECHO: DATOS DIGITALES D6 */}
-            <section className={`${styles.dataPanel} ${activeTab === 'INTELLIGENCE' ? styles.tabActive : ''}`}>
-              <div className={styles.dossierContent}>
-                <div className={styles.headerInfo}>
-                  <div className={styles.classification}>RESERVED_STATION_RECORD</div>
-                  <h2 className={styles.drinkTitle}>{drink.name?.replace(/_/g, ' ')}</h2>
-                  <div className={styles.tagCloud}>
-                    <span className={styles.flavorTag}>{drink.flavor}</span>
-                    <span className={styles.alcoholTag}>{drink.alcohol}% ABV</span>
+                    </button>
                   </div>
                 </div>
+              </section>
+            </div>
 
-                <div className={styles.infoBlock}>
-                  <h3><FileSearch size={14} /> LOG_SUMMARY</h3>
-                  <p className={styles.descText}>
-                    {isUnlocked ? drink.desc : `${drink.desc.substring(0, 60)} [DATA_EXPUNGED]`}
-                  </p>
-                </div>
-
-                <div className={styles.infoBlock}>
-                  <h3><Beaker size={14} /> ANALYSIS</h3>
-                  <div className={styles.chemicalGrid}>
-                    {drink.ingredients?.map((ing, i) => (
-                      <div key={i} className={styles.chemItem}>
-                        <ChevronRight size={10} /> {isUnlocked ? ing : "••••••"}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className={styles.toxicityScanner}>
-                  <div className={styles.scannerHeader}>
-                    <span>TOXICITY_LEVEL</span>
-                    <span className={drink.toxicity > 50 ? styles.highRisk : ''}>{drink.toxicity}%</span>
-                  </div>
-                  <div className={styles.barContainer}>
-                    <motion.div 
-                      className={styles.barFill}
-                      initial={{ width: 0 }}
-                      animate={{ width: `${drink.toxicity}%` }}
-                      style={{ 
-                        backgroundColor: drink.toxicity > 60 ? '#ff3e3e' : '#22c55e'
-                      }}
-                    />
-                  </div>
-                </div>
-
-                <div className={styles.actionArea}>
-                  <button 
-                    className={styles.dispenseButton}
-                    disabled={!isUnlocked}
-                    onClick={() => console.log("Protocolo de dispensación iniciado...")}
-                  >
-                    <Zap size={18} />
-                    <div className={styles.btnLabel}>
-                      <span className={styles.btnMain}>PREPARE_RATION</span>
-                      <span className={styles.btnSub}>D6-Auth Required</span>
-                    </div>
-                  </button>
-                </div>
-              </div>
-            </section>
+            {/* NAVEGACIÓN MÓVIL MEJORADA (con iconos) */}
+            <div className={styles.mobileNav}>
+              <button 
+                className={activeTab === 'EVIDENCE' ? styles.active : ''} 
+                onClick={() => setActiveTab('EVIDENCE')}
+                aria-pressed={activeTab === 'EVIDENCE'}
+              >
+                <Fingerprint size={18} />
+                <span>EVIDENCE</span>
+              </button>
+              <button 
+                className={activeTab === 'INTELLIGENCE' ? styles.active : ''} 
+                onClick={() => setActiveTab('INTELLIGENCE')}
+                aria-pressed={activeTab === 'INTELLIGENCE'}
+              >
+                <FileSearch size={18} />
+                <span>INTEL</span>
+              </button>
+            </div>
           </div>
 
-          {/* TABS PARA MÓVIL */}
-          <div className={styles.mobileNav}>
-            <button 
-              className={activeTab === 'EVIDENCE' ? styles.active : ''} 
-              onClick={() => setActiveTab('EVIDENCE')}
-            >EVIDENCE</button>
-            <button 
-              className={activeTab === 'INTELLIGENCE' ? styles.active : ''} 
-              onClick={() => setActiveTab('INTELLIGENCE')}
-            >INTEL</button>
-          </div>
-        </div>
-      </motion.div>
-    </div>
+          {/* OVERLAYS ESTÉTICOS */}
+          <div className={styles.folderGrain} />
+          <div className={styles.dirtOverlays} />
+        </motion.div>
+      </div>
+    </AnimatePresence>
   );
 };

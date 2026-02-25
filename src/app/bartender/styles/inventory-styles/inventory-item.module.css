@@ -1,189 +1,553 @@
-.itemWrapper {
-  --theme-color: #ffb300;
-  --bg-folder: #2a2620;
+/* ============================================================
+   inventory-item.module.css
+   Estilos para el componente InventoryItem (versión mejorada)
+   Inspiración: Manila / Windows 95 / Dossier / Saga Metro
+   ============================================================ */
+
+/* Contenedor principal con perspectiva 3D */
+.dossierWrapper {
+  position: relative;
+  width: 300px;
+  height: 400px;
+  margin: 2rem 1rem;
+  perspective: 1200px;
+  transform: rotate(var(--folder-rot, 0deg));
+  transition: transform 0.3s ease;
+  cursor: default;
+  filter: drop-shadow(0 10px 8px rgba(0, 0, 0, 0.3));
+}
+
+/* ============================================================
+   PESTAÑA SUPERIOR (ARCHIVADOR)
+   ============================================================ */
+.dossierTab {
+  position: absolute;
+  top: -20px;
+  left: 0;
+  height: 25px;
+  padding: 0 20px;
+  background: #e3c18b;
+  clip-path: polygon(0 100%, 10% 0, 90% 0, 100% 100%);
+  display: flex;
+  align-items: center;
+  z-index: 5;
+  box-shadow: inset 0 -1px 3px rgba(0,0,0,0.2);
+  border-bottom: 1px solid #aa8c5c;
+}
+
+.tabContent {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.7);
+  letter-spacing: 0.5px;
+}
+
+.tabIcon {
+  opacity: 0.7;
+}
+
+.tabLabel {
+  text-transform: uppercase;
+}
+
+/* Variante pixelada (Win95 retro) */
+.pixelatedTab {
+  image-rendering: pixelated;
+  border: 2px solid #000;
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
+  clip-path: none;
+}
+
+/* ============================================================
+   CUERPO DE LA CARPETA MANILA
+   ============================================================ */
+.manilaBody {
   position: relative;
   width: 100%;
   height: 100%;
-  transform: rotate(var(--f-rot));
-  padding-top: 25px; /* Espacio para la pestaña */
-}
-
-/* --- ESTILO DOSSIER --- */
-.dossierContainer {
-  position: relative;
-  z-index: 2;
-  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
-}
-
-.folderTab {
-  position: absolute;
-  top: -22px;
-  left: 10px;
-  width: 120px;
-  height: 25px;
-  background: var(--bg-folder);
-  clip-path: polygon(0% 100%, 15% 0%, 85% 0%, 100% 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1;
-}
-
-.tabInfo {
-  font-size: 0.6rem;
-  font-weight: bold;
-  color: rgba(255,255,255,0.4);
-  letter-spacing: 1px;
-  display: flex;
-  gap: 8px;
-}
-
-.folderBody {
-  background: var(--bg-folder);
-  border: 1px solid rgba(255,255,255,0.05);
-  min-height: 280px;
-  position: relative;
-  overflow: hidden;
-  display: flex;
-}
-
-.securityStripe {
-  width: 6px;
-  background: repeating-linear-gradient(
-    45deg,
-    var(--theme-color),
-    var(--theme-color) 5px,
-    #000 5px,
-    #000 10px
-  );
-  opacity: 0.4;
-}
-
-.mainContent {
-  flex: 1;
+  background-color: #e3c18b;
+  background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+  border-radius: 2px 20px 20px 20px;
+  box-shadow: 
+    8px 8px 20px rgba(0, 0, 0, 0.5),
+    inset -2px -2px 8px rgba(0, 0, 0, 0.2),
+    inset 2px 2px 5px rgba(255, 255, 240, 0.3);
   padding: 15px;
   display: flex;
   flex-direction: column;
+  overflow: hidden; /* Para que no se salgan elementos como manchas */
+  transition: filter 0.2s;
 }
 
-/* --- MONITOR DE DATOS --- */
-.dataScreen {
-  background: #050805;
-  border: 2px solid #1a1a1a;
-  height: 100px;
-  margin: 10px 0;
-  position: relative;
-  overflow: hidden;
-  box-shadow: inset 0 0 15px var(--theme-color);
-}
-
-.screenCenter {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: var(--theme-color);
-}
-
-.pulseGlow {
+/* Lomo reforzado (lado izquierdo) */
+.folderSpine {
   position: absolute;
-  width: 40px;
-  height: 40px;
-  background: var(--theme-color);
-  border-radius: 50%;
-  filter: blur(20px);
-  animation: pulse 2s infinite;
-  opacity: 0.3;
-}
-
-/* --- DESGASTE FÍSICO --- */
-.vintage .folderBody {
-  background: #3d3529; /* Carpeta más vieja/amarillenta */
-}
-
-.coffeeStain {
-  position: absolute;
-  top: 10%;
-  left: 5%;
-  width: 80px;
-  height: 70px;
-  background: rgba(60, 30, 0, 0.4);
-  border-radius: 40% 60% 70% 30%;
-  filter: blur(10px);
-  z-index: 10;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 15px;
+  background: linear-gradient(to right, rgba(0,0,0,0.2), transparent 80%);
+  border-radius: 2px 0 0 20px;
   pointer-events: none;
 }
 
-.burnEdge {
+/* ============================================================
+   CLIP METÁLICO
+   ============================================================ */
+.paperClipArea {
   position: absolute;
-  bottom: -10px;
-  right: -10px;
-  width: 100px;
-  height: 100px;
-  background: radial-gradient(circle, #000 30%, transparent 70%);
-  clip-path: polygon(100% 0, 100% 100%, 0 100%);
-  z-index: 10;
-  opacity: 0.9;
+  top: 12px;
+  left: 25px;
+  z-index: 100;
+  transform: rotate(-5deg);
+  filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.3));
 }
 
-/* --- POST-IT --- */
-.postIt {
+.silverClip {
+  color: #c0c0c0;
+  stroke: #a0a0a0;
+  stroke-width: 1.5;
+}
+
+.rustedClip {
+  color: #8b5a2b;
+  stroke: #5a3e1a;
+  stroke-width: 1.5;
+  filter: sepia(0.5) contrast(1.2);
+}
+
+/* ============================================================
+   CONTENEDOR DE HOJAS INTERNAS (PILA DE PAPELES)
+   ============================================================ */
+.internalSheetsContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+}
+
+.innerSheet {
   position: absolute;
-  top: 10px;
-  right: -15px;
-  width: 100px;
-  background: #ffe787;
-  padding: 10px;
-  box-shadow: 5px 5px 10px rgba(0,0,0,0.3);
-  z-index: 20;
-  font-family: 'Permanent Marker', cursive, sans-serif;
+  inset: 0;
+  background-color: #fdfaf0;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+  transform-origin: top left;
+  transition: transform 0.2s ease;
+  pointer-events: none; /* Permite que los clics pasen a la hoja superior */
+}
+
+.innerSheet.topSheet {
+  pointer-events: auto;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 100 !important;
+}
+
+.innerSheet.damagedSheet {
+  filter: sepia(0.4) brightness(0.85);
+  background-color: #ecd9b4;
+}
+
+/* ============================================================
+   CONTENIDO DEL DOCUMENTO (HOJA SUPERIOR)
+   ============================================================ */
+.documentInterface {
+  height: 100%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: #fefcf5;
+  background-image: linear-gradient(rgba(0,0,0,0.01) 1px, transparent 1px);
+  background-size: 100% 24px; /* Líneas de cuaderno */
+}
+
+/* Cabecera estilo Win95 */
+.docHeader {
+  margin-bottom: 15px;
+}
+
+.win95TitleBar {
+  background: #c0c0c0;
+  padding: 4px 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 2px solid;
+  border-color: #dfdfdf #404040 #404040 #dfdfdf;
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.win95Icons {
+  display: flex;
+  gap: 4px;
+}
+
+.winSquare {
+  width: 12px;
+  height: 12px;
+  background: #000;
+  border: 1px solid #808080;
+}
+
+.headerTitle {
+  color: #000;
+  text-shadow: 1px 1px 0 #fff;
+}
+
+/* Sello oficial */
+.stampContainer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.officialStamp {
+  border: 3px double #222;
+  padding: 4px 8px;
+  transform: rotate(-2deg);
+  background: rgba(255,255,200,0.3);
+  font-family: 'Arial Black', sans-serif;
+  font-size: 10px;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.stampMain {
+  font-size: 14px;
+  color: #8b0000;
+}
+
+.stampSub {
+  font-size: 8px;
+  color: #444;
+}
+
+/* Cuerpo del documento */
+.docBody {
+  flex: 1;
+  position: relative;
+}
+
+.metaGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  background: rgba(0,0,0,0.03);
+  padding: 8px;
+  border: 1px solid #ccc;
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  margin-bottom: 15px;
+}
+
+.metaItem {
   color: #333;
 }
 
-.postItContent {
-  font-size: 0.6rem;
-  white-space: pre-wrap;
-  line-height: 1.2;
+.contentArea {
+  position: relative;
+  padding: 10px 0;
 }
 
-.tape {
+.fileSubject {
+  font-family: 'Courier New', monospace;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin: 15px 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 2px dashed #aaa;
+  padding-bottom: 5px;
+}
+
+/* Líneas de texto simuladas (efecto dossier) */
+.skeletonParagraph {
+  margin: 15px 0;
+}
+
+.skeletonLine {
+  height: 8px;
+  background: rgba(0,0,0,0.1);
+  margin-bottom: 6px;
+  border-radius: 2px;
+}
+
+/* Marca de agua central */
+.watermarkContainer {
   position: absolute;
-  top: -5px;
-  left: 50%;
-  width: 40px;
-  height: 12px;
-  background: rgba(255,255,255,0.3);
-  transform: translateX(-50%);
+  bottom: 20px;
+  right: 20px;
+  opacity: 0.1;
+  pointer-events: none;
 }
 
-@keyframes pulse {
-  0% { transform: scale(0.8); opacity: 0.2; }
-  50% { transform: scale(1.2); opacity: 0.5; }
-  100% { transform: scale(0.8); opacity: 0.2; }
+/* Pie de página con acciones */
+.docFooter {
+  margin-top: auto;
+  border-top: 2px solid #999;
+  padding-top: 10px;
 }
 
-@keyframes scan {
-  from { transform: translateY(-100%); }
-  to { transform: translateY(100%); }
+.footerBorder {
+  height: 1px;
+  background: #ccc;
+  margin-bottom: 8px;
 }
 
-/* --- TERMINAL --- */
-.terminalInput {
+.actionSection {
   display: flex;
-  background: rgba(0,0,0,0.5);
-  border: 1px solid #333;
-  padding: 5px;
   align-items: center;
+  justify-content: space-between;
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
 }
 
-.terminalInput input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  color: var(--theme-color);
-  font-family: monospace;
-  font-size: 0.8rem;
-  outline: none;
-  padding: 0 5px;
+.retroButton {
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: bold;
+  color: #000;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+
+.retroButton:active {
+  border-color: #808080 #ffffff #ffffff #808080;
+  transform: translate(1px, 1px);
+}
+
+.primaryBtn {
+  background: #d97706;
+  border-color: #fbbf24 #92400e #92400e #fbbf24;
+  color: #fff;
+}
+
+.lastUpdated {
+  color: #666;
+  font-style: italic;
+}
+
+/* ============================================================
+   MANCHAS PROCEDIMENTALES (CAFÉ, SANGRE, QUEMADURAS, ETC.)
+   ============================================================ */
+.stain {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  filter: blur(3px);
+  opacity: 0.6;
+}
+
+.stain-coffee {
+  background: radial-gradient(circle at 30% 30%, #6f4e37 0%, transparent 70%);
+}
+.stain-blood {
+  background: radial-gradient(circle at 20% 40%, #8b0000 0%, transparent 80%);
+}
+.stain-burn {
+  background: radial-gradient(circle at 50% 50%, #2c2c2c 0%, transparent 90%);
+}
+.stain-water {
+  background: radial-gradient(circle at 60% 70%, #3a6ea5 0%, transparent 80%);
+}
+.stain-grease {
+  background: radial-gradient(circle at 40% 20%, #d4a373 0%, transparent 70%);
+}
+.stain-mold {
+  background: radial-gradient(circle at 70% 30%, #2e7d32 0%, transparent 80%);
+}
+
+/* ============================================================
+   STICKY NOTES MEJORADAS (MÚLTIPLES)
+   ============================================================ */
+.stickyNoteContainer {
+  position: absolute;
+  max-width: 130px;
+  min-width: 90px;
+  padding: 12px 8px;
+  background: #feff9c;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+  border-radius: 2px 10px 10px 2px;
+  font-family: 'Indie Flower', cursive;
+  transform-origin: top center;
+  z-index: 50;
+  transition: transform 0.1s;
+}
+
+.stickyNoteContainer:hover {
+  transform: scale(1.02) rotate(0deg) !important;
+  z-index: 200;
+}
+
+.adhesiveTape {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 16px;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(2px);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+  box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+}
+
+.stickyContent {
+  position: relative;
+  z-index: 2;
+}
+
+.handwrittenNote {
+  font-size: 11px;
+  line-height: 1.4;
+  color: #1a1a1a;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: inherit;
+  margin: 0;
+}
+
+.stickyShadow {
+  position: absolute;
+  bottom: -6px;
+  right: -6px;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.15);
+  filter: blur(6px);
+  z-index: -1;
+  border-radius: 2px;
+}
+
+/* ============================================================
+   DAÑOS ESPECÍFICOS (QUEMADURAS, SANGRE, CAFÉ)
+   ============================================================ */
+.damage-burned {
+  filter: sepia(0.4) brightness(0.8);
+}
+
+.damage-coffee {
+  filter: sepia(0.3) brightness(0.95);
+}
+
+.damage-blood {
+  filter: sepia(0.2) brightness(0.9) saturate(1.3);
+}
+
+.burnEdges {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(145deg, transparent 50%, #1a1a1a 90%);
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: 0.6;
+}
+
+.burnHole {
+  position: absolute;
+  top: 30%;
+  left: 40%;
+  width: 50px;
+  height: 50px;
+  border-radius: 60% 40% 50% 50%;
+  background: #1a1a1a;
+  box-shadow: inset 0 0 10px #000, 0 0 15px #ff8c00;
+  border: 2px solid #5a3a1a;
+  filter: blur(1px);
+  pointer-events: none;
+  z-index: 200;
+}
+
+.bloodSplatter {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 20% 30%, #8b0000 0%, transparent 40%),
+              radial-gradient(circle at 80% 70%, #8b0000 0%, transparent 50%),
+              radial-gradient(circle at 40% 80%, #a52a2a 0%, transparent 60%);
+  opacity: 0.25;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+.coffeeRing {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  width: 100px;
+  height: 60px;
+  border: 5px solid #6f4e37;
+  border-radius: 50%;
+  opacity: 0.25;
+  transform: rotate(10deg);
+  filter: blur(2px);
+  pointer-events: none;
+}
+
+/* ============================================================
+   TEXTURAS Y ACABADOS
+   ============================================================ */
+.textureOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('https://www.transparenttextures.com/patterns/rough-cloth.png');
+  opacity: 0.1;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  border-radius: inherit;
+}
+
+/* Carpeta dañada (clase adicional) */
+.damagedFolder {
+  position: relative;
+}
+.damagedFolder::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.1);
+  pointer-events: none;
+}
+
+/* ============================================================
+   RESPONSIVE / AJUSTES
+   ============================================================ */
+@media (max-width: 640px) {
+  .dossierWrapper {
+    width: 260px;
+    height: 350px;
+  }
 }

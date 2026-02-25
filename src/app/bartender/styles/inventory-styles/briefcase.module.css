@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Permanent+Marker&family=JetBrains+Mono:wght@400;800&family=VT323&display=swap');
 
 /* ============================================================
-   SISTEMA DE DISEÑO ADAPTATIVO D6
+   SISTEMA DE DISEÑO ADAPTATIVO D6 - VERSIÓN FINAL
    ============================================================ */
 :root {
   --folder-bg: #c2b280;
@@ -29,36 +29,36 @@
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  padding: 20px;
+  padding: 16px;
   perspective: 2000px;
-  overflow-y: auto; /* Permite scroll si la pantalla es muy pequeña */
+  overflow-y: auto;
 }
 
-/* LA CARPETA (ESTRUCTURA FÍSICA) */
+/* LA CARPETA - COMPACTA Y CON SCROLL INTERNO */
 .documentFolder {
   width: 100%;
-  max-width: 1200px;
-  min-height: 85vh;
+  max-width: 1100px;
   background: var(--folder-bg); 
   background-image: url('https://www.transparenttextures.com/patterns/cardboard.png');
   position: relative;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 50px 100px -20px var(--shadow-heavy);
-  border-radius: 4px 60px 15px 4px;
-  border-left: 25px solid var(--folder-dark);
+  box-shadow: 0 30px 60px -15px var(--shadow-heavy);
+  border-radius: 4px 40px 15px 4px;
+  border-left: 20px solid var(--folder-dark);
   transform-style: preserve-3d;
   overflow: hidden;
+  max-height: 90vh;
 }
 
 /* ============================================================
-   CABECERA TÉCNICA (TOP BAR)
+   CABECERA TÉCNICA (TOP BAR) - STICKY EN MÓVIL
    ============================================================ */
 .folderHeader {
-  padding: 15px 30px;
+  padding: 12px 20px;
   background: rgba(0,0,0,0.15);
   border-bottom: 1px solid rgba(0,0,0,0.1);
-  z-index: 10;
+  z-index: 40; /* Asegura que quede por encima al hacer scroll */
 }
 
 .topBar {
@@ -73,7 +73,7 @@
 .systemInfo {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   font-weight: 800;
 }
 
@@ -84,7 +84,7 @@
 
 .windowControls {
   display: flex;
-  gap: 15px;
+  gap: 12px;
 }
 
 .iconBtn, .closeBtn {
@@ -93,58 +93,106 @@
   cursor: pointer;
   color: var(--d6-black);
   transition: transform 0.2s;
+  padding: 12px; /* Área táctil aumentada */
+  min-width: 48px;
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
 }
 
 .iconBtn:hover { transform: scale(1.1); }
-.closeBtn:hover { color: var(--ink-red); transform: rotate(90deg); }
+.closeBtn:hover { 
+  color: var(--ink-red); 
+  transform: rotate(90deg);
+  background: rgba(0,0,0,0.05);
+}
 
 /* ============================================================
-   LAYOUT PRINCIPAL (GRID RESPONSIVE)
+   CONTENEDOR PRINCIPAL (MAIN EXPEDIENTE)
    ============================================================ */
-.gridContainer {
-  display: grid;
-  grid-template-columns: 450px 1fr; /* Desktop: 2 columnas */
-  flex: 1;
+.mainExpediente {
   position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto; /* Scroll interno */
 }
 
 /* Lomo físico central */
 .folderSpine {
   position: absolute;
-  left: 450px;
+  left: min(400px, 40%);
   top: 0;
   bottom: 0;
   width: 2px;
   background: rgba(0,0,0,0.1);
   box-shadow: -2px 0 5px rgba(0,0,0,0.05);
   z-index: 5;
+  pointer-events: none;
+}
+
+/* Oreja lateral (categoría) */
+.tabEar {
+  position: absolute;
+  top: -8px;
+  right: 20px;
+  background: var(--folder-dark);
+  padding: 4px 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  text-transform: uppercase;
+  transform: rotate(2deg);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  z-index: 20;
+  color: rgba(255,255,240,0.9);
+  letter-spacing: 1px;
+}
+
+/* ============================================================
+   LAYOUT PRINCIPAL (GRID RESPONSIVE)
+   ============================================================ */
+.gridContainer {
+  display: grid;
+  grid-template-columns: minmax(280px, 400px) 1fr;
+  flex: 1;
+  position: relative;
 }
 
 /* ============================================================
    PANEL IZQUIERDO: EVIDENCIA
    ============================================================ */
 .evidencePanel {
-  padding: 40px;
+  padding: clamp(16px, 3vw, 30px);
   background: rgba(0,0,0,0.02);
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 20px;
+}
+
+.paperInner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 20px;
 }
 
 .photoContainer {
   background: #fff;
-  padding: 15px 15px 50px 15px;
-  box-shadow: 10px 15px 30px rgba(0,0,0,0.3);
-  transform: rotate(-2deg);
+  padding: 12px 12px 40px 12px;
+  box-shadow: 8px 12px 25px rgba(0,0,0,0.3);
+  transform: rotate(-1.5deg);
   position: relative;
+  width: 100%;
 }
 
 .tape {
   position: absolute;
-  top: -10px;
+  top: -8px;
   left: 30%;
-  width: 100px;
-  height: 30px;
+  width: 80px;
+  height: 25px;
   background: rgba(245, 235, 190, 0.4);
   backdrop-filter: blur(2px);
   z-index: 5;
@@ -152,7 +200,7 @@
 
 .imageWrapper {
   width: 100%;
-  height: 300px;
+  height: 250px;
   overflow: hidden;
   position: relative;
   border: 1px solid #ddd;
@@ -165,8 +213,18 @@
   filter: sepia(0.4) contrast(1.1);
 }
 
+.imageOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255,255,240,0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
 .placeholderVisual {
-  height: 300px;
+  height: 250px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -175,56 +233,121 @@
   color: #888;
   font-family: 'JetBrains Mono', monospace;
   font-size: 10px;
+  text-align: center;
 }
 
 .handwrittenID {
   position: absolute;
-  bottom: 15px;
-  left: 20px;
+  bottom: 12px;
+  left: 15px;
   font-family: 'Permanent Marker', cursive;
   color: #1a237e;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 /* RECETA ANTIGUA */
 .ancientRecipeArea {
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 .realPaper {
   background: var(--paper-white);
-  padding: 25px;
-  box-shadow: 5px 10px 20px rgba(0,0,0,0.2);
-  border-left: 6px solid var(--ink-red);
-  transform: rotate(1deg);
+  padding: 20px;
+  box-shadow: 4px 8px 15px rgba(0,0,0,0.2);
+  border-left: 5px solid var(--ink-red);
+  transform: rotate(0.5deg);
   font-family: 'Special Elite', cursive;
 }
 
 .paperTitle {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 14px;
-  margin-bottom: 15px;
+  gap: 8px;
+  font-size: 13px;
+  margin-bottom: 12px;
   border-bottom: 1px solid rgba(0,0,0,0.1);
+  text-transform: uppercase;
 }
 
 .recipeScroll {
-  max-height: 200px;
+  max-height: 180px;
   overflow-y: auto;
-  font-size: 13px;
+  font-size: 12px;
   line-height: 1.4;
   color: #2c3e50;
+  padding-right: 8px;
+}
+
+.ingList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 12px 0;
+}
+
+.ingList li {
+  padding: 3px 0;
+  border-bottom: 1px dashed rgba(0,0,0,0.1);
+}
+
+.instructionsText {
+  font-style: italic;
+  margin-top: 8px;
+}
+
+.bottomStamp {
+  margin-top: 15px;
+  text-align: right;
+  font-size: 9px;
+  color: var(--ink-red);
+  opacity: 0.8;
+}
+
+/* Bloqueo de receta */
+.lockedIntel {
+  background: rgba(0,0,0,0.05);
+  padding: 16px;
+  text-align: center;
+  border: 2px dashed var(--d6-black);
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--d6-black);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.progressMini {
+  width: 40px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--terminal-green) 30%, transparent 30%);
+  animation: scan 1.5s infinite linear;
+}
+
+@keyframes scan {
+  0% { background-position: 0 0; }
+  100% { background-position: 40px 0; }
 }
 
 /* ============================================================
    PANEL DERECHO: INTELIGENCIA D6
    ============================================================ */
 .dataPanel {
-  padding: 40px 60px;
+  padding: clamp(16px, 4vw, 40px);
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 20px;
+  background: rgba(255, 255, 245, 0.1);
+}
+
+.dossierContent {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 20px;
+}
+
+.headerInfo {
+  margin-bottom: 10px;
 }
 
 .classification {
@@ -232,67 +355,87 @@
   background: var(--d6-black);
   color: var(--folder-bg);
   display: inline-block;
-  padding: 2px 10px;
-  font-size: 10px;
+  padding: 2px 8px;
+  font-size: 9px;
   letter-spacing: 2px;
+  margin-bottom: 8px;
 }
 
 .drinkTitle {
   font-family: 'Special Elite', cursive;
-  font-size: clamp(32px, 5vw, 48px);
+  font-size: clamp(24px, 5vw, 40px);
   color: var(--d6-black);
-  margin: 10px 0;
+  margin: 8px 0;
   text-transform: uppercase;
+  line-height: 1.2;
+  word-break: break-word;
 }
 
 .tagCloud {
   display: flex;
-  gap: 10px;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .flavorTag, .alcoholTag {
-  padding: 4px 12px;
+  padding: 3px 10px;
   border: 1px solid rgba(0,0,0,0.2);
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
+  font-size: 10px;
   border-radius: 20px;
+  background: rgba(255,255,255,0.3);
 }
 
 /* BLOQUES DE INFO */
+.infoBlock {
+  margin: 8px 0;
+}
+
 .infoBlock h3 {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
+  font-size: 11px;
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 10px;
+  gap: 6px;
+  margin-bottom: 8px;
   color: var(--ink-red);
+  text-transform: uppercase;
 }
 
 .descText {
   font-family: 'Special Elite', cursive;
-  font-size: 16px;
-  line-height: 1.6;
+  font-size: clamp(13px, 1.8vw, 15px);
+  line-height: 1.5;
   color: #3d3831;
+  background: rgba(255,255,245,0.5);
+  padding: 12px;
+  border-radius: 4px;
+  border-left: 4px solid var(--folder-dark);
 }
 
 .chemicalGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 8px;
 }
 
 .chemItem {
   font-family: 'Courier New', monospace;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: bold;
+  padding: 5px 8px;
+  background: rgba(0,0,0,0.03);
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 /* ESCÁNER DE TOXICIDAD */
 .toxicityScanner {
-  margin-top: 20px;
+  margin-top: 15px;
   background: rgba(0,0,0,0.05);
-  padding: 15px;
+  padding: 12px;
   border-radius: 4px;
 }
 
@@ -301,14 +444,14 @@
   justify-content: space-between;
   font-family: 'JetBrains Mono', monospace;
   font-weight: 800;
-  font-size: 12px;
-  margin-bottom: 8px;
+  font-size: 11px;
+  margin-bottom: 6px;
 }
 
 .highRisk { color: var(--hazard-red); animation: blink 1s infinite; }
 
 .barContainer {
-  height: 12px;
+  height: 10px;
   background: rgba(0,0,0,0.1);
   border-radius: 2px;
   overflow: hidden;
@@ -316,7 +459,7 @@
 
 .barFill {
   height: 100%;
-  transition: width 1.5s cubic-bezier(0.1, 0, 0.2, 1);
+  transition: width 1.2s cubic-bezier(0.1, 0, 0.2, 1);
 }
 
 /* ============================================================
@@ -325,45 +468,60 @@
 .actionArea {
   margin-top: auto;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  padding-top: 30px;
+  padding-top: 20px;
+  gap: 15px;
 }
 
 .officialStamps {
   display: flex;
-  gap: 20px;
+  gap: 15px;
+  flex-wrap: wrap;
 }
 
 .circularStamp {
   font-family: 'Special Elite', cursive;
   color: #27ae60;
   border: 3px double #27ae60;
-  padding: 10px;
+  padding: 8px;
   border-radius: 50%;
-  font-size: 10px;
-  transform: rotate(-15deg);
+  font-size: 9px;
+  transform: rotate(-12deg);
   opacity: 0.6;
+}
+
+.warningStamp {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--hazard-red);
+  border: 2px solid var(--hazard-red);
+  padding: 6px 12px;
+  font-size: 10px;
+  font-weight: 800;
+  transform: rotate(2deg);
 }
 
 .dispenseButton {
   background: var(--d6-black);
   color: var(--terminal-green);
   border: 2px solid var(--terminal-green);
-  padding: 15px 35px;
+  padding: 12px 25px;
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
   cursor: pointer;
   transition: all 0.3s;
   font-family: 'VT323', monospace;
-  clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+  clip-path: polygon(8% 0, 100% 0, 92% 100%, 0 100%);
+  min-width: 200px;
+  justify-content: center;
 }
 
 .dispenseButton:hover:not(:disabled) {
   background: var(--terminal-green);
   color: #000;
-  box-shadow: 0 0 20px var(--terminal-green);
+  box-shadow: 0 0 15px var(--terminal-green);
 }
 
 .dispenseButton:disabled {
@@ -372,39 +530,83 @@
   filter: grayscale(1);
 }
 
-.btnMain { display: block; font-size: 20px; letter-spacing: 1px; }
-.btnSub { display: block; font-size: 10px; opacity: 0.7; }
+.btnLabel {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.btnMain { 
+  display: block; 
+  font-size: 18px; 
+  letter-spacing: 1px; 
+  line-height: 1.2;
+}
+.btnSub { 
+  display: block; 
+  font-size: 9px; 
+  opacity: 0.7; 
+}
 
 /* ============================================================
-   ADAPTABILIDAD MÓVIL (QUERIES)
+   ADAPTABILIDAD MÓVIL (QUERIES) - MEJORAS TÁCTILES
    ============================================================ */
-.mobileNav { display: none; }
+.mobileNav { 
+  display: none; 
+}
 
 @media (max-width: 900px) {
-  .gridContainer { grid-template-columns: 1fr; }
-  .folderSpine { display: none; }
+  .gridContainer { 
+    grid-template-columns: 1fr; 
+  }
+  
+  .folderSpine { 
+    display: none; 
+  }
   
   .evidencePanel, .dataPanel {
-    display: none; /* Escondemos ambos por defecto */
-    padding: 20px;
+    display: none;
+    padding: 16px;
   }
 
-  .tabActive { display: flex; } /* Solo el activo se muestra */
+  .tabActive { 
+    display: flex; 
+  }
 
+  /* Cabecera sticky para que el botón de cerrar siempre sea visible */
+  .folderHeader {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--folder-bg); /* Fondo sólido para que no se transparente al hacer scroll */
+    border-bottom: 2px solid var(--folder-dark);
+  }
+
+  /* Navegación móvil mejorada */
   .mobileNav {
     display: flex;
     background: var(--folder-dark);
-    border-top: 1px solid rgba(0,0,0,0.2);
+    border-top: 2px solid rgba(0,0,0,0.3);
+    position: sticky;
+    bottom: 0;
+    z-index: 50;
   }
 
   .mobileNav button {
     flex: 1;
-    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 8px; /* Más área táctil */
     border: none;
     background: transparent;
     font-family: 'JetBrains Mono', monospace;
     font-weight: 800;
     color: rgba(0,0,0,0.5);
+    font-size: 14px;
+    min-height: 56px; /* Altura mínima para facilitar el toque */
+    transition: background 0.2s;
   }
 
   .mobileNav button.active {
@@ -413,14 +615,110 @@
   }
 
   .documentFolder {
-    min-height: auto;
     border-left: 10px solid var(--folder-dark);
+    max-height: 95vh;
   }
   
-  .photoContainer { transform: rotate(0); }
+  .photoContainer { 
+    transform: rotate(0); 
+  }
+  
+  .dispenseButton {
+    width: 100%;
+    clip-path: none;
+    border-radius: 4px;
+  }
+  
+  .actionArea {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .officialStamps {
+    justify-content: center;
+  }
 }
 
-/* ANIMACIONES */
+@media (max-width: 480px) {
+  .tabEar {
+    right: 8px;
+    font-size: 11px;
+    padding: 3px 10px;
+  }
+  
+  .photoContainer {
+    padding: 8px 8px 35px 8px;
+  }
+  
+  .imageWrapper, .placeholderVisual {
+    height: 180px;
+  }
+  
+  .handwrittenID {
+    font-size: 11px;
+  }
+  
+  .chemicalGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .dispenseButton {
+    padding: 10px 20px;
+    min-width: 160px;
+  }
+  
+  .btnMain {
+    font-size: 16px;
+  }
+  
+  .btnSub {
+    font-size: 8px;
+  }
+
+  /* Ajuste adicional para que los botones de la cabecera no queden demasiado juntos */
+  .windowControls {
+    gap: 8px;
+  }
+  
+  .iconBtn, .closeBtn {
+    padding: 10px;
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+/* ============================================================
+   EFECTOS DE LUZ AMBIENTAL (GLOW)
+   ============================================================ */
+.ambientGlow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.25;
+  mix-blend-mode: screen;
+  animation: glowPulse 4s infinite alternate;
+}
+
+.glowGreen {
+  background: radial-gradient(circle at 30% 50%, rgba(0, 255, 100, 0.25), transparent 70%);
+}
+
+.glowAmber {
+  background: radial-gradient(circle at 70% 50%, rgba(255, 200, 0, 0.3), transparent 70%);
+}
+
+@keyframes glowPulse {
+  0% { opacity: 0.15; }
+  100% { opacity: 0.4; }
+}
+
+/* ============================================================
+   ANIMACIONES
+   ============================================================ */
 @keyframes pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.4; }
@@ -437,15 +735,26 @@
   inset: 0;
   pointer-events: none;
   opacity: 0.05;
+  mix-blend-mode: multiply;
 }
-.folderGrain { background-image: url('https://www.transparenttextures.com/patterns/rough-paper.png'); }
-.dirtOverlays { background-image: url('https://www.transparenttextures.com/patterns/stardust.png'); }
+.folderGrain { 
+  background-image: url('https://www.transparenttextures.com/patterns/rough-paper.png'); 
+}
+.dirtOverlays { 
+  background-image: url('https://www.transparenttextures.com/patterns/stardust.png'); 
+}
 
-/* Estilo para cuando se desbloquea */
-.unlockedTheme .barContainer { border-color: var(--terminal-green); }
-.unlockedTheme .dispenseButton { animation: neonGlitch 2s infinite; }
+/* ============================================================
+   ESTILO PARA MODO DESBLOQUEADO
+   ============================================================ */
+.unlockedTheme .barContainer { 
+  border-color: var(--terminal-green); 
+}
+.unlockedTheme .dispenseButton { 
+  animation: neonGlitch 2s infinite; 
+}
 
 @keyframes neonGlitch {
-  0%, 100% { box-shadow: 0 0 10px var(--terminal-green); }
-  95% { box-shadow: 0 0 25px var(--terminal-green); }
+  0%, 100% { box-shadow: 0 0 8px var(--terminal-green); }
+  95% { box-shadow: 0 0 20px var(--terminal-green); }
 }

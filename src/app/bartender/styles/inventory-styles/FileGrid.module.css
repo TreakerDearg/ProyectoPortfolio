@@ -1,3 +1,10 @@
+/* ============================================================
+   FILE GRID MODULE - D6 AMBER PHOSPHOR
+   Estilos para la cuadrícula de archivos (Inventory)
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
 /* --- CONTENEDOR MAESTRO --- */
 .gridContainer {
   width: 100%;
@@ -38,12 +45,18 @@
   white-space: nowrap;
 }
 
+.sectorIcon {
+  color: #ffb300;
+  opacity: 0.8;
+}
+
 .sectorTitle {
   font-size: 1.1rem;
   letter-spacing: 3px;
   color: #ffb300;
   font-weight: 800;
   margin: 0;
+  text-transform: uppercase;
 }
 
 .nodeBadge {
@@ -55,6 +68,8 @@
   padding: 2px 8px;
   font-size: 0.6rem;
   color: #ffb300;
+  font-family: 'Share Tech Mono', monospace;
+  border-radius: 2px;
 }
 
 .sectorLine {
@@ -71,7 +86,6 @@
 
 .autoGrid {
   display: grid;
-  /* El uso de min(100%) evita que la tarjeta sea más ancha que la pantalla */
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
   gap: 20px;
   width: 100%;
@@ -88,12 +102,14 @@
   flex-direction: column;
   padding: 12px;
   cursor: pointer;
-  overflow: hidden; /* Mantiene el contenido dentro de los bordes */
+  overflow: hidden;
   box-sizing: border-box;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  animation: fadeIn 0.5s ease forwards;
-  animation-delay: var(--delay);
-  opacity: 0;
+  /* La animación de entrada la maneja Framer Motion, pero mantenemos un estado base */
+}
+
+.accessibleEntry {
+  /* Estilo base para accesibles */
 }
 
 .accessibleEntry:hover {
@@ -101,6 +117,12 @@
   background: rgba(255, 179, 0, 0.05);
   transform: translateY(-4px);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 10px rgba(255, 179, 0, 0.1);
+}
+
+.lockedEntry {
+  cursor: not-allowed;
+  filter: grayscale(0.8);
+  border-color: #331111;
 }
 
 /* Contenedor del item interno */
@@ -112,10 +134,9 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  pointer-events: none;
+  pointer-events: none; /* Para que los clics pasen al contenedor padre */
 }
 
-/* Restricción de tamaño para InventoryItem */
 .contentWrapper > * {
   max-width: 100%;
   max-height: 100%;
@@ -134,6 +155,7 @@
   font-size: 0.6rem;
   color: #666;
   letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
 .statusIndicator {
@@ -141,6 +163,7 @@
   height: 6px;
   border-radius: 50%;
   background: #444;
+  transition: all 0.3s ease;
 }
 
 .accessibleEntry:hover .statusIndicator {
@@ -149,12 +172,6 @@
 }
 
 /* --- BLOQUEO (LOCKED) --- */
-.lockedEntry {
-  cursor: not-allowed;
-  filter: grayscale(0.8);
-  border-color: #331111;
-}
-
 .lockShield {
   position: absolute;
   inset: 0;
@@ -171,6 +188,11 @@
   color: #ff3c00;
   filter: drop-shadow(0 0 8px #ff3c00);
   margin-bottom: 8px;
+  animation: pulseHazard 2s infinite;
+}
+
+.lockLabel {
+  text-align: center;
 }
 
 .lockText {
@@ -178,10 +200,16 @@
   font-size: 0.7rem;
   font-weight: bold;
   letter-spacing: 2px;
+  font-family: 'Share Tech Mono', monospace;
 }
 
 /* --- DETALLES COSMÉTICOS --- */
-.frameCorners::before, .frameCorners::after {
+.frameCorners {
+  position: relative;
+}
+
+.frameCorners::before,
+.frameCorners::after {
   content: '';
   position: absolute;
   width: 8px;
@@ -189,10 +217,20 @@
   border-color: rgba(255, 179, 0, 0.2);
   border-style: solid;
   pointer-events: none;
+  z-index: 2;
 }
 
-.frameCorners::before { top: 0; left: 0; border-width: 1px 0 0 1px; }
-.frameCorners::after { bottom: 0; right: 0; border-width: 0 1px 1px 0; }
+.frameCorners::before {
+  top: 0;
+  left: 0;
+  border-width: 1px 0 0 1px;
+}
+
+.frameCorners::after {
+  bottom: 0;
+  right: 0;
+  border-width: 0 1px 1px 0;
+}
 
 .entryScanline {
   position: absolute;
@@ -200,24 +238,138 @@
   background: linear-gradient(to bottom, transparent, rgba(255, 179, 0, 0.02), transparent);
   background-size: 100% 4px;
   pointer-events: none;
+  opacity: 0.5;
+  animation: scanlineMove 8s linear infinite;
 }
 
-/* --- ANIMACIONES Y RESPONSIVO --- */
+/* --- VISTA VACÍA --- */
+.emptyContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  width: 100%;
+  padding: 40px;
+  box-sizing: border-box;
+}
+
+.warningBox {
+  background: rgba(20, 10, 0, 0.7);
+  border: 2px solid #ffb300;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 600px;
+  gap: 20px;
+  border-radius: 4px;
+  box-shadow: 0 0 30px rgba(255, 179, 0, 0.1);
+}
+
+.warningIcon {
+  color: #ffb300;
+  filter: drop-shadow(0 0 10px #ffb300);
+  animation: pulse 2s infinite;
+}
+
+.emptyText h3 {
+  color: #ffb300;
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+  letter-spacing: 2px;
+}
+
+.emptyText p {
+  color: rgba(255, 179, 0, 0.6);
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+}
+
+.resetButton {
+  background: transparent;
+  border: 1px solid #ffb300;
+  color: #ffb300;
+  padding: 10px 20px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.8rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.2s;
+  margin-top: 10px;
+}
+
+.resetButton:hover {
+  background: #ffb300;
+  color: #000;
+  box-shadow: 0 0 20px #ffb300;
+}
+
+/* --- ANIMACIONES --- */
 @keyframes fadeIn {
   from { opacity: 0; transform: scale(0.96) translateY(10px); }
   to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
+@keyframes scanlineMove {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 100%; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes pulseHazard {
+  0%, 100% { opacity: 1; filter: drop-shadow(0 0 5px #ff3c00); }
+  50% { opacity: 0.7; filter: drop-shadow(0 0 15px #ff3c00); }
+}
+
+/* --- RESPONSIVIDAD --- */
 @media (max-width: 768px) {
   .autoGrid {
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 12px;
   }
-  .sectorTitle { font-size: 0.9rem; }
+  .sectorTitle {
+    font-size: 0.9rem;
+  }
+  .nodeBadge {
+    font-size: 0.55rem;
+    padding: 2px 6px;
+  }
+  .warningBox {
+    padding: 30px;
+  }
 }
 
 @media (max-width: 480px) {
   .autoGrid {
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+  }
+  .folderEntry {
+    padding: 8px;
+  }
+  .sectorHeader {
+    gap: 10px;
+  }
+  .sectorInfo {
+    gap: 6px;
+  }
+  .sectorTitle {
+    font-size: 0.8rem;
+  }
+  .nodeBadge {
+    font-size: 0.5rem;
+  }
+  .warningBox {
+    padding: 20px;
+  }
+  .warningBox h3 {
+    font-size: 1rem;
   }
 }

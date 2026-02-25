@@ -1,9 +1,8 @@
 'use client';
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Search, X, Activity, Globe, 
-  ShieldCheck, Filter
+  Search, X, Activity, Database, 
+  Globe, ShieldCheck, Filter, ChevronDown
 } from 'lucide-react';
 import styles from '../../../styles/inventory-styles/SearchBar.module.css';
 
@@ -17,24 +16,32 @@ export const SearchBar = ({
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const inputRef = useRef(null);
+  const modalRef = useRef(null);
+  
+  const categories = ['ALL', 'MILITARY', 'ENGINEERING', 'BIOMEDICAL', 'INTEL', 'COMMERCE', 'LOGISTICS'];
 
-  const categories = [
-    'ALL', 'MILITARY', 'ENGINEERING', 
-    'BIOMEDICAL', 'INTEL', 'COMMERCE', 'LOGISTICS'
-  ];
-
+  // Cerrar modal con Escape
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isFilterOpen) {
+        setIsFilterOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isFilterOpen]);
 
-  // Cerrar modal y cambiar categoría
+  // Limpiar input
+  const handleClear = () => {
+    setSearchTerm('');
+    if (inputRef.current) inputRef.current.focus();
+  };
+
   const handleSelectCategory = (cat) => {
     setActiveCategory(cat);
     setIsFilterOpen(false);
   };
-
-  if (!mounted) return null;
 
   return (
     <div className={`${styles.masterWrapper} ${isMobile ? styles.mobileMaster : ''}`}>
@@ -44,8 +51,8 @@ export const SearchBar = ({
         ${isUnlocked ? styles.unlockedBorder : ''}
       `}>
         
-        {/* INDICADOR DE SEGURIDAD RED */}
-        <div className={styles.connectionStatus}>
+        {/* LADO IZQUIERDO: Estado de Conexión */}
+        <div className={styles.connectionStatus} aria-label="Connection status">
           {isUnlocked ? (
             <Globe size={isMobile ? 14 : 16} className={styles.globeIcon} />
           ) : (
@@ -58,40 +65,53 @@ export const SearchBar = ({
           )}
         </div>
 
-        {/* INPUT DE BÚSQUEDA */}
+        {/* CENTRO: Entrada de Datos */}
         <div className={styles.searchInterface}>
           <div className={styles.inputWrapper}>
             <Search 
               size={18} 
               className={`${styles.searchIcon} ${isFocused ? styles.iconActive : ''}`} 
+              aria-hidden="true"
             />
             <input 
+              ref={inputRef}
               type="text" 
-              placeholder={isMobile ? "BUSCAR..." : "ANALIZANDO_BANCO_DATOS..."} 
+              placeholder={isMobile ? "SEARCH..." : "ANALYZING_DATABANK..."} 
               value={searchTerm}
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
               onChange={(e) => setSearchTerm(e.target.value.toUpperCase())}
               className={styles.searchInput}
+              aria-label="Search query"
             />
+            {searchTerm && (
+              <button 
+                className={styles.clearButton} 
+                onClick={handleClear}
+                aria-label="Clear search"
+              >
+                <X size={14} />
+              </button>
+            )}
           </div>
         </div>
 
-        {/* SELECTOR PDA MÓVIL */}
+        {/* BOTÓN FILTRO (Solo Móvil) */}
         {isMobile && (
           <button 
-            type="button"
             className={`${styles.mobileFilterToggle} ${activeCategory !== 'ALL' ? styles.filterActive : ''}`}
             onClick={() => setIsFilterOpen(true)}
+            aria-label="Open filter menu"
+            aria-expanded={isFilterOpen}
           >
             <Filter size={16} />
             <span className={styles.catIndicator}>{activeCategory.slice(0, 3)}</span>
           </button>
         )}
 
-        {/* TELEMETRÍA DE BÚSQUEDA (Desktop) */}
+        {/* METADATA (Solo Desktop) */}
         {!isMobile && (
-          <div className={styles.metaData}>
+          <div className={styles.metaData} aria-label="Search metadata">
             <div className={styles.dataBit}>
               <Activity size={12} className={styles.pulseIcon} />
               <span>SYNC_{searchTerm.length.toString().padStart(2, '0')}</span>
@@ -100,37 +120,41 @@ export const SearchBar = ({
         )}
       </div>
 
-      {/* BARRA DE FILTROS HORIZONTAL (Desktop) */}
+      {/* FILTROS DESKTOP (Horizontal) */}
       {!isMobile && (
-        <div className={styles.filterBar}>
+        <div className={styles.filterBar} role="tablist" aria-label="Categories">
           {categories.map(cat => (
             <button
               key={cat}
-              type="button"
               onClick={() => setActiveCategory(cat)}
               className={`${styles.filterBtn} ${activeCategory === cat ? styles.filterBtnActive : ''}`}
+              role="tab"
+              aria-selected={activeCategory === cat}
             >
-              <div className={styles.btnGlow} />
               {cat}
             </button>
           ))}
         </div>
       )}
 
-      {/* MODAL PDA OVERLAY (Móvil) */}
+      {/* MODAL DE FILTRADO MÓVIL (PDA Overlay) */}
       {isMobile && isFilterOpen && (
-        <div className={styles.mobileModalOverlay} onClick={() => setIsFilterOpen(false)}>
-          <div className={styles.mobileModalContent} onClick={e => e.stopPropagation()}>
+        <div 
+          className={styles.mobileModalOverlay} 
+          onClick={() => setIsFilterOpen(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Category selector"
+        >
+          <div 
+            className={styles.mobileModalContent} 
+            onClick={e => e.stopPropagation()}
+            ref={modalRef}
+          >
             <div className={styles.modalHeader}>
               <div className={styles.modalTitle}>[ SECTOR_SELECTOR ]</div>
-              <button 
-                className={styles.closeBtn} 
-                onClick={() => setIsFilterOpen(false)}
-              >
-                <X size={20} />
-              </button>
+              <button onClick={() => setIsFilterOpen(false)} aria-label="Close"><X size={20} /></button>
             </div>
-            
             <div className={styles.modalGrid}>
               {categories.map(cat => (
                 <button
@@ -143,10 +167,7 @@ export const SearchBar = ({
                 </button>
               ))}
             </div>
-            
-            <div className={styles.modalFooter}>
-              <span>STATUS: ESPERANDO_SELECCIÓN_SECTOR</span>
-            </div>
+            <div className={styles.modalFooter}>SELECT_TARGET_SECTOR_TO_SCAN</div>
           </div>
         </div>
       )}

@@ -1,4 +1,11 @@
 /* ============================================================
+   SEARCHBAR MODULE - D6 AMBER PHOSPHOR
+   Estilos para el componente SearchBar
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+/* ============================================================
    CONTENEDOR MAESTRO
    ============================================================ */
 .masterWrapper {
@@ -30,7 +37,7 @@
   padding: 0 15px;
   height: 48px;
   gap: 15px;
-  transition: all 0.3s var(--crt-curve, ease);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   /* Look industrial D6 */
   clip-path: polygon(15px 0%, 100% 0%, calc(100% - 15px) 100%, 0% 100%);
 }
@@ -64,8 +71,15 @@
   min-width: fit-content;
 }
 
-.globeIcon { color: #00ff41; filter: drop-shadow(0 0 5px #00ff41); animation: flicker 3s infinite; }
-.shieldIcon { color: #ffb300; opacity: 0.7; }
+.globeIcon { 
+  color: #00ff41; 
+  filter: drop-shadow(0 0 5px #00ff41); 
+  animation: flicker 3s infinite; 
+}
+.shieldIcon { 
+  color: #ffb300; 
+  opacity: 0.7; 
+}
 
 .onlineText, .offlineText {
   font-size: 0.6rem;
@@ -90,11 +104,13 @@
   align-items: center;
   width: 100%;
   gap: 12px;
+  position: relative;
 }
 
 .searchIcon {
   color: #ffb300;
   transition: all 0.3s ease;
+  flex-shrink: 0;
 }
 
 .iconActive {
@@ -111,10 +127,42 @@
   font-size: 0.95rem;
   width: 100%;
   letter-spacing: 1px;
+  padding-right: 30px; /* Espacio para el botón de limpiar */
 }
 
 .searchInput::placeholder {
   color: rgba(255, 179, 0, 0.3);
+  text-transform: uppercase;
+}
+
+/* Botón de limpiar búsqueda */
+.clearButton {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: #ffb300;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.6;
+  transition: all 0.2s ease;
+  z-index: 5;
+}
+
+.clearButton:hover {
+  opacity: 1;
+  color: #ff3c00;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.clearButton:focus-visible {
+  outline: 1px solid #ffb300;
+  border-radius: 2px;
 }
 
 /* ============================================================
@@ -132,18 +180,6 @@
   white-space: nowrap;
 }
 
-.clearBtn {
-  background: transparent;
-  border: none;
-  color: #ffb300;
-  cursor: pointer;
-  padding: 5px;
-  display: flex;
-  opacity: 0.6;
-}
-
-.clearBtn:hover { opacity: 1; color: #ff3c00; }
-
 .mobileFilterToggle {
   background: rgba(255, 179, 0, 0.1);
   border: 1px solid rgba(255, 179, 0, 0.3);
@@ -156,11 +192,40 @@
   min-width: 48px;
   height: 40px;
   border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
 .filterActive {
   background: #ffb300;
   color: #000;
+}
+
+/* Metadatos (desktop) */
+.metaData {
+  display: flex;
+  align-items: center;
+  min-width: fit-content;
+}
+
+.dataBit {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 4px 8px;
+  border: 1px solid rgba(255, 179, 0, 0.2);
+  font-size: 0.6rem;
+  color: rgba(255, 179, 0, 0.7);
+}
+
+.pulseIcon {
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
 }
 
 /* ============================================================
@@ -216,6 +281,13 @@
   align-items: center;
   gap: 12px;
   font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.modalOption:hover {
+  background: rgba(255, 179, 0, 0.1);
+  border-color: rgba(255, 179, 0, 0.3);
 }
 
 .optionActive {
@@ -229,11 +301,21 @@
   height: 6px;
   border-radius: 50%;
   background: rgba(255, 179, 0, 0.2);
+  transition: background 0.2s;
 }
 
 .optionActive .optionDot {
   background: #ffb300;
   box-shadow: 0 0 8px #ffb300;
+}
+
+.modalFooter {
+  font-size: 0.6rem;
+  color: rgba(255, 179, 0, 0.4);
+  text-align: center;
+  letter-spacing: 1px;
+  border-top: 1px dashed rgba(255, 179, 0, 0.1);
+  padding-top: 15px;
 }
 
 /* ============================================================
@@ -255,6 +337,7 @@
   font-family: 'Share Tech Mono', monospace;
   cursor: pointer;
   transition: all 0.2s ease;
+  text-transform: uppercase;
 }
 
 .filterBtn:hover {
@@ -289,4 +372,19 @@
 
 .spinningDb {
   animation: spin 4s infinite linear;
+}
+
+/* ============================================================
+   RESPONSIVIDAD ADICIONAL
+   ============================================================ */
+@media (max-width: 480px) {
+  .mobileFilterToggle {
+    min-width: 44px;
+    height: 44px;
+  }
+  
+  .modalOption {
+    padding: 14px;
+    font-size: 0.7rem;
+  }
 }

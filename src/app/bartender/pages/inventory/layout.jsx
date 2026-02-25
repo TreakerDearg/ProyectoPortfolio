@@ -1,124 +1,98 @@
 'use client';
-import React, { useMemo } from 'react';
+import React from 'react';
 import styles from '../../styles/inventory-styles/metro-layout.module.css';
-
-// Componentes de Hardware
 import { IndustrialFan } from './components/decos/IndustrialFan';
 import { PowerCables } from './components/decos/PowerCables';
 import { BunkerHeader } from './components/layout/BunkerHeader';
 import { BunkerFooter } from './components/layout/BunkerFooter';
 
 export default function MetroLayout({ children }) {
-  // Generamos elementos decorativos de forma estática para evitar re-renders innecesarios
-  const leftVents = useMemo(() => Array.from({ length: 14 }), []);
-  const rightVents = useMemo(() => Array.from({ length: 8 }), []);
-  const rivets = useMemo(() => Array.from({ length: 6 }), []);
-  const dustParticles = useMemo(() => Array.from({ length: 20 }), []);
+  const leftVents = Array.from({ length: 12 });
+  const rightVents = Array.from({ length: 6 });
+  const rivets = Array.from({ length: 5 });
+  const dustMotes = Array.from({ length: 15 }); // Partículas de polvo
 
   return (
     <div className={styles.bunkerContainer}>
-      {/* --- CAPA 0: ATMÓSFERA PROFUNDA --- */}
+      {/* 1. CAPAS ATMOSFÉRICAS Y FX */}
       <div className={styles.vignetteOverlay} />
-      <div className={styles.grainEffect} />
-      <div className={styles.emergencyFlicker} />
-
-      {/* --- CAPA 1: ELEMENTOS DE FONDO (MACHINERY) --- */}
-      <div className={styles.backgroundEnvironment}>
-        <div className={styles.dustChamber}>
-          {dustParticles.map((_, i) => (
-            <div 
-              key={`dust-${i}`} 
-              className={styles.dustParticle} 
-              style={{
-                '--delay': `${Math.random() * 5}s`,
-                '--left': `${Math.random() * 100}%`,
-                '--size': `${Math.random() * 3 + 1}px`
-              }}
-            />
-          ))}
+      <div className={styles.grainEffect} /> 
+      
+      {/* Sistema de Polvo Cayendo (Motes) */}
+      <div className={styles.dustChamber}>
+        {dustMotes.map((_, i) => (
+          <div key={`dust-${i}`} className={styles.dustParticle} />
+        ))}
+      </div>
+      
+      {/* Maquinaria Pesada en el fondo */}
+      <div className={styles.backgroundMachinery}>
+        <div className={styles.fanPlacement}>
+           <IndustrialFan size="normal" />
         </div>
-        
-        <div className={styles.heavyMachinery}>
-          <div className={styles.fanPlacement}>
-             <IndustrialFan size="normal" />
-          </div>
-          <div className={styles.secondaryFan}>
-             <IndustrialFan size="small" />
-          </div>
-          <PowerCables />
-        </div>
+        <PowerCables />
       </div>
 
-      {/* --- CAPA 2: ESTRUCTURA METÁLICA (EL CHASIS) --- */}
-      <div className={styles.metalFrameChassis}>
+      {/* 2. ESTRUCTURA DE SOPORTE (HARDWARE) */}
+      <div className={styles.metalFrame}>
         
         <BunkerHeader />
 
         <div className={styles.mainOperationalArea}>
           
-          {/* PANEL IZQUIERDO: VENTILACIÓN Y MARCA */}
-          <aside className={`${styles.hardwareSidePanel} ${styles.panelLeft}`}>
-            <div className={styles.panelInner}>
-              <div className={styles.ventilationSystem}>
+          {/* PANEL IZQUIERDO */}
+          <aside className={`${styles.hardwareSidePanel} ${styles.responsiveHide}`}>
+            <div className={styles.panelContent}>
+              <div className={styles.ventilationGrill}>
                 {leftVents.map((_, i) => (
                   <div key={`v-l-${i}`} className={styles.ventHole} />
                 ))}
               </div>
-              <div className={styles.verticalTextContainer}>
-                <span className={styles.serialNumber}>MOD_D6_88-04</span>
-                <p className={styles.verticalBrand}>METRO_INDUSTRIES_ARCHIVE</p>
+              <div className={styles.brandContainer}>
+                <p className={styles.verticalBrand}>METRO_INDUSTRIES_D6</p>
               </div>
-              <div className={styles.rivetLine}>
+              <div className={styles.rivetColumn}>
                 {rivets.map((_, i) => (
-                  <div key={`r-l-${i}`} className={styles.rivetHex} />
+                  <div key={`r-l-${i}`} className={styles.rivetSmall} />
                 ))}
               </div>
             </div>
-            <div className={styles.panelEdgeShadow} />
+            <div className={styles.panelShadowEdge} />
           </aside>
 
-          {/* ÁREA CENTRAL: EL MONITOR CRT */}
-          <main className={styles.monitorSlot}>
-            <div className={styles.crtHousing}>
-              <div className={styles.bezelOuter}>
-                <div className={styles.bezelInner}>
-                  {/* El "Vidrio" del monitor */}
-                  <div className={styles.screenGlass}>
-                    <div className={styles.scanlineOverlay} />
-                    <div className={styles.staticNoise} />
-                    <div className={styles.screenReflection} />
-                    
-                    {/* Contenido Real */}
-                    <div className={styles.viewport}>
-                      <div className={styles.contentWrapper}>
-                        {children}
-                      </div>
-                    </div>
+          {/* ÁREA CENTRAL (CRT MONITOR) */}
+          <main className={styles.monitorEnclosure}>
+            <div className={styles.crtContainer}>
+              <div className={styles.crtBezel}>
+                <div className={styles.crtGlassEffect}>
+                  <div className={styles.scanlineOverlay} />
+                  <div className={styles.staticFlicker} />
+                </div>
+                
+                <div className={styles.contentScroll}>
+                  <div className={styles.innerLayoutPadding}>
+                    {children}
                   </div>
                 </div>
               </div>
-              {/* Tornillos del monitor */}
-              <div className={`${styles.screw} ${styles.tl}`} />
-              <div className={`${styles.screw} ${styles.tr}`} />
-              <div className={`${styles.screw} ${styles.bl}`} />
-              <div className={`${styles.screw} ${styles.br}`} />
             </div>
           </main>
 
-          {/* PANEL DERECHO: SENSORES Y COMUNICACIÓN */}
-          <aside className={`${styles.hardwareSidePanel} ${styles.panelRight}`}>
-            <div className={styles.panelEdgeShadowRight} />
-            <div className={styles.panelInner}>
-              <div className={styles.rivetLine}>
+          {/* PANEL DERECHO */}
+          <aside className={`${styles.sensorSidePanel} ${styles.responsiveHide}`}>
+            <div className={styles.panelShadowEdgeRight} />
+            <div className={styles.panelContent}>
+              <div className={styles.rivetColumn}>
                 {rivets.map((_, i) => (
-                  <div key={`r-r-${i}`} className={styles.rivetHex} />
+                  <div key={`r-r-${i}`} className={styles.rivetSmall} />
                 ))}
               </div>
-              <div className={styles.commsDisplay}>
-                <div className={styles.ledIndicator} />
-                <p className={styles.verticalBrand}>TERMINAL_V.2033.6</p>
+              <div className={styles.brandContainer}>
+                <p className={`${styles.verticalBrand} ${styles.brandRight}`}>
+                  COM_UNIT_V.2
+                </p>
               </div>
-              <div className={styles.ventilationSystem}>
+              <div className={styles.ventilationGrill}>
                 {rightVents.map((_, i) => (
                   <div key={`v-r-${i}`} className={`${styles.ventHole} ${styles.ventHoleSmall}`} />
                 ))}
@@ -130,9 +104,6 @@ export default function MetroLayout({ children }) {
 
         <BunkerFooter />
       </div>
-
-      {/* --- CAPA 3: POST-PROCESS (FRONT) --- */}
-      <div className={styles.screenDirt} />
     </div>
   );
 }

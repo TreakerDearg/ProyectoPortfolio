@@ -1,51 +1,111 @@
+/* ============================================================
+   TERMINAL PUZZLE MODULE - D6 AMBER PHOSPHOR
+   Estilos para el componente TerminalPuzzle
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+/* ============================================================
+   VARIABLES LOCALES (heredan de :root global si existe)
+   ============================================================ */
 .container {
-  --amber: #ffb300;
-  --green: #00ff66;
-  --hazard: #ff4400;
-  --bg: #050505;
+  --amber-bright: #ffb300;
+  --amber-glow: rgba(255, 179, 0, 0.6);
+  --amber-dim: rgba(255, 179, 0, 0.15);
+  --amber-ultra-dim: rgba(255, 179, 0, 0.04);
+  --hazard-red: #ff3c00;
+  --hazard-glow: rgba(255, 60, 0, 0.3);
+  --success-green: #00ff66;
+  --success-glow: rgba(0, 255, 65, 0.3);
+  --bg-deep: #030403;
+  --panel-bg: #0a0a0a;
+  --terminal-font: 'Share Tech Mono', 'Courier New', monospace;
+
   width: 100%;
   max-width: 500px;
   margin: 0 auto;
-  font-family: 'Share Tech Mono', monospace;
-  background: var(--bg);
-  border-radius: 8px;
-  padding: 4px;
+  font-family: var(--terminal-font);
+  background: transparent;
 }
 
+/* ============================================================
+   MONITOR PRINCIPAL (EFECTO HARDWARE)
+   ============================================================ */
 .monitor {
-  position: relative;
-  background: #020202;
+  background: var(--bg-deep);
   border: 4px solid #1a1a1a;
-  min-height: 400px;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 
+    inset 0 0 50px rgba(0,0,0,1),
+    0 10px 30px rgba(0,0,0,0.8);
+  min-height: 450px;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  box-shadow: inset 0 0 50px rgba(0,0,0,1), 0 10px 30px rgba(0,0,0,0.5);
 }
 
+/* Líneas de escaneo CRT */
 .scanlines {
   position: absolute;
   inset: 0;
-  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%);
-  background-size: 100% 4px;
-  z-index: 10;
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.2) 50%
+  ), linear-gradient(
+    90deg, 
+    rgba(255, 0, 0, 0.02), 
+    rgba(0, 255, 0, 0.02), 
+    rgba(0, 0, 255, 0.02)
+  );
+  background-size: 100% 4px, 3px 100%;
   pointer-events: none;
+  z-index: 10;
+  opacity: 0.8;
 }
 
+/* ============================================================
+   CABECERA DEL SISTEMA
+   ============================================================ */
 .header {
   display: flex;
   justify-content: space-between;
-  padding: 10px 15px;
+  padding: 12px 15px;
   background: rgba(255,179,0,0.05);
   border-bottom: 1px solid #1a1a1a;
-  color: var(--amber);
+  color: var(--amber-bright);
   font-size: 0.7rem;
   letter-spacing: 1px;
+  z-index: 5;
 }
 
+.brand {
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.stats {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.pulse {
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* ============================================================
+   PESTAÑAS DE NAVEGACIÓN
+   ============================================================ */
 .tabs {
   display: flex;
   background: #080808;
+  border-bottom: 1px solid #1a1a1a;
 }
 
 .tabs button {
@@ -54,92 +114,54 @@
   border: none;
   border-right: 1px solid #1a1a1a;
   color: #444;
-  padding: 12px;
+  padding: 12px 8px;
   cursor: pointer;
   font-family: inherit;
-  font-size: 0.7rem;
-  transition: 0.3s;
+  font-size: 0.75rem;
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
+}
+
+.tabs button:last-child {
+  border-right: none;
+}
+
+.tabs button:hover:not(:disabled) {
+  background: rgba(255,179,0,0.1);
+  color: var(--amber-dim);
+}
+
+.tabs button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
 }
 
 .activeTab {
   background: #111 !important;
-  color: var(--amber) !important;
-  box-shadow: inset 0 -2px var(--amber);
+  color: var(--amber-bright) !important;
+  box-shadow: inset 0 -2px var(--amber-bright);
 }
 
+/* ============================================================
+   ÁREA DE PANTALLA PRINCIPAL
+   ============================================================ */
 .screenArea {
   flex: 1;
+  min-height: 320px;
   padding: 20px;
   display: flex;
   flex-direction: column;
   position: relative;
+  background: radial-gradient(circle at 50% 30%, rgba(255,179,0,0.03) 0%, transparent 70%);
 }
 
-/* VISTA DE HASH / KEYPAD */
-.hashView {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  height: 100%;
-}
-
-.hashForm {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.inputGroup {
-  display: flex;
-  align-items: center;
-  background: rgba(255, 179, 0, 0.05);
-  border: 1px solid #222;
-  padding: 12px;
-  gap: 10px;
-}
-
-.inputGroup input {
-  background: transparent;
-  border: none;
-  color: var(--amber);
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 1.2rem;
-  outline: none;
-  width: 100%;
-  text-transform: uppercase;
-}
-
-.cursor {
-  color: var(--amber);
-  animation: blink 1s infinite;
-}
-
-.submitBtn {
-  background: var(--amber);
-  color: #000;
-  border: none;
-  padding: 15px;
-  font-family: inherit;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.2s;
-  text-transform: uppercase;
-}
-
-.submitBtn:hover:not(:disabled) {
-  background: #fff;
-  box-shadow: 0 0 20px var(--amber);
-}
-
-/* ESTADOS ESPECIALES */
 .centered {
   margin: auto;
   text-align: center;
-  color: var(--amber);
+  color: var(--amber-bright);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -147,45 +169,281 @@
 }
 
 .spin {
-  animation: rotate 2s linear infinite;
+  animation: spin 1.5s linear infinite;
 }
 
-.successText {
-  color: var(--green);
-  text-shadow: 0 0 10px var(--green);
-  letter-spacing: 2px;
-}
-
-.footer {
-  padding: 8px 15px;
-  border-top: 1px solid #1a1a1a;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: #333;
-  font-size: 0.6rem;
-}
-
-/* ANIMACIONES */
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
-@keyframes rotate {
+@keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
 
-@keyframes glitch {
-  0% { transform: translate(0); }
-  20% { transform: translate(-2px, 2px); }
-  40% { transform: translate(-2px, -2px); }
-  60% { transform: translate(2px, 2px); }
-  80% { transform: translate(2px, -2px); }
-  100% { transform: translate(0); }
+.successRing {
+  border: 3px solid var(--success-green);
+  border-radius: 50%;
+  padding: 20px;
+  display: inline-flex;
+  box-shadow: 0 0 30px var(--success-glow);
+  animation: ringPulse 2s infinite;
 }
 
-.unlocked {
-  border-color: var(--green);
+@keyframes ringPulse {
+  0% { box-shadow: 0 0 10px var(--success-glow); }
+  50% { box-shadow: 0 0 40px var(--success-glow); }
+  100% { box-shadow: 0 0 10px var(--success-glow); }
+}
+
+.glowText {
+  color: var(--success-green);
+  text-shadow: 0 0 10px var(--success-glow);
+  font-size: 1.2rem;
+}
+
+.blink {
+  animation: blink 1s step-end infinite;
+  color: var(--amber-dim);
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+/* ============================================================
+   VISTA HASH (KEYPAD)
+   ============================================================ */
+.hashView {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 10px 0;
+}
+
+.alertBox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--hazard-red);
+  font-size: 0.7rem;
+  padding: 12px;
+  border: 1px solid rgba(255, 60, 0, 0.2);
+  background: rgba(255, 60, 0, 0.05);
+  text-transform: uppercase;
+}
+
+/* Nueva caja de pista (clue) */
+.hintBox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--amber-bright);
+  font-size: 0.8rem;
+  padding: 12px;
+  border: 1px dashed var(--amber-dim);
+  background: rgba(255, 179, 0, 0.03);
+  border-radius: 4px;
+  margin-top: 5px;
+}
+
+.hintBox span:first-child {
+  font-size: 1.2rem;
+}
+
+.hashForm {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.hashForm label {
+  font-size: 0.7rem;
+  color: var(--amber-dim);
+  letter-spacing: 1px;
+}
+
+.inputGroup {
+  background: rgba(255,179,0,0.05);
+  border: 1px solid #222;
+  padding: 12px 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: border-color 0.2s;
+}
+
+.inputGroup:focus-within {
+  border-color: var(--amber-bright);
+  box-shadow: 0 0 10px var(--amber-glow);
+}
+
+.cursor {
+  color: var(--amber-bright);
+  opacity: 0.7;
+}
+
+.inputGroup input {
+  background: transparent;
+  border: none;
+  color: var(--amber-bright);
+  font-family: inherit;
+  font-size: 1.2rem;
+  width: 100%;
+  outline: none;
+  text-transform: uppercase;
+}
+
+.inputGroup input::placeholder {
+  color: rgba(255,179,0,0.2);
+  font-size: 0.9rem;
+  text-transform: none;
+}
+
+.submitBtn {
+  background: var(--amber-bright);
+  color: #000;
+  border: none;
+  padding: 14px;
+  font-family: inherit;
+  font-weight: bold;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 5px;
+}
+
+.submitBtn:hover:not(:disabled) {
+  background: #fff;
+  box-shadow: 0 0 20px var(--amber-glow);
+}
+
+.submitBtn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   OVERLAY DE ERROR (GLITCH)
+   ============================================================ */
+.errorGlitch {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 60, 0, 0.1);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  animation: glitch 0.2s infinite;
+}
+
+.errorBox {
+  background: rgba(0,0,0,0.9);
+  border: 2px solid var(--hazard-red);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  color: var(--hazard-red);
+  font-weight: bold;
+  box-shadow: 0 0 30px var(--hazard-glow);
+}
+
+@keyframes glitch {
+  0% { transform: translate(0); filter: hue-rotate(0deg); }
+  25% { transform: translate(-3px, 3px); filter: hue-rotate(30deg); }
+  50% { transform: translate(3px, -3px); }
+  75% { transform: translate(-1px, 1px); }
+  100% { transform: translate(0); filter: hue-rotate(0deg); }
+}
+
+/* ============================================================
+   FOOTER CON TELEMETRÍA
+   ============================================================ */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 15px;
+  background: rgba(0,0,0,0.5);
+  border-top: 1px solid #1a1a1a;
+  color: var(--amber-dim);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  z-index: 5;
+}
+
+.log {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* ============================================================
+   ESTADO DESBLOQUEADO
+   ============================================================ */
+.unlocked .monitor {
+  border-color: var(--success-green);
+  box-shadow: 0 0 30px var(--success-glow);
+}
+
+.unlocked .footer {
+  color: var(--success-green);
+}
+
+/* ============================================================
+   RESPONSIVIDAD
+   ============================================================ */
+@media (max-width: 600px) {
+  .container {
+    max-width: 100%;
+    padding: 0 10px;
+  }
+
+  .monitor {
+    min-height: 400px;
+  }
+
+  .tabs button {
+    padding: 10px 4px;
+    font-size: 0.7rem;
+  }
+
+  .tabs button span {
+    display: none; /* Oculta el texto en móvil, solo iconos */
+  }
+
+  .screenArea {
+    padding: 15px;
+  }
+
+  .inputGroup input {
+    font-size: 1rem;
+  }
+
+  .submitBtn {
+    padding: 12px;
+    font-size: 0.8rem;
+  }
+
+  .hintBox {
+    font-size: 0.7rem;
+    padding: 10px;
+  }
+}
+
+@media (max-width: 400px) {
+  .header {
+    padding: 8px 10px;
+    font-size: 0.6rem;
+  }
+
+  .inputGroup {
+    padding: 10px;
+  }
+
+  .inputGroup input {
+    font-size: 0.9rem;
+  }
 }

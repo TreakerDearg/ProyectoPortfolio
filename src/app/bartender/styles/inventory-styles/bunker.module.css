@@ -1,25 +1,25 @@
 /* ============================================================
-   SISTEMA DE VARIABLES D6 - AMBER PHOSPHOR ULTRA V8.8
+   BUNKER MODULE - D6 AMBER PHOSPHOR TERMINAL
+   Estilos principales para InventoryPage
+   ============================================================ */
+
+/* Importación de fuentes técnicas */
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Special+Elite&display=swap');
+
+/* ============================================================
+   VARIABLES Y CONFIGURACIÓN GLOBAL
    ============================================================ */
 :root {
-  /* Paleta Ámbar de Alta Fidelidad */
   --amber-bright: #ffb300;
   --amber-glow: rgba(255, 179, 0, 0.6);
   --amber-dim: rgba(255, 179, 0, 0.15);
   --amber-ultra-dim: rgba(255, 179, 0, 0.04);
-  
-  /* Estados de Sistema */
   --hazard-red: #ff3c00;
   --hazard-glow: rgba(255, 60, 0, 0.3);
   --success-green: #00ff41;
   --success-glow: rgba(0, 255, 65, 0.3);
-  
-  /* Superficies Industrializadas */
-  --bg-deep: #030403; 
+  --bg-deep: #030403;
   --panel-bg: rgba(7, 8, 9, 0.98);
-  --glass-reflection: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 50%);
-  
-  /* Tipografía y Layout */
   --terminal-font: 'Share Tech Mono', 'Courier New', monospace;
   --header-height: clamp(90px, 12vh, 120px);
   --sidebar-width: 340px;
@@ -27,7 +27,7 @@
 }
 
 /* ============================================================
-   ESTRUCTURA MAESTRA Y ATMÓSFERA CRT (HARDWARE LAYER)
+   CONTENEDOR PRINCIPAL Y CAPAS CRT
    ============================================================ */
 .terminalContainer {
   width: 100vw;
@@ -39,8 +39,24 @@
   font-family: var(--terminal-font);
   position: relative;
   overflow: hidden;
-  /* Simulación de curvatura física del monitor */
   mask-image: radial-gradient(circle, white 70%, black 120%);
+}
+
+.terminalGlitch {
+  animation: globalGlitch 0.2s cubic-bezier(.25,.46,.45,.94) both;
+}
+
+@keyframes globalGlitch {
+  0% { transform: translate(0); filter: hue-rotate(0deg); }
+  20% { transform: translate(-3px, 3px) skew(2deg); filter: hue-rotate(90deg) contrast(1.5); }
+  40% { transform: translate(3px, -3px) skew(-2deg); }
+  60% { transform: translate(-3px, 0); }
+  100% { transform: translate(0); filter: hue-rotate(0deg); }
+}
+
+.systemBypassed {
+  /* Estilo adicional cuando se desbloquea, ejemplo: borde verde */
+  box-shadow: inset 0 0 30px var(--success-glow);
 }
 
 .hardwareOverlays {
@@ -50,7 +66,6 @@
   z-index: 10000;
 }
 
-/* Escaneo de entrelazado mejorado */
 .amberScanline {
   position: absolute;
   inset: 0;
@@ -67,16 +82,71 @@
   opacity: 0.3;
 }
 
-/* Brillo de tubo catódico (Flicker sutil) */
-.amberGlow {
+.crtStatic {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at center, transparent 30%, rgba(255, 179, 0, 0.015) 100%);
-  animation: crtFlicker 0.15s infinite;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)' opacity='0.03'/%3E%3C/svg%3E");
+  opacity: 0.15;
+}
+
+.vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.8) 120%);
 }
 
 /* ============================================================
-   HEADER HUD: INTERFAZ DE COMANDO
+   BOOT SCREEN (PANTALLA DE INICIO)
+   ============================================================ */
+.bootingScreen {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--terminal-font);
+}
+
+.bootTerminal {
+  width: 90%;
+  max-width: 600px;
+}
+
+.bootBrand {
+  color: var(--amber-bright);
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+.bootProgressContainer {
+  width: 100%;
+  height: 2px;
+  background: #222;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.bootProgressBar {
+  height: 100%;
+  background: var(--amber-bright);
+  box-shadow: 0 0 10px var(--amber-glow);
+}
+
+.bootLogs {
+  max-height: 200px;
+  overflow-y: auto;
+  font-size: 12px;
+}
+
+.bootLogLine {
+  color: #666;
+  margin-bottom: 4px;
+}
+
+/* ============================================================
+   HEADER TÁCTICO (HUD)
    ============================================================ */
 .hudHeader {
   height: var(--header-height);
@@ -109,6 +179,17 @@
   gap: 30px;
 }
 
+.headerLeft {
+  display: flex;
+  align-items: center;
+}
+
+.brandingGroup {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
 .d6LogoAmber {
   font-size: 32px;
   font-weight: 900;
@@ -120,7 +201,28 @@
   letter-spacing: -1px;
 }
 
-/* Telemetría Dinámica */
+.sysMeta {
+  display: flex;
+  flex-direction: column;
+  font-size: 11px;
+  color: var(--amber-dim);
+}
+
+.sysId, .opStatus {
+  line-height: 1.4;
+}
+
+.headerCenter {
+  flex: 1;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+}
+
 .telemetryGroup {
   display: flex;
   gap: 20px;
@@ -148,8 +250,29 @@
   text-transform: uppercase;
 }
 
+.textHazard {
+  color: var(--hazard-red);
+  animation: blinkHazard 0.5s infinite alternate;
+}
+
+@keyframes blinkHazard {
+  from { opacity: 1; }
+  to { opacity: 0.3; }
+}
+
+.radioPulse {
+  color: var(--success-glow);
+  animation: radioWave 2s infinite;
+}
+
+@keyframes radioWave {
+  0% { opacity: 0.2; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.1); }
+  100% { opacity: 0.2; transform: scale(0.8); }
+}
+
 /* ============================================================
-   WORKSPACE: SIDEBAR & MAIN EXPLORER
+   WORKSPACE (SIDEBAR + EXPLORER)
    ============================================================ */
 .workspaceWrapper {
   flex: 1;
@@ -162,6 +285,7 @@
     transparent 1px,
     transparent 40px
   );
+  position: relative;
 }
 
 .sidebar {
@@ -171,6 +295,15 @@
   box-shadow: 20px 0 50px rgba(0,0,0,0.5);
   backdrop-filter: blur(10px);
   z-index: 50;
+  transition: transform 0.4s var(--crt-curve);
+}
+
+.sidebarInner {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding-bottom: 20px;
 }
 
 .sidebarModule {
@@ -187,12 +320,18 @@
   color: var(--amber-glow);
 }
 
-/* Kernel Log Estilo Matrix */
-.kernelLog {
+.modBody {
+  padding: 15px;
+}
+
+/* Kernel Log */
+.kernelModule .kernelLog {
   padding: 15px;
   font-size: 11px;
   background: rgba(0,0,0,0.2);
   line-height: 1.6;
+  max-height: 300px;
+  overflow-y: auto;
 }
 
 .logLine {
@@ -201,6 +340,7 @@
   border-left: 2px solid transparent;
   padding-left: 5px;
   transition: all 0.2s;
+  margin-bottom: 4px;
 }
 
 .logLine:hover {
@@ -208,9 +348,11 @@
   border-left-color: var(--amber-bright);
 }
 
-/* ============================================================
-   GRID DE ARCHIVOS (OPTIMIZADO)
-   ============================================================ */
+.logTimestamp {
+  opacity: 0.5;
+}
+
+/* File Explorer */
 .fileExplorer {
   flex: 1;
   overflow-y: auto;
@@ -218,213 +360,19 @@
   scroll-behavior: smooth;
 }
 
-/* Scrollbar personalizada */
-.fileExplorer::-webkit-scrollbar { width: 4px; }
-.fileExplorer::-webkit-scrollbar-thumb { background: var(--amber-dim); }
-.fileExplorer::-webkit-scrollbar-thumb:hover { background: var(--amber-bright); }
-
-/* ============================================================
-   SISTEMA DE BLOQUEO (SHIELD OVERLAY)
-   ============================================================ */
-.lockShield {
-  position: absolute;
-  inset: 0;
-  background: rgba(5, 2, 0, 0.95);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  z-index: 200;
-  border: 1px dashed var(--hazard-red);
-  backdrop-filter: blur(4px);
-}
-
-.lockIcon {
-  color: var(--hazard-red);
-  filter: drop-shadow(0 0 15px var(--hazard-red));
-  margin-bottom: 15px;
-}
-
-/* ============================================================
-   ANIMACIONES TÉCNICAS
-   ============================================================ */
-@keyframes crtFlicker {
-  0% { opacity: 0.98; }
-  50% { opacity: 1; }
-  100% { opacity: 0.99; }
-}
-
-@keyframes scanlineMove {
-  from { transform: translateY(0); }
-  to { transform: translateY(100%); }
-}
-
-@keyframes pulseRed {
-  0% { box-shadow: 0 0 5px var(--hazard-red); }
-  50% { box-shadow: 0 0 20px var(--hazard-red); }
-  100% { box-shadow: 0 0 5px var(--hazard-red); }
-}
-
-/* Efecto Glitch para errores de sistema */
-.terminalGlitch {
-  animation: glitch 0.2s linear infinite;
-}
-
-@keyframes glitch {
-  0% { transform: translate(0); }
-  25% { transform: translate(2px, -2px); filter: hue-rotate(90deg); }
-  50% { transform: translate(-2px, 2px); }
-  75% { transform: translate(1px, 1px); }
-  100% { transform: translate(0); }
-}
-
-/* ============================================================
-   RESPONSIVIDAD PDA (MOBILE)
-   ============================================================ */
-@media (max-width: 1024px) {
-  .sidebar {
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 100%;
-    transform: translateX(-100%);
-    transition: transform 0.5s var(--crt-curve);
-  }
-
-  .sidebarActive .sidebar {
-    transform: translateX(0);
-    box-shadow: 50px 0 100px rgba(0,0,0,0.9);
-  }
-
-  .headerMainRow {
-    gap: 10px;
-  }
-}
-
-@media (max-width: 480px) {
-  :root { --header-height: 100px; }
-  .d6LogoAmber { font-size: 24px; padding: 3px 10px; }
-  .fileExplorer { padding: 15px; }
-}
-
-/* ============================================================
-   PDA TRIGGER - BOTÓN DE ACCESO MÓVIL
-   ============================================================ */
-
-/* Oculto por defecto en Desktop */
-.mobileMenuBtn {
-  display: none; 
-  width: 48px;
-  height: 48px;
-  background: var(--panel-bg);
-  border: 1px solid var(--amber-dim);
-  color: var(--amber-bright);
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  position: relative;
-  transition: all 0.3s var(--crt-curve);
-  /* Corte industrial en la esquina superior izquierda */
-  clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 25%);
-  z-index: 2001;
-}
-
-/* Solo se muestra cuando la pantalla es inferior a 1024px */
-@media (max-width: 1024px) {
-  .mobileMenuBtn {
-    display: flex; /* Se activa en móviles/tablets */
-    animation: pulseBorder 2s infinite;
-  }
-}
-
-.mobileMenuBtn:active {
-  transform: scale(0.9);
-  background: var(--amber-bright);
-  color: #000;
-  box-shadow: 0 0 20px var(--amber-glow);
-}
-
-/* Indicador de "Sistema Activo" en el botón */
-.mobileMenuBtn::before {
-  content: '';
-  position: absolute;
-  top: 4px;
-  right: 4px;
+.fileExplorer::-webkit-scrollbar {
   width: 4px;
-  height: 4px;
-  background: var(--success-green);
-  border-radius: 50%;
-  box-shadow: 0 0 5px var(--success-green);
 }
-
-/* Animación de latido para que el usuario sepa que es interactivo */
-@keyframes pulseBorder {
-  0% { border-color: var(--amber-dim); }
-  50% { border-color: var(--amber-glow); }
-  100% { border-color: var(--amber-dim); }
+.fileExplorer::-webkit-scrollbar-thumb {
+  background: var(--amber-dim);
 }
-
-.workspaceWrapper {
-  display: flex;
-  height: calc(100vh - 110px); /* Ajuste según header/footer */
-  overflow: hidden;
-  position: relative;
-}
-
-.sidebar {
-  width: 380px; /* Ancho fijo en Desktop */
-  border-right: 1px solid rgba(255, 179, 0, 0.2);
-  background: rgba(5, 5, 5, 0.8);
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 50;
-}
-
-.fileExplorer {
-  flex: 1;
-  overflow-y: auto;
-  padding: 20px;
-  background: radial-gradient(circle at center, rgba(255,179,0,0.02) 0%, transparent 100%);
-}
-
-/* RESPONSIVIDAD: Mobile First */
-@media (max-width: 1023px) {
-  .sidebar {
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 100%; /* Ocupa todo el ancho en móvil */
-    transform: translateX(-100%);
-    backdrop-filter: blur(10px);
-  }
-
-  .sidebarOpen {
-    transform: translateX(0);
-  }
-
-  .kernelModule {
-    display: none; /* Ocultamos los logs en móvil para priorizar el Puzzle */
-  }
+.fileExplorer::-webkit-scrollbar-thumb:hover {
+  background: var(--amber-bright);
 }
 
 /* ============================================================
-   METRO D6 - BUNKER OS v10.0 (CORE STYLES)
+   FLOATING ACTION BUTTON (MÓVIL)
    ============================================================ */
-
-/* 1. MOTOR DE GLITCH (EFECTO DE FALLO DEL SISTEMA) */
-.terminalGlitch {
-  animation: globalGlitch 0.2s cubic-bezier(.25,.46,.45,.94) both;
-}
-
-@keyframes globalGlitch {
-  0% { transform: translate(0); filter: hue-rotate(0deg); }
-  20% { transform: translate(-3px, 3px) skew(2deg); filter: hue-rotate(90deg) contrast(1.5); }
-  40% { transform: translate(3px, -3px) skew(-2deg); }
-  60% { transform: translate(-3px, 0); }
-  100% { transform: translate(0); filter: hue-rotate(0deg); }
-}
-
-/* 2. FLOATING ACTION BUTTON (FAB) - SECURITY ACCESS */
 .floatingSecurityBtn {
   position: fixed;
   bottom: 80px;
@@ -433,15 +381,15 @@
   height: 65px;
   border-radius: 50%;
   background: #0a0a0a;
-  border: 2px solid var(--folder-accent);
-  color: var(--folder-accent);
+  border: 2px solid var(--amber-bright);
+  color: var(--amber-bright);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  box-shadow: 0 0 20px rgba(255, 171, 0, 0.4);
+  box-shadow: 0 0 20px var(--amber-glow);
   cursor: pointer;
-  transition: all 0.3s var(--ease-hw);
+  transition: all 0.3s var(--crt-curve);
 }
 
 .fabActive {
@@ -483,157 +431,180 @@
   align-items: center;
   justify-content: center;
   border: 2px solid #0a0a0a;
-  font-family: 'Share Tech Mono', monospace;
+  font-family: var(--terminal-font);
 }
 
-/* 3. CAPAS CRT (ATMÓSFERA TÁCTICA) */
-.hardwareOverlays {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 9999;
+/* ============================================================
+   FOOTER Y BADGES
+   ============================================================ */
+.systemFooter {
+  height: 40px;
+  background: var(--panel-bg);
+  border-top: 1px solid var(--amber-dim);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  font-size: 11px;
+  color: var(--amber-dim);
 }
 
-.amberScanline {
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    rgba(18, 16, 16, 0) 50%, 
-    rgba(0, 0, 0, 0.1) 50%
-  ), linear-gradient(
-    90deg, 
-    rgba(255, 0, 0, 0.02), 
-    rgba(0, 255, 0, 0.01), 
-    rgba(0, 0, 255, 0.02)
-  );
-  background-size: 100% 3px, 3px 100%;
+.statusBox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.vignette {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.8) 120%);
+.statusIndicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--amber-dim);
 }
 
-.crtStatic {
-  position: absolute;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)' opacity='0.03'/%3E%3C/svg%3E");
-  opacity: 0.15;
-}
-
-/* 4. INDICADORES DE TELEMETRÍA */
-.textHazard {
-  color: var(--hazard-red);
-  font-weight: bold;
-  animation: blinkHazard 0.5s infinite alternate;
-}
-
-@keyframes blinkHazard {
-  from { opacity: 1; }
-  to { opacity: 0.3; }
-}
-
-.radioPulse {
-  color: var(--success-glow);
-  animation: radioWave 2s infinite;
-}
-
-@keyframes radioWave {
-  0% { opacity: 0.2; transform: scale(0.8); }
-  50% { opacity: 1; transform: scale(1.1); }
-  100% { opacity: 0.2; transform: scale(0.8); }
-}
-
-/* 5. BARRA DE ESTADO Y BADGES */
 .statusUnlocked {
-  background: var(--success-glow) !important;
+  background: var(--success-green);
   box-shadow: 0 0 10px var(--success-glow);
 }
 
 .glowGreen {
-  color: var(--success-glow);
+  color: var(--success-green);
   text-shadow: 0 0 5px var(--success-glow);
 }
 
-.radBadge {
-  background: rgba(255, 171, 0, 0.1);
-  border: 1px solid var(--folder-accent);
+.footerCenterInfo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.radBadge, .locBadge {
+  background: rgba(255, 179, 0, 0.1);
+  border: 1px solid var(--amber-dim);
   padding: 2px 8px;
   border-radius: 2px;
-  color: var(--folder-accent);
   font-size: 10px;
 }
 
-/* 6. BOOT SCREEN (SECUENCIA DE INICIO) */
-.bootingScreen {
-  position: fixed;
-  inset: 0;
-  background: #000;
-  z-index: 10000;
+.separator {
+  width: 1px;
+  height: 15px;
+  background: var(--amber-ultra-dim);
+}
+
+.footerTime {
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-family: 'Share Tech Mono', monospace;
+  gap: 5px;
 }
 
-.bootTerminal {
-  width: 90%;
-  max-width: 600px;
+/* ============================================================
+   RESPONSIVIDAD
+   ============================================================ */
+@media (max-width: 1024px) {
+  .sidebar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 85%;
+    max-width: 340px;
+    transform: translateX(-100%);
+    backdrop-filter: blur(10px);
+  }
+
+  .sidebarOpen {
+    transform: translateX(0);
+  }
+
+  .headerMainRow {
+    gap: 10px;
+  }
+
+  .kernelModule {
+    display: none; /* Oculto en móvil para simplificar */
+  }
+
+  .fileExplorer {
+    padding: 20px;
+  }
+
+  .floatingSecurityBtn {
+    display: flex; /* Se muestra en móvil */
+  }
 }
 
-.bootBrand {
-  color: var(--folder-accent);
-  font-size: 1.5rem;
-  margin-bottom: 20px;
+@media (max-width: 768px) {
+  .headerMainRow {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+  }
+
+  .headerLeft, .headerRight {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .headerCenter {
+    order: 3;
+    width: 100%;
+    max-width: none;
+    margin-top: 5px;
+  }
+
+  .telemetryGroup {
+    padding: 5px 10px;
+    gap: 10px;
+  }
+
+  .d6LogoAmber {
+    font-size: 24px;
+    padding: 3px 10px;
+  }
 }
 
-.bootProgressContainer {
+@media (max-width: 480px) {
+  :root {
+    --header-height: 100px;
+  }
+
+  .fileExplorer {
+    padding: 10px;
+  }
+
+  .floatingSecurityBtn {
+    bottom: 60px;
+    right: 15px;
+    width: 55px;
+    height: 55px;
+  }
+
+  .bootBrand {
+    font-size: 1.2rem;
+  }
+}
+
+/* ============================================================
+   ESTILOS ADICIONALES PARA COMPONENTES INTERNOS
+   (Se asume que SearchBar, FileGrid, TerminalPuzzle y BriefcaseModal
+    tienen sus propios estilos modulares, pero se proveen bases)
+   ============================================================ */
+/* Ejemplo para SearchBar si no tiene estilos propios */
+.searchBarContainer {
   width: 100%;
-  height: 2px;
-  background: #222;
-  margin-bottom: 20px;
-  overflow: hidden;
 }
 
-.bootProgressBar {
-  height: 100%;
-  background: var(--folder-accent);
-  box-shadow: 0 0 10px var(--folder-accent);
+/* Para FileGrid, se puede definir un grid base */
+.fileGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
 }
 
-.bootLogLine {
-  color: #666;
-  font-size: 12px;
-  margin-bottom: 4px;
-}
-
-@keyframes scanline {
-  0% { transform: translateY(-100%); }
-  100% { transform: translateY(100%); }
-}
-
-.amberScanlines {
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(
-    rgba(255, 179, 0, 0) 50%, 
-    rgba(255, 179, 0, 0.05) 50%
-  );
-  background-size: 100% 4px;
-  z-index: 100;
-  pointer-events: none;
-}
-
-.glitchEffect {
-  animation: glitch-anim 0.1s infinite;
-}
-
-@keyframes glitch-anim {
-  0% { transform: translate(0); }
-  20% { transform: translate(-2px, 1px); }
-  40% { transform: translate(-2px, -1px); }
-  60% { transform: translate(2px, 1px); filter: hue-rotate(90deg); }
-  80% { transform: translate(2px, -1px); }
-  100% { transform: translate(0); }
+/* Para TerminalPuzzle, se puede dar un estilo mínimo */
+.terminalPuzzle {
+  background: rgba(0,0,0,0.5);
+  border: 1px solid var(--amber-dim);
+  padding: 10px;
 }
