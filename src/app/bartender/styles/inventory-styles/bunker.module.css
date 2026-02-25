@@ -607,3 +607,33 @@
   font-size: 12px;
   margin-bottom: 4px;
 }
+
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+.amberScanlines {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(
+    rgba(255, 179, 0, 0) 50%, 
+    rgba(255, 179, 0, 0.05) 50%
+  );
+  background-size: 100% 4px;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.glitchEffect {
+  animation: glitch-anim 0.1s infinite;
+}
+
+@keyframes glitch-anim {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 1px); }
+  40% { transform: translate(-2px, -1px); }
+  60% { transform: translate(2px, 1px); filter: hue-rotate(90deg); }
+  80% { transform: translate(2px, -1px); }
+  100% { transform: translate(0); }
+}
