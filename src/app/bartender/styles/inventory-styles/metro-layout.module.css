@@ -424,3 +424,163 @@
   20% { opacity: 0.3; }
   to { transform: translateY(110vh) translateX(20px); opacity: 0; }
 }
+
+.bunkerContainer {
+  --color-iron: #1a1a1a;
+  --color-rust: #2a241c;
+  --color-amber: #ffb300;
+  --panel-width: 60px;
+  
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: #0a0a0a;
+  color: var(--color-amber);
+  overflow: hidden;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* --- EFECTOS ATMOSFÉRICOS --- */
+.grainEffect {
+  position: absolute;
+  inset: 0;
+  background-image: url("https://www.transparenttextures.com/patterns/stardust.png");
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.emergencyFlicker {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 0, 0, 0.02);
+  animation: flicker 8s infinite;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* --- ESTRUCTURA DE PANELES --- */
+.mainOperationalArea {
+  display: flex;
+  height: calc(100vh - 120px); /* Ajuste para header y footer */
+  background: linear-gradient(90deg, #111 0%, #1a1a1a 50%, #111 100%);
+}
+
+.hardwareSidePanel {
+  width: var(--panel-width);
+  background: var(--color-iron);
+  border-left: 2px solid #333;
+  border-right: 2px solid #000;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.panelInner {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  padding: 20px 0;
+}
+
+/* --- EL MONITOR CRT (ESTILO HARDWARE) --- */
+.monitorSlot {
+  flex: 1;
+  padding: 20px;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.crtHousing {
+  width: 100%;
+  height: 100%;
+  background: #222;
+  border-radius: 40px;
+  padding: 15px;
+  position: relative;
+  box-shadow: 
+    inset 0 0 50px #000,
+    0 20px 50px rgba(0,0,0,0.8);
+}
+
+.bezelInner {
+  background: #111;
+  width: 100%;
+  height: 100%;
+  border-radius: 30px;
+  overflow: hidden;
+  border: 4px solid #333;
+  position: relative;
+}
+
+.screenGlass {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background: #050805;
+}
+
+.viewport {
+  height: 100%;
+  overflow-y: auto;
+  padding: 30px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-amber) transparent;
+}
+
+/* --- DECORACIONES --- */
+.ventHole {
+  width: 25px;
+  height: 4px;
+  background: #000;
+  margin: 6px 0;
+  border-radius: 2px;
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.05);
+}
+
+.rivetHex {
+  width: 8px;
+  height: 8px;
+  background: #333;
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+  margin: 15px 0;
+}
+
+.verticalBrand {
+  writing-mode: vertical-rl;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 4px;
+  opacity: 0.3;
+  color: #fff;
+}
+
+/* --- ANIMACIONES --- */
+@keyframes flicker {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 0.05; }
+  52% { opacity: 0.1; }
+  54% { opacity: 0.05; }
+}
+
+.dustParticle {
+  position: absolute;
+  width: var(--size);
+  height: var(--size);
+  background: white;
+  border-radius: 50%;
+  opacity: 0.1;
+  left: var(--left);
+  top: -10px;
+  animation: dustFall 10s linear infinite;
+  animation-delay: var(--delay);
+}
+
+@keyframes dustFall {
+  to { transform: translateY(100vh) translateX(20px); opacity: 0; }
+}
