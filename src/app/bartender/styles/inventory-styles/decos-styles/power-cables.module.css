@@ -1,0 +1,107 @@
+.cableContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 120px;
+  pointer-events: none;
+  z-index: 105; /* Justo debajo del cristal del header pero sobre el contenido */
+  overflow: hidden;
+}
+
+.svgCable {
+  filter: drop-shadow(0 10px 15px rgba(0,0,0,0.7));
+}
+
+.cablePath {
+  fill: none;
+  stroke: url(#cableGrad);
+  stroke-linecap: round;
+  stroke-width: 3;
+  transition: all 0.3s ease;
+}
+
+/* VARIANTE: CABLE PESADO */
+.heavy {
+  stroke-width: 5;
+  stroke: #0a0a0a;
+  opacity: 0.9;
+  animation: sway 8s ease-in-out infinite;
+}
+
+/* VARIANTE: CABLE DE DATOS */
+.medium {
+  stroke-width: 2.5;
+  stroke: #151719;
+  stroke-dasharray: 10 2; /* Simula trenzado */
+  animation: sway 6s ease-in-out infinite reverse;
+}
+
+/* VARIANTE: CABLE DAÑADO CON CORRIENTE */
+.damaged {
+  stroke-width: 2;
+  stroke: #1a1c1e;
+  animation: sway 7s ease-in-out infinite;
+}
+
+/* SISTEMA DE CHISPAS (SPARKS) */
+.sparkSystem {
+  position: absolute;
+  top: 60%; /* Alineado con la curva del cable dañado */
+  left: 35%;
+}
+
+.sparkEmitter {
+  position: relative;
+  width: 2px;
+  height: 2px;
+}
+
+.spark {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #5eb5ff;
+  border-radius: 50%;
+  box-shadow: 0 0 15px #3a9eff, 0 0 30px #0066ff;
+  animation: electricalShort 4s infinite cubic-bezier(0.9, 0, 0.1, 1);
+}
+
+.arcFlash {
+  position: absolute;
+  inset: -20px;
+  background: radial-gradient(circle, rgba(94, 181, 255, 0.2) 0%, transparent 70%);
+  opacity: 0;
+  animation: flash 4s infinite cubic-bezier(0.9, 0, 0.1, 1);
+}
+
+/* ANIMACIONES ATMOSFÉRICAS */
+@keyframes sway {
+  0%, 100% { transform: translateY(0) rotate(0.1deg); }
+  50% { transform: translateY(5px) rotate(-0.1deg); }
+}
+
+@keyframes electricalShort {
+  0%, 95%, 100% { opacity: 0; scale: 0; }
+  96% { opacity: 1; scale: 1.5; transform: translate(0, 0); }
+  97% { transform: translate(10px, 20px); opacity: 0.8; }
+  98% { transform: translate(-5px, 35px); opacity: 0; }
+}
+
+@keyframes flash {
+  0%, 95%, 100% { opacity: 0; }
+  96% { opacity: 1; }
+  97% { opacity: 0.3; }
+  98% { opacity: 0; }
+}
+
+/* AJUSTE RESPONSIVO */
+@media (max-width: 768px) {
+  .cableContainer {
+    height: 80px;
+  }
+  .heavy { stroke-width: 3; }
+  .medium { stroke-width: 1.5; }
+  .damaged { display: none; } /* Quitamos el dañado en móvil para evitar distracciones */
+  .sparkSystem { left: 50%; }
+}

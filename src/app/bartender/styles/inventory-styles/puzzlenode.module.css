@@ -1,0 +1,217 @@
+/* ============================================================
+   D6_NODE_SYSTEM - CIRCUIT BYPASS MODULE
+   ============================================================ */
+
+.gridWrapper {
+  margin: auto;
+  width: 100%;
+  max-width: 340px;
+  background: #080808;
+  padding: 24px;
+  border: 2px solid #1a1a1a;
+  box-shadow: 
+    inset 0 0 40px #000,
+    0 10px 30px rgba(0,0,0,0.8);
+  border-radius: 4px;
+  position: relative;
+}
+
+/* Fondo decorativo de microchips */
+.gridWrapper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.3;
+  background-image: 
+    linear-gradient(90deg, #111 1px, transparent 1px),
+    linear-gradient(#111 1px, transparent 1px);
+  background-size: 20px 20px;
+  pointer-events: none;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  aspect-ratio: 1/1;
+  position: relative;
+  z-index: 1;
+}
+
+/* NODO INDIVIDUAL */
+.node {
+  background: #0c0c0c;
+  border: 1px solid #222;
+  aspect-ratio: 1/1;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0;
+  overflow: visible; /* Permite que los cables se conecten visualmente */
+  outline: none;
+}
+
+.node:hover:not(:disabled) {
+  background: #121212;
+  border-color: #3a3a3a;
+}
+
+/* EL CABLE (PUENTE DE ENERGÍA) */
+.wire {
+  position: absolute;
+  width: 140%; /* Sobresale para tocar los cables de los nodos adyacentes */
+  height: 6px;
+  background: #1a1a1a;
+  z-index: 2;
+  transition: all 0.3s ease;
+  pointer-events: none;
+  border-radius: 2px;
+}
+
+/* Animación de pulso de electrones */
+.energyFlow {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 179, 0, 0.8), 
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: electronFlow 1.5s linear infinite;
+  display: none;
+}
+
+/* NÚCLEO LED CENTRAL */
+.core {
+  width: 16px;
+  height: 16px;
+  background: #050505;
+  border: 2px solid #222;
+  border-radius: 50%;
+  z-index: 5;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.innerGlow {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  background: radial-gradient(circle, #fff 0%, transparent 70%);
+}
+
+/* ESTADO ACTIVO (ALINEADO) */
+.active {
+  background: #1a160a;
+  border-color: rgba(255, 179, 0, 0.3);
+}
+
+.active .wire {
+  background: #ffb300;
+  box-shadow: 0 0 12px rgba(255, 179, 0, 0.5);
+}
+
+.active .energyFlow {
+  display: block;
+}
+
+.active .core {
+  background: #ffb300;
+  border-color: #fff;
+  box-shadow: 0 0 15px rgba(255, 179, 0, 0.8);
+}
+
+.active .innerGlow {
+  opacity: 0.6;
+}
+
+/* ÉXITO (SISTEMA DESBLOQUEADO) */
+.lockedSuccess.active .wire {
+  background: #00ff66;
+  box-shadow: 0 0 15px rgba(0, 255, 102, 0.6);
+}
+
+.lockedSuccess.active .core {
+  background: #00ff66;
+  border-color: #fff;
+  box-shadow: 0 0 20px rgba(0, 255, 102, 0.8);
+}
+
+/* TORNILLOS DE HARDWARE */
+.screwHead {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #252525;
+  border-radius: 50%;
+  top: 4px;
+  left: 4px;
+  box-shadow: 
+    calc(100% + 72px) 0 #252525, 
+    0 calc(100% + 72px) #252525, 
+    calc(100% + 72px) calc(100% + 72px) #252525;
+  opacity: 0.6;
+}
+
+/* PANEL DE ESTADO INFERIOR */
+.status {
+  margin-top: 24px;
+  background: #050505;
+  border: 1px solid #1a1a1a;
+  padding: 12px;
+}
+
+.stabilityBar {
+  width: 100%;
+  height: 6px;
+  background: #111;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #222;
+}
+
+.stabilityProgress {
+  height: 100%;
+  background: linear-gradient(90deg, #886000, #ffb300);
+  box-shadow: 0 0 10px rgba(255, 179, 0, 0.5);
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.statusLabel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  color: #666;
+  font-family: 'Share Tech Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.statusLabel span {
+  color: #ffb300;
+  text-shadow: 0 0 5px rgba(255, 179, 0, 0.5);
+}
+
+/* ANIMACIONES */
+@keyframes electronFlow {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
+/* Responsive */
+@media (max-width: 400px) {
+  .gridWrapper {
+    padding: 15px;
+  }
+  .grid {
+    gap: 10px;
+  }
+}

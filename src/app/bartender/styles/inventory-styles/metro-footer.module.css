@@ -1,0 +1,214 @@
+/* ============================================================
+   METRO_FOOTER_CORE - ADAPTIVE D6 SYSTEM
+   ============================================================ */
+.metroFooter {
+  width: 100%;
+  height: clamp(55px, 9vh, 75px);
+  background: linear-gradient(to top, #0a0b0c 0%, #151719 100%);
+  border-top: 3px solid #000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 clamp(15px, 4vw, 40px);
+  position: relative;
+  box-shadow: 0 -10px 30px rgba(0,0,0,0.6);
+  z-index: 100;
+  box-sizing: border-box;
+}
+
+/* 1. MÓDULO POWER (Energía Reactiva) */
+.powerModule {
+  flex: 1;
+  max-width: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.moduleHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.moduleLabel {
+  font-size: 9px;
+  color: #444;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.percentage {
+  font-size: 11px;
+  color: #ff9d00;
+  text-shadow: 0 0 8px rgba(255, 157, 0, 0.4);
+}
+
+.loadBarContainer {
+  width: 100%;
+  max-width: 200px;
+  height: 10px;
+  background: #050505;
+  border: 1px solid #1a1c1e;
+  position: relative;
+  overflow: hidden;
+  border-radius: 1px;
+}
+
+.loadBarFill {
+  height: 100%;
+  background: linear-gradient(90deg, #8b5a00 0%, #ff9d00 100%);
+  box-shadow: 0 0 12px rgba(255, 157, 0, 0.3);
+}
+
+.loadBarGlass {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom, 
+    rgba(255,255,255,0.07) 0%, 
+    transparent 50%, 
+    rgba(0,0,0,0.2) 100%
+  );
+  pointer-events: none;
+}
+
+/* 2. PLACA CENTRAL (Hazard & Security) */
+.warningPlateContainer {
+  flex: 1.5;
+  display: flex;
+  justify-content: center;
+}
+
+.warningPlate {
+  background: #080808;
+  display: flex;
+  align-items: center;
+  border: 1px solid #1a1c1e;
+  padding: 4px 15px;
+  gap: 15px;
+  box-shadow: inset 0 0 15px #000;
+  transform: skewX(-12deg); /* Inclinación industrial */
+  transition: all 0.3s ease;
+}
+
+.hazardStripes {
+  width: 35px;
+  height: 12px;
+  background: repeating-linear-gradient(
+    45deg,
+    #ff9d00,
+    #ff9d00 6px,
+    #000 6px,
+    #000 12px
+  );
+  opacity: 0.8;
+}
+
+.warningText {
+  font-size: 10px;
+  color: #22c55e; /* Verde operativo */
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* 3. TELEMETRÍA DERECHA (Uptime) */
+.footerRight {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.uptimeValue {
+  color: #ff9d00;
+  font-size: clamp(11px, 1.5vw, 14px);
+  font-weight: 900;
+  font-family: 'JetBrains Mono', monospace;
+  text-shadow: 0 0 10px rgba(255, 157, 0, 0.3);
+}
+
+/* 4. DETALLES ESTRUCTURALES (Remaches) */
+.rivetRow {
+  position: absolute;
+  top: -6px; /* Ajustado para que asomen por el borde */
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-around;
+  pointer-events: none;
+  padding: 0 20px;
+}
+
+.structuralRivet {
+  width: 7px;
+  height: 7px;
+  background: radial-gradient(circle at 35% 35%, #333, #000);
+  border-radius: 50%;
+  box-shadow: 1px 2px 3px rgba(0,0,0,0.8);
+  border: 1px solid rgba(0,0,0,0.4);
+}
+
+/* ============================================================
+   RESPONSIVIDAD (SISTEMA DE EMERGENCIA)
+   ============================================================ */
+
+/* TABLETS: Compactamos elementos */
+@media (max-width: 1024px) {
+  .warningPlate {
+    gap: 8px;
+    padding: 3px 10px;
+  }
+  .hazardStripes { width: 25px; }
+  .powerModule { max-width: 200px; }
+}
+
+/* MÓVILES: Colapso estructural */
+@media (max-width: 768px) {
+  .metroFooter {
+    padding: 0 15px;
+    height: 60px;
+  }
+
+  .hideMobile {
+    display: none !important;
+  }
+
+  /* Ocultamos la placa central para dar espacio */
+  .warningPlateContainer {
+    display: none;
+  }
+
+  .powerModule {
+    max-width: 140px;
+  }
+
+  .loadBarContainer {
+    height: 6px;
+  }
+
+  .uptimeValue {
+    font-size: 12px;
+  }
+}
+
+/* MINI-PANTALLAS: Solo valores críticos */
+@media (max-width: 480px) {
+  .moduleLabel {
+    display: none;
+  }
+  
+  .powerModule {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .percentage {
+    font-size: 10px;
+  }
+}

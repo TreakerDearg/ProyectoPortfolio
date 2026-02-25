@@ -1,0 +1,273 @@
+/* ============================================================
+   METRO_HEADER_D6 - HYBRID ARCHITECTURE
+   ============================================================ */
+:root {
+  --header-bg: linear-gradient(to bottom, #1a1d1f 0%, #0a0b0c 100%);
+  --hazard-orange: #ff9d00;
+  --status-green: #22c55e;
+  --border-glow: rgba(255, 255, 255, 0.05);
+}
+
+.metroHeader {
+  width: 100%;
+  height: clamp(70px, 11vh, 100px);
+  background: var(--header-bg);
+  border-bottom: 4px solid #000;
+  border-top: 1px solid var(--border-glow);
+  position: relative;
+  z-index: 110;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.9);
+  box-sizing: border-box;
+  overflow: visible; /* Permite que los tornillos asomen si es necesario */
+}
+
+.headerMainLayout {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  padding: 0 clamp(15px, 4vw, 40px);
+  gap: 20px;
+}
+
+/* --- MÓDULO IZQUIERDO: IDENTIDAD Y ACCESO --- */
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.accessGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.idBadge {
+  background: #050505;
+  padding: 5px 12px;
+  border-left: 2px solid var(--hazard-orange);
+  border-right: 1px solid #1a1c1e;
+  display: flex;
+  flex-direction: column;
+  box-shadow: inset 0 0 10px #000;
+}
+
+.idBadge .label { 
+  font-size: 8px; 
+  color: #444; 
+  font-weight: 800; 
+  letter-spacing: 1px;
+}
+
+.idBadge .value { 
+  font-size: 11px; 
+  color: #888; 
+  font-family: 'JetBrains Mono', monospace; 
+}
+
+.statusPlate {
+  background: var(--hazard-orange);
+  padding: 4px 18px;
+  clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+  box-shadow: inset 0 -2px 5px rgba(0,0,0,0.3);
+  margin-left: 5px;
+}
+
+.plateText {
+  color: #000;
+  font-weight: 900;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* --- MÓDULO CENTRAL: BAHÍA DE INSTRUMENTOS (GAUGE) --- */
+.gaugesContainer {
+  flex: 1.6;
+  display: flex;
+  justify-content: center;
+  max-width: 650px;
+  height: 90%;
+  align-self: flex-start; /* Pegado al borde superior para realismo de corte */
+}
+
+.consoleWindow {
+  width: 100%;
+  background: #08090a;
+  border-radius: 0 0 12px 12px; 
+  border: 1px solid #000;
+  border-top: none;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 
+    inset 0 12px 25px -5px #000,
+    0 2px 0 var(--border-glow);
+}
+
+.consoleRail {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 25px;
+  background: radial-gradient(circle at 50% -20%, #151719 0%, #08090a 100%);
+}
+
+.nixieSection {
+  display: flex;
+  gap: clamp(10px, 1.5vw, 20px);
+  align-items: center;
+}
+
+/* Sombras de Bisel y Oclusión (Detalle Pro) */
+.innerBezelShadow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: 
+    inset 0 25px 35px -10px rgba(0,0,0,1),
+    inset 10px 0 20px -5px rgba(0,0,0,0.8),
+    inset -10px 0 20px -5px rgba(0,0,0,0.8);
+}
+
+.bezelUpperDepth {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 12px;
+  background: linear-gradient(to bottom, #000 0%, transparent 100%);
+  z-index: 10;
+  opacity: 0.9;
+}
+
+/* Tornillos de Montaje */
+.windowMounts {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 5px;
+  pointer-events: none;
+}
+
+.bolt {
+  width: 5px;
+  height: 5px;
+  background: radial-gradient(circle at 30% 30%, #3a3d40, #000);
+  border-radius: 50%;
+  box-shadow: 1px 1px 2px #000;
+}
+
+.railSeparator {
+  width: 1px;
+  height: 45px;
+  background: linear-gradient(to bottom, transparent, #2a2c2e, transparent);
+  opacity: 0.5;
+}
+
+/* --- MÓDULO DERECHO: TELEMETRÍA --- */
+.headerRight {
+  display: flex;
+  align-items: center;
+}
+
+.systemStatus {
+  background: linear-gradient(135deg, rgba(20,22,24,0.8) 0%, rgba(0,0,0,0.9) 100%);
+  border: 1px solid #1f2225;
+  padding: 6px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: 4px;
+}
+
+.statusLabel { 
+  font-size: 9px; 
+  color: var(--status-green); 
+  font-weight: 800; 
+  letter-spacing: 1px;
+}
+
+.statusSubText { 
+  font-size: 8px; 
+  color: #3e444a; 
+  font-family: 'JetBrains Mono', monospace; 
+}
+
+.indicatorCore {
+  width: 20px;
+  height: 20px;
+  background: #000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #151719;
+}
+
+.blinkDot {
+  width: 7px;
+  height: 7px;
+  background: var(--status-green);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--status-green);
+}
+
+/* --- ESTRUCTURA DE SOPORTE --- */
+.headerStructuralCap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--border-glow);
+  pointer-events: none;
+}
+
+/* ============================================================
+   SISTEMA DE RESPONSIVIDAD DINÁMICA
+   ============================================================ */
+
+/* TABLETS: Priorización de Instrumentos Críticos */
+@media (max-width: 1024px) {
+  .headerMainLayout { padding: 0 20px; }
+  .hideTablet { display: none !important; }
+  
+  .gaugesContainer { 
+    flex: 1; 
+    max-width: 220px; /* Solo queda espacio para el Reloj Analógico */
+  }
+  
+  .consoleRail { padding: 0 10px; }
+}
+
+/* MÓVILES: Modo Terminal Portátil */
+@media (max-width: 768px) {
+  .metroHeader { height: 65px; border-bottom-width: 2px; }
+  
+  .hideMobile { display: none !important; }
+
+  .headerMainLayout {
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .statusPlate {
+    padding: 3px 10px;
+    clip-path: none;
+    border-radius: 2px;
+  }
+  
+  .indicatorCore { width: 14px; height: 14px; }
+  .blinkDot { width: 5px; height: 5px; }
+}
+
+/* LANDSCAPE (Móviles horizontales) */
+@media (max-height: 450px) and (orientation: landscape) {
+  .metroHeader { height: 50px; }
+  .gaugesContainer { display: none; }
+}

@@ -1,0 +1,426 @@
+/* ============================================================
+   1. RESET Y VARIABLES DE ENTORNO
+   ============================================================ */
+:root {
+  --hazard-orange: #ff9d00;
+  --industrial-blue: #3a9eff;
+  --bronze: #8b5a00;
+  --panel-bg: #0a0c0e;
+  --crt-bezel: #151719;
+  --side-panel-width: 80px;
+}
+
+.bunkerContainer {
+  width: 100vw;
+  height: 100vh;
+  background: #020202;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #a0a0a0;
+  overflow: hidden;
+  box-sizing: border-box;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ============================================================
+   2. CAPAS ATMOSFÉRICAS (FX)
+   ============================================================ */
+.vignetteOverlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, transparent 20%, rgba(0,0,0,0.9) 100%);
+  z-index: 100;
+  pointer-events: none;
+}
+
+.grainEffect {
+  position: absolute;
+  inset: 0;
+  background: url('https://grainy-gradients.vercel.app/noise.svg');
+  opacity: 0.03;
+  z-index: 101;
+  pointer-events: none;
+}
+
+/* SISTEMA DE POLVO (DUST PARTICLES) */
+.dustChamber {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 90;
+}
+
+.dustParticle {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  filter: blur(1px);
+  top: -10%;
+  animation: fall linear infinite;
+}
+
+@keyframes fall {
+  0% { transform: translateY(0) translateX(0); opacity: 0; }
+  20% { opacity: 0.5; }
+  80% { opacity: 0.5; }
+  100% { transform: translateY(110vh) translateX(30px); opacity: 0; }
+}
+
+/* ============================================================
+   3. MAQUINARIA DE FONDO (BACKGROUND)
+   ============================================================ */
+.backgroundMachinery {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.fanPlacement {
+  position: absolute;
+  top: 40px;
+  right: 5%;
+  transform: rotate(-5deg);
+  filter: grayscale(0.6) contrast(1.2);
+}
+
+/* ============================================================
+   4. ESTRUCTURA DE METAL (CHASSIS)
+   ============================================================ */
+.metalFrame {
+  position: relative;
+  z-index: 20;
+  width: 100%;
+  max-width: 1600px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: rgba(10, 12, 14, 0.6);
+  backdrop-filter: blur(4px);
+  border-left: 4px solid #1a1c1e;
+  border-right: 4px solid #1a1c1e;
+  box-shadow: 0 0 100px rgba(0,0,0,0.8);
+}
+
+.mainOperationalArea {
+  flex: 1;
+  display: grid;
+  grid-template-columns: var(--side-panel-width) 1fr var(--side-panel-width);
+  background: #050505;
+  overflow: hidden;
+}
+
+/* PANELES LATERALES */
+.hardwareSidePanel, .sensorSidePanel {
+  background: linear-gradient(to bottom, #151719, #0a0b0c);
+  border-right: 1px solid #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 0;
+  z-index: 25;
+}
+
+/* ============================================================
+   5. MONITOR CRT Y SCROLLBAR INDUSTRIAL
+   ============================================================ */
+.monitorEnclosure {
+  padding: clamp(5px, 2vw, 20px);
+  background: radial-gradient(circle at center, #111, #050505);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.crtContainer {
+  flex: 1;
+  background: #000;
+  border-radius: 25px;
+  border: 12px solid var(--crt-bezel);
+  box-shadow: 
+    inset 0 0 40px #000,
+    0 0 20px rgba(0,0,0,0.5);
+  position: relative;
+  display: flex;
+  overflow: hidden;
+}
+
+/* EL SCROLLBAR MAESTRO (ESTILO D6) */
+.contentScroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 30px;
+  scrollbar-gutter: stable;
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: var(--bronze) #0a0a0a;
+}
+
+/* Chrome, Edge, Safari: Scrollbar Engineering */
+.contentScroll::-webkit-scrollbar {
+  width: 10px;
+}
+
+.contentScroll::-webkit-scrollbar-track {
+  background: #0a0a0a;
+  border-left: 1px solid #1a1c1e;
+  box-shadow: inset 2px 0 5px rgba(0,0,0,0.5);
+}
+
+.contentScroll::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #4b3601, var(--bronze), #4b3601);
+  border: 1px solid #000;
+  border-radius: 2px;
+  box-shadow: 
+    inset 1px 1px 0 rgba(255,255,255,0.1),
+    0 0 10px rgba(139, 90, 0, 0.3);
+}
+
+.contentScroll::-webkit-scrollbar-thumb:hover {
+  background: var(--hazard-orange);
+  cursor: pointer;
+}
+
+/* EFECTOS DE CRISTAL CRT */
+.crtGlassEffect {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  background: radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.3) 100%);
+}
+
+.scanlineOverlay {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.05) 0px,
+    rgba(0, 0, 0, 0.05) 1px,
+    transparent 2px,
+    transparent 4px
+  );
+  z-index: 11;
+}
+
+/* ============================================================
+   6. DETALLES DE HARDWARE
+   ============================================================ */
+.verticalBrand {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-size: 10px;
+  color: #222;
+  font-weight: 900;
+  letter-spacing: 3px;
+}
+
+.rivetSmall {
+  width: 4px;
+  height: 4px;
+  background: radial-gradient(circle at 30% 30%, #333, #000);
+  border-radius: 50%;
+  margin: 15px 0;
+  box-shadow: 1px 1px 1px rgba(255,255,255,0.05);
+}
+
+/* ============================================================
+   7. RESPONSIVIDAD (SISTEMA DE EMERGENCIA)
+   ============================================================ */
+@media (max-width: 1024px) {
+  :root { --side-panel-width: 50px; }
+  .fanPlacement { display: none; }
+}
+
+@media (max-width: 768px) {
+  .mainOperationalArea {
+    grid-template-columns: 1fr;
+  }
+  .responsiveHide {
+    display: none !important;
+  }
+  .crtContainer {
+    border-radius: 0;
+    border: 4px solid var(--crt-bezel);
+  }
+  .monitorEnclosure {
+    padding: 0;
+  }
+}
+
+/* ============================================================
+   ESTRUCTURA CORE DEL BÚNKER (SOPORTE FÍSICO)
+   ============================================================ */
+.bunkerContainer {
+  width: 100vw;
+  height: 100vh;
+  background: #050505;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.metalFrame {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  /* El borde metálico que envuelve todo */
+  border: 12px solid #1a1c1e;
+  box-shadow: inset 0 0 100px rgba(0,0,0,0.8);
+  background: #0a0b0c;
+}
+
+/* 3. ÁREA OPERACIONAL (CONTENIDO DINÁMICO) */
+.mainOperationalArea {
+  flex: 1; /* Esto empuja el header y footer a los extremos */
+  display: flex;
+  overflow: hidden; /* Evita que el búnker entero scrollee */
+  background: #08090a;
+}
+
+/* ============================================================
+   EL MONITOR CRT (DONDE VIVE TU INVENTARIO)
+   ============================================================ */
+.monitorEnclosure {
+  flex: 1; /* Toma todo el espacio entre los paneles laterales */
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  background: #000;
+  position: relative;
+}
+
+.crtContainer {
+  flex: 1;
+  background: #020202;
+  border-radius: 4px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  /* Simulación de profundidad del monitor */
+  border: 4px solid #1e2022;
+  box-shadow: 
+    0 0 0 2px #000,
+    inset 0 0 30px rgba(0,0,0,1);
+}
+
+.crtBezel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px; /* Bordes redondeados de monitor viejo */
+}
+
+/* ÁREA DE SCROLL REAL */
+.contentScroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  z-index: 5;
+  
+  /* Scrollbar estilo Metro */
+  scrollbar-width: thin;
+  scrollbar-color: #ffaa00 rgba(0,0,0,0.3);
+}
+
+.contentScroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.contentScroll::-webkit-scrollbar-thumb {
+  background: #ffaa00;
+  border-radius: 10px;
+}
+
+.innerLayoutPadding {
+  /* Aquí es donde el inventario "respira" */
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ============================================================
+   PANELES LATERALES (HARDWARE DE APOYO)
+   ============================================================ */
+.hardwareSidePanel, .sensorSidePanel {
+  width: 80px;
+  height: 100%;
+  background: #141618;
+  border-right: 2px solid #000;
+  border-left: 2px solid #000;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px 0;
+  position: relative;
+}
+
+.verticalBrand {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  font-family: var(--terminal-font);
+  color: #2a2d30;
+  font-size: 10px;
+  letter-spacing: 4px;
+  margin: auto;
+}
+
+/* ============================================================
+   EFECTOS ATMOSFÉRICOS (CAPA FINAL)
+   ============================================================ */
+.crtGlassEffect {
+  position: absolute;
+  inset: 0;
+  pointer-events: none; /* Crucial: para que no bloquee los clicks */
+  background: radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.3) 100%);
+  z-index: 10;
+}
+
+.scanlineOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.1) 50%
+  );
+  background-size: 100% 4px;
+  z-index: 11;
+  opacity: 0.15;
+}
+
+/* Partículas de polvo */
+.dustChamber {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+}
+
+.dustParticle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  animation: fall 10s linear infinite;
+}
+
+@keyframes fall {
+  from { transform: translateY(-10vh) translateX(0); opacity: 0; }
+  20% { opacity: 0.3; }
+  to { transform: translateY(110vh) translateX(20px); opacity: 0; }
+}

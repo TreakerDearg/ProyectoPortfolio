@@ -1,0 +1,223 @@
+/* --- CONTENEDOR MAESTRO --- */
+.gridContainer {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 20px 20px 100px 20px;
+  box-sizing: border-box;
+  overflow-x: hidden; /* Evita cualquier scroll horizontal accidental */
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.animateIn {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --- SECCIONES DE SECTOR --- */
+.sectorSection {
+  margin-bottom: 50px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.sectorHeader {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 25px;
+  width: 100%;
+}
+
+.sectorInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  white-space: nowrap;
+}
+
+.sectorTitle {
+  font-size: 1.1rem;
+  letter-spacing: 3px;
+  color: #ffb300;
+  font-weight: 800;
+  margin: 0;
+}
+
+.nodeBadge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 179, 0, 0.1);
+  border: 1px solid rgba(255, 179, 0, 0.3);
+  padding: 2px 8px;
+  font-size: 0.6rem;
+  color: #ffb300;
+}
+
+.sectorLine {
+  height: 1px;
+  flex: 1;
+  background: linear-gradient(90deg, rgba(255, 179, 0, 0.3), transparent);
+}
+
+/* --- EL GRID (SOLUCIÓN AL DESBORDAMIENTO) --- */
+.gridWrapper {
+  width: 100%;
+  display: block;
+}
+
+.autoGrid {
+  display: grid;
+  /* El uso de min(100%) evita que la tarjeta sea más ancha que la pantalla */
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+  gap: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* --- TARJETA INDIVIDUAL --- */
+.folderEntry {
+  position: relative;
+  background: rgba(15, 15, 15, 0.9);
+  border: 1px solid #222;
+  aspect-ratio: 1 / 1.15;
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  cursor: pointer;
+  overflow: hidden; /* Mantiene el contenido dentro de los bordes */
+  box-sizing: border-box;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: fadeIn 0.5s ease forwards;
+  animation-delay: var(--delay);
+  opacity: 0;
+}
+
+.accessibleEntry:hover {
+  border-color: #ffb300;
+  background: rgba(255, 179, 0, 0.05);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 10px rgba(255, 179, 0, 0.1);
+}
+
+/* Contenedor del item interno */
+.contentWrapper {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Restricción de tamaño para InventoryItem */
+.contentWrapper > * {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.entryMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  font-family: monospace;
+}
+
+.slotId {
+  font-size: 0.6rem;
+  color: #666;
+  letter-spacing: 1px;
+}
+
+.statusIndicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #444;
+}
+
+.accessibleEntry:hover .statusIndicator {
+  background: #ffb300;
+  box-shadow: 0 0 8px #ffb300;
+}
+
+/* --- BLOQUEO (LOCKED) --- */
+.lockedEntry {
+  cursor: not-allowed;
+  filter: grayscale(0.8);
+  border-color: #331111;
+}
+
+.lockShield {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 5, 0, 0.85);
+  backdrop-filter: blur(3px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+}
+
+.lockIcon {
+  color: #ff3c00;
+  filter: drop-shadow(0 0 8px #ff3c00);
+  margin-bottom: 8px;
+}
+
+.lockText {
+  color: #ff3c00;
+  font-size: 0.7rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+/* --- DETALLES COSMÉTICOS --- */
+.frameCorners::before, .frameCorners::after {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-color: rgba(255, 179, 0, 0.2);
+  border-style: solid;
+  pointer-events: none;
+}
+
+.frameCorners::before { top: 0; left: 0; border-width: 1px 0 0 1px; }
+.frameCorners::after { bottom: 0; right: 0; border-width: 0 1px 1px 0; }
+
+.entryScanline {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent, rgba(255, 179, 0, 0.02), transparent);
+  background-size: 100% 4px;
+  pointer-events: none;
+}
+
+/* --- ANIMACIONES Y RESPONSIVO --- */
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.96) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .autoGrid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+  }
+  .sectorTitle { font-size: 0.9rem; }
+}
+
+@media (max-width: 480px) {
+  .autoGrid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+}

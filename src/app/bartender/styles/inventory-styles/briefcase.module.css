@@ -1,0 +1,451 @@
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Permanent+Marker&family=JetBrains+Mono:wght@400;800&family=VT323&display=swap');
+
+/* ============================================================
+   SISTEMA DE DISEÑO ADAPTATIVO D6
+   ============================================================ */
+:root {
+  --folder-bg: #c2b280;
+  --folder-dark: #a3946a;
+  --ink-red: #8e2a2a;
+  --terminal-amber: #ffb300;
+  --terminal-green: #00ff66;
+  --paper-white: #fffdf5;
+  --d6-black: #1a1a1a;
+  --shadow-heavy: rgba(0, 0, 0, 0.8);
+  --hazard-red: #ff3300;
+}
+
+/* ============================================================
+   OVERLAY Y CONTENEDOR MAESTRO
+   ============================================================ */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: 
+    radial-gradient(circle at 50% 50%, rgba(45, 45, 40, 0.6) 0%, rgba(5, 5, 5, 0.99) 100%),
+    url('https://www.transparenttextures.com/patterns/dark-leather.png'); 
+  backdrop-filter: blur(15px) brightness(0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  perspective: 2000px;
+  overflow-y: auto; /* Permite scroll si la pantalla es muy pequeña */
+}
+
+/* LA CARPETA (ESTRUCTURA FÍSICA) */
+.documentFolder {
+  width: 100%;
+  max-width: 1200px;
+  min-height: 85vh;
+  background: var(--folder-bg); 
+  background-image: url('https://www.transparenttextures.com/patterns/cardboard.png');
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 50px 100px -20px var(--shadow-heavy);
+  border-radius: 4px 60px 15px 4px;
+  border-left: 25px solid var(--folder-dark);
+  transform-style: preserve-3d;
+  overflow: hidden;
+}
+
+/* ============================================================
+   CABECERA TÉCNICA (TOP BAR)
+   ============================================================ */
+.folderHeader {
+  padding: 15px 30px;
+  background: rgba(0,0,0,0.15);
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+  z-index: 10;
+}
+
+.topBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--d6-black);
+}
+
+.systemInfo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+}
+
+.pulseIcon {
+  color: var(--ink-red);
+  animation: pulse 2s infinite;
+}
+
+.windowControls {
+  display: flex;
+  gap: 15px;
+}
+
+.iconBtn, .closeBtn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--d6-black);
+  transition: transform 0.2s;
+}
+
+.iconBtn:hover { transform: scale(1.1); }
+.closeBtn:hover { color: var(--ink-red); transform: rotate(90deg); }
+
+/* ============================================================
+   LAYOUT PRINCIPAL (GRID RESPONSIVE)
+   ============================================================ */
+.gridContainer {
+  display: grid;
+  grid-template-columns: 450px 1fr; /* Desktop: 2 columnas */
+  flex: 1;
+  position: relative;
+}
+
+/* Lomo físico central */
+.folderSpine {
+  position: absolute;
+  left: 450px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: rgba(0,0,0,0.1);
+  box-shadow: -2px 0 5px rgba(0,0,0,0.05);
+  z-index: 5;
+}
+
+/* ============================================================
+   PANEL IZQUIERDO: EVIDENCIA
+   ============================================================ */
+.evidencePanel {
+  padding: 40px;
+  background: rgba(0,0,0,0.02);
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.photoContainer {
+  background: #fff;
+  padding: 15px 15px 50px 15px;
+  box-shadow: 10px 15px 30px rgba(0,0,0,0.3);
+  transform: rotate(-2deg);
+  position: relative;
+}
+
+.tape {
+  position: absolute;
+  top: -10px;
+  left: 30%;
+  width: 100px;
+  height: 30px;
+  background: rgba(245, 235, 190, 0.4);
+  backdrop-filter: blur(2px);
+  z-index: 5;
+}
+
+.imageWrapper {
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid #ddd;
+}
+
+.subjectImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: sepia(0.4) contrast(1.1);
+}
+
+.placeholderVisual {
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #e0e0e0;
+  color: #888;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+}
+
+.handwrittenID {
+  position: absolute;
+  bottom: 15px;
+  left: 20px;
+  font-family: 'Permanent Marker', cursive;
+  color: #1a237e;
+  font-size: 14px;
+}
+
+/* RECETA ANTIGUA */
+.ancientRecipeArea {
+  margin-top: 20px;
+}
+
+.realPaper {
+  background: var(--paper-white);
+  padding: 25px;
+  box-shadow: 5px 10px 20px rgba(0,0,0,0.2);
+  border-left: 6px solid var(--ink-red);
+  transform: rotate(1deg);
+  font-family: 'Special Elite', cursive;
+}
+
+.paperTitle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.recipeScroll {
+  max-height: 200px;
+  overflow-y: auto;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #2c3e50;
+}
+
+/* ============================================================
+   PANEL DERECHO: INTELIGENCIA D6
+   ============================================================ */
+.dataPanel {
+  padding: 40px 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.classification {
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--d6-black);
+  color: var(--folder-bg);
+  display: inline-block;
+  padding: 2px 10px;
+  font-size: 10px;
+  letter-spacing: 2px;
+}
+
+.drinkTitle {
+  font-family: 'Special Elite', cursive;
+  font-size: clamp(32px, 5vw, 48px);
+  color: var(--d6-black);
+  margin: 10px 0;
+  text-transform: uppercase;
+}
+
+.tagCloud {
+  display: flex;
+  gap: 10px;
+}
+
+.flavorTag, .alcoholTag {
+  padding: 4px 12px;
+  border: 1px solid rgba(0,0,0,0.2);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  border-radius: 20px;
+}
+
+/* BLOQUES DE INFO */
+.infoBlock h3 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  color: var(--ink-red);
+}
+
+.descText {
+  font-family: 'Special Elite', cursive;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #3d3831;
+}
+
+.chemicalGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.chemItem {
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* ESCÁNER DE TOXICIDAD */
+.toxicityScanner {
+  margin-top: 20px;
+  background: rgba(0,0,0,0.05);
+  padding: 15px;
+  border-radius: 4px;
+}
+
+.scannerHeader {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 800;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.highRisk { color: var(--hazard-red); animation: blink 1s infinite; }
+
+.barContainer {
+  height: 12px;
+  background: rgba(0,0,0,0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.barFill {
+  height: 100%;
+  transition: width 1.5s cubic-bezier(0.1, 0, 0.2, 1);
+}
+
+/* ============================================================
+   BOTONES Y SELLOS
+   ============================================================ */
+.actionArea {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 30px;
+}
+
+.officialStamps {
+  display: flex;
+  gap: 20px;
+}
+
+.circularStamp {
+  font-family: 'Special Elite', cursive;
+  color: #27ae60;
+  border: 3px double #27ae60;
+  padding: 10px;
+  border-radius: 50%;
+  font-size: 10px;
+  transform: rotate(-15deg);
+  opacity: 0.6;
+}
+
+.dispenseButton {
+  background: var(--d6-black);
+  color: var(--terminal-green);
+  border: 2px solid var(--terminal-green);
+  padding: 15px 35px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-family: 'VT323', monospace;
+  clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+}
+
+.dispenseButton:hover:not(:disabled) {
+  background: var(--terminal-green);
+  color: #000;
+  box-shadow: 0 0 20px var(--terminal-green);
+}
+
+.dispenseButton:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  filter: grayscale(1);
+}
+
+.btnMain { display: block; font-size: 20px; letter-spacing: 1px; }
+.btnSub { display: block; font-size: 10px; opacity: 0.7; }
+
+/* ============================================================
+   ADAPTABILIDAD MÓVIL (QUERIES)
+   ============================================================ */
+.mobileNav { display: none; }
+
+@media (max-width: 900px) {
+  .gridContainer { grid-template-columns: 1fr; }
+  .folderSpine { display: none; }
+  
+  .evidencePanel, .dataPanel {
+    display: none; /* Escondemos ambos por defecto */
+    padding: 20px;
+  }
+
+  .tabActive { display: flex; } /* Solo el activo se muestra */
+
+  .mobileNav {
+    display: flex;
+    background: var(--folder-dark);
+    border-top: 1px solid rgba(0,0,0,0.2);
+  }
+
+  .mobileNav button {
+    flex: 1;
+    padding: 15px;
+    border: none;
+    background: transparent;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 800;
+    color: rgba(0,0,0,0.5);
+  }
+
+  .mobileNav button.active {
+    background: var(--folder-bg);
+    color: var(--d6-black);
+  }
+
+  .documentFolder {
+    min-height: auto;
+    border-left: 10px solid var(--folder-dark);
+  }
+  
+  .photoContainer { transform: rotate(0); }
+}
+
+/* ANIMACIONES */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+/* TEXTURAS FINALES */
+.folderGrain, .dirtOverlays {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.05;
+}
+.folderGrain { background-image: url('https://www.transparenttextures.com/patterns/rough-paper.png'); }
+.dirtOverlays { background-image: url('https://www.transparenttextures.com/patterns/stardust.png'); }
+
+/* Estilo para cuando se desbloquea */
+.unlockedTheme .barContainer { border-color: var(--terminal-green); }
+.unlockedTheme .dispenseButton { animation: neonGlitch 2s infinite; }
+
+@keyframes neonGlitch {
+  0%, 100% { box-shadow: 0 0 10px var(--terminal-green); }
+  95% { box-shadow: 0 0 25px var(--terminal-green); }
+}

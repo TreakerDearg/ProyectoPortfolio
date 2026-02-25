@@ -1,0 +1,213 @@
+.container {
+  --amber: #ffb300;
+  --green: #00ff66;
+  --bg: #050505;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.monitor {
+  background: var(--bg);
+  border: 4px solid #1a1a1a;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 50px rgba(0,0,0,1), 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.scanlines {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%),
+              linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.02));
+  background-size: 100% 3px, 3px 100%;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 15px;
+  background: rgba(255,179,0,0.05);
+  border-bottom: 1px solid #1a1a1a;
+  color: var(--amber);
+  font-size: 0.7rem;
+}
+
+.tabs {
+  display: flex;
+  background: #080808;
+}
+
+.tabs button {
+  flex: 1;
+  background: transparent;
+  border: none;
+  border-right: 1px solid #1a1a1a;
+  color: #444;
+  padding: 10px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.7rem;
+  transition: 0.3s;
+}
+
+.activeTab {
+  background: #111 !important;
+  color: var(--amber) !important;
+  box-shadow: inset 0 -2px var(--amber);
+}
+
+.screenArea {
+  min-height: 320px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.centered {
+  margin: auto;
+  text-align: center;
+  color: var(--amber);
+}
+
+.hashForm {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.inputGroup {
+  background: rgba(255,179,0,0.05);
+  border: 1px solid #222;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.inputGroup input {
+  background: transparent;
+  border: none;
+  color: var(--amber);
+  font-family: inherit;
+  font-size: 1.2rem;
+  width: 100%;
+  outline: none;
+  text-transform: uppercase;
+}
+
+.submitBtn {
+  background: var(--amber);
+  color: #000;
+  border: none;
+  padding: 12px;
+  font-family: inherit;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.errorGlitch {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 0, 0, 0.1);
+  color: #ff4444;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  backdrop-filter: blur(2px);
+  animation: glitch 0.2s infinite;
+}
+
+@keyframes glitch {
+  0% { transform: translate(0); }
+  50% { transform: translate(-2px, 2px); }
+  100% { transform: translate(0); }
+}
+
+.container {
+  --amber: #ffb300;
+  background: #050505;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.monitor {
+  position: relative;
+  background: #020202;
+  border: 4px solid #1a1a1a;
+  min-height: 450px;
+  display: flex;
+  flex-direction: column;
+}
+
+.scanlines {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.2) 50%
+  );
+  background-size: 100% 4px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.hashView {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+}
+
+.alertBox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #ff3c00;
+  font-size: 0.7rem;
+  padding: 10px;
+  border: 1px solid rgba(255, 60, 0, 0.2);
+  background: rgba(255, 60, 0, 0.05);
+}
+
+.inputGroup {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 179, 0, 0.05);
+  border: 1px solid #222;
+  padding: 12px;
+  margin-top: 5px;
+}
+
+.inputGroup input {
+  background: transparent;
+  border: none;
+  color: var(--amber);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 1.2rem;
+  outline: none;
+  width: 100%;
+}
+
+.submitBtn {
+  background: var(--amber);
+  color: #000;
+  border: none;
+  padding: 15px;
+  font-family: inherit;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: 0.2s;
+}
+
+.submitBtn:hover {
+  background: #fff;
+  box-shadow: 0 0 20px var(--amber);
+}
