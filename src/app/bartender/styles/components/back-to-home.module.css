@@ -1,145 +1,242 @@
+/* --- CONTENEDOR MAESTRO --- */
+.mainContainer {
+  position: relative;
+  display: block;
+  outline: none;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  z-index: 10;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+/* 1. HUD OVERLAY (FCS Targeting) */
+.hudOverlay {
+  position: absolute;
+  inset: -8px;
+  pointer-events: none;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.targetCornerTL, .targetCornerBR {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-color: #0ff;
+  border-style: solid;
+  filter: drop-shadow(0 0 5px #0ff);
+}
+
+.targetCornerTL { top: 0; left: 0; border-width: 2px 0 0 2px; }
+.targetCornerBR { bottom: 0; right: 0; border-width: 0 2px 2px 0; }
+
+.mainContainer:hover .hudOverlay {
+  opacity: 1;
+  inset: -4px;
+}
+
 /* --- ESTILO METRO: VÁLVULA INDUSTRIAL PESADA --- */
 .btnMetro {
   --bronze: #451a03;
   --rust: #a4470e;
   --amber: #ffab00;
+  background: #000;
+  border: 2px solid var(--bronze);
+  padding: 2px;
+  box-shadow: 4px 4px 0px #000;
   position: relative;
-  background: #111;
-  border: 3px solid var(--bronze);
-  padding: 3px;
-  border-radius: 2px;
-  box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.9);
-  cursor: pointer;
-  transition: transform 0.1s active;
 }
 
 .innerMetro {
-  background: linear-gradient(135deg, #1a1005 0%, #000 100%);
-  border: 1px solid rgba(164, 71, 14, 0.4);
-  padding: 10px 20px;
+  background: linear-gradient(180deg, #1a1005 0%, #050505 100%);
+  border: 1px solid rgba(164, 71, 14, 0.3);
+  padding: 8px 16px;
   display: flex;
   align-items: center;
   gap: 12px;
   color: var(--amber);
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.btnMetro:hover .innerMetro {
-  background: rgba(164, 71, 14, 0.2);
-  border-color: var(--rust);
-  box-shadow: inset 0 0 15px rgba(164, 71, 14, 0.3);
+.textStack {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.mainText { font-size: 11px; font-weight: 900; letter-spacing: 2px; }
+.subText { font-size: 7px; opacity: 0.5; }
+
+.iconPulse {
+  transition: all 0.4s ease;
+}
+
+.mainContainer:hover .iconPulse {
   color: #fff;
-}
-
-.btnMetro:hover svg {
-  transform: rotate(-90deg) scale(1.1);
-  color: #ff4500;
-  filter: drop-shadow(0 0 5px #ff4500);
+  filter: drop-shadow(0 0 8px #ff4500);
+  transform: rotate(-90deg);
 }
 
 /* --- ESTILO SOMA: INTERRUPTOR DE PANEL TÁCTICO --- */
 .btnSoma {
   --soma-cyan: #76b5b5;
-  --dark-bg: #0b0f11;
-  background: #1a2226;
-  cursor: pointer;
+  background: #141a1d;
+  padding: 2px;
+  border: 1px solid #2a353a;
   position: relative;
-  padding: 3px;
-  border-radius: 1px; /* Casi cuadrado como el hardware industrial */
-  border: 1px solid #000;
-  box-shadow: 
-    -1px -1px 0px rgba(255,255,255,0.05), 
-    2px 2px 5px rgba(0,0,0,0.8);
   overflow: hidden;
 }
 
 .innerSoma {
-  padding: 8px 24px;
+  padding: 10px 20px;
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
   background: #0d1113;
   border-left: 4px solid var(--soma-cyan);
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 }
 
-.btnSoma:hover .innerSoma {
-  background: #141a1d;
-  border-left-width: 8px;
-  padding-left: 20px;
+.bioScanner {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(118, 181, 181, 0.1), transparent);
+  z-index: 1;
+}
+
+.mainContainer:hover .bioScanner {
+  animation: scanBiometric 1.5s infinite;
 }
 
 .somaLabel {
-  color: var(--soma-cyan);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 800;
-  letter-spacing: 3px;
-  text-transform: uppercase;
+  color: var(--soma-cyan);
+  letter-spacing: 1px;
 }
 
 .ledPulse {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
   background: var(--soma-cyan);
   border-radius: 50%;
   box-shadow: 0 0 10px var(--soma-cyan);
-  animation: somaFlicker 2.5s infinite;
-  margin-left: 10px;
+  animation: somaFlicker 2s infinite;
 }
 
-/* --- ESTILO AC (Armored Core): PALANCA DE EYECCIÓN CRÍTICA --- */
+/* --- ESTILO AC: PALANCA DE EYECCIÓN CRÍTICA --- */
 .btnAC {
   --ac-red: #ce1212;
-  background: #222;
-  padding: 4px;
   transform: skewX(-15deg);
-  border: 2px solid var(--ac-red);
-  cursor: pointer;
+  background: #111;
+  border: 1px solid var(--ac-red);
+  padding: 3px;
   position: relative;
-  transition: all 0.2s ease;
 }
 
 .innerAC {
-  background: var(--ac-red);
-  padding: 10px 25px;
+  background: linear-gradient(135deg, var(--ac-red) 0%, #7a0b0b 100%);
+  padding: 10px 24px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  color: white;
+  gap: 12px;
+  color: #fff;
   clip-path: polygon(0 0, 100% 0, 95% 100%, 0% 100%);
-  transition: all 0.2s ease;
-}
-
-.btnAC:hover {
-  filter: brightness(1.2);
-  box-shadow: 0 0 25px rgba(206, 18, 18, 0.4);
-  transform: skewX(-15deg) scale(1.05);
-}
-
-.btnAC:active {
-  transform: skewX(-15deg) scale(0.95);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .warningStripes {
   position: absolute;
   top: -18px;
-  left: 10px;
-  font-size: 9px;
+  left: 0;
+  font-size: 8px;
   font-weight: 900;
   color: var(--ac-red);
-  letter-spacing: 1px;
-  font-family: 'Arial Black', sans-serif;
-  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  animation: blink 0.5s infinite;
+}
+
+/* Remaches mecánicos */
+.boltTL, .boltBR {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #333;
+  border-radius: 50%;
+  border: 1px solid #000;
+}
+.boltTL { top: 2px; left: 2px; }
+.boltBR { bottom: 2px; right: 2px; }
+
+.industrialWear {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg, transparent 45%, rgba(255,255,255,0.05) 50%, transparent 55%);
+  pointer-events: none;
+}
+
+/* --- TOOLTIP TÁCTICO --- */
+.alertTooltip {
+  position: absolute;
+  bottom: -45px;
+  left: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.tooltipLine {
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.tooltipContent {
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tooltipMain { font-size: 9px; color: #fff; font-weight: bold; }
+.tooltipSub { font-size: 7px; color: rgba(255, 255, 255, 0.4); }
+
+/* --- ENERGÍA LATERAL --- */
+.energyLink {
+  position: absolute;
+  left: -12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 0%;
+  background: #0ff;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px #0ff;
 }
 
 /* --- ANIMACIONES --- */
 @keyframes somaFlicker {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.3; transform: scale(0.8); }
-  52% { opacity: 1; transform: scale(1.2); }
+  0%, 100% { opacity: 1; filter: brightness(1); }
+  50% { opacity: 0.3; filter: brightness(1.5); }
+}
+
+@keyframes scanBiometric {
+  from { left: -100%; }
+  to { left: 100%; }
 }
 
 @keyframes blink {
-  50% { opacity: 0; }
+  50% { opacity: 0.2; }
+}
+
+@keyframes pulseBright {
+  50% { filter: brightness(1.5); }
 }

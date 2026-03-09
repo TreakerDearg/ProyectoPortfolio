@@ -2,35 +2,35 @@
 import { useRouter } from 'next/navigation';
 import { 
   Power, 
-  X, 
   LogOut, 
-  Zap, 
-  Terminal, // Importado para corregir el ReferenceError
-  ChevronLeft 
+  Terminal,
+  ChevronLeft, 
+  AlertTriangle,
+  Zap,
+  Activity,
+  ShieldAlert
 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import styles from '../../styles/components/back-to-home.module.css';
 
-/**
- * BackToHome - Sistema de Navegación de Emergencia D6
- * Variantes: metro (Búnker), soma (Terminal Bio), ac (Alerta Crítica)
- */
 export default function BackToHome({ variant = 'metro' }) {
   const router = useRouter();
   const destination = '/bartender';
 
-  const renderContent = () => {
+  // Renderizado de estructuras mecánicas por variante
+  const renderVariantStructure = () => {
     switch (variant) {
       case 'metro':
         return (
           <div className={styles.btnMetro}>
+            <div className={styles.metroGlow} />
             <div className={styles.innerMetro}>
-              <Power size={16} strokeWidth={2.5} />
-              <span className="text-[10px] font-mono tracking-widest uppercase">
-                Cut_Power
-              </span>
+              <Power size={14} strokeWidth={3} className={styles.iconPulse} />
+              <div className={styles.textStack}>
+                <span className={styles.mainText}>CUT_POWER</span>
+                <span className={styles.subText}>BUNKER_D6_AUTH</span>
+              </div>
             </div>
-            {/* Efecto visual de sombra proyectada para profundidad física */}
             <div className={styles.metroShadow} />
           </div>
         );
@@ -38,11 +38,16 @@ export default function BackToHome({ variant = 'metro' }) {
       case 'soma':
         return (
           <div className={styles.btnSoma}>
+            <div className={styles.bioScanner} />
             <div className={styles.innerSoma}>
-              {/* Ahora Terminal está definido correctamente */}
-              <Terminal size={14} className="text-[#76b5b5]" strokeWidth={2} />
-              <span className={styles.somaLabel}>Terminate_Session</span>
-              <div className={styles.ledPulse} /> 
+              <Terminal size={14} className="text-[#76b5b5]" />
+              <div className={styles.somaInfo}>
+                <span className={styles.somaLabel}>DISCONNECT_BIO_LINK</span>
+                <div className={styles.statusRow}>
+                  <div className={styles.ledPulse} />
+                  <span className={styles.statusText}>SYNC_STABLE</span>
+                </div>
+              </div>
             </div>
           </div>
         );
@@ -50,21 +55,26 @@ export default function BackToHome({ variant = 'metro' }) {
       case 'ac':
         return (
           <div className={styles.btnAC}>
-            <div className={styles.warningStripes}>! SYSTEM_CRITICAL !</div>
-            <div className={styles.innerAC}>
-              <LogOut size={18} strokeWidth={3} />
-              <span className="font-black italic text-sm tracking-tighter">EJECT</span>
+            <div className={styles.warningStripes}>
+              <ShieldAlert size={10} />
+              <span>SYSTEM_CRITICAL_EJECT</span>
             </div>
-            {/* Efecto de desgaste en los bordes para estilo industrial */}
+            <div className={styles.innerAC}>
+              <LogOut size={18} strokeWidth={3} className={styles.ejectIcon} />
+              <span className={styles.ejectText}>EJECT</span>
+            </div>
             <div className={styles.industrialWear} />
+            {/* Detalle de tornillos/remaches mecánicos */}
+            <div className={styles.boltTL} />
+            <div className={styles.boltBR} />
           </div>
         );
 
       default:
         return (
-          <div className="flex items-center gap-2 text-amber-500 font-mono text-xs border border-amber-900/50 p-2 bg-black/20">
-            <ChevronLeft size={12} />
-            RETURN_TO_BASE
+          <div className={styles.defaultBack}>
+            <ChevronLeft size={14} />
+            <span>RETURN_TO_BASE</span>
           </div>
         );
     }
@@ -72,25 +82,58 @@ export default function BackToHome({ variant = 'metro' }) {
 
   return (
     <motion.button
-      initial={{ opacity: 0, x: -20 }}
-      animate={{ opacity: 1, x: 0 }}
-      whileHover={{ 
-        y: -2, 
-        transition: { duration: 0.2 } 
-      }}
-      whileTap={{ scale: 0.95 }}
+      initial={{ opacity: 0, x: -20, scale: 0.95 }}
+      animate={{ opacity: 1, x: 0, scale: 1 }}
+      whileHover="hover"
+      whileTap="tap"
       onClick={() => router.push(destination)}
-      className="relative block outline-none bg-transparent border-none p-0 cursor-pointer group"
+      className={styles.mainContainer}
       aria-label="Volver al inicio"
     >
-      {renderContent()}
-      
-      {/* Tooltip retro opcional al hacer hover */}
-      <div className="absolute -bottom-8 left-0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-        <span className="text-[9px] font-mono text-white/40 whitespace-nowrap">
-          EXEC_NAV_BACK.SYS
-        </span>
+      {/* 1. HUD Overlay (FCS targeting logic) */}
+      <motion.div 
+        variants={{
+          hover: { opacity: 1, scale: 1.05 },
+          tap: { scale: 0.98 }
+        }}
+        className={styles.hudOverlay}
+      >
+        <div className={styles.targetCornerTL} />
+        <div className={styles.targetCornerBR} />
+      </motion.div>
+
+      {/* 2. El cuerpo del botón según variante */}
+      <div className={styles.contentWrapper}>
+        {renderVariantStructure()}
       </div>
+
+      {/* 3. Feedback de Alerta (Solo se activa en hover intenso) */}
+      <AnimatePresence>
+        <motion.div 
+          variants={{
+            hover: { opacity: 1, y: 0 },
+            initial: { opacity: 0, y: 10 }
+          }}
+          className={styles.alertTooltip}
+        >
+          <div className={styles.tooltipLine} />
+          <div className={styles.tooltipContent}>
+            <AlertTriangle size={10} className="text-red-500 animate-pulse" />
+            <div className="flex flex-col">
+              <span className={styles.tooltipMain}>EXEC_NAV_BACK.SYS</span>
+              <span className={styles.tooltipSub}>REDIRECT: {destination}</span>
+            </div>
+          </div>
+        </motion.div>
+      </AnimatePresence>
+
+      {/* 4. Línea de Enlace Neural (Energía) */}
+      <motion.div 
+        variants={{
+          hover: { height: '100%', backgroundColor: variant === 'ac' ? '#ce1212' : '#00ffff' }
+        }}
+        className={styles.energyLink} 
+      />
     </motion.button>
   );
 }

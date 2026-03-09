@@ -1,31 +1,70 @@
-import BackToHome from '../../components/salida/BackToHome';
-import styles from '../../styles/pages/armored.module.css';
+"use client";
+import { useState, useEffect } from 'react';
+import { AnimatePresence } from 'framer-motion';
+import styles from '../../styles/root-styles/armored.module.css';
+
+import HudHeader from './components/hud-c/HudHeader';
+import ModuleGrid from './components/hud-c/ModuleGrid';
+import DiagnosticFooter from './components/hud-c/DiagnotsticFooter';
+import SidebarNav from './components/hud-c/SidebarNav';
+import Briefcase from './components/hud-c/Briefcase';
 
 export default function RootPage() {
+  const [selectedDrink, setSelectedDrink] = useState(null);
+  const [activeFilter, setActiveFilter] = useState('ALL');
+  const [searchTerm, setSearchTerm] = useState(''); // Nuevo estado para búsqueda
+
+  // Cerrar Briefcase con tecla ESC
+  useEffect(() => {
+    const handleEsc = (e) => e.key === 'Escape' && setSelectedDrink(null);
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, []);
+
   return (
-    <div className={styles.acContainer}>
-      <div className="max-w-6xl mx-auto p-8">
-        <BackToHome variant="ac" />
-        
-        <div className={styles.hudFrame + " bg-black/40 p-12 border-l-4 border-l-[#ff3c00]"}>
-          <div className="flex justify-between items-start mb-12">
-            <h1 className="text-7xl font-black italic tracking-tighter">RAVEN_SYSTEMS</h1>
-            <div className="text-right font-mono text-red-500">
-              <p>AC: LOADED</p>
-              <p>STABILITY: 100%</p>
+    <main className={styles.acContainer}>
+      {/* Capas de fondo holográfico */}
+      <div className={styles.holoGrid} />
+      <div className={styles.scanlineOverlay} />
+
+      <div className={styles.hudFrame}>
+        <HudHeader onSearch={setSearchTerm} searchTerm={searchTerm} />
+
+        <section className={styles.mainLayout}>
+          <SidebarNav
+            activeFilter={activeFilter}
+            onFilterChange={setActiveFilter}
+          />
+
+          <div className={`${styles.contentArea} ${selectedDrink ? styles.dimmed : ''}`}>
+            {/* Panel de vidrio para el contenido */}
+            <div className={styles.glassPanel}>
+              <ModuleGrid
+                onSelectDrink={setSelectedDrink}
+                filter={activeFilter}
+                searchTerm={searchTerm} // Pasamos el término de búsqueda
+              />
             </div>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            {[1,2,3,4].map(i => (
-              <div key={i} className="border border-red-900/20 p-4 bg-red-950/10">
-                <span className="text-[9px] text-red-800">MODULE_0{i}</span>
-                <div className="h-1 w-full bg-red-600 mt-2 shadow-[0_0_10px_#ff3c00]" />
-              </div>
-            ))}
-          </div>
-        </div>
+        </section>
+
+        <AnimatePresence>
+          {selectedDrink && (
+            <Briefcase
+              drink={selectedDrink}
+              onClose={() => setSelectedDrink(null)}
+            />
+          )}
+        </AnimatePresence>
+
+        <DiagnosticFooter />
       </div>
-    </div>
+
+      {/* Esquinas decorativas */}
+      <div className={styles.cornerTL} />
+      <div className={styles.cornerTR} />
+      <div className={styles.cornerBL} />
+      <div className={styles.cornerBR} />
+    </main>
   );
 }

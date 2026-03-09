@@ -1,0 +1,128 @@
+.footerContainer {
+  height: 40px;
+  background: rgba(5, 5, 5, 0.95);
+  border-top: 2px solid rgba(255, 60, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 25px;
+  font-family: 'JetBrains Mono', 'Share Tech Mono', monospace;
+  font-size: 10px; /* Reducido ligeramente para look técnico */
+  letter-spacing: 1px;
+  color: #8a8a8a;
+  text-transform: uppercase;
+  position: relative;
+  box-shadow: 0 -10px 20px rgba(255, 60, 0, 0.05);
+  overflow: hidden;
+}
+
+/* Log de eventos con AnimatePresence */
+.logWrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 200px;
+}
+
+.eventText {
+  color: #fff;
+  font-weight: normal;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+}
+
+/* Grupo de actividad */
+.statusGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #ff3c00;
+}
+
+.pulseIcon {
+  animation: pulse 1.5s infinite ease-in-out;
+  filter: drop-shadow(0 0 4px rgba(255, 60, 0, 0.8));
+}
+
+/* Coordenadas con look de GPS militar */
+.coordGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 20px;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.02);
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.coords {
+  color: #fff;
+  font-variant-numeric: tabular-nums; /* Evita que los números salten */
+}
+
+.divider {
+  color: #ff3c00;
+  opacity: 0.5;
+  margin: 0 4px;
+}
+
+/* Sección de Neural Link y Señal */
+.systemLog {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.linkStatus {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+}
+
+.pulseDot {
+  width: 4px;
+  height: 4px;
+  background: #ff3c00;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #ff3c00;
+  animation: pulse 1s infinite;
+}
+
+.signalGroup {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  padding-left: 15px;
+}
+
+.signalBars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 12px;
+}
+
+.bar {
+  width: 2px;
+  background: #ff3c00;
+  box-shadow: 0 0 4px #ff3c00;
+}
+
+/* Decoración superior */
+.footerContainer::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: 50px;
+  width: 80px;
+  height: 3px;
+  background: #ff3c00;
+  box-shadow: 0 0 10px #ff3c00;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.1); }
+}

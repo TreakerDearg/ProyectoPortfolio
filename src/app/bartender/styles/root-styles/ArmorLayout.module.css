@@ -1,0 +1,105 @@
+.container {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #0a0d14;
+  color: #10b981;
+  font-family: 'JetBrains Mono', monospace;
+  overflow: hidden;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+/* ---------------- EFECTO SCANLINES ---------------- */
+.scanlines {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0.05;
+  background-image: 
+    linear-gradient(rgba(0,0,0,0) 50%, rgba(16,255,129,0.04) 50%),
+    linear-gradient(90deg, rgba(16,255,129,0.02), rgba(0,255,255,0.01), rgba(16,255,129,0.02));
+  background-size: 100% 2px, 3px 100%;
+}
+
+/* ---------------- MARCO EXTERIOR ---------------- */
+.frame {
+  position: fixed;
+  inset: 1rem;
+  border: 1px solid rgba(16,185,129,0.2);
+  pointer-events: none;
+  z-index: 40;
+  box-shadow: inset 0 0 40px rgba(16,255,129,0.08);
+}
+
+/* Esquinas reforzadas */
+.cornerTopLeft {
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  width: 60px;
+  height: 60px;
+  border-top: 4px solid #10b981;
+  border-left: 4px solid #10b981;
+  border-radius: 2px;
+  box-shadow: 0 0 8px rgba(16,255,129,0.4);
+}
+
+.cornerBottomRight {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 60px;
+  height: 60px;
+  border-bottom: 4px solid #10b981;
+  border-right: 4px solid #10b981;
+  border-radius: 2px;
+  box-shadow: 0 0 8px rgba(16,255,129,0.4);
+}
+
+/* Laterales decorativos */
+.sideLeft, .sideRight {
+  position: absolute;
+  top: 50%;
+  width: 2px;
+  height: 8rem;
+  background-color: rgba(16,255,129,0.3);
+  transform: translateY(-50%);
+  border-radius: 1px;
+}
+
+.sideLeft { left: -2px; }
+.sideRight { right: -2px; }
+
+/* ---------------- PANEL CENTRAL ---------------- */
+.main {
+  flex-grow: 1;
+  position: relative;
+  border: 1px solid rgba(16,185,129,0.1);
+  background-color: rgba(16,185,129,0.08);
+  backdrop-filter: blur(4px);
+  box-shadow: inset 0 0 120px rgba(16,255,129,0.08);
+  overflow-y: auto;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  transition: all 0.3s ease;
+}
+
+/* ---------------- SCROLLBAR ---------------- */
+.main::-webkit-scrollbar {
+  width: 6px;
+}
+.main::-webkit-scrollbar-track {
+  background: rgba(16,185,129,0.05);
+}
+.main::-webkit-scrollbar-thumb {
+  background: rgba(16,185,129,0.35);
+  border-radius: 3px;
+}
+
+/* ---------------- RESPONSIVE ---------------- */
+@media(max-width: 768px) {
+  .main { padding: 1rem; }
+  .frame { inset: 0.5rem; }
+}

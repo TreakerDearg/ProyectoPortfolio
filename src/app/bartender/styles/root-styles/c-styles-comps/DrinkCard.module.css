@@ -1,0 +1,442 @@
+/* ===== DrinkCard.module.css ===== */
+/* Estilos para la tarjeta de bebida con temática industrial-militar */
+
+.card {
+  position: relative;
+  background: #0a0a0a;
+  border: 1px solid #2a2a2a;
+  border-radius: 8px; /* Un poco más redondeado para suavizar */
+  padding: 24px 16px 16px; /* Aumentamos el padding superior por la barra LED */
+  color: #d1d5db;
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+  overflow: hidden;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+
+/* Efecto de brillo en los bordes según la variante (se aplica con estilos inline o clases específicas) */
+.card.variantPristine {
+  border-color: #4ade80;
+  box-shadow: 0 0 15px rgba(74, 222, 128, 0.3);
+}
+.card.variantDamaged {
+  border-color: #b91c1c;
+  box-shadow: 0 0 15px rgba(185, 28, 28, 0.3);
+}
+.card.variantEncrypted {
+  border-color: #a855f7;
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
+}
+.card.variantHelghast {
+  border-color: #8b0000;
+  box-shadow: 0 0 15px rgba(139, 0, 0, 0.4);
+}
+.card.variantCorrupted {
+  border-color: #f97316;
+  box-shadow: 0 0 15px rgba(249, 115, 22, 0.3);
+}
+
+/* Capa base de textura para todas las tarjetas */
+.baseTexture {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.08;
+  z-index: 0;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  mix-blend-mode: overlay; /* Para que se mezcle mejor */
+}
+
+/* Texturas específicas de cada variante (ajusta rutas según tu proyecto) */
+.pristineOverlay {
+  background-image: url('../../../../../../public/textures/carbon.png');
+}
+.damagedOverlay {
+  background-image: url('../../../../../../public/textures/scratches.png');
+  opacity: 0.15;
+}
+.encryptedOverlay {
+  background-image: url('../../../../../../public/textures/glitch.png');
+  opacity: 0.1;
+}
+.helghastOverlay {
+  background-image: url('../../../../../../public/textures/helghast-lines.png');
+  opacity: 0.2;
+}
+.corruptedOverlay {
+  background-image: url('../../../../../../public/textures/noise.png');
+  opacity: 0.1;
+}
+
+/* Barra LED superior */
+.topLedBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 12px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #000;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  z-index: 2;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.statusIndicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.powerIndicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pulseDot {
+  width: 6px;
+  height: 6px;
+  background: #0f0;
+  border-radius: 50%;
+  animation: pulse 1.2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+/* Cabecera con tipo e ID */
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  position: relative;
+  z-index: 3;
+}
+
+.typeTag {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 2px 10px;
+  border-radius: 12px;
+  border: 1px solid currentColor;
+  backdrop-filter: blur(2px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.serialId {
+  font-size: 10px;
+  color: #6b7280;
+  font-family: 'Share Tech Mono', monospace;
+  background: rgba(0,0,0,0.3);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid #2a2a2a;
+}
+
+/* Nombre de la unidad */
+.unitName {
+  font-size: 20px; /* Un poco más grande */
+  font-weight: 700;
+  margin: 8px 0 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #f3f4f6;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+  transition: letter-spacing 0.2s, text-shadow 0.2s;
+  position: relative;
+  z-index: 3;
+  line-height: 1.2;
+  border-bottom: 1px dashed #2a2a2a;
+  padding-bottom: 8px;
+}
+
+/* Contenedor de telemetría */
+.telemetryContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 3;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #2a2a2a;
+}
+
+.statLine {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+}
+
+.statLabel {
+  width: 30px;
+  font-weight: 600;
+  color: #9ca3af;
+  text-transform: uppercase;
+}
+
+.barPath {
+  flex: 1;
+  height: 12px;
+  background: #1f2937;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 3px #000, 0 1px 1px rgba(255,255,255,0.1);
+}
+
+.barLevel {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.3s ease;
+  background: currentColor; /* Se define en el estilo inline */
+}
+
+.statValue {
+  width: 40px;
+  text-align: right;
+  font-weight: 600;
+  color: #e5e7eb;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+/* Paneles específicos de variante */
+.diagnosticPanel {
+  margin: 8px 0;
+  padding: 6px 10px;
+  background: rgba(0, 0, 0, 0.6);
+  border-left: 3px solid;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #ffb3b3;
+  position: relative;
+  z-index: 3;
+  border-radius: 0 4px 4px 0;
+  backdrop-filter: blur(2px);
+  border-top: 1px solid rgba(255,255,255,0.1);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  border-right: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Para la variante pristine, el panel es verde */
+.diagnosticPanel:has(svg[color="#4ade80"]) {
+  border-left-color: #4ade80;
+  color: #bbf7d0;
+}
+
+.encryptionPanel {
+  margin: 8px 0;
+  padding: 6px 10px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px dashed #a855f7;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 8px;
+  color: #c084fc;
+  position: relative;
+  z-index: 3;
+  border-radius: 4px;
+  backdrop-filter: blur(2px);
+}
+
+.binaryStrip {
+  display: flex;
+  gap: 2px;
+  overflow: hidden;
+  letter-spacing: 2px;
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+}
+
+.helghastCrest {
+  margin: 8px 0;
+  padding: 6px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-top: 1px solid #8b0000;
+  border-bottom: 1px solid #8b0000;
+  font-size: 9px;
+  font-weight: 800;
+  color: #b91c1c;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 3;
+  background: rgba(0,0,0,0.3);
+  letter-spacing: 1px;
+}
+
+.crestSymbol {
+  width: 20px;
+  height: 20px;
+  background: #8b0000;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  box-shadow: 0 0 8px #8b0000;
+}
+
+.corruptionMark {
+  margin: 8px 0;
+  padding: 6px 10px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid #f97316;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #fdba74;
+  position: relative;
+  z-index: 3;
+  border-radius: 4px;
+  backdrop-filter: blur(2px);
+  animation: glitchFlicker 3s infinite;
+}
+
+@keyframes glitchFlicker {
+  0%, 100% { opacity: 1; }
+  92% { opacity: 1; }
+  93% { opacity: 0.3; }
+  94% { opacity: 1; }
+  96% { opacity: 0.6; }
+  97% { opacity: 1; }
+}
+
+/* Footer de la tarjeta */
+.cardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  font-size: 9px;
+  position: relative;
+  z-index: 3;
+  border-top: 1px solid #2a2a2a;
+  padding-top: 8px;
+}
+
+.originInfo {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #9ca3af;
+  background: rgba(0,0,0,0.3);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid #2a2a2a;
+}
+
+.flavorProfile {
+  padding: 2px 10px;
+  border: 1px solid;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.6);
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 8px;
+  letter-spacing: 0.5px;
+  backdrop-filter: blur(2px);
+}
+
+/* Esquina funcional (notch) */
+.angleNotch {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 0 20px 20px;
+  border-color: transparent transparent transparent transparent;
+  border-right-color: inherit;
+  border-bottom-color: inherit;
+  z-index: 1;
+  filter: drop-shadow(0 0 2px currentColor);
+}
+
+/* Código de barras decorativo */
+.barcodeLine {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  width: 60px;
+  height: 16px;
+  opacity: 0.3;
+  z-index: 2;
+  transform: rotate(-90deg) translateX(-20px); /* Lo rotamos para que parezca más técnico */
+  transform-origin: left bottom;
+}
+
+.barcode {
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(90deg, #fff 0px, #fff 2px, transparent 2px, transparent 4px);
+}
+
+/* Efecto de scanlines sutiles en toda la tarjeta */
+.card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(0deg, rgba(0,0,0,0.1) 0px, rgba(0,0,0,0.1) 2px, transparent 2px, transparent 4px);
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.3;
+}
+
+/* Mejora de la legibilidad en textos pequeños */
+.serialId, .originInfo span, .flavorProfile {
+  text-shadow: 0 1px 2px black;
+}
+
+/* Animación para el borde en variantes inestables (se puede usar con Framer Motion también) */
+@keyframes borderPulse {
+  0% { border-color: #b91c1c; box-shadow: 0 0 10px #b91c1c; }
+  50% { border-color: #7f1d1d; box-shadow: 0 0 5px #7f1d1d; }
+  100% { border-color: #b91c1c; box-shadow: 0 0 10px #b91c1c; }
+}
+
+.card.variantDamaged {
+  animation: borderPulse 2s infinite;
+}
+
+/* Pequeños detalles para cada variante */
+.card.variantEncrypted .typeTag {
+  border-color: #a855f7;
+  box-shadow: 0 0 5px #a855f7;
+}
+
+.card.variantHelghast .unitName {
+  text-shadow: 0 0 8px #8b0000;
+}
+
+.card.variantCorrupted .statValue {
+  color: #f97316;
+}
