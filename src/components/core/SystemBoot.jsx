@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import useSystemState from '@/hooks/useSystemState'
-import s from '@/styles/SystemBoot.module.css'
+import useSystemState from '../../hooks/useSystemState'
+import s from '../../styles/SystemBoot.module.css'
 
 const FRAME_TOP = `╔${"═".repeat(60)}╗`;
 const FRAME_BOT = `╚${"═".repeat(60)}╝`;

@@ -2,19 +2,23 @@
    inventory-item.module.css
    Estilos para el componente InventoryItem (versión mejorada)
    Inspiración: Manila / Windows 95 / Dossier / Saga Metro
+   Versión fluida adaptada al grid responsivo
    ============================================================ */
 
 /* Contenedor principal con perspectiva 3D */
 .dossierWrapper {
   position: relative;
-  width: 300px;
-  height: 400px;
-  margin: 2rem 1rem;
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  aspect-ratio: 3 / 4; /* Proporción original 300x400 */
+  margin: 0 auto; /* Centrado dentro de la celda del grid */
   perspective: 1200px;
   transform: rotate(var(--folder-rot, 0deg));
   transition: transform 0.3s ease;
   cursor: default;
   filter: drop-shadow(0 10px 8px rgba(0, 0, 0, 0.3));
+  will-change: transform;
 }
 
 /* ============================================================
@@ -80,7 +84,7 @@
   padding: 15px;
   display: flex;
   flex-direction: column;
-  overflow: hidden; /* Para que no se salgan elementos como manchas */
+  overflow: hidden;
   transition: filter 0.2s;
 }
 
@@ -139,7 +143,7 @@
   box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
   transform-origin: top left;
   transition: transform 0.2s ease;
-  pointer-events: none; /* Permite que los clics pasen a la hoja superior */
+  pointer-events: none;
 }
 
 .innerSheet.topSheet {
@@ -164,7 +168,7 @@
   position: relative;
   background: #fefcf5;
   background-image: linear-gradient(rgba(0,0,0,0.01) 1px, transparent 1px);
-  background-size: 100% 24px; /* Líneas de cuaderno */
+  background-size: 100% 24px;
 }
 
 /* Cabecera estilo Win95 */
@@ -393,11 +397,36 @@
   transform-origin: top center;
   z-index: 50;
   transition: transform 0.1s;
+  will-change: transform;
 }
 
 .stickyNoteContainer:hover {
   transform: scale(1.02) rotate(0deg) !important;
   z-index: 200;
+}
+
+/* Notas de pista (más visibles) */
+.hintNote {
+  border: 2px solid #ffd700;
+  box-shadow: 0 0 15px gold, 5px 5px 15px rgba(0,0,0,0.3);
+  z-index: 100 !important;
+}
+
+/* Notas desgastadas (nivel 3) - bordes rotos */
+.tornNote {
+  filter: sepia(0.2) brightness(0.9);
+  background-blend-mode: multiply;
+}
+
+/* Capa de desgaste para notas con wearLevel > 1 */
+.wearOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.05);
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  border-radius: inherit;
+  z-index: 3;
 }
 
 .adhesiveTape {
@@ -412,6 +441,7 @@
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 2px;
   box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+  z-index: 2;
 }
 
 .stickyContent {
@@ -425,7 +455,7 @@
   color: #1a1a1a;
   white-space: pre-wrap;
   word-break: break-word;
-  font-family: inherit;
+  font-family: 'Indie Flower', cursive;
   margin: 0;
 }
 
@@ -547,7 +577,14 @@
    ============================================================ */
 @media (max-width: 640px) {
   .dossierWrapper {
-    width: 260px;
-    height: 350px;
+    max-width: 260px;
+  }
+  .stickyNoteContainer {
+    max-width: 110px;
+    min-width: 80px;
+    padding: 10px 6px;
+  }
+  .handwrittenNote {
+    font-size: 10px;
   }
 }

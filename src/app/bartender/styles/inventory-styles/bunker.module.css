@@ -1,6 +1,6 @@
 /* ============================================================
    BUNKER MODULE - D6 AMBER PHOSPHOR TERMINAL
-   Estilos principales para InventoryPage - Versión Ultra Responsive
+   Estilos principales para InventoryPage - Versión Optimizada
    ============================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Special+Elite&display=swap');
@@ -95,7 +95,7 @@
 }
 
 /* ============================================================
-   BOOT SCREEN (PANTALLA DE INICIO) - Responsive
+   BOOT SCREEN (PANTALLA DE INICIO)
    ============================================================ */
 .bootingScreen {
   position: fixed;
@@ -151,7 +151,7 @@
 }
 
 /* ============================================================
-   HEADER TÁCTICO (HUD) - Adaptable
+   HEADER TÁCTICO (HUD)
    ============================================================ */
 .hudHeader {
   height: var(--header-height);
@@ -338,7 +338,7 @@
 }
 
 /* Kernel Log */
-.kernelModule .kernelLog {
+.kernelLog {
   padding: 15px;
   font-size: 11px;
   background: rgba(0,0,0,0.2);
@@ -403,6 +403,7 @@
   box-shadow: 0 0 20px var(--amber-glow);
   cursor: pointer;
   transition: all 0.3s var(--crt-curve);
+  will-change: transform; /* Mejora rendimiento */
 }
 
 .fabActive {
@@ -513,6 +514,15 @@
   display: flex;
   align-items: center;
   gap: 5px;
+}
+
+/* ============================================================
+   GRID CONTAINER (para el explorador de archivos)
+   ============================================================ */
+.gridContainer {
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
 }
 
 /* ============================================================
@@ -697,7 +707,6 @@
 
   .gridContainer {
     max-width: 1600px;
-    margin: 0 auto;
   }
 
   .d6LogoAmber {
@@ -726,4 +735,12 @@
   background: rgba(0,0,0,0.5);
   border: 1px solid var(--amber-dim);
   padding: 10px;
+}
+
+.loadingFallback {
+  color: var(--amber-bright);
+  padding: 20px;
+  text-align: center;
+  font-family: var(--terminal-font);
+  animation: pulse 1.5s infinite;
 }

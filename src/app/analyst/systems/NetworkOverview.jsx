@@ -1,113 +1,88 @@
 "use client";
-import React, { useCallback, useRef, useMemo } from 'react'; // Añadido useMemo
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { useAnalysis } from '../context/AnalysisContext';
-import styles from '@/app/analyst/styles/Styles-C/networkOverview.module.css';
+import styles from '../styles/Styles-C/NetworkOverview.module.css';
 
-const OVERVIEW_SCALE = 0.15;
+export const NetworkOverview = ({ nodes, canvasX, canvasY, focusNode }) => {
+  // Ajustamos la escala para que el mapa de 10000px quepa en el radar
+  const RADAR_SCALE = 0.015; 
+  const [coords, setCoords] = useState({ x: 0, y: 0 });
 
-export const NetworkOverview = ({ currentViewBox = { x: 0, y: 0, width: 0, height: 0 } }) => {
-  const { nodes, selectedNode, updateNodePosition } = useAnalysis();
-  const overviewRef = useRef(null);
-
-  // 2. Calcular límites de forma segura
-  const networkBounds = useMemo(() => {
-    const xs = nodes.map(n => n.x || 0);
-    const ys = nodes.map(n => n.y || 0);
-    
-    return {
-      minX: Math.min(...xs),
-      minY: Math.min(...ys),
-      maxX: Math.max(...xs),
-      maxY: Math.max(...ys)
-    };
-  }, [nodes]);
-
-  const handleViewBoxDrag = useCallback((e, info) => {
-    const deltaX = info.delta.x / OVERVIEW_SCALE;
-    const deltaY = info.delta.y / OVERVIEW_SCALE;
-    
-    nodes.forEach(node => {
-        updateNodePosition(node.id, { x: -deltaX, y: -deltaY });
-    });
-  }, [nodes, updateNodePosition]);
-
-  // 1. Validar que existan nodos antes de proceder
-  if (!nodes || nodes.length === 0) return null;
-
-  const networkWidth = (networkBounds.maxX - networkBounds.minX) + 100;
-  const networkHeight = (networkBounds.maxY - networkBounds.minY) + 100;
-
-  const overviewWidth = networkWidth * OVERVIEW_SCALE;
-  const overviewHeight = networkHeight * OVERVIEW_SCALE;
-
-  // 3. Mapeo seguro del ViewBox
-  const viewBox = useMemo(() => {
-    return {
-      x: (currentViewBox.x - networkBounds.minX) * OVERVIEW_SCALE,
-      y: (currentViewBox.y - networkBounds.minY) * OVERVIEW_SCALE,
-      width: (currentViewBox.width || 0) * OVERVIEW_SCALE,
-      height: (currentViewBox.height || 0) * OVERVIEW_SCALE
-    };
-  }, [currentViewBox, networkBounds]);
+  useEffect(() => {
+    const unsubX = canvasX.on("change", (v) => setCoords(prev => ({ ...prev, x: v })));
+    const unsubY = canvasY.on("change", (v) => setCoords(prev => ({ ...prev, y: v })));
+    return () => { unsubX(); unsubY(); };
+  }, [canvasX, canvasY]);
 
   return (
-    <motion.div 
-      className={styles.overviewContainer}
-      style={{ width: overviewWidth, height: overviewHeight }}
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-    >
-      <svg 
-        width="100%" 
-        height="100%" 
-        // viewBox dinámico para que los nodos siempre estén centrados en el mini-mapa
-        viewBox={`${networkBounds.minX * OVERVIEW_SCALE} ${networkBounds.minY * OVERVIEW_SCALE} ${overviewWidth} ${overviewHeight}`}
-        className={styles.overviewSvg}
-        ref={overviewRef}
-      >
-        {/* Líneas simplificadas */}
-        {nodes.map((sourceNode, i) =>
-          nodes.slice(i + 1).map((targetNode) => (
-            <line
-              key={`ov-l-${sourceNode.id}-${targetNode.id}`}
-              x1={(sourceNode.x) * OVERVIEW_SCALE}
-              y1={(sourceNode.y) * OVERVIEW_SCALE}
-              x2={(targetNode.x) * OVERVIEW_SCALE}
-              y2={(targetNode.y) * OVERVIEW_SCALE}
-              stroke="rgba(255,255,255,0.1)"
-              strokeWidth="0.5"
+    <div className={styles.radarWrapper}>
+      <div className={styles.radarContainer}>
+        {/* HEADER MODULAR */}
+        <div className={styles.scannerHeader}>
+          <div className={styles.tag}>
+            <span className={styles.blink}>▶</span>
+            <span className={styles.terminalText}>SYS_RADAR_V4.2</span>
+          </div>
+          <div className={styles.systemLoad}>
+            <motion.div 
+              className={styles.loadBar} 
+              animate={{ width: ["20%", "85%", "60%"] }}
+              transition={{ duration: 4, repeat: Infinity }}
             />
-          ))
-        )}
+          </div>
+        </div>
 
-        {/* Nodos simplificados */}
-        {nodes.map(node => (
-          <circle
-            key={`ov-n-${node.id}`}
-            cx={(node.x) * OVERVIEW_SCALE}
-            cy={(node.y) * OVERVIEW_SCALE}
-            r={1.5}
-            fill={selectedNode?.id === node.id ? '#eab308' : node.color}
-            opacity={selectedNode?.id === node.id ? 1 : 0.6}
-          />
-        ))}
+        {/* MAPA DE CALOR/REJILLA */}
+        <div className={styles.radarMap}>
+          <div className={styles.scannerSweep} />
+          
+          {/* NODOS: Representados como pixeles de datos */}
+          {nodes.map(node => (
+            <motion.div
+              key={`radar-${node.id}`}
+              className={styles.radarDot}
+              style={{
+                left: `calc(50% + ${node.x * RADAR_SCALE}px)`,
+                top: `calc(50% + ${node.y * RADAR_SCALE}px)`
+              }}
+              onClick={() => focusNode(node)}
+            >
+              <div className={styles.pingRing} />
+            </motion.div>
+          ))}
 
-        {/* El visor táctico */}
-        <motion.rect
-          x={viewBox.x}
-          y={viewBox.y}
-          width={viewBox.width}
-          height={viewBox.height}
-          className={styles.viewBox}
-          drag
-          dragMomentum={false}
-          onDrag={handleViewBoxDrag}
-        />
-      </svg>
-      
-      {/* Decoración HUD para el mini-mapa */}
-      <div className={styles.scanEffect} />
-    </motion.div>
+          {/* INDICADOR DE VIEWPORT (CORREGIDO) */}
+          <div 
+            className={styles.viewportIndicator}
+            style={{
+              left: '50%',
+              top: '50%',
+              // Invertimos la relación: si el canvas va a la derecha (+x), 
+              // el indicador en el radar va a la izquierda (-x)
+              transform: `translate(${-coords.x * RADAR_SCALE}px, ${-coords.y * RADAR_SCALE}px)`
+            }}
+          >
+            <div className={styles.focusCorner} />
+          </div>
+        </div>
+
+        {/* TELEMETRÍA INFERIOR */}
+        <div className={styles.scannerFooter}>
+          <div className={styles.coordGroup}>
+            <div className={styles.dataPoint}>
+              <span className={styles.label}>X_POS</span>
+              <span className={styles.value}>{Math.round(coords.x).toString().padStart(6, '0')}</span>
+            </div>
+            <div className={styles.dataPoint}>
+              <span className={styles.label}>Y_POS</span>
+              <span className={styles.value}>{Math.round(coords.y).toString().padStart(6, '0')}</span>
+            </div>
+          </div>
+          <div className={styles.statusInfo}>
+            ACTIVE_NODES: {nodes.length.toString().padStart(2, '0')}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };

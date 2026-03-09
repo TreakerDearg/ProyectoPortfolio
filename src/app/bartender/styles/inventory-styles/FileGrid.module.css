@@ -1,18 +1,30 @@
 /* ============================================================
    FILE GRID MODULE - D6 AMBER PHOSPHOR
-   Estilos para la cuadrícula de archivos (Inventory)
+   Estilos para la cuadrícula de archivos (grid responsivo)
+   Versión final con 2 columnas en escritorio y tablet
+   y desplazamiento a la izquierda
    ============================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+:root {
+  --amber-bright: #ffb300;
+  --amber-dim: rgba(255, 179, 0, 0.3);
+  --amber-glow: rgba(255, 179, 0, 0.6);
+  --hazard-red: #ff3c00;
+  --hazard-glow: rgba(255, 60, 0, 0.3);
+  --bg-dark: rgba(15, 15, 15, 0.9);
+  --border-dark: #222;
+}
 
 /* --- CONTENEDOR MAESTRO --- */
 .gridContainer {
   width: 100%;
   max-width: 1280px;
-  margin: 0 auto;
-  padding: 20px 20px 100px 20px;
+  margin: 0 0 0 -180px; /* Alineado a la izquierda con margen izquierdo */
+  padding: 2px 0px 10px 50px;
   box-sizing: border-box;
-  overflow-x: hidden; /* Evita cualquier scroll horizontal accidental */
+  overflow-x: hidden;
   opacity: 0;
   transform: translateY(10px);
   transition: opacity 0.4s ease, transform 0.4s ease;
@@ -36,6 +48,7 @@
   gap: 20px;
   margin-bottom: 25px;
   width: 100%;
+  flex-wrap: wrap;
 }
 
 .sectorInfo {
@@ -46,16 +59,17 @@
 }
 
 .sectorIcon {
-  color: #ffb300;
+  color: var(--amber-bright);
+   margin: 108px;
   opacity: 0.8;
 }
 
 .sectorTitle {
   font-size: 1.1rem;
   letter-spacing: 3px;
-  color: #ffb300;
+  color: var(--amber-bright);
   font-weight: 800;
-  margin: 0;
+  margin: -106px;
   text-transform: uppercase;
 }
 
@@ -64,10 +78,11 @@
   align-items: center;
   gap: 6px;
   background: rgba(255, 179, 0, 0.1);
-  border: 1px solid rgba(255, 179, 0, 0.3);
+  border: 1px solid var(--amber-dim);
   padding: 2px 8px;
   font-size: 0.6rem;
-  color: #ffb300;
+  margin: 0 0 0 120px;
+  color: var(--amber-bright);
   font-family: 'Share Tech Mono', monospace;
   border-radius: 2px;
 }
@@ -75,18 +90,18 @@
 .sectorLine {
   height: 1px;
   flex: 1;
-  background: linear-gradient(90deg, rgba(255, 179, 0, 0.3), transparent);
+  background: linear-gradient(90deg, var(--amber-dim), transparent);
 }
 
-/* --- EL GRID (SOLUCIÓN AL DESBORDAMIENTO) --- */
+/* --- GRID RESPONSIVO (2 columnas en desktop/tablet, 1 en móvil) --- */
 .gridWrapper {
   width: 100%;
-  display: block;
+  overflow: hidden;
 }
 
-.autoGrid {
+.responsiveGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 20px;
   width: 100%;
   box-sizing: border-box;
@@ -95,8 +110,10 @@
 /* --- TARJETA INDIVIDUAL --- */
 .folderEntry {
   position: relative;
-  background: rgba(15, 15, 15, 0.9);
-  border: 1px solid #222;
+  background: var(--bg-dark);
+  border: 1px solid var(--border-dark);
+  width: 100%;
+  max-width: 300px; /* Consistente con InventoryItem */
   aspect-ratio: 1 / 1.15;
   display: flex;
   flex-direction: column;
@@ -105,18 +122,14 @@
   overflow: hidden;
   box-sizing: border-box;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  /* La animación de entrada la maneja Framer Motion, pero mantenemos un estado base */
-}
-
-.accessibleEntry {
-  /* Estilo base para accesibles */
+  margin: 0 auto; /* Centrado dentro de la celda */
 }
 
 .accessibleEntry:hover {
-  border-color: #ffb300;
+  border-color: var(--amber-bright);
   background: rgba(255, 179, 0, 0.05);
   transform: translateY(-4px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 10px rgba(255, 179, 0, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 10px var(--amber-glow);
 }
 
 .lockedEntry {
@@ -134,7 +147,7 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  pointer-events: none; /* Para que los clics pasen al contenedor padre */
+  pointer-events: none;
 }
 
 .contentWrapper > * {
@@ -167,8 +180,8 @@
 }
 
 .accessibleEntry:hover .statusIndicator {
-  background: #ffb300;
-  box-shadow: 0 0 8px #ffb300;
+  background: var(--amber-bright);
+  box-shadow: 0 0 8px var(--amber-glow);
 }
 
 /* --- BLOQUEO (LOCKED) --- */
@@ -185,8 +198,8 @@
 }
 
 .lockIcon {
-  color: #ff3c00;
-  filter: drop-shadow(0 0 8px #ff3c00);
+  color: var(--hazard-red);
+  filter: drop-shadow(0 0 8px var(--hazard-red));
   margin-bottom: 8px;
   animation: pulseHazard 2s infinite;
 }
@@ -196,7 +209,7 @@
 }
 
 .lockText {
-  color: #ff3c00;
+  color: var(--hazard-red);
   font-size: 0.7rem;
   font-weight: bold;
   letter-spacing: 2px;
@@ -204,10 +217,6 @@
 }
 
 /* --- DETALLES COSMÉTICOS --- */
-.frameCorners {
-  position: relative;
-}
-
 .frameCorners::before,
 .frameCorners::after {
   content: '';
@@ -255,7 +264,7 @@
 
 .warningBox {
   background: rgba(20, 10, 0, 0.7);
-  border: 2px solid #ffb300;
+  border: 2px solid var(--amber-bright);
   padding: 40px;
   display: flex;
   flex-direction: column;
@@ -264,17 +273,17 @@
   max-width: 600px;
   gap: 20px;
   border-radius: 4px;
-  box-shadow: 0 0 30px rgba(255, 179, 0, 0.1);
+  box-shadow: 0 0 30px var(--amber-glow);
 }
 
 .warningIcon {
-  color: #ffb300;
-  filter: drop-shadow(0 0 10px #ffb300);
+  color: var(--amber-bright);
+  filter: drop-shadow(0 0 10px var(--amber-bright));
   animation: pulse 2s infinite;
 }
 
 .emptyText h3 {
-  color: #ffb300;
+  color: var(--amber-bright);
   font-size: 1.3rem;
   margin-bottom: 10px;
   letter-spacing: 2px;
@@ -288,8 +297,8 @@
 
 .resetButton {
   background: transparent;
-  border: 1px solid #ffb300;
-  color: #ffb300;
+  border: 1px solid var(--amber-bright);
+  color: var(--amber-bright);
   padding: 10px 20px;
   font-family: 'Share Tech Mono', monospace;
   font-size: 0.8rem;
@@ -302,17 +311,12 @@
 }
 
 .resetButton:hover {
-  background: #ffb300;
+  background: var(--amber-bright);
   color: #000;
-  box-shadow: 0 0 20px #ffb300;
+  box-shadow: 0 0 20px var(--amber-glow);
 }
 
 /* --- ANIMACIONES --- */
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.96) translateY(10px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
-}
-
 @keyframes scanlineMove {
   0% { background-position: 0 0; }
   100% { background-position: 0 100%; }
@@ -324,15 +328,20 @@
 }
 
 @keyframes pulseHazard {
-  0%, 100% { opacity: 1; filter: drop-shadow(0 0 5px #ff3c00); }
-  50% { opacity: 0.7; filter: drop-shadow(0 0 15px #ff3c00); }
+  0%, 100% { opacity: 1; filter: drop-shadow(0 0 5px var(--hazard-red)); }
+  50% { opacity: 0.7; filter: drop-shadow(0 0 15px var(--hazard-red)); }
 }
 
-/* --- RESPONSIVIDAD --- */
+/* --- RESPONSIVIDAD (solo para móvil, donde pasamos a 1 columna) --- */
 @media (max-width: 768px) {
-  .autoGrid {
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 12px;
+  .gridContainer {
+    padding: 20px 8px 80px 8px;
+  }
+  .responsiveGrid {
+    gap: 15px;
+  }
+  .folderEntry {
+    max-width: 280px;
   }
   .sectorTitle {
     font-size: 0.9rem;
@@ -347,11 +356,15 @@
 }
 
 @media (max-width: 480px) {
-  .autoGrid {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  .gridContainer {
+    padding: 20px 5px 60px 5px;
+  }
+  .responsiveGrid {
+    grid-template-columns: 1fr;
     gap: 10px;
   }
   .folderEntry {
+    max-width: 280px;
     padding: 8px;
   }
   .sectorHeader {

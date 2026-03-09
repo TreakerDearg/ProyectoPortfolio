@@ -3,9 +3,10 @@
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
-import { createPortal } from 'react-dom' // Importante
-import useSystemState from '@/hooks/useSystemState'
-import styles from '@/app/analyst/styles/exitPrompt.module.css'
+import { createPortal } from 'react-dom'
+import { AlertTriangle } from 'lucide-react' // Nuevo icono
+import useSystemState from '../../../hooks/useSystemState'
+import styles from '../styles/exitPrompt.module.css'
 
 export default function ExitPrompt({ onCancel }) {
   const router = useRouter()
@@ -13,7 +14,6 @@ export default function ExitPrompt({ onCancel }) {
   const modalRef = useRef(null)
   const [mounted, setMounted] = useState(false)
 
-  // Esperar a que el componente se monte en el cliente
   useEffect(() => {
     setMounted(true)
     return () => setMounted(false)
@@ -27,17 +27,15 @@ export default function ExitPrompt({ onCancel }) {
     }
     window.addEventListener('keydown', handleKey)
     return () => window.removeEventListener('keydown', handleKey)
-  }, [])
+  }, [onCancel])
 
   const handleConfirm = () => {
     closeWindow()
     router.push('/')
   }
 
-  // Si no está montado (SSR), no renderizamos nada
   if (!mounted) return null
 
-  // Usamos createPortal para teletransportar el modal al final del body
   return createPortal(
     <div className={styles.overlay} onMouseDown={(e) => e.target === e.currentTarget && onCancel()}>
       <motion.div
@@ -55,7 +53,8 @@ export default function ExitPrompt({ onCancel }) {
           
           <div className={styles.terminalContent}>
             <div className={styles.header}>
-              <span className="text-red-500 font-bold tracking-[0.3em]">![ ALERT ]!</span>
+              <AlertTriangle size={18} className="text-red-500 mr-2" /> {/* Icono añadido */}
+              <span className="text-red-500 font-bold tracking-[0.3em]">ALERT</span>
             </div>
 
             <div className={styles.body}>
@@ -67,14 +66,18 @@ export default function ExitPrompt({ onCancel }) {
                 <p className="text-[10px] text-red-500/70 animate-pulse">
                   ESTA ACCIÓN ES IRREVERSIBLE
                 </p>
+                {/* Pequeño indicador de entrada */}
+                <div className="mt-4 text-[10px] font-mono text-slate-600">
+                  <span className="text-sky-400">[Y]</span> Confirmar • <span className="text-sky-400">[N]</span> Cancelar • <span className="text-sky-400">[ESC]</span> Salir
+                </div>
               </div>
 
               <div className={styles.buttonGrid}>
                 <button onClick={handleConfirm} className={styles.asciiBtnConfirm}>
-                   [ Y_CONFIRMAR ]
+                  <span className={styles.glitchText}>&gt; Y_CONFIRMAR</span> {/* Cambiamos a un estilo más dinámico */}
                 </button>
                 <button onClick={onCancel} className={styles.asciiBtnCancel}>
-                   [ N_ABORTAR ]
+                  <span>&gt; N_ABORTAR</span>
                 </button>
               </div>
             </div>
@@ -82,6 +85,6 @@ export default function ExitPrompt({ onCancel }) {
         </div>
       </motion.div>
     </div>,
-    document.body // Destino del portal
+    document.body
   )
 }

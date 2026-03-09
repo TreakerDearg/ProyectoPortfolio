@@ -160,7 +160,7 @@ export default function LogsPage() {
           <div className={styles.sidebarContent}>
             <div className={styles.sidebarGroup}>
               <DesktopIcon label="REBOOT" icon={<RefreshCw size={18} />} onClick={() => window.location.reload()} tooltip="Reiniciar sistema" />
-              <DesktopIcon label="SEARCH" icon={<Search size={18} />} isActive={isSearchOpen} onClick={() => setIsSearchOpen(!isSearchOpen)} tooltip="Búsqueda de registros" />
+              <DesktopIcon  label="SEARCH" icon={<Search size={18} />} isActive={isSearchOpen}  onClick={() => { if (window.innerWidth < 768) setIsSidebarOpen(false);setIsSearchOpen(!isSearchOpen);}} tooltip="Búsqueda de registros" />
               <DesktopIcon label="ARCHIVE" icon={<Database size={18} />} isActive={viewMode === 'archives'} onClick={() => setViewMode(viewMode === 'desktop' ? 'archives' : 'desktop')} tooltip="Archivos históricos" />
               <DesktopIcon label="ICONS" icon={<Layers size={18} />} isActive={viewMode === 'icons'} onClick={() => setViewMode(viewMode === 'icons' ? 'desktop' : 'icons')} tooltip="Vista de iconos" />
               <DesktopIcon label="DISK" icon={<HardDrive size={18} />} onClick={() => alert('Disco local C:')} tooltip="Explorar disco" />

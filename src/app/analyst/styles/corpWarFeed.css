@@ -1,238 +1,342 @@
-/* src/app/analyst/styles/corpWarFeed.css */
+/* =====================================================
+   CORP WAR FEED — KIROSHI HUD MK-VII (OPTIMIZED)
+   Enfoque: Máxima densidad de datos y efectos reactivos
+===================================================== */
 
-/* --- MAIN CONTAINER --- */
-.corp-war-container {
-    flex: 1;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-    margin: 1.5rem 0.5rem 0.5rem 0.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    background: linear-gradient(180deg, #050505 0%, #0a0000 100%);
-    border-radius: 4px;
-    overflow: hidden;
-    position: relative;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+:root {
+  --hud-bg: rgba(5, 10, 15, 0.95);
+  --hud-surface: rgba(10, 20, 30, 0.7);
+  --hud-border: rgba(0, 234, 255, 0.15);
+  --hud-accent: #00eaff;
+  --hud-accent-glow: rgba(0, 234, 255, 0.4);
+  --hud-danger: #ff1a1a;
+  --hud-danger-glow: rgba(255, 26, 26, 0.5);
+  --hud-warning: #facc15;
+  --hud-success: #22c55e;
+  --hud-text-primary: #e2f8ff;
+  --hud-text-dim: #64748b;
+  --scanline-color: rgba(0, 234, 255, 0.03);
 }
 
-/* --- CRITICAL SYSTEM STATES --- */
-
-/* State: Hacked/Breached */
-.is-hacked {
-    border: 1px solid #ff0000 !important;
-    box-shadow: 0 0 20px rgba(255, 0, 0, 0.2), inset 0 0 15px rgba(255, 0, 0, 0.1);
-    animation: intense-shake 0.15s steps(2) infinite;
-    z-index: 60;
+.corpwar-hud-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 400px; /* Asegura espacio para el feed */
+  padding: 12px;
+  background: var(--hud-bg);
+  border: 1px solid var(--hud-border);
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--hud-text-primary);
+  overflow: hidden;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
 }
 
-/* State: System Failure / Blackout */
-.system-blackout {
-    background: #000 !important;
-    filter: brightness(0);
-    pointer-events: none;
-    cursor: wait;
-    animation: screen-flicker 0.1s infinite;
+/* Efecto de Scanline y Grilla */
+.corpwar-hud-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: 
+    linear-gradient(var(--scanline-color) 50%, transparent 50%) 0 0 / 100% 4px,
+    linear-gradient(90deg, rgba(0, 234, 255, 0.02) 1px, transparent 1px) 0 0 / 20px 20px,
+    linear-gradient(rgba(0, 234, 255, 0.02) 1px, transparent 1px) 0 0 / 20px 20px;
+  pointer-events: none;
+  z-index: 10;
 }
 
-/* --- OVERLAYS & TEXTURES --- */
+/* =====================================================
+   HEADER & TABS
+===================================================== */
 
-/* Moving Red Scanline (Hack in progress) */
-.scanner-line {
-    position: absolute;
-    width: 100%;
-    height: 30px;
-    background: linear-gradient(to bottom, 
-        transparent 0%, 
-        rgba(255, 0, 0, 0.15) 50%, 
-        transparent 100%);
-    z-index: 101;
-    pointer-events: none;
-    animation: scan-move 2.5s linear infinite;
+.corpwar-header {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--hud-border);
+  padding-bottom: 4px;
 }
 
-/* Static Grain/Noise */
-.corp-war-container::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    opacity: 0.02;
-    pointer-events: none;
-    z-index: 5;
+.corpwar-tab {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--hud-text-dim);
+  font-size: 9px;
+  font-weight: 800;
+  padding: 6px 2px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-/* --- REBOOT VISUALS (Blue Spiral) --- */
-
-.reboot-spiral-container {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center; /* Fixed typo from justify-center */
-    pointer-events: none;
-    z-index: 100;
+.corpwar-tab.active {
+  color: var(--hud-accent);
+  background: rgba(0, 234, 255, 0.1);
+  box-shadow: inset 0 -2px 0 var(--hud-accent);
 }
 
-.spiral-ring {
-    position: absolute;
-    border: 1px solid rgba(59, 130, 246, 0.4);
-    border-radius: 2px;
-    width: 20px;
-    height: 20px;
-    animation: tunnel-out 3s ease-in infinite;
+/* =====================================================
+   THREAT MONITOR
+===================================================== */
+
+.corpwar-threat-section {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 15px;
 }
 
-/* Delay rings to create the tunnel depth */
-.spiral-ring:nth-child(2) { animation-delay: 1s; }
-.spiral-ring:nth-child(3) { animation-delay: 2s; }
-
-/* --- TYPOGRAPHY EFFECTS --- */
-
-.is-breached-text {
-    color: #fff;
-    font-size: 11px;
-    letter-spacing: 0.4em;
-    text-transform: uppercase;
-    font-weight: 900;
-    text-shadow: 2px 0 #f00, -2px 0 #0ff;
-    animation: text-glitch 0.3s infinite;
+.threat-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  margin-bottom: 6px;
+  letter-spacing: 1px;
 }
 
-.glitch-text {
-    animation: glitch-simple 500ms infinite;
+.threat-bar-container {
+  height: 4px;
+  background: #000;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* --- ANIMATIONS --- */
-
-@keyframes intense-shake {
-    0% { transform: translate(1px, 1px); }
-    50% { transform: translate(-1px, -1px); }
-    100% { transform: translate(0); }
+.threat-bar-fill {
+  height: 100%;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@keyframes scan-move {
-    from { top: -20%; }
-    to { top: 120%; }
+.threat-bar-grid {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(90deg, transparent 90%, rgba(0,0,0,0.5) 90%);
+  background-size: 10% 100%;
 }
 
-@keyframes tunnel-out {
-    0% { transform: scale(0.5); opacity: 0; }
-    20% { opacity: 1; }
-    100% { transform: scale(12); opacity: 0; }
+/* =====================================================
+   FEED CONTENT (TIMELINE & FILES)
+===================================================== */
+
+.corpwar-content-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 4px;
 }
 
-@keyframes text-glitch {
-    0% { transform: translate(0); clip-path: inset(0 0 0 0); }
-    25% { transform: translate(-1px, 1px); clip-path: inset(20% 0 50% 0); }
-    50% { transform: translate(1px, -1px); clip-path: inset(40% 0 10% 0); }
-    100% { transform: translate(0); }
+.corpwar-content-scroll::-webkit-scrollbar { width: 2px; }
+.corpwar-content-scroll::-webkit-scrollbar-thumb { background: var(--hud-border); }
+
+/* Event Cards */
+.event-card {
+  position: relative;
+  display: flex;
+  background: rgba(255, 255, 255, 0.02);
+  margin-bottom: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: transform 0.2s;
 }
 
-@keyframes glitch-simple {
-    0% { text-shadow: 1px 0 red; }
-    50% { text-shadow: -1px -1px blue; }
-    100% { text-shadow: 1px 1px green; }
+.event-sidebar-line {
+  width: 3px;
+  flex-shrink: 0;
 }
 
-/* --- SCROLLBAR --- */
-.cyber-scrollbar::-webkit-scrollbar {
-    width: 2px;
+.event-body {
+  padding: 8px;
+  flex: 1;
 }
 
-.cyber-scrollbar::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
+.event-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 8px;
+  color: var(--hud-text-dim);
+  margin-bottom: 4px;
 }
 
-/* Contenedor Principal */
-.emergency-overlay {
+.status-tag {
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.status-tag.compromised { color: var(--hud-danger); animation: flicker 2s infinite; }
+.status-tag.deflected { color: var(--hud-success); }
+
+.event-main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.event-vector {
+  font-size: 9px;
+  color: var(--hud-text-dim);
+  margin-top: 2px;
+  letter-spacing: 1px;
+}
+
+/* File Matrix */
+.file-item {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  background: rgba(0, 234, 255, 0.02);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  gap: 6px;
+}
+
+.file-info {
+  display: flex;
+  justify-content: space-between;
+}
+
+.file-name { font-size: 10px; color: var(--hud-accent); }
+.file-class { font-size: 8px; color: var(--hud-text-dim); }
+
+.integrity-mini-bar {
+  flex: 1;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.integrity-mini-bar .fill {
+  height: 100%;
+  background: var(--hud-accent);
+}
+
+/* =====================================================
+   EMERGENCY OVERLAYS (GLITCH & REBOOT)
+===================================================== */
+
+.overlay-breach {
   position: absolute;
   inset: 0;
   z-index: 100;
-  display: flex;
-  align-items: center;      /* Centrado vertical */
-  justify-content: center;   /* Centrado horizontal */
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(12px);
-  overflow: hidden;
-}
-
-.status-container {
-  position: relative;
-  z-index: 101;
+  background: rgba(255, 0, 0, 0.2);
+  backdrop-filter: blur(4px) saturate(2);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  border: 4px solid var(--hud-danger);
+  animation: alarm-pulse 0.5s infinite;
 }
 
-.flex-center-col {
+.skull-container {
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 15px;
 }
 
-/* Estilos de Texto */
-.status-text {
-  margin-top: 1.5rem;
-  font-family: 'JetBrains Mono', monospace; /* O cualquier mono */
+.skull-text {
+  font-size: 14px;
   font-weight: 900;
-  text-transform: uppercase;
+  color: #fff;
+  letter-spacing: 4px;
+  text-shadow: 0 0 10px var(--hud-danger);
 }
 
-.breach-text {
-  color: #ff0000;
-  letter-spacing: 0.8em;
-  text-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
-  animation: glitch 1s infinite;
-}
-
-.restore-text {
-  color: #3b82f6;
-  letter-spacing: 0.3em;
-  font-size: 0.75rem;
-  text-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
-}
-
-/* Iconos y Barras */
-.icon-breach {
-  color: #dc2626;
-  filter: drop-shadow(0 0 12px rgba(220, 38, 38, 0.8));
-}
-
-.icon-restore {
-  color: #3b82f6;
-  filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.6));
-}
-
-.status-bar {
-  margin-top: 0.75rem;
-  height: 2px;
-  width: 150px;
-  background: linear-gradient(90deg, transparent, #ff0000, transparent);
-}
-
-/* Animación de Scanner Line */
-.scanner-line {
+.overlay-reboot {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 4px;
-  background: rgba(255, 0, 0, 0.2);
-  box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
-  animation: scan 3s linear infinite;
+  inset: 0;
+  z-index: 100;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-@keyframes scan {
-  0% { top: 0%; }
-  100% { top: 100%; }
+.reboot-box {
+  width: 80%;
+  text-align: center;
 }
 
-@keyframes glitch {
+.reboot-text {
+  font-size: 10px;
+  margin-bottom: 15px;
+  letter-spacing: 2px;
+  color: var(--hud-accent);
+}
+
+.reboot-progress {
+  height: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  margin-bottom: 10px;
+}
+
+.reboot-fill {
+  height: 100%;
+  background: var(--hud-accent);
+  box-shadow: 0 0 10px var(--hud-accent);
+}
+
+/* =====================================================
+   ANIMATIONS
+===================================================== */
+
+@keyframes alarm-pulse {
+  0% { background: rgba(255, 0, 0, 0.2); }
+  50% { background: rgba(255, 0, 0, 0.4); }
+  100% { background: rgba(255, 0, 0, 0.2); }
+}
+
+@keyframes flicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+  20%, 22%, 24%, 55% { opacity: 0.2; }
+}
+
+.system-glitch {
+  animation: glitch-anim 0.2s infinite;
+}
+
+@keyframes glitch-anim {
   0% { transform: translate(0); }
   20% { transform: translate(-2px, 2px); }
   40% { transform: translate(-2px, -2px); }
   60% { transform: translate(2px, 2px); }
   80% { transform: translate(2px, -2px); }
   100% { transform: translate(0); }
+}
+
+.critical-border {
+  border: 1px solid var(--hud-danger) !important;
+  box-shadow: 0 0 10px var(--hud-danger-glow);
+  animation: flicker 1s infinite;
+}
+
+.corpwar-footer {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 8px;
+  color: var(--hud-text-dim);
+}
+
+.pulse-dot {
+  width: 4px;
+  height: 4px;
+  background: var(--hud-success);
+  border-radius: 50%;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(3); opacity: 0; }
 }

@@ -1,0 +1,114 @@
+.foundryContainer {
+  background: rgba(0, 10, 15, 0.4);
+  border: 1px solid rgba(0, 234, 255, 0.1);
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Línea de escaneo superior */
+.assemblyLine {
+  height: 1px;
+  width: 100%;
+  background: rgba(0, 234, 255, 0.1);
+  position: relative;
+}
+
+.scannerBeam {
+  position: absolute;
+  height: 100%;
+  width: 40px;
+  background: linear-gradient(90deg, transparent, #00eaff, transparent);
+  animation: scan 3s infinite linear;
+}
+
+.header {
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.nodeLabel { font-size: 6px; color: #00eaff; opacity: 0.5; letter-spacing: 2px; }
+.mainTitle { font-size: 10px; font-weight: 900; color: white; letter-spacing: 1px; margin: 0; }
+
+.nodeGrid {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.nodeCard {
+  display: flex;
+  gap: 12px;
+}
+
+.sideIndicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding-top: 4px;
+}
+
+.dotActive { width: 4px; height: 4px; background: #00eaff; border-radius: 50%; box-shadow: 0 0 8px #00eaff; }
+.dotIdle { width: 4px; height: 4px; background: rgba(255,255,255,0.1); border-radius: 50%; }
+.verticalLine { width: 1px; flex: 1; background: linear-gradient(180deg, rgba(0,234,255,0.5), transparent); }
+
+.taskId { font-size: 7px; color: rgba(255,255,255,0.3); }
+.taskPercent { font-size: 9px; color: #00eaff; font-weight: bold; }
+.taskName { font-size: 11px; font-weight: 800; color: white; margin-bottom: 8px; }
+
+/* CONTENEDOR DE LA MATRIZ DE BLOQUES */
+.matrixContainer {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 3px;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.matrixBlock {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.blockActive {
+  /* La animación se maneja en el Framer Motion */
+}
+
+.innerCore {
+  width: 2px;
+  height: 2px;
+  background: white;
+  box-shadow: 0 0 4px white;
+}
+
+.foundryFooter {
+  padding: 6px 12px;
+  background: rgba(0, 234, 255, 0.03);
+  border-top: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.terminalLine {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 6px;
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
+}
+
+@keyframes scan {
+  from { left: -40px; }
+  to { left: 100%; }
+}

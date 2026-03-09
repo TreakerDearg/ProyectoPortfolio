@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import ExitPrompt from './ExitPrompt';
-import styles from '@/app/analyst/styles/exitButton.module.css';
+import styles from '../styles/exitButton.module.css';
 import { Power, ShieldOff } from 'lucide-react';
 
 export default function ExitButton() {

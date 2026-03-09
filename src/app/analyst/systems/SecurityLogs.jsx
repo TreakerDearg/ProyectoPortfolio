@@ -1,112 +1,118 @@
 "use client";
-import React from 'react';
-import { motion } from 'framer-motion';
-import { ShieldAlert, ShieldCheck, Activity, Terminal } from 'lucide-react';
-import styles from '@/app/analyst/styles/Styles-C/securityLogs.module.css';
-
-const MOCK_LOGS = [
-  { id: '0x12A', timestamp: '22:45:12', event: 'Unauthorized_Access_Attempt', origin: '192.168.1.44', status: 'BLOCKED', level: 'CRITICAL' },
-  { id: '0x12B', timestamp: '22:48:05', event: 'Kernel_Handshake_Sync', origin: 'Internal_Core', status: 'SUCCESS', level: 'STABLE' },
-  { id: '0x12C', timestamp: '22:50:33', event: 'Packet_Sniffing_Detected', origin: 'Unknown_Proxy', status: 'MONITORING', level: 'WARNING' },
-  { id: '0x12D', timestamp: '22:55:01', event: 'Database_Query_Inject', origin: 'SQL_Port_80', status: 'FILTERED', level: 'CRITICAL' },
-  { id: '0x12E', timestamp: '23:02:12', event: 'Node_Auth_Refresh', origin: 'System_Admin', status: 'SUCCESS', level: 'STABLE' },
-];
+import React, { useState, useEffect, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ShieldAlert, ShieldCheck, Terminal, AlertCircle, Info, Download } from 'lucide-react';
+import { useAnalysis } from '../context/AnalysisContext';
+import styles from '../styles/Styles-C/securityLogs.module.css';
 
 export const SecurityLogs = () => {
+  const { logs, isAnalyzing: isLoading, systemStatus } = useAnalysis();
+
+  const stats = useMemo(() => {
+    if (!logs) return { total: 0, threats: 0 };
+    return {
+      total: logs.length,
+      threats: logs.filter(l => ['critical', 'warning', 'CRITICAL'].includes(l.level)).length
+    };
+  }, [logs]);
+
+  if (isLoading) {
+    return (
+      <div className={styles.centerFull}>
+        <div className={styles.loadingSpinner} />
+        <p className={styles.loadingText}>SYNCHRONIZING_ENCRYPTED_LOGS...</p>
+      </div>
+    );
+  }
+
   return (
-    <div className={styles.logContainer}>
-      {/* HEADER TÁCTICO */}
-      <div className={styles.logHeader}>
+    <div className={styles.logWrapper}>
+      {/* HEADER: Fijo arriba */}
+      <header className={styles.logHeader}>
         <div className={styles.titleGroup}>
-          <div className={styles.brandIcon}><Terminal size={18} /></div>
-          <div>
+          <Terminal size={16} className={styles.iconCyan} />
+          <div className={styles.textGroup}>
             <h2 className={styles.mainTitle}>SEC_AUDIT_LOGS</h2>
             <div className={styles.subTitle}>
-              <span className={styles.pulseDot}></span>
-              LIVE_INTRUSION_DETECTION_ACTIVE
+              <span className={`${styles.pulseDot} ${systemStatus !== 'NOMINAL' ? styles.dotCritical : styles.dotNominal}`} />
+              {systemStatus === 'NOMINAL' ? 'INTRUSION_DETECTION_ACTIVE' : 'SYSTEM_BREACH_DETECTED'}
             </div>
           </div>
         </div>
-        
-        <div className={styles.systemStatus}>
-          <div className={styles.statusBadge}>
-            <span className="opacity-40">ENCRYPTION:</span>
-            <span className="text-sky-400">RSA_4096</span>
-          </div>
-          <div className={styles.decors}>
-            {[...Array(5)].map((_, i) => <div key={i} className={styles.decorBit} />)}
+
+        <div className={styles.headerStats}>
+          <div className={styles.miniStat}>
+            <span className={styles.miniLabel}>FIREWALL</span>
+            <span className={systemStatus === 'NOMINAL' ? styles.textCyan : styles.textRed}>
+              {systemStatus === 'NOMINAL' ? 'REINFORCED' : 'COMPROMISED'}
+            </span>
           </div>
         </div>
-      </div>
+      </header>
 
-      {/* TABLA DE DATOS */}
+      {/* VIEWPORT: El corazón que hace scroll */}
       <div className={styles.tableViewport}>
         <table className={styles.cyberTable}>
           <thead>
             <tr>
-              <th><div className={styles.thContent}>TRACE_ID</div></th>
-              <th><div className={styles.thContent}>TIMESTAMP</div></th>
-              <th><div className={styles.thContent}>EVENT_DATA</div></th>
-              <th><div className={styles.thContent}>ORIGIN_NODE</div></th>
-              <th className="text-right"><div className={styles.thContent}>STATUS</div></th>
+              <th>TRACE_ID</th>
+              <th>TIMESTAMP</th>
+              <th>EVENT_DATA</th>
+              <th>ORIGIN_NODE</th>
+              <th className="text-right">STATUS</th>
             </tr>
           </thead>
           <tbody>
-            {MOCK_LOGS.map((log, index) => (
-              <motion.tr 
-                key={log.id}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.05 }}
-                className={styles.logRow}
-                data-level={log.level}
-              >
-                <td className={styles.idCell}>
-                  <span className={styles.hashPrefix}>#</span>{log.id}
-                </td>
-                <td className={styles.timeCell}>{log.timestamp}</td>
-                <td className={styles.eventCell}>
-                  <div className={styles.eventWrapper}>
-                    {log.level === 'CRITICAL' ? <ShieldAlert size={12} /> : <Activity size={12} />}
-                    <span className={log.level === 'CRITICAL' ? styles.criticalText : ''}>
+            <AnimatePresence initial={false}>
+              {logs.map((log, index) => (
+                <motion.tr
+                  key={log.id}
+                  initial={{ opacity: 0, x: -5 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  className={styles.logRow}
+                  data-level={log.level.toLowerCase()}
+                >
+                  <td className={styles.idCell}><span>0x</span>{log.id.split('-')[1] || log.id}</td>
+                  <td className={styles.timeCell}>{log.timestamp}</td>
+                  <td className={styles.eventCell}>
+                    <div className={styles.eventFlex}>
+                      {log.level.toLowerCase() === 'critical' ? <ShieldAlert size={12} /> : <Info size={12} />}
                       {log.event}
+                    </div>
+                  </td>
+                  <td className={styles.originCell}>{log.origin}</td>
+                  <td className={styles.statusCell}>
+                    <span className={`${styles.statusTag} ${styles[log.level.toLowerCase()]}`}>
+                      {log.status}
                     </span>
-                  </div>
-                </td>
-                <td className={styles.originCell}>{log.origin}</td>
-                <td className={styles.statusCell}>
-                  <div className={`${styles.statusTag} ${styles[log.level]}`}>
-                    {log.status}
-                    {log.level === 'STABLE' && <ShieldCheck size={10} className="ml-1" />}
-                  </div>
-                </td>
-              </motion.tr>
-            ))}
+                  </td>
+                </motion.tr>
+              ))}
+            </AnimatePresence>
           </tbody>
         </table>
-        
-        {/* Efecto de Scan Line que baja por la tabla */}
-        <div className={styles.tableScanner} />
       </div>
 
-      {/* FOOTER DE METADATOS */}
-      <div className={styles.logFooter}>
-        <div className={styles.stats}>
+      {/* FOOTER: Fijo abajo */}
+      <footer className={styles.logFooter}>
+        <div className={styles.footerStats}>
           <div className={styles.statBox}>
             <span className={styles.statLabel}>PROCESSED</span>
-            <span className={styles.statValue}>1,244</span>
+            <span className={styles.statValue}>{stats.total}</span>
           </div>
           <div className={styles.statBox}>
             <span className={styles.statLabel}>THREATS</span>
-            <span className={styles.statValue} style={{color: '#ef4444'}}>00</span>
+            <span className={`${styles.statValue} ${stats.threats > 0 ? styles.textRed : ''}`}>
+              {stats.threats}
+            </span>
           </div>
         </div>
-        
+
         <button className={styles.reportBtn}>
-          <span className={styles.btnText}>GENERATE_SEC_REPORT</span>
-          <div className={styles.btnGlow} />
+          <Download size={14} />
+          <span>DUMP_BUFFER</span>
         </button>
-      </div>
+      </footer>
     </div>
   );
 };

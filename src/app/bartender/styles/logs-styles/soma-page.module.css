@@ -695,6 +695,13 @@
   box-shadow: 0 0 30px var(--soma-teal);
 }
 
+@media (max-width: 768px) {
+  .searchOverlay {
+    width: 95%;
+    padding: 15px;
+    max-width: none; /* Elimina el max-width fijo en móvil */
+  }
+}
 /* --- DECORACIONES SOMA (posiciones) --- */
 .decorTopRight {
   position: absolute;

@@ -1,173 +1,272 @@
+/* exitPrompt.module.css */
+
+:root {
+  --exit-bg: #0a0a0c;
+  --exit-red: #ff0000;
+  --exit-red-glow: rgba(255, 0, 0, 0.3);
+  --exit-blue: #0ea5e9;
+  --exit-blue-glow: rgba(14, 165, 233, 0.3);
+  --exit-text: #f1f5f9;
+  --exit-text-dim: #94a3b8;
+}
+
 .overlay {
   position: fixed;
-  /* Forzamos que cubra todo el viewport */
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100vw;
-  height: 100vh;
-  
-  /* Centrado absoluto */
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
-  
-  /* Capas */
-  z-index: 99999; /* Valor altísimo */
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(12px);
-  
-  /* Aseguramos que ignore transformaciones del padre */
-  transform: none !important;
+  z-index: 9999;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .asciiWrapper {
   position: relative;
-  z-index: 100000;
-  pointer-events: auto;
-}
-
-@keyframes modalAppear {
-  0% { 
-    opacity: 0; 
-    transform: scale(0.8) translateY(20px); 
-    filter: hue-rotate(90deg) brightness(2);
-  }
-  100% { 
-    opacity: 1; 
-    transform: scale(1) translateY(0); 
-    filter: hue-rotate(0deg) brightness(1);
-  }
+  max-width: 90vw;
+  width: 400px;
+  color: var(--exit-text); /* Color base blanco */
 }
 
 .asciiFrame {
   background: #08080a;
-  border: 1px solid rgba(244, 63, 94, 0.6);
+  border: 1px solid var(--exit-red);
+  background-color: var(--exit-bg);
+  box-shadow: 0 0 20px var(--exit-red-glow), inset 0 0 10px rgba(255, 0, 0, 0.1);
+  padding: 20px;
   position: relative;
-  padding: 4px;
-  /* Sombra industrial pesada */
-  box-shadow: 
-    0 0 0 1px rgba(0, 0, 0, 1),
-    0 30px 60px rgba(0, 0, 0, 0.8),
-    0 0 20px rgba(244, 63, 94, 0.15);
 }
 
-/* Esquinas de caracteres ASCII Estilizadas */
-.asciiCornerTopL, .asciiCornerTopR, .asciiCornerBotL, .asciiCornerBotR {
+/* Esquinas ascii usando pseudo-elementos */
+.asciiFrame::before,
+.asciiFrame::after {
+  content: '';
   position: absolute;
-  font-family: var(--font-mono);
-  font-size: 20px; /* Un poco más grandes para resaltar */
-  color: #f43f5e;
-  background: #08080a;
-  width: 22px;
-  height: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
-  font-weight: 900;
-  text-shadow: 0 0 8px rgba(244, 63, 94, 0.8);
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--exit-red);
+  filter: drop-shadow(0 0 5px var(--exit-red));
 }
 
-.asciiCornerTopL { top: -11px; left: -11px; }
-.asciiCornerTopR { top: -11px; right: -11px; }
-.asciiCornerBotL { bottom: -11px; left: -11px; }
-.asciiCornerBotR { bottom: -11px; right: -11px; }
+.asciiFrame::before {
+  top: 0;
+  left: 0;
+  border-right: none;
+  border-bottom: none;
+}
+
+.asciiFrame::after {
+  top: 0;
+  right: 0;
+  border-left: none;
+  border-bottom: none;
+}
+
+/* Esquinas inferiores con selectores adicionales */
+.asciiFrame .corner-bottom-left {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--exit-red);
+  border-top: none;
+  border-right: none;
+  filter: drop-shadow(0 0 5px var(--exit-red));
+}
+
+.asciiFrame .corner-bottom-right {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--exit-red);
+  border-top: none;
+  border-left: none;
+  filter: drop-shadow(0 0 5px var(--exit-red));
+}
+
+/* Si prefieres mantener los divs originales, usamos las clases */
+.asciiCornerTopL,
+.asciiCornerTopR,
+.asciiCornerBotL,
+.asciiCornerBotR {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  font-size: 14px;
+  color: var(--exit-red);
+  font-weight: bold;
+  line-height: 1;
+  filter: drop-shadow(0 0 5px var(--exit-red));
+}
+
+.asciiCornerTopL { top: 2px; left: 2px; }
+.asciiCornerTopR { top: 2px; right: 2px; }
+.asciiCornerBotL { bottom: 2px; left: 2px; }
+.asciiCornerBotR { bottom: 2px; right: 2px; }
 
 .terminalContent {
-  /* Borde de puntos para look de impresora antigua */
-  border: 1px dashed rgba(244, 63, 94, 0.3);
-  padding: 2rem;
-  min-width: 340px;
-  max-width: 450px;
-  background: linear-gradient(to bottom, rgba(244, 63, 94, 0.03), transparent);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .header {
-  text-align: center;
-  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid var(--exit-red-glow);
+  padding-bottom: 0.5rem;
+}
+
+.header span {
+  color: var(--exit-red);
+  font-weight: bold;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  text-shadow: 0 0 8px var(--exit-red);
+}
+
+.body {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--exit-text); /* Texto blanco por defecto */
 }
 
 .asciiDivider {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: rgba(244, 63, 94, 0.3);
-  letter-spacing: 1px;
+  color: var(--exit-red);
+  opacity: 0.3;
   text-align: center;
-  margin: 10px 0;
-  overflow: hidden;
-  white-space: nowrap;
+  letter-spacing: 2px;
 }
 
-.statusLine {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  margin: 6px 0;
-  letter-spacing: 0.02em;
+/* Texto principal de advertencia */
+.body p:first-of-type {
+  color: var(--exit-text);
+  font-weight: 700;
+  font-size: 14px;
+  text-align: center;
+}
+
+/* Texto de advertencia secundario */
+.body p.text-red-500,
+.body .animate-pulse {
+  color: var(--exit-red) !important;
+  font-size: 10px;
+  text-align: center;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
 }
 
 .buttonGrid {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
 }
 
-.asciiBtnConfirm, .asciiBtnCancel {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 900;
-  padding: 12px;
-  text-align: center;
-  transition: all 0.1s steps(2); /* Transición brusca estilo terminal */
+.asciiBtnConfirm,
+.asciiBtnCancel {
+  background: transparent;
+  border: 1px solid;
+  padding: 0.5rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: bold;
   cursor: pointer;
+  transition: all 0.2s ease;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 1px;
+  border-radius: 2px;
 }
 
 .asciiBtnConfirm {
-  background: rgba(244, 63, 94, 0.08);
-  color: #f43f5e;
-  border: 1px solid rgba(244, 63, 94, 0.4);
+  border-color: var(--exit-red);
+  color: var(--exit-red);
+  text-shadow: 0 0 5px var(--exit-red);
 }
 
 .asciiBtnConfirm:hover {
-  background: #f43f5e;
+  background: rgba(255, 0, 0, 0.1);
+  box-shadow: 0 0 15px var(--exit-red);
+  transform: scale(1.02);
   color: #fff;
-  box-shadow: 0 0 15px rgba(244, 63, 94, 0.4);
-  transform: translateY(-1px);
 }
 
 .asciiBtnCancel {
-  background: transparent;
-  color: #64748b;
-  border: 1px solid rgba(100, 116, 139, 0.2);
+  border-color: var(--exit-blue);
+  color: var(--exit-blue);
+  text-shadow: 0 0 5px var(--exit-blue);
 }
 
 .asciiBtnCancel:hover {
-  color: #f1f5f9;
-  border-color: #f1f5f9;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(14, 165, 233, 0.1);
+  box-shadow: 0 0 15px var(--exit-blue);
+  transform: scale(1.02);
+  color: #fff;
 }
 
-.footer {
-  margin-top: 1.5rem;
-  font-family: var(--font-mono);
+/* Efecto glitch opcional para el botón confirmar */
+.glitchText {
+  animation: glitch 2s infinite;
+  display: inline-block;
+}
+
+@keyframes glitch {
+  0%, 100% { transform: translate(0); }
+  20% { transform: translate(-1px, 1px); }
+  40% { transform: translate(1px, -1px); }
+  60% { transform: translate(-1px, 0); }
+  80% { transform: translate(1px, 1px); }
+}
+
+/* Indicador de teclas (si se añade) */
+.keyHint {
+  color: var(--exit-text-dim);
   font-size: 9px;
-  color: #334155;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-  padding-top: 12px;
-  display: flex;
-  align-items: center;
+  text-align: center;
+  margin-top: 0.5rem;
 }
 
-.blinkingCursor {
-  animation: blink 0.8s step-end infinite;
-  color: #f43f5e;
-  font-weight: bold;
+/* Responsive */
+@media (max-width: 640px) {
+  .asciiWrapper {
+    width: 90%;
+  }
+  .buttonGrid {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+  .body p:first-of-type {
+    font-size: 12px;
+  }
 }
 
-@keyframes blink {
-  50% { opacity: 0; }
+/* Preferencia de movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+  .overlay {
+    animation: none;
+  }
+  .asciiBtnConfirm:hover,
+  .asciiBtnCancel:hover {
+    transform: none;
+  }
+  .animate-pulse {
+    animation: none;
+    opacity: 0.8;
+  }
+  .glitchText {
+    animation: none;
+  }
 }

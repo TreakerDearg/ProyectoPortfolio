@@ -1,0 +1,478 @@
+/* =========================================
+   VARIABLES DE PROTOCOLO ARASAKA
+========================================= */
+.sidebarRoot {
+  --red: #e11d48;
+  --red-glow: rgba(225, 29, 72, 0.4);
+  --red-deep: #9f1239;
+  --bg-dark: #070709;
+  --panel-bg: rgba(15, 20, 29, 0.6);
+  --border-color: rgba(255, 255, 255, 0.05);
+  --text-dim: #64748b;
+  --sidebar-transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+
+  background: var(--bg-dark);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: width var(--sidebar-transition);
+  z-index: 50;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Efecto de Scanline Arasaka */
+.sidebarRoot::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%),
+              linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
+  background-size: 100% 2px, 3px 100%;
+  pointer-events: none;
+  opacity: 0.3;
+  z-index: 10;
+}
+
+/* ===== HEADER & LOGO ===== */
+.header {
+  height: 64px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border-color);
+  background: rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  position: relative;
+}
+
+.brandContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.statusLight {
+  width: 8px;
+  height: 8px;
+  background: var(--red);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--red-glow);
+  animation: pulse 2s infinite;
+}
+
+.brandText {
+  font-size: 18px;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.05em;
+  color: rgba(255,255,255,0.9);
+}
+
+.brandAccent { color: var(--red); }
+
+/* ===== COLLAPSE HANDLE (SIMÉTRICO AL DERECHO) ===== */
+.handleWrapper {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  z-index: 100;
+}
+
+.collapseHandle {
+  position: absolute;
+  right: -12px;
+  width: 24px;
+  height: 48px;
+  background: var(--bg-dark);
+  border: 1px solid var(--border-color);
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.collapseHandle:hover {
+  border-color: var(--red);
+  color: var(--red);
+  box-shadow: 0 0 15px var(--red-glow);
+}
+
+/* ===== NAVIGATION ITEMS ===== */
+.navigation {
+  padding: 16px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.navItem {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-dim);
+  transition: all 0.2s ease-out;
+  cursor: pointer;
+}
+
+.navItem:hover {
+  background: rgba(255, 255, 255, 0.03);
+  color: #f8fafc;
+}
+
+.navActive {
+  background: linear-gradient(90deg, rgba(225, 29, 72, 0.1) 0%, transparent 100%);
+  color: var(--red) !important;
+  border-left: 2px solid var(--red);
+}
+
+.navActive::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 20%;
+  height: 60%;
+  width: 1px;
+  background: var(--red);
+  box-shadow: 0 0 10px var(--red-glow);
+}
+
+.navItemContent {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.labelGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1;
+}
+
+.mainLabel {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.extLabel {
+  font-size: 7px;
+  font-family: monospace;
+  opacity: 0.4;
+  margin-top: 4px;
+}
+
+.badge {
+  font-family: monospace;
+  font-size: 9px;
+  font-weight: bold;
+}
+
+/* ===== SCROLL AREA & FEEDS ===== */
+.scrollArea {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0 8px;
+}
+
+.scrollArea::-webkit-scrollbar { width: 3px; }
+.scrollArea::-webkit-scrollbar-thumb { background: var(--border-color); }
+.scrollArea:hover::-webkit-scrollbar-thumb { background: var(--red-deep); }
+
+.extraContent {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-bottom: 20px;
+}
+
+.terminalSection {
+  background: rgba(0,0,0,0.4);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 8px;
+}
+
+/* ===== FOOTER METRICS ===== */
+.footer {
+  padding: 12px;
+  border-top: 1px solid var(--border-color);
+  background: rgba(0,0,0,0.4);
+}
+
+.footerMetric {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  background: rgba(225, 29, 72, 0.05);
+  border: 1px solid rgba(225, 29, 72, 0.2);
+  border-radius: 2px;
+}
+
+.metricLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 9px;
+  font-weight: bold;
+  color: var(--red-deep);
+}
+
+.alertDot {
+  width: 4px;
+  height: 4px;
+  background: var(--red);
+  border-radius: 50%;
+  animation: pulse 1s infinite;
+}
+
+.metricValue {
+  font-family: monospace;
+  font-size: 10px;
+  color: var(--red);
+  font-weight: bold;
+}
+
+/* ===== MODOS COLAPSADOS ===== */
+.collapsed .navItem {
+  justify-content: center;
+  padding: 12px 0;
+}
+
+.miniLogo {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.diamondOuter {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--red);
+  transform: rotate(45deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.diamondInner {
+  width: 8px;
+  height: 8px;
+  background: var(--red);
+}
+
+.collapsedDecor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding-top: 20px;
+  opacity: 0.2;
+}
+
+.verticalLine {
+  width: 1px;
+  height: 100px;
+  background: linear-gradient(to bottom, var(--red), transparent);
+}
+
+/* Tooltip nativo */
+.tooltip {
+  position: absolute;
+  left: 56px;
+  background: var(--red);
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 2px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  white-space: nowrap;
+  z-index: 100;
+}
+
+.navItem:hover .tooltip {
+  opacity: 1;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 10px var(--red-glow); }
+  50% { opacity: 0.5; box-shadow: 0 0 2px var(--red-glow); }
+}
+
+/* ===== MANEJADOR DE COLAPSO (LADO IZQUIERDO) ===== */
+.handleWrapper {
+  position: absolute;
+  right: -12px; /* Sobresale de la sidebar */
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.collapseHandle {
+  width: 24px;
+  height: 60px;
+  background: var(--bg-dark);
+  border: 1px solid var(--red);
+  border-left: none; /* Se funde con la sidebar */
+  color: var(--red);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 0 4px 4px 0;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.collapseHandle:hover {
+  background: var(--red);
+  color: #fff;
+  box-shadow: 4px 0 15px var(--red-glow);
+}
+
+/* Detalle de diseño: Muescas industriales */
+.collapseHandle::before,
+.collapseHandle::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  width: 2px;
+  height: 15%;
+  background: currentColor;
+  opacity: 0.4;
+}
+.collapseHandle::before { top: 10%; }
+.collapseHandle::after { bottom: 10%; }
+
+/* ===== COMPORTAMIENTO RESPONSIVE (MÓVIL) ===== */
+@media (max-width: 1024px) {
+  /* La sidebar se convierte en un overlay flotante */
+  .sidebarRoot.expanded {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 280px !important;
+    z-index: 1000;
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.9);
+  }
+
+  /* Ajuste del botón en móvil para que sea más fácil de tocar */
+  .collapseHandle {
+    width: 40px;
+    height: 45px;
+    right: -28px; /* Ajuste para que no se pierda el botón al colapsar */
+  }
+
+  /* Ocultamos elementos pesados en móvil si está colapsado para evitar distracciones */
+  .collapsed .collapsedDecor {
+    display: none;
+  }
+}
+
+/* ===== SOPORTE PARA MODO VERTICAL EN FOOTER (COLAPSADO) ===== */
+.miniFooter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.verticalMetric {
+  font-family: monospace;
+  font-size: 8px;
+  font-weight: 900;
+  color: var(--red);
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  opacity: 0.6;
+  letter-spacing: 1px;
+}
+
+/* ===== ANIMACIONES DE SISTEMA ===== */
+.pulseZap {
+  color: var(--red);
+  filter: drop-shadow(0 0 5px var(--red-glow));
+  animation: pulse 1.5s infinite;
+}
+
+.flickerActivity {
+  color: var(--red-deep);
+  animation: flicker 3s infinite;
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 0.2; }
+  5% { opacity: 0.8; }
+  10% { opacity: 0.3; }
+  15% { opacity: 0.9; }
+  25% { opacity: 0.2; }
+}
+
+/* Posicionamiento del handle para el lado izquierdo */
+.handleWrapper {
+  position: absolute;
+  left: 0; /* Punto de anclaje inicial */
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1100; /* Por encima de la sidebar */
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Cuando la sidebar está abierta, el botón se desplaza al borde derecho de la misma */
+.expanded + .handleWrapper, 
+.sidebarRoot:not(.collapsed) ~ .handleWrapper {
+  left: 280px; /* Ancho de la sidebar abierta */
+}
+
+/* En modo colapsado, el botón se queda en el borde de la mini-barra */
+.isCollapsed {
+  left: 64px; /* Ancho de la sidebar colapsada */
+}
+
+.handleContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* Overlay móvil */
+.mobileOverlay {
+  position: fixed !important;
+  left: 0 !important;
+  top: 0 !important;
+  height: 100vh !important;
+  width: 280px !important;
+  z-index: 1050 !important;
+  box-shadow: 10px 0 50px rgba(0, 0, 0, 0.95) !important;
+}
+
+@media (max-width: 1024px) {
+  .handleWrapper {
+    left: 10px; /* Botón flotante inicial en móvil */
+  }
+  .isCollapsed {
+    left: 10px;
+  }
+}

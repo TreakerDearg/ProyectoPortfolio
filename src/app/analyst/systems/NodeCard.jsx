@@ -1,122 +1,91 @@
 "use client";
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useRouter } from 'next/navigation';
-import { ExternalLink, Database } from 'lucide-react';
-import { useAnalysis } from '../context/AnalysisContext';
-import styles from '@/app/analyst/styles/Styles-C/nodeCard.module.css';
+import React, { useState, useMemo, useCallback } from "react";
+import { motion } from "framer-motion";
+import { useAnalysis } from "../context/AnalysisContext";
 
-const DataBrief = ({ node, onNavigate }) => (
-  <div className={styles.dataBrief}>
-    <div className={styles.briefDivider} />
-    <button 
-      onPointerDown={(e) => e.stopPropagation()} // Evita que el drag inicie al tocar el botón
-      onClick={(e) => {
-        e.stopPropagation();
-        onNavigate(node.path);
-      }}
-      className={styles.accessBtn}
-    >
-      <span className={styles.btnText}>OPEN_PROJECT</span>
-      <ExternalLink size={10} />
-    </button>
-  </div>
-);
+import ArasakaNode from "./nodes/ArasakaNode";
+import MilitechNode from "./nodes/MilitechNode";
+import KangTaoNode from "./nodes/KangTaoNode";
+import {NeutralNode} from "./nodes/NeutralNode";
 
-export const NodeCard = ({ node, handleDrag }) => {
+import styles from "../styles/Styles-C/nodeCard.module.css";
+
+export const NodeCard = ({
+  node,
+  handleDrag = () => {},
+  isSelected,
+  isSystemAlert,
+}) => {
   const [isHovered, setIsHovered] = useState(false);
-  const { setSelectedNode, selectedNode, setIsAnalyzing } = useAnalysis();
-  const router = useRouter();
+  const { setSelectedNode } = useAnalysis();
 
-  const isSelected = selectedNode?.id === node.id;
+  // Selecciona el componente correcto según la compañía
+  const BrandSkin = useMemo(() => {
+    switch ((node.company || "").toLowerCase()) {
+      case "arasaka":
+        return ArasakaNode;
+      case "militech":
+        return MilitechNode;
+      case "kang_tao":
+        return KangTaoNode;
+      case "neutral":
+        return NeutralNode;
+      default:
+        return NeutralNode;
+    }
+  }, [node.company]);
 
-  const handleQuickNavigate = (path) => {
-    setIsAnalyzing(true);
-    setTimeout(() => router.push(path), 800);
-  };
+  // Función interna para drag
+  const onDragInternal = useCallback(
+    (e, info) => handleDrag(node.id, info.delta),
+    [node.id, handleDrag]
+  );
 
   return (
     <motion.div
       drag
       dragMomentum={false}
-      // Sincronización con el Contexto usando el desplazamiento delta
-      onDrag={(e, info) => {
-        handleDrag(node.id, info.delta);
-      }}
+      onDrag={onDragInternal}
       onClick={(e) => {
         e.stopPropagation();
         setSelectedNode(node);
       }}
-      // Usamos x/y para transformaciones de GPU suaves
-      style={{ 
-        x: node.x, 
-        y: node.y, 
-        position: 'absolute',
-        top: 0,
-        left: 0
+      style={{
+        x: node.x,
+        y: node.y,
+        position: "absolute",
+        zIndex: isSelected ? 100 : 20,
+        cursor: isHovered ? "grab" : "default",
       }}
-      animate={{ 
-        scale: isSelected ? 1.1 : 1,
-        zIndex: isSelected || isHovered ? 100 : 10
-      }}
-      whileDrag={{ scale: 0.95 }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={styles.nodeWrapper}
+      title={node.tooltip || ""}
+      className={`${styles.nodeWrapper} ${
+        isSelected ? styles.wrapperSelected : ""
+      }`}
     >
-      <div className={styles.nodeContainer}>
-        {isSelected && <div className={styles.selectionScanner} />}
+      {/* Componente de marca */}
+      <BrandSkin
+        node={node}
+        isSelected={isSelected}
+        isHovered={isHovered}
+        isSystemAlert={isSystemAlert}
+        handleDrag={handleDrag} // <-- seguro para NeutralNode
+      />
 
-        <div 
-          className={`${styles.nodeOrb} ${isSelected ? styles.selectedOrb : ''}`}
-          style={{ '--node-color': node.color }}
-        >
-          <div className={styles.innerBrackets} />
-          <div className={styles.coreContainer}>
-            <div className={styles.core} style={{ backgroundColor: node.color }} />
-            <div className={styles.corePulse} style={{ backgroundColor: node.color }} />
-          </div>
-        </div>
-        
-        <div className={`${styles.nodeLabel} ${isSelected ? styles.selectedLabel : ''}`}>
-          <span className={styles.labelPrefix}>ID_</span>
-          {node.name}
-        </div>
-
-        <AnimatePresence>
-          {isHovered && (
-            <motion.div
-              initial={{ opacity: 0, x: 20, filter: 'blur(5px)' }}
-              animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
-              exit={{ opacity: 0, x: 10 }}
-              className={styles.infoTooltip}
-            >
-              <div className={styles.tooltipHeader}>
-                <Database size={12} className="text-slate-500" />
-                <span className={styles.protocolText}>SIGNAL_0x{node.id}</span>
-                <div className={styles.activeLed} />
-              </div>
-              
-              <div className={styles.tooltipBody}>
-                <div className={styles.dataRow}>
-                  <span className={styles.dataLabel}>LOAD:</span>
-                  <span className={styles.dataValue}>{node.metrics?.load || '24%'}</span>
-                </div>
-              </div>
-
-              <DataBrief node={node} onNavigate={handleQuickNavigate} />
-
-              <div className={styles.loadingTrack}>
-                <motion.div 
-                  animate={{ x: ["-100%", "100%"] }}
-                  transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
-                  className={styles.loadingFill}
-                />
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+      {/* Glow de selección */}
+      {isSelected && (
+        <motion.div
+          layoutId="selectionGlow"
+          className={styles.selectionGlow}
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          style={{
+            boxShadow: `0 0 20px ${node.color || "var(--primary-glow)"}`,
+            borderColor: node.color || "var(--primary)",
+          }}
+        />
+      )}
     </motion.div>
   );
 };

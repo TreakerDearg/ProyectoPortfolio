@@ -1,21 +1,38 @@
 'use client';
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { 
-  Terminal, 
-  Cpu, 
-  Hash, 
+import React, { useState, useEffect, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
+import {
+  Terminal,
+  Cpu,
   Globe,
   Activity,
   Zap,
   ShieldCheck,
-  Radio
+  Radio,
+  AlertTriangle,
+  Skull
 } from 'lucide-react';
-import ExitButton from '../ui/ExitButton'; 
-import styles from '@/app/analyst/styles/header.module.css'; // Usando CSS Modules
+import ExitButton from '../ui/ExitButton';
+import styles from '../styles/header.module.css';
 
-export const Header = () => {
-  const [sysTime, setSysTime] = useState("");
+// Hook para detectar preferencia de movimiento reducido
+const usePrefersReducedMotion = () => {
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReducedMotion(mediaQuery.matches);
+    const handler = (e) => setPrefersReducedMotion(e.matches);
+    mediaQuery.addEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler);
+  }, []);
+  return prefersReducedMotion;
+};
+
+export const Header = ({ isOverclocked = false }) => {
+  const [sysTime, setSysTime] = useState('');
+  const [showTooltip, setShowTooltip] = useState(null);
+  const router = useRouter();
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -25,16 +42,45 @@ export const Header = () => {
     return () => clearInterval(timer);
   }, []);
 
+  // Datos de telemetría con tooltips
+  const telemetryItems = useMemo(
+    () => [
+      { label: 'CPU', val: '24%', icon: Cpu, color: 'text-sky-400', desc: 'Central Processing Unit load' },
+      { label: 'SEC', val: 'ENCRYPTED', icon: ShieldCheck, color: 'text-emerald-400', desc: 'Security protocol status' },
+      { label: 'NET', val: 'V-SAT_ACTIVE', icon: Globe, color: 'text-purple-400', desc: 'Network uplink' },
+      { label: 'PWR', val: 'STABLE', icon: Zap, color: 'text-amber-400', desc: 'Power supply' },
+      { label: 'LOG', val: 'LISTENING...', icon: Activity, color: 'text-slate-400', desc: 'System log activity' },
+    ],
+    []
+  );
+
+  const handleExit = () => {
+    router.push('/');
+  };
+
   return (
-    <header className={styles.headerRoot}>
-      <div className={styles.scanline} />
-      
-      {/* SECCIÓN IZQUIERDA: SISTEMA */}
-      <div className="flex items-center gap-6 z-10">
+    <header className={`${styles.headerRoot} ${isOverclocked ? styles.overclock : ''}`} aria-label="System header">
+      <div className={styles.scanline} aria-hidden="true" />
+
+      {/* Línea de energía decorativa (solo visible en desktop) */}
+      <div className={styles.powerLine} aria-hidden="true" />
+
+      {/* SECCIÓN IZQUIERDA: SISTEMA + CORPORACIÓN */}
+      <div className="flex items-center gap-2 sm:gap-6 z-10">
         <div className={styles.systemBadge}>
-          <div className={styles.pulseDot} />
-          <Terminal size={14} className="text-sky-400" />
-          <span className={styles.systemText}>ANALYST_NODE_01</span>
+          <div
+            className={`${styles.pulseDot} ${prefersReducedMotion ? 'opacity-50' : ''}`}
+            style={{ animation: prefersReducedMotion ? 'none' : undefined }}
+          />
+          <Terminal size={14} className="text-sky-400" aria-hidden="true" />
+          <span className={`${styles.systemText} ${styles.glitchHover}`}>ANALYST_NODE_01</span>
+        </div>
+
+        {/* Badge Corporativo (Arasaka/Militech) */}
+        <div className={styles.corpBadge}>
+          <Skull size={12} className="text-red-500" />
+          <span className={styles.corpName}>ARASAKA</span>
+          <span className={styles.corpSector}>• SEC-7</span>
         </div>
 
         <div className="hidden xl:flex items-center gap-4">
@@ -43,43 +89,69 @@ export const Header = () => {
             <span className="text-white font-bold">ROOT</span>
           </div>
           <div className={styles.metaData}>
-            <Radio size={10} className="text-emerald-500 animate-pulse" />
+            <Radio
+              size={10}
+              className={`text-emerald-500 ${prefersReducedMotion ? '' : 'animate-pulse'}`}
+              aria-hidden="true"
+            />
             <span className="text-emerald-500 font-bold uppercase">Linked</span>
           </div>
         </div>
       </div>
 
-      {/* SECCIÓN CENTRAL: TELEMETRÍA DINÁMICA */}
+      {/* SECCIÓN CENTRAL: TELEMETRÍA DINÁMICA CON TOOLTIPS */}
       <div className={styles.tickerContainer}>
         <div className={styles.tickerContent}>
-          {[
-            { label: 'CPU', val: '24%', icon: <Cpu size={12}/>, color: 'text-sky-400' },
-            { label: 'SEC', val: 'ENCRYPTED', icon: <ShieldCheck size={12}/>, color: 'text-emerald-400' },
-            { label: 'NET', val: 'V-SAT_ACTIVE', icon: <Globe size={12}/>, color: 'text-purple-400' },
-            { label: 'PWR', val: 'STABLE', icon: <Zap size={12}/>, color: 'text-amber-400' },
-            { label: 'LOG', val: 'LISTENING...', icon: <Activity size={12}/>, color: 'text-slate-400' }
-          ].map((item, i) => (
-            <div key={i} className={styles.tickerItem}>
-              <span className="opacity-40">{item.icon}</span>
-              <span className={styles.tickerLabel}>{item.label}</span>
-              <span className={`${item.color} font-black`}>[{item.val}]</span>
-            </div>
-          ))}
+          {telemetryItems.map((item, i) => {
+            const Icon = item.icon;
+            return (
+              <div
+                key={i}
+                className={styles.tickerItem}
+                onMouseEnter={() => setShowTooltip(i)}
+                onMouseLeave={() => setShowTooltip(null)}
+                title={item.desc} // fallback
+              >
+                <span className="opacity-40" aria-hidden="true">
+                  <Icon size={12} />
+                </span>
+                <span className={styles.tickerLabel}>{item.label}</span>
+                <span className={`${item.color} font-black`}>[{item.val}]</span>
+
+                {/* Tooltip personalizado (opcional) */}
+                {showTooltip === i && (
+                  <div className={styles.tooltip} role="tooltip">
+                    {item.desc}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
 
-      {/* SECCIÓN DERECHA: RELOJ Y EXIT */}
-      <div className="flex items-center gap-8 z-10">
+      {/* SECCIÓN DERECHA: RELOJ, OVERCLOCK INDICATOR Y EXIT */}
+      <div className="flex items-center gap-4 sm:gap-8 z-10">
+        {isOverclocked && (
+          <div className={styles.overclockIndicator}>
+            <AlertTriangle size={14} className="text-red-500 animate-pulse" />
+            <span className={styles.overclockText}>OVERCLOCK</span>
+          </div>
+        )}
+
         <div className={styles.clockWrapper}>
           <div className="flex flex-col items-end leading-none">
-            <span className={styles.timeText}>{sysTime}</span>
+            <span className={styles.timeText}>{sysTime || '--:--:--'}</span>
             <span className={styles.dateText}>GMT_REF_00</span>
           </div>
-          <div className={styles.statusIndicator} />
+          <div className={styles.statusIndicator} aria-hidden="true" />
         </div>
 
-        <ExitButton />
+        <ExitButton onClick={handleExit} aria-label="Exit system" />
       </div>
+
+      {/* Efecto de barrido de datos (solo decorativo) */}
+      <div className={styles.dataSweep} aria-hidden="true" />
     </header>
   );
 };

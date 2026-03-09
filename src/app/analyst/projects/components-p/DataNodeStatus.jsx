@@ -1,6 +1,6 @@
 // components-p/DataNodeStatus.jsx
 import { motion } from 'framer-motion';
-import styles from '@/app/analyst/styles/Proyectos-styles/DataNodeStatus.module.css';
+import styles from '../../styles/Proyectos-styles/DataNodeStatus.module.css';
 
 
 export const DataNodeStatus = () => (

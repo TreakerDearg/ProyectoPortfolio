@@ -1,52 +1,72 @@
 'use client';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
-import styles from '@/app/analyst/styles/F-styles/trafficGraph.module.css';
+import styles from '../../../styles/F-styles/trafficGraph.module.css';
+
+const usePrefersReducedMotion = () => {
+  const [prefersReducedMotion, setPrefersReducedMotion] = React.useState(false);
+  React.useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReducedMotion(mediaQuery.matches);
+    const handler = (e) => setPrefersReducedMotion(e.matches);
+    mediaQuery.addEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler);
+  }, []);
+  return prefersReducedMotion;
+};
 
 export const TrafficGraph = () => {
-  // Generamos una semilla fija para los delays iniciales
+  const prefersReducedMotion = usePrefersReducedMotion();
   const barCount = 18;
 
+  const bars = useMemo(() => {
+    return Array.from({ length: barCount }, (_, i) => ({
+      heights: [
+        `${20 + Math.random() * 30}%`,
+        `${60 + Math.random() * 40}%`,
+        `${10 + Math.random() * 50}%`
+      ],
+      colors: ['#0ea5e9', '#f43f5e', '#0ea5e9'],
+      delay: i * 0.08,
+      duration: 0.8 + Math.random() * 1.2
+    }));
+  }, []);
+
   return (
-    <div className={styles.graphContainer}>
-      {/* Capas de fondo técnicas */}
-      <div className={styles.gridOverlay} />
-      <div className={styles.scanline} />
-      
+    <div className={styles.graphContainer} role="region" aria-label="Network traffic graph">
+      <div className={styles.gridOverlay} aria-hidden="true" />
+      <div className={styles.scanline} aria-hidden="true" />
+
       <div className="flex items-end gap-[2px] h-full relative z-10 px-1">
-        {[...Array(barCount)].map((_, i) => (
+        {bars.map((bar, i) => (
           <motion.div
             key={i}
-            animate={{ 
-              height: [
-                `${20 + Math.random() * 30}%`, 
-                `${60 + Math.random() * 40}%`, 
-                `${10 + Math.random() * 50}%`
-              ],
-              opacity: [0.4, 1, 0.7],
-              backgroundColor: [
-                '#0ea5e9', // Sky normal
-                '#f43f5e', // Red alert peak
-                '#0ea5e9'
-              ]
-            }}
-            transition={{ 
-              duration: 0.8 + Math.random() * 1.2, 
-              repeat: Infinity, 
+            animate={
+              prefersReducedMotion
+                ? {}
+                : {
+                    height: bar.heights,
+                    opacity: [0.4, 1, 0.7],
+                    backgroundColor: bar.colors
+                  }
+            }
+            transition={{
+              duration: bar.duration,
+              repeat: Infinity,
               ease: "easeInOut",
-              delay: i * 0.08
+              delay: bar.delay
             }}
             className={styles.bar}
+            style={{ willChange: prefersReducedMotion ? 'auto' : 'height, opacity, background-color' }}
           />
         ))}
       </div>
 
-      {/* Metadatos del gráfico */}
       <div className={styles.metaOverlay}>
         <span className={styles.tag}>RX/TX_SCAN</span>
-        <div className={styles.bitRate}>
+        <div className={styles.bitRate} aria-live="polite">
           <motion.span
-            animate={{ opacity: [0, 1] }}
+            animate={prefersReducedMotion ? {} : { opacity: [0, 1] }}
             transition={{ repeat: Infinity, duration: 0.1, repeatType: "mirror" }}
           >
             ●

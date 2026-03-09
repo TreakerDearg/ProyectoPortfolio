@@ -1,7 +1,7 @@
 'use client'
 
 import TerminalLine from './TerminalLine'
-import s from '@/styles/CommandList.module.css'
+import s from '../../styles/CommandList.module.css'
 
 export default function CommandList({ commands = [] }) {
   // Generamos un timestamp simple para el look retro

@@ -1,13 +1,27 @@
-.mainContainer {
-  flex: 1;
+/* =========================================
+   CORE & TACTICAL VARIABLES
+========================================= */
+.container {
+  --bg-dark: #020203;
+  --accent-sky: #38bdf8;
+  --accent-purple: #a855f7;
+  --accent-red: #ef4444;
+  --panel-glass: rgba(8, 10, 15, 0.85);
+  --border-ui: rgba(56, 189, 248, 0.15);
+  --hud-padding: clamp(1rem, 3vw, 2rem);
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
   position: relative;
-  overflow: hidden;
-  background-color: #020203;
+  width: 100%;
+  height: 100%;
+  background: var(--bg-dark);
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  color: #fff;
 }
 
-/* --- CAPA ATMOSFÉRICA --- */
+/* ===== CAPA 0: ATMÓSFERA Y EFECTOS FX ===== */
 .atmosphere {
   position: absolute;
   inset: 0;
@@ -15,189 +29,249 @@
   z-index: 0;
 }
 
-.radarSweep {
-  position: absolute;
-  width: 200%;
-  height: 200%;
-  top: -50%;
-  left: -50%;
-  background: conic-gradient(from 0deg at 50% 50%, rgba(14, 165, 233, 0.05) 0deg, transparent 90deg);
-  animation: radarRotate 10s linear infinite;
-}
-
-@keyframes radarRotate {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-.coordinateGrid {
+.gridOverlay {
   position: absolute;
   inset: 0;
   background-image: 
-    radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.03) 1px, transparent 0);
-  background-size: 40px 40px;
+    linear-gradient(var(--border-ui) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border-ui) 1px, transparent 1px);
+  background-size: 50px 50px;
+  mask-image: radial-gradient(circle at center, black 20%, transparent 90%);
+  opacity: 0.5;
 }
 
-.vignette {
+.noiseBase {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at center, transparent 0%, #000 95%);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.04;
+  mix-blend-mode: overlay;
 }
 
-/* --- VIEWPORT & PANELS --- */
+.scanline {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.2) 50%);
+  background-size: 100% 4px;
+  z-index: 2;
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+/* ===== CAPA 1: VIEWPORT DINÁMICO ===== */
 .viewport {
-  position: absolute;
-  inset: 0;
+  position: relative;
+  flex: 1;
+  width: 100%;
+  height: 100%;
   z-index: 10;
 }
 
-.glassPanel {
-  background: rgba(13, 13, 15, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(20px);
-  border-radius: 4px;
+.dashboardContainer {
   width: 100%;
-  max-width: 1000px;
-  min-height: 500px;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 30px 60px rgba(0,0,0,0.5);
-}
-
-.dashboardView {
-  position: absolute;
-  inset: 0;
+  height: 100%;
+  padding: var(--hud-padding);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4rem;
-  overflow-y: auto;
+}
+
+.glassPanel {
+  width: 100%;
+  max-width: 1300px;
+  height: 85%;
+  background: var(--panel-glass);
+  backdrop-filter: blur(25px) saturate(150%);
+  border: 1px solid var(--border-ui);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(56, 189, 248, 0.05);
+  position: relative;
 }
 
 .panelHeader {
-  display: flex;
-  justify-content: space-between;
   padding: 0.75rem 1.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  background: rgba(255, 255, 255, 0.02);
-}
-
-.bracketLabel {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  font-weight: 900;
-  color: #0ea5e9;
-  letter-spacing: 0.3em;
+  border-bottom: 1px solid var(--border-ui);
   display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.pulseDot {
-  width: 5px;
-  height: 5px;
-  background: #0ea5e9;
-  border-radius: 50%;
-  animation: pulse 2s infinite;
-}
-
-/* --- HUD & UI --- */
-.hudLayer {
-  position: relative;
-  z-index: 50;
-  height: 100%;
-  pointer-events: none;
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
   justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(90deg, rgba(56, 189, 248, 0.05), transparent);
 }
 
-.syncIndicator {
-  background: rgba(168, 85, 247, 0.1);
-  border: 1px solid rgba(168, 85, 247, 0.2);
-  padding: 0.5rem 1.25rem;
-  border-radius: 2px;
+.headerTitle {
   display: flex;
   align-items: center;
   gap: 12px;
-  font-size: 9px;
-  font-weight: 900;
-  letter-spacing: 0.1em;
-}
-
-.loadingBar {
-  width: 20px;
-  height: 2px;
-  background: #a855f7;
-  position: relative;
-  overflow: hidden;
-}
-
-.loadingBar::after {
-  content: '';
-  position: absolute;
-  width: 50%;
-  height: 100%;
-  background: #fff;
-  animation: loadingMove 1s infinite;
-}
-
-@keyframes loadingMove {
-  from { left: -100%; }
-  to { left: 100%; }
-}
-
-.terminalStatus {
-  background: rgba(0, 0, 0, 0.9);
-  border: 1px solid rgba(168, 85, 247, 0.3);
-  border-left: 4px solid #a855f7;
-  padding: 1rem 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  pointer-events: auto;
-}
-
-.statusLabel {
-  font-size: 7px;
-  color: #a855f7;
-  font-weight: 900;
-  letter-spacing: 0.3em;
-}
-
-.activeViewName {
-  display: block;
-  font-size: 14px;
-  color: #fff;
-  font-weight: 900;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 3px;
   text-transform: uppercase;
-  font-style: italic;
-  letter-spacing: -0.02em;
+  color: var(--accent-sky);
 }
 
-.connectionBadge {
-  display: flex;
-  flex-direction: column;
-  font-size: 9px;
-  font-weight: 900;
-  line-height: 1.2;
+.panelBody {
+  flex: 1;
+  overflow: hidden; /* El scroll lo manejan los subcomponentes */
+  position: relative;
 }
 
-/* --- DECORACIÓN --- */
-.frameDecoration {
+/* ===== CAPA 2: HUD FLOTANTE ===== */
+.hudOverlay {
   position: absolute;
   inset: 0;
+  padding: var(--hud-padding);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   pointer-events: none;
-  z-index: 60;
-  border: 1px solid rgba(255, 255, 255, 0.03);
-  margin: 10px;
+  z-index: 100;
+  font-family: var(--font-mono);
 }
 
-.frameDecoration::before {
-  content: '';
+.hudOverlay section * { pointer-events: auto; }
+
+/* HUD TOP: Coordenadas e Info */
+.sysInfo {
+  margin-bottom: 1rem;
+  border-left: 2px solid var(--accent-sky);
+  padding-left: 10px;
+}
+
+.locTag {
+  font-size: 9px;
+  font-weight: 800;
+  color: var(--accent-sky);
+  display: block;
+}
+
+.coordinateDisplay {
+  display: flex;
+  gap: 10px;
+  font-size: 8px;
+  opacity: 0.5;
+}
+
+/* Status Group */
+.statusGroup {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.syncStatus {
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid var(--border-ui);
+  padding: 5px 12px;
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+
+.alertPulse {
+  color: var(--accent-red);
+  animation: pulseWarning 1.5s infinite;
+}
+
+/* HUD BOTTOM: Metadata y Terminal */
+.systemMetadata {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 1rem;
+  background: rgba(0,0,0,0.4);
+  padding: 8px 15px;
+  border-radius: 2px;
+}
+
+.metaItem { display: flex; flex-direction: column; }
+.metaLabel { font-size: 7px; opacity: 0.4; }
+.metaValue { font-size: 10px; font-weight: 700; }
+
+.terminalIndicator {
+  background: linear-gradient(90deg, rgba(56, 189, 248, 0.15), transparent);
+  border-left: 3px solid var(--accent-sky);
+  padding: 12px 25px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  backdrop-filter: blur(10px);
+}
+
+.terminalText { display: flex; flex-direction: column; }
+.terminalText .label { font-size: 8px; color: var(--accent-sky); font-weight: 900; }
+.terminalText .value { font-size: 16px; font-weight: 900; font-style: italic; }
+
+/* ===== EFECTO GLITCH (Triggered by state) ===== */
+.glitchActive .viewport {
+  animation: glitchSkew 0.3s cubic-bezier(.25, .46, .45, .94) both;
+}
+
+.glitchActive .atmosphere {
+  filter: hue-rotate(90deg) contrast(1.5);
+  opacity: 0.8;
+}
+
+/* ===== MARCO TÁCTICO ===== */
+.frameDecoration {
   position: absolute;
-  top: 0; left: 0; width: 40px; height: 40px;
-  border-top: 2px solid rgba(14, 165, 233, 0.4);
-  border-left: 2px solid rgba(14, 165, 233, 0.4);
+  inset: 15px;
+  border: 1px solid rgba(56, 189, 248, 0.05);
+  pointer-events: none;
+  z-index: 200;
+}
+
+.cornerTR, .cornerBL {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border-color: var(--accent-sky);
+  border-style: solid;
+  opacity: 0.4;
+}
+
+.cornerTR { top: -5px; right: -5px; border-width: 2px 2px 0 0; }
+.cornerBL { bottom: -5px; left: -5px; border-width: 0 0 2px 2px; }
+
+/* ===== ANIMACIONES ===== */
+@keyframes glitchSkew {
+  0% { transform: skew(0deg); }
+  20% { transform: skew(3deg); filter: blur(1px); }
+  40% { transform: skew(-3deg); }
+  60% { transform: skew(1deg); }
+  100% { transform: skew(0deg); }
+}
+
+@keyframes pulseWarning {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(0.9); }
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .hudOverlay { padding: 1rem; }
+  .sysInfo, .systemMetadata { display: none; }
+  .glassPanel { height: 90%; }
+  .terminalIndicator { padding: 8px 15px; }
+  .terminalText .value { font-size: 12px; }
+}
+
+/* MainSystem.module.css */
+
+.hudOverlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none; /* Esto permite que toques el mapa de fondo */
+  z-index: 100;
+}
+
+/* IMPORTANTE: Reactivamos el ratón para los elementos del HUD */
+.hudTop, .hudBottom {
+  pointer-events: auto; /* Permite interactuar con los widgets */
+}
+
+/* Asegúrate de que las capas decorativas no bloqueen nada */
+.atmosphere, .scanline, .noiseBase {
+  pointer-events: none !important;
+  z-index: 1; /* Mantenerlas al fondo o justo encima del mapa, pero debajo del HUD */
 }

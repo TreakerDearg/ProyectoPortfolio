@@ -8,7 +8,6 @@ export function SomaSearch({ onSearch, onClose }) {
   const [isScanning, setIsScanning] = useState(false);
   const [progress, setProgress] = useState(0);
 
-  // Debounce mejorado para simular red lenta de Pathos-II
   useEffect(() => {
     if (!query) {
       onSearch('');
@@ -20,10 +19,7 @@ export function SomaSearch({ onSearch, onClose }) {
     let progressInterval;
     if (query) {
       progressInterval = setInterval(() => {
-        setProgress(prev => {
-          if (prev >= 90) return prev; // se queda en 90 hasta que termine
-          return prev + 10;
-        });
+        setProgress(prev => (prev >= 90 ? prev : prev + 10));
       }, 150);
     }
 
@@ -31,7 +27,7 @@ export function SomaSearch({ onSearch, onClose }) {
       onSearch(query);
       setIsScanning(false);
       setProgress(100);
-      setTimeout(() => setProgress(0), 500); // resetea después
+      setTimeout(() => setProgress(0), 500);
     }, 800);
 
     return () => {
@@ -42,7 +38,7 @@ export function SomaSearch({ onSearch, onClose }) {
 
   return (
     <div className={styles.windowFrame}>
-      {/* BARRA DE TÍTULO WIN95 */}
+      {/* Barra de título */}
       <div className={styles.titleBar}>
         <div className={styles.titleContent}>
           <div className={styles.iconContainer}>
@@ -51,13 +47,13 @@ export function SomaSearch({ onSearch, onClose }) {
           <span className={styles.titleText}>NETWORK_FILE_FINDER.EXE</span>
         </div>
         <div className={styles.titleControls}>
-          <button onClick={onClose} className={styles.closeBtn} title="Cerrar">
+          <button onClick={onClose} className={styles.closeBtn} title="Cerrar" aria-label="Cerrar ventana">
             <X size={10} strokeWidth={4} />
           </button>
         </div>
       </div>
       
-      {/* CUERPO DE LA VENTANA */}
+      {/* Cuerpo */}
       <div className={styles.windowBody}>
         <div className={styles.topInfo}>
           <div className={styles.warningIndicator}>
@@ -74,13 +70,16 @@ export function SomaSearch({ onSearch, onClose }) {
           </div>
           
           <div className={styles.inputWrapper}>
-            <input 
+            <input
               autoFocus
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="AWAITING_INPUT..."
               className={styles.retroInput}
+              inputMode="search"
+              enterKeyHint="search"
+              aria-label="Campo de búsqueda"
             />
             <div className={styles.statusIndicator}>
               {isScanning ? (
@@ -91,11 +90,11 @@ export function SomaSearch({ onSearch, onClose }) {
             </div>
           </div>
 
-          {/* Barra de progreso estilo retro (opcional) */}
+          {/* Barra de progreso */}
           {isScanning && (
-            <div className={styles.progressBarContainer}>
-              <div 
-                className={styles.progressBarFill} 
+            <div className={styles.progressBarContainer} role="status" aria-live="polite">
+              <div
+                className={styles.progressBarFill}
                 style={{ width: `${progress}%` }}
               />
               <span className={styles.progressText}>{progress}%</span>
@@ -103,7 +102,7 @@ export function SomaSearch({ onSearch, onClose }) {
           )}
         </div>
 
-        {/* BARRA DE ESTADO INFERIOR */}
+        {/* Barra de estado */}
         <div className={styles.statusBar}>
           <div className={styles.statusField}>
             <HardDrive size={8} />

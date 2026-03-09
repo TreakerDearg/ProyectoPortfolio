@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import Cursor from './Cursor' // Importamos el cursor mejorado
-import s from '@/styles/CommandInput.module.css'
+import s from '../../styles/CommandInput.module.css'
 
 export default function CommandInput({ onCommand, isSystemBusy = false }) {
   const [value, setValue] = useState('')

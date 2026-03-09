@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useMemo, useEffect, useCallback, useRef, lazy, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Activity, Cpu as CpuIcon, Thermometer, Radio, X, 
@@ -9,19 +9,25 @@ import {
 
 import styles from '../../styles/inventory-styles/bunker.module.css';
 
-// Componentes modularizados
-import { BriefcaseModal } from './components/BriefcaseModal';
-import { TerminalPuzzle } from './components/TerminalPuzzle';
-import { SearchBar } from './components/SearchBar';
-import { FileGrid } from './components/FileGrid';
+// Carga diferida de componentes pesados (mejora el rendimiento inicial)
+const BriefcaseModal = lazy(() => import('./components/BriefcaseModal').then(mod => ({ default: mod.BriefcaseModal })));
+const TerminalPuzzle = lazy(() => import('./components/TerminalPuzzle').then(mod => ({ default: mod.TerminalPuzzle })));
+const SearchBar = lazy(() => import('./components/SearchBar').then(mod => ({ default: mod.SearchBar })));
+const FileGrid = lazy(() => import('./components/FileGrid').then(mod => ({ default: mod.FileGrid })));
 
-// Datos e iconos
+// Datos e iconos (importación estática para datos pequeños)
 import { METRO_FOLDERS, METRO_DRINKS, D6_SYSTEM_CONFIG } from './data/dataMetro';
 
 // Opciones para evitar hidratación
 const isBrowser = typeof window !== 'undefined';
 
-export default function InventoryPage() {
+// Componente de carga (fallback) - asegúrate de definir .loadingFallback en el CSS
+const LoadingFallback = () => (
+  <div className={styles.loadingFallback}>CARGANDO...</div>
+);
+
+// Componente principal memoizado para evitar re-renders innecesarios
+export default React.memo(function InventoryPage() {
   // --- ESTADOS DE INTERFAZ ---
   const [searchTerm, setSearchTerm] = useState('');
   const [activeCategory, setActiveCategory] = useState('ALL');
@@ -41,7 +47,7 @@ export default function InventoryPage() {
   const [mounted, setMounted] = useState(false);
   const mainScrollRef = useRef(null);
 
-  // Asegurar montaje en cliente
+  // Asegurar montaje en cliente (para evitar errores de hidratación)
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -54,7 +60,7 @@ export default function InventoryPage() {
     setSystemLog(prev => [`[${timestamp}] ${entry}`, ...prev].slice(0, 30));
   }, [mounted]);
 
-  // --- DETECCIÓN DE BREAKPOINTS ---
+  // --- DETECCIÓN DE BREAKPOINTS (responsive) ---
   useEffect(() => {
     if (!mounted) return;
     const handleResize = () => {
@@ -67,7 +73,7 @@ export default function InventoryPage() {
     return () => window.removeEventListener('resize', handleResize);
   }, [mounted]);
 
-  // --- SIMULACIÓN DE HARDWARE DINÁMICO (solo cliente) ---
+  // --- SIMULACIÓN DE HARDWARE DINÁMICO (optimizada con menor frecuencia) ---
   useEffect(() => {
     if (!mounted) return;
     const interval = setInterval(() => {
@@ -79,7 +85,7 @@ export default function InventoryPage() {
         setTimeout(() => setGlitchActive(false), 150);
         addLogEntry("WARNING: VOLTAGE_INSTABILITY_IN_SECTOR_D6");
       }
-    }, 4000);
+    }, 6000); // Intervalo más largo para reducir carga
     return () => clearInterval(interval);
   }, [addLogEntry, mounted]);
 
@@ -97,12 +103,12 @@ export default function InventoryPage() {
     return () => clearTimeout(timer);
   }, [addLogEntry, mounted]);
 
-  // --- MOTOR DE FILTRADO (sin aleatoriedad) ---
+  // --- MOTOR DE FILTRADO (memorizado) ---
   const filteredFolders = useMemo(() => {
     const term = searchTerm.toUpperCase().trim();
     return METRO_FOLDERS.map(folder => ({
       ...folder,
-      // Metadatos deterministas basados en id (evita aleatoriedad en servidor)
+      // Metadatos deterministas (evita aleatoriedad en servidor)
       integrity: 90 + (folder.id.charCodeAt(0) % 10),
       sector: D6_SYSTEM_CONFIG.radiation_level > 0.4 ? "HOT_ZONE" : "D6_ARCHIVE"
     })).filter(f => {
@@ -116,30 +122,37 @@ export default function InventoryPage() {
     });
   }, [searchTerm, activeCategory]);
 
-  // --- HANDLER PARA RESETEAR BÚSQUEDA ---
+  // Handlers memorizados para evitar recreaciones
   const handleResetSearch = useCallback(() => {
     setSearchTerm('');
     setActiveCategory('ALL');
   }, []);
 
-  // --- HANDLER PARA SELECCIONAR FOLDER ---
   const handleSelectFolder = useCallback((folder) => {
     setSelectedFolder(folder);
     addLogEntry(`ACCESSING_FILE: ${folder.title}`);
   }, [addLogEntry]);
 
-  // --- HANDLER PARA DESBLOQUEO ---
   const handleUnlock = useCallback((val) => {
     setIsUnlocked(val);
     addLogEntry(val ? "CRITICAL: SECURITY_BYPASS_DETECTED" : "SIGNAL_RESTORED");
     if (isMobile && val) setTimeout(() => setSidebarOpen(false), 800);
   }, [addLogEntry, isMobile]);
 
-  // Renderizado condicional para evitar hidratación
+  const handleCloseModal = useCallback(() => {
+    setSelectedFolder(null);
+  }, []);
+
+  const toggleSidebar = useCallback(() => {
+    setSidebarOpen(prev => !prev);
+  }, []);
+
+  // Renderizado condicional para evitar hidratación (hasta que el cliente esté listo)
   if (!mounted) {
-    return null; // O un esqueleto simple
+    return null; // Puedes poner un esqueleto simple si lo deseas
   }
 
+  // Pantalla de arranque (boot sequence)
   if (bootSequence) {
     return (
       <div className={styles.bootingScreen}>
@@ -179,6 +192,7 @@ export default function InventoryPage() {
     );
   }
 
+  // Interfaz principal
   return (
     <div className={`
       ${styles.terminalContainer} 
@@ -209,14 +223,16 @@ export default function InventoryPage() {
           </div>
 
           <div className={styles.headerCenter}>
-            <SearchBar 
-              searchTerm={searchTerm} 
-              setSearchTerm={setSearchTerm} 
-              isUnlocked={isUnlocked}
-              activeCategory={activeCategory}
-              setActiveCategory={setActiveCategory}
-              isMobile={isMobile} 
-            />
+            <Suspense fallback={<LoadingFallback />}>
+              <SearchBar 
+                searchTerm={searchTerm} 
+                setSearchTerm={setSearchTerm} 
+                isUnlocked={isUnlocked}
+                activeCategory={activeCategory}
+                setActiveCategory={setActiveCategory}
+                isMobile={isMobile} 
+              />
+            </Suspense>
           </div>
 
           <div className={styles.headerRight}>
@@ -247,10 +263,12 @@ export default function InventoryPage() {
                 <span>{isUnlocked ? 'ENCRYPTION_BYPASSED' : 'SECURITY_OVERRIDE'}</span>
               </div>
               <div className={styles.modBody}>
-                <TerminalPuzzle 
-                  isUnlocked={isUnlocked} 
-                  onUnlock={handleUnlock} 
-                />
+                <Suspense fallback={<LoadingFallback />}>
+                  <TerminalPuzzle 
+                    isUnlocked={isUnlocked} 
+                    onUnlock={handleUnlock} 
+                  />
+                </Suspense>
               </div>
             </div>
 
@@ -271,12 +289,14 @@ export default function InventoryPage() {
 
         {/* EXPLORADOR DE ARCHIVOS */}
         <main ref={mainScrollRef} className={styles.fileExplorer}>
-          <FileGrid 
-            items={filteredFolders} 
-            isUnlocked={isUnlocked} 
-            onSelectItem={handleSelectFolder}
-            onResetSearch={handleResetSearch} // Pasamos el reset para vista vacía
-          />
+          <Suspense fallback={<LoadingFallback />}>
+            <FileGrid 
+              items={filteredFolders} 
+              isUnlocked={isUnlocked} 
+              onSelectItem={handleSelectFolder}
+              onResetSearch={handleResetSearch}
+            />
+          </Suspense>
         </main>
       </div>
 
@@ -284,11 +304,12 @@ export default function InventoryPage() {
       <AnimatePresence>
         {isMobile && (
           <motion.button
+            key="fab"
             initial={{ scale: 0, y: 100 }}
             animate={{ scale: 1, y: 0 }}
             exit={{ scale: 0, y: 100 }}
             className={`${styles.floatingSecurityBtn} ${sidebarOpen ? styles.fabActive : ''}`}
-            onClick={() => setSidebarOpen(!sidebarOpen)}
+            onClick={toggleSidebar}
             aria-label={sidebarOpen ? "Cerrar panel" : "Abrir panel de seguridad"}
           >
             {sidebarOpen ? <X size={24} /> : (
@@ -327,14 +348,16 @@ export default function InventoryPage() {
       {/* MODAL DEL BRIEFCASE */}
       <AnimatePresence>
         {selectedFolder && (
-          <BriefcaseModal 
-            folder={selectedFolder} 
-            isUnlocked={isUnlocked} 
-            drinks={METRO_DRINKS[selectedFolder.contentKey] || []}
-            onClose={() => setSelectedFolder(null)} 
-          />
+          <Suspense fallback={null}>
+            <BriefcaseModal 
+              folder={selectedFolder} 
+              isUnlocked={isUnlocked} 
+              drinks={METRO_DRINKS[selectedFolder.contentKey] || []}
+              onClose={handleCloseModal} 
+            />
+          </Suspense>
         )}
       </AnimatePresence>
     </div>
   );
-}
+});

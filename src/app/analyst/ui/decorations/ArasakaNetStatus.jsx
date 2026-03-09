@@ -1,125 +1,190 @@
 'use client';
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { TrendingUp, Activity } from 'lucide-react';
-import '../../styles/arasakaStatus.css';
 
-// Subcomponente interno de Métricas de Ventas
-const ArasakaSalesMetric = () => {
-  // Simulación de fluctuación de valor
-  const [value, setValue] = useState(842.9);
-  
-  useEffect(() => {
-    const interval = setInterval(() => {
-      // Pequeña fluctuación aleatoria
-      const change = (Math.random() - 0.4) * 0.5;
-      setValue(prev => Number((prev + change).toFixed(1)));
-    }, 2000);
-    return () => clearInterval(interval);
-  }, []);
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  ChevronLeft, ChevronRight, TrendingUp, TrendingDown,
+  Shield, Target, Database, Radio, Lock, Server, 
+  BarChart3, Zap, ShieldAlert, Fingerprint, Activity
+} from 'lucide-react';
 
-  return (
-    <div className="mt-3 pt-2 border-t border-red-900/30 relative">
-      {/* Etiqueta de Sección */}
-      <div className="flex justify-between items-center mb-1">
-         <span className="text-[6px] font-mono text-red-500/80 tracking-widest uppercase">Global_Revenue_Stream</span>
-         <span className="text-[6px] font-mono text-white/40">Q3_FY2077</span>
-      </div>
+import { CORPORATE_DATA, CORPORATE_EVENTS } from '../../data/corporateData';
+import '../../styles/arasakaWarBoard.css';
 
-      {/* Valor Principal Gigante */}
-      <div className="flex items-baseline gap-1 relative z-10">
-         <span className="text-[10px] text-red-500 font-bold mr-0.5">¥</span>
-         <span className="text-xl font-black text-white font-arasaka tracking-tighter shadow-red-glow">
-            {value}<span className="text-red-600 text-sm">T</span>
-         </span>
-         
-         {/* Indicador de tendencia */}
-         <div className="ml-auto flex items-center gap-1 bg-red-900/20 px-1.5 py-0.5 rounded border border-red-500/20">
-            <TrendingUp size={10} className="text-red-500" />
-            <span className="text-[8px] font-mono text-red-400 font-bold">+2.4%</span>
-         </div>
-      </div>
-
-      {/* Gráfico de Barras (Micro-Trading) */}
-      <div className="flex items-end gap-[1px] h-6 mt-1 opacity-70">
-         {[...Array(20)].map((_, i) => (
-           <motion.div
-             key={i}
-             animate={{ 
-               height: [Math.random() * 60 + 20 + "%", Math.random() * 90 + 10 + "%"],
-               backgroundColor: Math.random() > 0.9 ? "#fff" : "#dc2626" 
-             }}
-             transition={{ duration: 0.8, repeat: Infinity, repeatType: "reverse", delay: i * 0.05 }}
-             className="w-full bg-red-600/80 rounded-[1px]"
-           />
-         ))}
-      </div>
-      
-      {/* Detalle decorativo Kanji (Beneficio/Profit) */}
-      <div className="absolute right-0 bottom-8 text-[30px] opacity-[0.07] text-red-500 font-black pointer-events-none select-none z-0">
-        利益
-      </div>
-    </div>
-  );
+const STATUS_CONFIG = {
+  allied: { label: 'STRATEGIC_PARTNER', color: '#22c55e', bg: 'rgba(34, 197, 94, 0.12)' },
+  watched: { label: 'SURVEILLANCE_ACTIVE', color: '#eab308', bg: 'rgba(234, 179, 8, 0.12)' },
+  hostile: { label: 'TARGET_ACQUIRED', color: '#ef4444', bg: 'rgba(239, 68, 68, 0.12)' },
+  collapsing: { label: 'TOTAL_LIQUIDATION', color: '#7f1d1d', bg: 'rgba(127, 29, 29, 0.25)' }
 };
 
-export const ArasakaNetStatus = () => {
+export const ArasakaWarBoard = () => {
+  const [index, setIndex] = useState(0);
+  const [isGlitching, setIsGlitching] = useState(false);
+  const total = CORPORATE_DATA.length;
+  const corp = CORPORATE_DATA[index];
+
+  // Efecto visual de interferencia al cambiar de objetivo
+  useEffect(() => {
+    setIsGlitching(true);
+    const timer = setTimeout(() => setIsGlitching(false), 300);
+    return () => clearTimeout(timer);
+  }, [index]);
+
+  const globalDominance = useMemo(() => {
+    const totalCap = CORPORATE_DATA.reduce((acc, c) => acc + c.marketCap, 0);
+    const alliedCap = CORPORATE_DATA
+      .filter(c => c.status === 'allied')
+      .reduce((acc, c) => acc + c.marketCap, 0);
+    return Math.min(100, Math.floor((alliedCap / totalCap) * 100));
+  }, []);
+
+  const marketSentiment = globalDominance > 60 ? 'DOMINANT' : 'CONTESTED';
+  
+  const takeoverProb = useMemo(() => {
+    if (corp.status === 'allied') return 5;
+    if (corp.status === 'collapsing') return 94;
+    return corp.status === 'hostile' ? 65 : 35;
+  }, [corp.status]);
+
+  const recentEvent = useMemo(() => 
+    CORPORATE_EVENTS.find(e => e.corpId === corp.id), 
+  [corp.id]);
+
+  const next = useCallback(() => setIndex(prev => (prev + 1) % total), [total]);
+  const prev = useCallback(() => setIndex(prev => (prev - 1 + total) % total), [total]);
+
+  const statusInfo = STATUS_CONFIG[corp.status] || STATUS_CONFIG.watched;
+
   return (
-    <div className="arasaka-container mt-6 mx-2 p-3 relative overflow-hidden group">
-      {/* Fondo de rejilla táctica */}
-      <div className="absolute inset-0 bg-arasaka-grid opacity-20 pointer-events-none" />
+    <div className={`arasaka-board-container ${isGlitching ? 'terminal-glitch' : ''}`}>
+      {/* CAPAS ESTÉTICAS HUD */}
+      <div className="arasaka-grid-bg" />
+      <div className="arasaka-scan-line" />
       
-      {/* Cabecera del Módulo */}
-      <div className="flex justify-between items-end mb-3 border-b border-red-600/30 pb-1">
-        <div className="flex flex-col">
-          <span className="text-[6px] font-mono text-red-500/60 tracking-widest uppercase">Subnet_Link</span>
-          <span className="text-[10px] font-black text-white tracking-wider font-arasaka">
-            ARASAKA<span className="text-red-600">.CORP</span>
-          </span>
-        </div>
-        <div className="w-1.5 h-1.5 bg-red-600 animate-pulse shadow-[0_0_8px_#dc2626]" />
-      </div>
-
-      {/* Cuerpo Visual: Hexágono Giratorio */}
-      <div className="flex items-center gap-3 mb-2">
-        <div className="relative w-8 h-8 flex items-center justify-center shrink-0">
-           <motion.div 
-             animate={{ rotate: 360 }}
-             transition={{ duration: 10, ease: "linear", repeat: Infinity }}
-             className="absolute w-full h-full border border-dashed border-red-500/40 rounded-full"
-           />
-           <motion.div 
-             animate={{ rotate: -360 }}
-             transition={{ duration: 15, ease: "linear", repeat: Infinity }}
-             className="absolute w-3/4 h-3/4 border-2 border-l-transparent border-r-transparent border-red-600 rounded-full"
-           />
-        </div>
-
-        <div className="flex-1 flex flex-col gap-1">
-          <div className="flex justify-between text-[7px] font-mono text-slate-400">
-            <span>SEC_LVL</span>
-            <span className="text-red-400 font-bold">OMEGA</span>
-          </div>
-          <div className="w-full h-1 bg-gray-800 rounded-sm overflow-hidden">
-             <motion.div 
-               animate={{ width: ["10%", "90%", "40%", "100%"] }}
-               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-               className="h-full bg-red-600 shadow-[0_0_5px_#dc2626]"
-             />
+      {/* 1. HEADER: ESTADO DE RED */}
+      <header className="arasaka-header-v2">
+        <div className="system-branding">
+          <div className="system-text">
+            <span className="version">K-HUD v5.2</span>
+            <span className="protocol animate-pulse">LINK_STABLE</span>
           </div>
         </div>
-      </div>
+        <div className="dominance-gauge">
+          <div className="gauge-track">
+            <div className="gauge-fill" style={{ width: `${globalDominance}%` }} />
+          </div>
+          <span className="gauge-value">{globalDominance}%_DOM</span>
+        </div>
+      </header>
 
-      {/* --- AQUÍ INSERTAMOS LA NUEVA MÉTRICA DE VENTAS --- */}
-      <ArasakaSalesMetric />
+      {/* 2. SELECTOR DE OBJETIVO (DOSSIER) */}
+      <nav className="dossier-stepper">
+        <button onClick={prev} className="step-btn">
+          <ChevronLeft size={14} />
+        </button>
+        <div className="current-dossier">
+          <Fingerprint size={10} className="text-red-500 opacity-50" />
+          <span className="corp-id">{corp.symbol}</span>
+          <span className="pagination">[{index + 1}/{total}]</span>
+        </div>
+        <button onClick={next} className="step-btn">
+          <ChevronRight size={14} />
+        </button>
+      </nav>
 
-      {/* Decoración Kanji (Arasaka) */}
-      <div className="absolute top-1 right-1 opacity-20 text-[14px] leading-none font-black text-red-500 pointer-events-none select-none">
-        荒坂
-      </div>
-      
-      {/* Scanline Overlay */}
-      <div className="absolute inset-0 bg-scan-red opacity-10 pointer-events-none" />
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={corp.id}
+          className="panel-inner"
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: 10 }}
+          transition={{ duration: 0.2 }}
+        >
+          {/* 3. IDENTIDAD Y AMENAZA */}
+          <section className="identity-panel">
+            <h2 className="glitch-text" style={{ color: corp.color }}>
+              {corp.name}
+            </h2>
+            
+            <div className="status-row-v2">
+              <div className="status-indicator" style={{ '--accent': statusInfo.color }}>
+                <Activity size={10} className="pulse-icon" />
+                <span>{statusInfo.label}</span>
+              </div>
+              <div className="threat-tag">
+                <ShieldAlert size={10} />
+                <span>{corp.riskLevel}</span>
+              </div>
+            </div>
+          </section>
+
+          {/* 4. REJILLA TÁCTICA ADAPTADA (2x2 o 1x1 según espacio) */}
+          <div className="tactical-grid">
+            <div className="data-node">
+              <div className="node-label">NET_VALUATION</div>
+              <div className="node-value">{corp.marketCap}T</div>
+              <div className="node-sub">SHARE: {corp.marketShare}%</div>
+            </div>
+            <div className="data-node">
+              <div className="node-label">TRAJECTORY</div>
+              <div className={`node-value flex items-center gap-1 ${corp.trend === 'up' ? 'text-green-500' : 'text-red-500'}`}>
+                {corp.trend === 'up' ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
+                {corp.change}%
+              </div>
+              <div className="node-sub">ICE_STAB: {corp.networkIntegrity}%</div>
+            </div>
+          </div>
+
+          {/* 5. MÓDULO DE ABSORCIÓN (SLIM) */}
+          <section className="absorption-module">
+            <div className="module-header">
+              <div className="flex items-center gap-1">
+                <Target size={10} className="text-red-500" />
+                <span>ABSORPTION_PROB</span>
+              </div>
+              <span className="val-pct">{takeoverProb}%</span>
+            </div>
+            <div className="progress-segments">
+              {[...Array(15)].map((_, i) => (
+                <div 
+                  key={i} 
+                  className={`segment ${i / 15 < takeoverProb / 100 ? 'active' : ''}`}
+                  style={{ '--active-color': corp.color }}
+                />
+              ))}
+            </div>
+          </section>
+
+          {/* 6. INTEL FEED (ACCESIBLE Y LEGIBLE) */}
+          {recentEvent && (
+            <div className="intel-box-v2">
+              <div className="intel-header">
+                <span className="category">// {recentEvent.category.toUpperCase()}</span>
+                <span className="timestamp">{recentEvent.time}</span>
+              </div>
+              <p className="intel-body">{recentEvent.event}</p>
+              <div className={`impact-badge ${recentEvent.type}`}>
+                <Zap size={8} />
+                <span>IMPACT: {recentEvent.impact}</span>
+              </div>
+            </div>
+          )}
+
+          {/* 7. FOOTER DE DATOS DE SISTEMA */}
+          <footer className="dossier-footer">
+            <div className="footer-item">
+              <Server size={10} />
+              <span>{corp.meta.headquarters.split(',')[0].toUpperCase()}</span>
+            </div>
+            <div className="footer-item">
+              <Lock size={10} />
+              <span>{marketSentiment}</span>
+            </div>
+          </footer>
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 };

@@ -2,8 +2,8 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import ModuleCard from '@/components/Modules/ModuleCard'
-import s from '@/styles/RoleSelector.module.css'
+import ModuleCard from '../../components/Modules/ModuleCard'
+import s from '../../styles/RoleSelector.module.css'
 
 export default function RoleSelector({
   roles = [],

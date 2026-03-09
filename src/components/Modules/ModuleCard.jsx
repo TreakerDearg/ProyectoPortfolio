@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { memo, useCallback } from 'react'
-import s from '@/styles/ModuleCard.module.css'
+import s from '../../styles/ModuleCard.module.css'
 
 function ModuleCard({
   icon,

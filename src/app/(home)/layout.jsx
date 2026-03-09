@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import CoreVisualLayer from '@/components/core/CoreVisualLayer'
-import SystemLayout from '@/components/core/SystemLayout'
+import CoreVisualLayer from '../../components/core/CoreVisualLayer'
+import SystemLayout from '../../components/core/SystemLayout'
 
 export default function HomeLayout({ children }) {
   // 1. Usamos un estado de montaje para evitar discrepancias de hidratación

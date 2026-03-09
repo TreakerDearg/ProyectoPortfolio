@@ -1,0 +1,111 @@
+/* =========================================
+   NEUTRAL NODE - MODERNO Y CLARO
+========================================= */
+
+/* VARIABLES */
+:root {
+  --neutral-bg: #1f2937;       /* Gris oscuro */
+  --neutral-border: #374151;   /* Gris medio */
+  --neutral-hover: #4f46e5;    /* Violeta claro para hover */
+  --neutral-selected: #6366f1; /* Violeta más fuerte */
+  --neutral-text: #e5e7eb;     /* Texto claro */
+  --neutral-font: "Courier New", monospace;
+}
+
+/* --- ENVOLTORIO --- */
+.neutralNodeWrapper {
+  cursor: grab;
+  transition: all 0.2s ease;
+}
+
+/* --- CONTENEDOR PRINCIPAL --- */
+.neutralContainer {
+  width: 200px;
+  min-height: 90px;
+  background: var(--neutral-bg);
+  border: 1px solid var(--neutral-border);
+  border-radius: 8px;
+  padding: 6px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  transition: all 0.3s ease;
+}
+
+/* --- HOVER Y SELECCIÓN --- */
+.hovered {
+  border-color: var(--neutral-hover);
+  box-shadow: 0 0 15px var(--neutral-hover);
+}
+
+.selected {
+  border-color: var(--neutral-selected);
+  box-shadow: 0 0 20px var(--neutral-selected);
+}
+
+/* --- HEADER --- */
+.terminalHeader {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 4px;
+}
+
+.nodeId {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--neutral-text);
+  letter-spacing: 1px;
+}
+
+/* --- NOMBRE Y ESTADO --- */
+.content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nodeName {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--neutral-text);
+  text-transform: uppercase;
+}
+
+.nodeStatus {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 4px;
+  border-radius: 3px;
+  background: #374151;
+  color: var(--neutral-text);
+  text-transform: uppercase;
+}
+
+.nodeStatus.active { background: #10b981; }   /* Verde para activo */
+.nodeStatus.inactive { background: #f59e0b; } /* Amarillo para inactivo */
+.nodeStatus.error { background: #ef4444; }    /* Rojo para error */
+
+/* --- METRICS FOOTER --- */
+.metrics {
+  margin-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.metricLine {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--neutral-text);
+  font-weight: 500;
+}
+
+/* --- RESPONSIVE --- */
+@media(max-width:768px) {
+  .neutralContainer { width: 160px; min-height: 80px; padding: 4px 6px; }
+  .nodeName { font-size: 11px; }
+  .nodeStatus { font-size: 9px; }
+  .metricLine { font-size: 9px; }
+}

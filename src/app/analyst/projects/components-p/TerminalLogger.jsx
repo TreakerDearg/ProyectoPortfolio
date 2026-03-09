@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import styles from '@/app/analyst/styles//Proyectos-styles/TerminalLogger.module.css';
+import styles from '../../styles//Proyectos-styles/TerminalLogger.module.css';
 
 const LOG_MESSAGES = [
   "QUERY_PLAN_OPTIMIZED::0.002s",

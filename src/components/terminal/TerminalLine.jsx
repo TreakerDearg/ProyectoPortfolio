@@ -1,9 +1,9 @@
 'use client'
 
 import { useMemo } from 'react'
-import useTypewriter from '@/hooks/useTypewriter'
+import useTypewriter from '../../hooks/useTypewriter'
 import Cursor from './Cursor'
-import s from '@/styles/TerminalLine.module.css'
+import s from '../../styles/TerminalLine.module.css'
 
 export default function TerminalLine({
   prefix = '>',

@@ -1,6 +1,6 @@
 'use client'
 
-import { useSystemContext } from '@/hooks/useSystemContext'
+import { useSystemContext } from './useSystemContext'
 
 export default function useSystemState() {
   const {

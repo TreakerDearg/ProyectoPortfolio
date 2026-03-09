@@ -1,0 +1,338 @@
+:root {
+  --arasaka-red: #dc2626;
+  --arasaka-red-soft: rgba(220,38,38,0.4);
+  --arasaka-red-glow: rgba(220,38,38,0.65);
+  --arasaka-dark: #05070b;
+  --arasaka-panel: #0a0e14;
+  --arasaka-border: #1b2230;
+  --arasaka-text: #cfd6e6;
+  --arasaka-muted: #6c7486;
+  --arasaka-grid: rgba(255,255,255,0.03);
+  --font-mono: "Courier New", monospace;
+}
+
+/* ======================================================
+   CONTENEDOR PRINCIPAL DEL NODO
+====================================================== */
+.nodeContainer {
+  position: relative;
+  width: 240px;
+  height: 240px;
+  background: linear-gradient(145deg,#070a0f,#0b0f17);
+  border: 1px solid var(--arasaka-border);
+  border-radius: 12px;
+  overflow: hidden;
+  font-family: var(--font-mono);
+  color: var(--arasaka-text);
+  box-shadow:
+    0 0 30px rgba(0,0,0,0.7),
+    inset 0 0 20px rgba(0,0,0,0.8);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.nodeContainer:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 30px var(--arasaka-red-glow), inset 0 0 25px rgba(0,0,0,0.9);
+}
+
+/* ======================================================
+   HEADER CORPORATIVO
+====================================================== */
+.header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 26px;
+  background: #06080d;
+  border-bottom: 1px solid var(--arasaka-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 12px;
+  font-size: 10px;
+  letter-spacing: 1px;
+  z-index: 5;
+}
+
+.corp {
+  color: var(--arasaka-red);
+  font-weight: 700;
+}
+
+.security {
+  color: var(--arasaka-muted);
+}
+
+/* ======================================================
+   CHASSIS Y ESQUINAS
+====================================================== */
+.chassis {
+  position: absolute;
+  top: 26px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border: 1px solid var(--arasaka-grid);
+}
+
+.cornerTL, .cornerTR, .cornerBL, .cornerBR {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-color: var(--arasaka-red-soft);
+  border-style: solid;
+}
+
+.cornerTL { top: 8px; left: 8px; border-width: 2px 0 0 2px; }
+.cornerTR { top: 8px; right: 8px; border-width: 2px 2px 0 0; }
+.cornerBL { bottom: 8px; left: 8px; border-width: 0 0 2px 2px; }
+.cornerBR { bottom: 8px; right: 8px; border-width: 0 2px 2px 0; }
+
+.serialNumber {
+  position: absolute;
+  top: 8px;
+  right: 14px;
+  font-size: 9px;
+  color: var(--arasaka-muted);
+  letter-spacing: 2px;
+}
+
+/* ======================================================
+   HEX LAYER Y GRID
+====================================================== */
+.hexLayer {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 14px 14px;
+  opacity: 0.35;
+}
+
+.circuitLayer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.gridLine {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--arasaka-grid), transparent);
+  top: 50%;
+}
+
+/* ======================================================
+   NUCLEO DE ENERGIA Y SYNC RING
+====================================================== */
+.syncRing {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+}
+
+.syncPulse {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 1px solid var(--arasaka-red-soft);
+  animation: syncPulse 4s linear infinite;
+}
+
+.core {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, #1a1f2b, var(--arasaka-dark));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 4;
+}
+
+.coreGlow {
+  position: absolute;
+  width: 120%;
+  height: 120%;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--arasaka-red-glow), transparent);
+  filter: blur(8px);
+  opacity: 0.6;
+  animation: corePulse 2s ease-in-out infinite;
+}
+
+.neuralActivity {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: conic-gradient(from 0deg, transparent, var(--arasaka-red-soft), transparent);
+  animation: rotateCore 6s linear infinite;
+  opacity: 0.4;
+}
+
+.energyPulse {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: var(--arasaka-red);
+  border-radius: 50%;
+  box-shadow: 0 0 12px var(--arasaka-red);
+}
+
+/* ======================================================
+   PANEL DE METRICS Y BOTON
+====================================================== */
+.nodeData {
+  position: absolute;
+  top: 60px;
+  left: 0;
+  right: 0;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-family: var(--font-mono);
+  z-index: 6;
+}
+
+.nodeTitle {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--arasaka-red);
+  text-shadow: 0 0 6px rgba(239,68,68,0.6);
+}
+
+.nodeCompany {
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--arasaka-muted);
+}
+
+.metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.metric {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 9px;
+  color: var(--arasaka-text);
+  gap: 6px;
+}
+
+.metricLabel { color: var(--arasaka-muted); }
+.metricValue { color: var(--arasaka-text); }
+
+.bar {
+  flex: 1;
+  height: 4px;
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+
+.barFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--arasaka-red), #b91c1c);
+  box-shadow: 0 0 6px var(--arasaka-red);
+  animation: loadPulse 2s infinite;
+}
+
+.connectButton {
+  margin-top: 6px;
+  padding: 4px 8px;
+  background: var(--arasaka-red);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+
+.connectButton:hover {
+  background: #b91c1c;
+  box-shadow: 0 0 8px var(--arasaka-red-glow);
+}
+
+/* ======================================================
+   STATUS LED
+====================================================== */
+.statusIndicator {
+  position: absolute;
+  bottom: 10px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+}
+
+.statusLed {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--arasaka-red);
+  box-shadow: 0 0 6px var(--arasaka-red);
+  animation: ledBlink 2s infinite;
+}
+
+.statusText {
+  letter-spacing: 1px;
+  color: var(--arasaka-text);
+}
+
+/* HOVER GLOW */
+.hoverGlow {
+  position: absolute;
+  inset: -4px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px var(--arasaka-red-glow);
+  pointer-events: none;
+}
+
+/* ALERT PULSE */
+.alertPulse {
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  box-shadow: 0 0 20px var(--arasaka-red-glow);
+  animation: pulseAlert 1.5s infinite;
+}
+
+/* ======================================================
+   ANIMATIONS
+====================================================== */
+@keyframes rotateCore { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+@keyframes corePulse { 0%,100%{opacity:.4;}50%{opacity:.9;} }
+@keyframes syncPulse { 0%{transform:scale(1);opacity:.6;}70%{transform:scale(1.4);opacity:0;}100%{opacity:0;} }
+@keyframes loadPulse {0%{filter:brightness(1);}50%{filter:brightness(1.4);}100%{filter:brightness(1);} }
+@keyframes ledBlink {0%,100%{opacity:.4;}50%{opacity:1;} }
+@keyframes pulseAlert { 0%,100%{box-shadow:0 0 20px var(--arasaka-red-glow);}50%{box-shadow:0 0 35px var(--arasaka-red-glow);} }

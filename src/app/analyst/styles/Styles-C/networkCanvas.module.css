@@ -1,103 +1,203 @@
+/* ==================== VARIABLES DE SISTEMA ==================== */
+:root {
+  --neon-blue: #38bdf8;
+  --neon-purple: #a855f7;
+  --neon-red: #ef4444;
+  --neon-green: #10b981;
+  --bg-space: #020617;
+  --grid-line: rgba(56, 189, 248, 0.08);
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --hud-bg: rgba(15,23,42,0.85);
+  --hud-border: rgba(255,255,255,0.08);
+  --button-bg: rgba(168,85,247,0.15);
+  --button-hover: rgba(168,85,247,0.3);
+  --overlay-vignette: rgba(2,6,23,0.9);
+  --overlay-scanline: rgba(0,0,0,0.15);
+}
+
+/* ==================== CONTENEDOR PRINCIPAL ==================== */
 .canvasWrapper {
   position: relative;
   width: 100%;
-  height: 100%;
-  min-height: 600px;
-  background: radial-gradient(
-    circle at 50% 50%, 
-    rgba(15, 23, 42, 0.3) 0%, 
-    transparent 80%
-  );
+  height: 100vh;
+  min-height: clamp(500px, 75vh, 900px);
+  background: var(--bg-space);
   overflow: hidden;
   cursor: crosshair;
+  border: 1px solid rgba(56,189,248,0.12);
+  touch-action: none;
+  box-shadow: inset 0 0 150px rgba(0,0,0,0.9);
+  isolation: isolate;
 }
 
-/* --- CAPA DE CONEXIONES --- */
+/* ==================== VIEWPORT ARRASTRABLE ==================== */
+.draggableViewport {
+  position: absolute;
+  width: 5000px;
+  height: 5000px;
+  top: 0;
+  left: 0;
+  cursor: grab;
+  transform-style: preserve-3d;
+  will-change: transform;
+  backface-visibility: hidden;
+  z-index: 0;
+}
+
+.draggableViewport:active { cursor: grabbing; }
+
+/* ==================== REJILLA ==================== */
+.gridLayer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: 
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 100px 100px;
+  background-position: center center;
+  z-index: 1;
+}
+
+.gridLayer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(56,189,248,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56,189,248,0.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.6;
+}
+
+/* ==================== CAPAS ==================== */
 .connectionsLayer {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  top: 0;
+  left: 0;
   pointer-events: none;
-  z-index: 5;
+  z-index: 10;
+  filter: drop-shadow(0 0 4px rgba(56,189,248,0.4));
 }
 
-/* --- CAPA DE NODOS --- */
 .nodesLayer {
   position: absolute;
-  inset: 0;
-  z-index: 10;
-}
-
-/* --- ELEMENTOS DE REFERENCIA (GRID & LÍNEAS) --- */
-.coordinateSystems {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.2;
-}
-
-.horizonLine {
-  position: absolute;
-  top: 50%;
+  top: 0;
   left: 0;
   width: 100%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(14, 165, 233, 0.5), transparent);
-}
-
-.verticalIndex {
-  position: absolute;
-  left: 50%;
-  top: 0;
-  width: 1px;
   height: 100%;
-  background: linear-gradient(180deg, transparent, rgba(14, 165, 233, 0.5), transparent);
+  z-index: 20;
 }
 
-/* --- LEYENDA TÉCNICA --- */
-.canvasLegend {
+/* ==================== HUD COMPACTO ==================== */
+.canvasInterface {
   position: absolute;
-  bottom: 20px;
-  left: 20px;
+  inset: 0;
+  padding: 1.5rem;
+  display: flex;
+  justify-content: flex-start;
+  gap: 1rem;
+  pointer-events: none;
+  z-index: 100;
+}
+
+.hudTop {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  z-index: 20;
-  pointer-events: none;
+  gap: 0.5rem;
 }
 
-.legendItem {
+.statsBox {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-width: 80px;
+  padding: 6px 10px;
+  background: var(--hud-bg);
+  border-left: 2px solid var(--neon-purple);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--neon-blue);
+  letter-spacing: 1px;
+  pointer-events: auto;
+}
+
+.statLabel { color: var(--neon-blue); opacity: 0.7; }
+.statValue { font-weight: 700; font-size: 14px; color: #fff; }
+
+.nominalText { color: var(--neon-green); text-shadow: 0 0 6px rgba(16,185,129,0.4); }
+.alertText { color: var(--neon-red); text-shadow: 0 0 8px rgba(239,68,68,0.6); }
+
+/* ==================== BOTONES DE ZOOM ==================== */
+.zoomControls {
+  position: absolute;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  z-index: 120;
+  pointer-events: auto;
+}
+
+.zoomBtn {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  border: 1px solid var(--hud-border);
+  background: var(--button-bg);
+  color: #fff;
+  font-weight: bold;
+  font-size: 18px;
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 8px;
-  font-weight: 900;
-  color: rgba(255, 255, 255, 0.4);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  background: rgba(0, 0, 0, 0.3);
-  padding: 4px 10px;
-  border-left: 2px solid rgba(255, 255, 255, 0.1);
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.legendDot {
-  width: 4px;
-  height: 4px;
-  background: #10b981;
-  border-radius: 50%;
-  box-shadow: 0 0 5px currentColor;
+.zoomBtn:hover {
+  background: var(--button-hover);
+  transform: scale(1.05);
 }
 
-/* --- DECORACIONES ADICIONALES --- */
-.canvasWrapper::after {
-  content: "TOP_VIEW_MODEL_A";
+/* ==================== OVERLAYS ==================== */
+.scanlineOverlay {
   position: absolute;
-  top: 20px;
-  right: 20px;
-  font-size: 8px;
-  color: rgba(255, 255, 255, 0.1);
-  font-family: var(--font-mono);
-  letter-spacing: 5px;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 50%, var(--overlay-scanline) 50%);
+  background-size: 100% 4px;
+  opacity: 0.25;
+  pointer-events: none;
+  z-index: 110;
+}
+
+.vignetteOverlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, transparent 40%, var(--overlay-vignette) 100%);
+  pointer-events: none;
+  z-index: 105;
+}
+
+/* ==================== ALERTAS ==================== */
+.systemAlert {
+  border-color: rgba(239,68,68,0.4);
+  animation: chromaticAberration 0.2s infinite alternate;
+}
+
+/* ==================== ANIMACIONES ==================== */
+@keyframes chromaticAberration {
+  0% { text-shadow: 2px 0 0 rgba(255,0,0,0.5), -2px 0 0 rgba(0,255,255,0.5); }
+  100% { text-shadow: -1px 0 0 rgba(255,0,0,0.5), 1px 0 0 rgba(0,255,255,0.5); }
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+  .canvasInterface { padding: 0.8rem; gap: 0.4rem; flex-direction: column; }
+  .statsBox { min-width: 60px; padding: 4px 6px; font-size: 10px; border-left-width: 1px; }
+  .statValue { font-size: 12px; }
+  .zoomControls { right: 1rem; bottom: 1rem; gap: 0.4rem; }
+  .zoomBtn { width: 36px; height: 36px; font-size: 16px; }
 }

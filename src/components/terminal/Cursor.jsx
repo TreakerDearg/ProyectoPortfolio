@@ -1,6 +1,6 @@
 'use client'
 
-import s from '@/styles/Cursor.module.css'
+import s from '../../styles/Cursor.module.css'
 
 export default function Cursor({ isBusy = false }) {
   return (

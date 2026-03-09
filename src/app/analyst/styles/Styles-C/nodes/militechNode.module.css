@@ -1,0 +1,309 @@
+/* ========================================
+   MILITECH NODE - GUERRABIOLÓGICO CYBERPUNK EXTREMO
+========================================= */
+
+/* --- VARIABLES DINÁMICAS --- */
+:root {
+  --node-color: #22c55e;        /* verde biológico base */
+  --node-glow: rgba(34,197,94,0.6);
+  --node-bg: #0a0d14;           /* fondo oscuro */
+  --node-border: rgba(16,185,129,0.2);
+  --node-mist: rgba(34,197,94,0.05);
+  --node-text: #e2e8f0;
+  --critical-color: #ef4444;
+  --high-color: #f59e0b;
+  --medium-color: #84cc16;
+  --low-color: #22c55e;
+  --metal-plate: rgba(30,30,35,0.6);
+  --scan-line: rgba(34,197,94,0.15);
+  --font-mono: "Courier New", monospace;
+}
+
+/* --- BASE NODE --- */
+.node {
+  position: relative;
+  width: 220px;
+  height: 140px;
+  font-family: var(--font-mono);
+  color: var(--node-text);
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+  perspective: 900px;
+  cursor: pointer;
+  background: linear-gradient(145deg, #0f141d, #0a0d14);
+  border: 1px solid var(--node-border);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.node:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 25px var(--node-glow);
+}
+
+/* --- CAPA BIOLOGICA / MIST --- */
+.bioLayer {
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+  background: var(--node-bg);
+  overflow: hidden;
+  border: 1px solid var(--node-border);
+}
+
+.organicTexture {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 30% 40%, var(--node-glow) 8%, transparent 60%),
+    radial-gradient(circle at 70% 60%, var(--node-glow) 8%, transparent 60%);
+}
+
+.bioMist {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, var(--node-mist), transparent);
+  filter: blur(12px);
+  opacity: 0.5;
+  animation: mistMove 10s linear infinite alternate;
+}
+
+@keyframes mistMove {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(4px); }
+  100% { transform: translateX(0); }
+}
+
+/* --- CORE BIOMÉCANO / NUCLEO --- */
+.core {
+  position: absolute;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--node-color), #065f46);
+  box-shadow: 0 0 20px var(--node-glow), inset 0 0 8px #000;
+  z-index: 4;
+  transition: box-shadow 0.3s ease;
+}
+
+.innerGlow {
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.6), transparent);
+  animation: glowPulse 1.5s infinite ease-in-out;
+}
+
+.metalPlate {
+  position: absolute;
+  inset: 12px;
+  border-radius: 50%;
+  background: var(--metal-plate);
+  box-shadow: inset 0 0 6px #000;
+}
+
+@keyframes glowPulse {
+  0%,100% { transform: scale(1); opacity:0.7; }
+  50% { transform: scale(1.1); opacity:1; }
+}
+
+/* --- MEMBRANA / LABEL --- */
+.membrane {
+  position: absolute;
+  bottom: 10px;
+  padding: 5px 10px;
+  background: rgba(2,6,23,0.85);
+  border: 1px solid rgba(16,185,129,0.25);
+  border-radius: 5px;
+  backdrop-filter: blur(2px);
+  z-index: 6;
+}
+
+.nodeLabel {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--node-color);
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+/* --- VENAS / CIRCUITOS --- */
+.veinSystem {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+.vein {
+  position: absolute;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(to bottom, transparent, var(--node-glow), transparent);
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 1px;
+}
+
+.vein:nth-child(2) { left: 25%; }
+.vein:nth-child(3) { left: 75%; }
+.vein:nth-child(4) { left: 40%; }
+
+.pumping {
+  animation: veinPulse 1.2s infinite ease-in-out;
+}
+
+@keyframes veinPulse {
+  0%,100% { opacity:0.3; }
+  50% { opacity:1; }
+}
+
+/* --- DNA HELIX --- */
+.dnaContainer {
+  position: absolute;
+  right: 14px;
+  top: 14px;
+  width: 8px;
+  height: 80px;
+  border: 1px solid rgba(16,185,129,0.2);
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.dna {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(to bottom, var(--node-color) 4px, transparent 4px, transparent 8px);
+  animation: dnaMove 3s linear infinite;
+}
+
+@keyframes dnaMove {
+  from { transform: translateY(-10px); }
+  to { transform: translateY(10px); }
+}
+
+.dnaProgress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--node-color);
+  box-shadow: 0 0 10px var(--node-color);
+  border-radius: 2px;
+}
+
+/* --- BIO LOAD BAR --- */
+.bioLoad {
+  position: absolute;
+  bottom: -10px;
+  width: 100%;
+  height: 6px;
+  background: rgba(15,23,42,0.9);
+  border: 1px solid rgba(16,185,129,0.2);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.bioLoadFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--node-color), #4ade80);
+  transition: width 0.3s ease;
+}
+
+/* --- SCAN / HUD --- */
+.bioScan {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, var(--scan-line), transparent);
+  opacity: 0;
+  border-radius: 6px;
+}
+
+.scanning {
+  animation: bioScanMove 2s linear infinite;
+}
+
+@keyframes bioScanMove {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100%); }
+}
+
+/* --- METRICS OVERLAY --- */
+.metricsOverlay {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 7;
+  background: rgba(2,6,23,0.85);
+  padding: 4px 6px;
+  border-radius: 4px;
+  font-size: 9px;
+  letter-spacing: 1px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  color: var(--node-color);
+  border: 1px solid rgba(16,185,129,0.25);
+  backdrop-filter: blur(2px);
+}
+
+.metricLine { font-weight: 600; }
+
+/* --- CONNECT BUTTON --- */
+.connectButtonContainer {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  z-index: 8;
+}
+
+.connectButton {
+  padding: 5px 10px;
+  font-size: 10px;
+  background: var(--node-color);
+  color: #020617;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+.connectButton:hover {
+  background: #4ade80;
+  transform: scale(1.05);
+}
+
+/* --- ALERTA CRÍTICA / BIO HAZARD --- */
+.bioHazard {
+  box-shadow: 0 0 35px rgba(239,68,68,0.3);
+  border: 1px solid rgba(239,68,68,0.35);
+}
+
+.hazardOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(239,68,68,0.1);
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: #ef4444;
+  z-index: 10;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+/* --- ESTADOS DE CARGA --- */
+.low .core { box-shadow: 0 0 15px var(--low-color); }
+.medium .core { box-shadow: 0 0 20px var(--medium-color); }
+.high .core { box-shadow: 0 0 25px var(--high-color); }
+.critical .core { box-shadow: 0 0 30px var(--critical-color); }
+
+/* --- NODO ACTIVO --- */
+.activeNode { filter: drop-shadow(0 0 15px var(--node-glow)); }

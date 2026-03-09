@@ -1,6 +1,6 @@
 'use client'
 
-import s from '@/styles/SystemLayout.module.css'
+import s from '../../styles/SystemLayout.module.css'
 
 export default function SystemLayout({ children }) {
   return (

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import s from '@/styles/BootLog.module.css'
+import s from '../../styles/BootLog.module.css'
 
 const LOG_DATA = [
   { type: 'ok', text: 'LOADING_KERNEL_v4.12.9_STABLE' },

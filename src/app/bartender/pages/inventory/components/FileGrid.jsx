@@ -1,13 +1,23 @@
 'use client';
-import React, { useMemo, useEffect, useState } from 'react';
+import React, { useMemo, useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShieldAlert, AlertTriangle, Layers, Zap, RotateCw } from 'lucide-react';
 import { InventoryItem } from './InventoryItem';
 import styles from '../../../styles/inventory-styles/FileGrid.module.css';
 
-export const FileGrid = ({ items, isUnlocked, onSelectItem, onResetSearch }) => {
+const sectionVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.1, duration: 0.4, ease: 'easeOut' }
+  })
+};
+
+const MemoizedInventoryItem = React.memo(InventoryItem);
+
+export const FileGrid = React.memo(({ items, isUnlocked, onSelectItem, onResetSearch }) => {
   const [isMounting, setIsMounting] = useState(false);
-  const [selectedId, setSelectedId] = useState(null);
 
   useEffect(() => {
     setIsMounting(true);
@@ -15,7 +25,6 @@ export const FileGrid = ({ items, isUnlocked, onSelectItem, onResetSearch }) => 
     return () => clearTimeout(timer);
   }, [items]);
 
-  // Agrupar items por categoría y ordenar categorías alfabéticamente
   const groupedItems = useMemo(() => {
     const groups = items.reduce((acc, item) => {
       const category = item.category || 'UNCATEGORIZED';
@@ -34,21 +43,10 @@ export const FileGrid = ({ items, isUnlocked, onSelectItem, onResetSearch }) => 
 
   const categories = Object.keys(groupedItems);
 
-  const handleSelect = (folder) => {
+  const handleSelect = useCallback((folder) => {
     if (folder.isLocked && !isUnlocked) return;
-    setSelectedId(folder.id);
     onSelectItem(folder);
-  };
-
-  // Variantes de animación para los sectores
-  const sectionVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: (i) => ({
-      opacity: 1,
-      y: 0,
-      transition: { delay: i * 0.1, duration: 0.4, ease: 'easeOut' }
-    })
-  };
+  }, [isUnlocked, onSelectItem]);
 
   if (items.length === 0) {
     return (
@@ -109,18 +107,18 @@ export const FileGrid = ({ items, isUnlocked, onSelectItem, onResetSearch }) => 
             </div>
 
             <div className={styles.gridWrapper}>
-              <div className={styles.autoGrid} role="grid" aria-label={`Archivos en sector ${cat}`}>
-                {groupedItems[cat].map((folder, index) => {
+              <div className={styles.responsiveGrid} role="grid" aria-label={`Archivos en sector ${cat}`}>
+                {groupedItems[cat].map((folder) => {
                   const isLocked = folder.isLocked && !isUnlocked;
-                  
                   return (
                     <motion.div
                       key={folder.id}
                       className={`${styles.folderEntry} ${isLocked ? styles.lockedEntry : styles.accessibleEntry}`}
                       onClick={() => handleSelect(folder)}
+                      layout
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: index * 0.04, duration: 0.3 }}
+                      transition={{ duration: 0.3 }}
                       whileHover={!isLocked ? { y: -5, transition: { duration: 0.2 } } : {}}
                       whileTap={!isLocked ? { scale: 0.98 } : {}}
                       role="gridcell"
@@ -132,7 +130,7 @@ export const FileGrid = ({ items, isUnlocked, onSelectItem, onResetSearch }) => 
                       </div>
 
                       <div className={styles.contentWrapper}>
-                        <InventoryItem 
+                        <MemoizedInventoryItem 
                           folderData={folder} 
                           isGlobalUnlocked={isUnlocked} 
                           onOpen={() => handleSelect(folder)}
@@ -160,4 +158,6 @@ export const FileGrid = ({ items, isUnlocked, onSelectItem, onResetSearch }) => 
       </AnimatePresence>
     </motion.div>
   );
-};
+});
+
+FileGrid.displayName = 'FileGrid';

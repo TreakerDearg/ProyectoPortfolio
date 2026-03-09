@@ -1,0 +1,161 @@
+.root {
+  background: rgba(15, 5, 5, 0.4);
+  border: 1px solid rgba(225, 29, 72, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* HEADER */
+.header {
+  padding: 10px;
+  background: rgba(225, 29, 72, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(225, 29, 72, 0.2);
+  position: relative;
+}
+
+.scannerLine {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: var(--red);
+  box-shadow: 0 0 10px var(--red);
+  animation: scanDown 4s infinite linear;
+}
+
+.titleGroup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mainTitle {
+  display: block;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  color: #fff;
+}
+
+.subTitle {
+  font-size: 7px;
+  color: #e11d48;
+  opacity: 0.6;
+}
+
+/* LISTA DE ARCHIVOS */
+.fileEntry {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+  position: relative;
+  transition: background 0.2s;
+}
+
+.fileEntry:hover {
+  background: rgba(225, 29, 72, 0.03);
+}
+
+.entryLeft {
+  display: flex;
+  gap: 12px;
+}
+
+.addressBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.address {
+  font-size: 8px;
+  color: #e11d48;
+  font-weight: bold;
+}
+
+.fileName {
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.fileMeta {
+  display: flex;
+  gap: 10px;
+  font-size: 7px;
+  margin-top: 2px;
+  align-items: center;
+}
+
+.statusBadge {
+  color: #e11d48;
+  border: 1px solid rgba(225, 29, 72, 0.3);
+  padding: 0 4px;
+  border-radius: 2px;
+  text-transform: uppercase;
+}
+
+/* SECTOR GRID */
+.sectorFooter {
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.sectorGrid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 2px;
+  margin-top: 6px;
+}
+
+.sectorCell {
+  height: 6px;
+  background: #111;
+  border-radius: 1px;
+}
+
+.gridContainer {
+  position: relative;
+}
+
+.gridOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 6px;
+  color: rgba(225, 29, 72, 0.2);
+  pointer-events: none;
+}
+
+/* ANIMACIONES */
+@keyframes scanDown {
+  0% { top: 0; opacity: 0; }
+  50% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+.glitchRow {
+  filter: hue-rotate(90deg);
+  transform: translateX(2px);
+  background: rgba(255, 0, 0, 0.1) !important;
+}
+
+.blinkDot {
+  width: 4px;
+  height: 4px;
+  background: #e11d48;
+  border-radius: 50%;
+  animation: blink 0.5s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}

@@ -1,0 +1,225 @@
+/* src/app/analyst/styles/terminalLiveFeed.css */
+
+/* =============================== */
+/* ROOT VARIABLES                  */
+/* =============================== */
+:root {
+  --live-bg-1: #060606;
+  --live-bg-2: #0b0b0f;
+  --live-border: rgba(255, 255, 255, 0.06);
+  --live-cyan: #00f0ff;
+  --live-purple: #a855f7;
+  --live-green: #22c55e;
+  --live-text: #e5e7eb;
+  --live-muted: #6b7280;
+  --live-glow: rgba(0, 240, 255, 0.25);
+  --live-font: 'JetBrains Mono', monospace;
+}
+
+/* =============================== */
+/* WRAPPER (SIDEBAR READY)        */
+/* =============================== */
+.terminal-live-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 220px;
+  border: 1px solid var(--live-border);
+  border-radius: 6px;
+  background: linear-gradient(180deg, var(--live-bg-1), var(--live-bg-2));
+  overflow: hidden;
+  font-family: var(--live-font);
+  position: relative;
+}
+
+/* subtle grid texture */
+.terminal-live-wrapper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 3px 3px;
+  opacity: 0.05;
+  pointer-events: none;
+}
+
+/* =============================== */
+/* HEADER                          */
+/* =============================== */
+.terminal-live-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0.8rem;
+  border-bottom: 1px solid var(--live-border);
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+}
+
+.terminal-live-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--live-cyan);
+  font-weight: 600;
+}
+
+.live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--live-green);
+  box-shadow: 0 0 6px var(--live-green);
+  animation: live-pulse 1.5s infinite;
+}
+
+/* pause button */
+.terminal-live-toggle {
+  background: transparent;
+  border: 1px solid var(--live-border);
+  color: var(--live-muted);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.terminal-live-toggle:hover {
+  border-color: var(--live-purple);
+  color: var(--live-purple);
+  box-shadow: 0 0 8px rgba(168, 85, 247, 0.3);
+}
+
+.terminal-live-toggle:focus-visible {
+  outline: 2px solid var(--live-cyan);
+  outline-offset: 2px;
+}
+
+/* =============================== */
+/* LOG CONTAINER                   */
+/* =============================== */
+.terminal-live-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  scroll-behavior: smooth;
+}
+
+/* scrollbar */
+.terminal-live-container::-webkit-scrollbar {
+  width: 3px;
+}
+
+.terminal-live-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* =============================== */
+/* LOG LINE                        */
+/* =============================== */
+.terminal-log-line {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 10px;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  word-break: break-word;
+  animation: log-fade-in 0.2s ease-out;
+}
+
+.terminal-log-time {
+  color: var(--live-muted);
+  min-width: 65px;
+  flex-shrink: 0;
+}
+
+.terminal-log-message {
+  color: var(--live-text);
+  font-weight: 500;
+}
+
+/* slight glow on new lines */
+.terminal-log-line:last-child .terminal-log-message {
+  color: var(--live-cyan);
+  text-shadow: 0 0 6px var(--live-glow);
+}
+
+/* =============================== */
+/* FOOTER                          */
+/* =============================== */
+.terminal-live-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.8rem;
+  border-top: 1px solid var(--live-border);
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.terminal-live-clear {
+  background: transparent;
+  border: 1px solid var(--live-border);
+  color: var(--live-muted);
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.terminal-live-clear:hover {
+  border-color: #ff003c;
+  color: #ff003c;
+  box-shadow: 0 0 8px rgba(255, 0, 60, 0.3);
+}
+
+.terminal-live-clear:focus-visible {
+  outline: 2px solid var(--live-cyan);
+  outline-offset: 2px;
+}
+
+.terminal-live-count {
+  font-size: 9px;
+  color: var(--live-muted);
+  letter-spacing: 0.2em;
+}
+
+/* =============================== */
+/* ANIMATIONS                      */
+/* =============================== */
+@keyframes live-pulse {
+  0% { opacity: 0.4; }
+  50% { opacity: 1; }
+  100% { opacity: 0.4; }
+}
+
+@keyframes log-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =============================== */
+/* REDUCED MOTION                  */
+/* =============================== */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

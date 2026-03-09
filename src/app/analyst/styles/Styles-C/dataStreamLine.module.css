@@ -1,62 +1,56 @@
-/* --- CONTENEDOR DE GRUPO --- */
+/* ================= CONTENEDOR DE GRUPO ================= */
 .streamGroup {
   pointer-events: none;
-  /* Animación de respiración global más sutil */
+  will-change: opacity, filter, transform;
   animation: breathe 10s ease-in-out infinite;
-  mix-blend-mode: screen; /* Mejora la fusión de colores con el fondo oscuro */
+  mix-blend-mode: normal; /* Evita colores raros en fondos oscuros */
 }
 
-/* --- CONDUCTO BASE (LA FIBRA) --- */
-.conduit {
+/* ================= CONDUCTO BASE (FIBRA ÓPTICA) ================= */
+.conduitBase {
   stroke-linecap: round;
-  opacity: 0.2;
+  opacity: 0.15;
   transition: stroke-width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  vector-effect: non-scaling-stroke;
 }
 
-/* --- FLUJO PRIMARIO (EL RUIDO DE FONDO) --- */
+/* ================= FLUJO CONTINUO ================= */
 .primaryFlux {
+  stroke-linecap: round;
   opacity: 0.4;
-  stroke-linecap: round;
-  /* Filtro de suavizado para que no se vea pixelado al moverse rápido */
   filter: blur(0.5px);
+  vector-effect: non-scaling-stroke;
 }
 
-/* --- IMPULSOS DE DATOS (PAQUETES) --- */
+/* ================= PULSOS DE DATOS ================= */
 .dataBit {
-  opacity: 0.9;
   stroke-linecap: round;
-  /* El resplandor se define en el SVG pero aquí reforzamos la intensidad */
+  opacity: 0.9;
   filter: drop-shadow(0 0 2px currentColor);
+  vector-effect: non-scaling-stroke;
 }
 
-/* --- CLASES DINÁMICAS (Cuando el nodo está seleccionado) --- */
+/* ================= HIT DE SELECCIÓN ================= */
 .selectedStream {
   opacity: 1 !important;
 }
 
-.selectedStream .conduit {
+.selectedStream .conduitBase {
   opacity: 0.5;
-  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.2));
+  filter: drop-shadow(0 0 5px rgba(255,255,255,0.2));
 }
 
 .selectedStream .dataBit {
-  stroke-width: 3px;
+  stroke-width: 3px; /* Ajustable según distancia */
   filter: drop-shadow(0 0 8px currentColor);
 }
 
-/* --- ANIMACIONES --- */
+/* ================= ANIMACIONES ================= */
 @keyframes breathe {
-  0%, 100% { 
-    opacity: 0.7; 
-    filter: brightness(1);
-  }
-  50% { 
-    opacity: 1; 
-    filter: brightness(1.3);
-  }
+  0%, 100% { opacity: 0.7; filter: brightness(1); }
+  50% { opacity: 1; filter: brightness(1.3); }
 }
 
-/* Efecto de parpadeo aleatorio para simular 'ruido' en la señal */
 @keyframes signalFlicker {
   0%, 100% { opacity: 1; }
   92% { opacity: 1; }
@@ -66,6 +60,53 @@
   96% { opacity: 1; }
 }
 
+/* ================= INTERACCIÓN ================= */
 .streamGroup:active {
   animation: signalFlicker 0.2s infinite;
+}
+
+/* ================= RESPONSIVE / MÓVIL ================= */
+@media (max-width: 640px) {
+  .streamGroup {
+    animation: none; /* Mejor rendimiento */
+  }
+  .conduitBase,
+  .primaryFlux,
+  .dataBit {
+    stroke-width: 1px; /* Reducir grosor */
+  }
+  .selectedStream .dataBit {
+    stroke-width: 2px;
+  }
+}
+
+/* ================= PREFIERE MOVIMIENTO REDUCIDO ================= */
+@media (prefers-reduced-motion: reduce) {
+  .streamGroup {
+    animation: none !important;
+  }
+  .streamGroup:active {
+    animation: none !important;
+  }
+  .conduitBase,
+  .primaryFlux,
+  .dataBit {
+    transition: none !important;
+  }
+}
+
+/* ================= GLOW NEÓN (Opcional para nodos seleccionados o alerta) ================= */
+.streamGroup circle,
+.streamGroup path[data-bit] {
+  filter: drop-shadow(0 0 6px currentColor);
+}
+
+/* ================= EXTRA: PAQUETES REACTIVOS ================= */
+.dataBitPulse {
+  animation: pulseDataBit 1s ease-in-out infinite;
+}
+
+@keyframes pulseDataBit {
+  0%, 100% { stroke-opacity: 0.6; transform: scale(1); }
+  50% { stroke-opacity: 1; transform: scale(1.2); }
 }

@@ -1,108 +1,205 @@
-/* src/app/analyst/(analista)/layout.css */
+/* ==================================================
+   VARIABLES DE SISTEMA (ARASAKA PROTOCOL)
+================================================== */
+:root {
+  --aska-cyan: #00eaff;
+  --aska-cyan-dim: rgba(0, 234, 255, 0.15);
+  --aska-red: #ff003c; /* Solo para alertas */
+  --aska-bg: #05070a;
+  --aska-panel: rgba(10, 12, 18, 0.8);
+  --aska-border: rgba(0, 234, 255, 0.1);
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --transition-speed: 0.45s;
+  --transition-curve: cubic-bezier(0.16, 1, 0.3, 1);
+}
 
-/* 1. RESET RADICAL DE VARIABLES GLOBALES */
 .analyst-terminal-root {
-  /* Anulamos la variable del global para que no afecte a componentes internos */
-  --terminal-green: transparent !important;
-  --cyber-purple: #a855f7;
-  --cyber-sky: #0ea5e9;
-  --cyber-gold: #fbbf24;
-  --bg-dark: #0a0a0c;
-  --border-glow: rgba(139, 92, 246, 0.2);
-
-  /* Bloqueo de herencia del body */
-  background-color: var(--bg-dark) !important;
-  color: #cbd5e1 !important;
-  font-family: 'JetBrains Mono', 'Fira Code', monospace !important;
-  text-shadow: none !important; /* Mata el glow verde del global */
-  
-  position: fixed;
-  inset: 0;
-  z-index: 9999; /* Asegura estar por encima de cualquier otro elemento del home */
+  background-color: var(--aska-bg) !important;
+  color: #a0aec0 !important;
+  font-family: var(--font-mono) !important;
+  height: 100dvh;
+  width: 100%;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  position: relative;
 }
 
-/* 2. LIMPIEZA QUIRÚRGICA DE ELEMENTOS INTERNOS */
-/* Forzamos que nada dentro de la terminal herede el glow verde del global */
-.analyst-terminal-root *:not(.text-shadow-retro) {
-  text-shadow: none !important;
-  box-shadow: none;
-}
-
-/* Anulamos bordes verdes que Tailwind o el global puedan inyectar */
-.analyst-terminal-root div, 
-.analyst-terminal-root header, 
-.analyst-terminal-root footer, 
-.analyst-terminal-root aside {
-  border-color: rgba(255, 255, 255, 0.05);
-}
-
-/* 3. SCROLLBARS (Cyber-Scroll) */
-.analyst-terminal-root .cyber-scroll::-webkit-scrollbar {
-  width: 4px;
-}
-.analyst-terminal-root .cyber-scroll::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.3);
-}
-.analyst-terminal-root .cyber-scroll::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom, var(--cyber-purple), var(--cyber-sky));
-  border-radius: 10px;
-}
-
-/* 4. CAPAS DEL SISTEMA */
-.analyst-terminal-root .main-system-container {
-  background-color: var(--bg-dark);
-  background-image: 
-    linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%),
-    linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
-  background-size: 100% 4px, 3px 100%;
-}
-
-/* 5. BORDES CYBERPUNK */
-.analyst-terminal-root .border-cyber {
-  border: 1px solid var(--border-glow) !important;
-  box-shadow: inset 0 0 10px rgba(139, 92, 246, 0.05) !important;
-  backdrop-filter: blur(8px);
-}
-
-/* 6. RADAR SWEEP */
-.analyst-terminal-root .radar-sweep {
-  position: absolute;
-  width: 200%;
-  height: 200%;
-  top: -50%;
-  left: -50%;
-  background: conic-gradient(
-    from 0deg at 50% 50%,
-    transparent 0deg,
-    rgba(14, 165, 233, 0.05) 180deg,
-    rgba(14, 165, 233, 0.1) 360deg
-  );
-  animation: radar-rotate 10s linear infinite;
+/* ==================================================
+   FONDO TÉCNICO Y SCANLINES
+================================================== */
+.analyst-terminal-root .cyber-bg {
+  position: fixed;
+  inset: 0;
+  background: 
+    radial-gradient(circle at 50% 50%, rgba(0, 234, 255, 0.02) 0%, transparent 70%),
+    linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+    linear-gradient(90deg, rgba(255, 0, 0, 0.01), rgba(0, 255, 0, 0.005), rgba(0, 0, 255, 0.01));
+  background-size: 100% 100%, 100% 4px, 3px 100%;
   pointer-events: none;
   z-index: 0;
 }
 
-@keyframes radar-rotate {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+/* ==================================================
+   GRID LAYOUT EVOLUCIONADO
+================================================== */
+.layout-grid {
+  display: grid;
+  /* Usamos variables para control dinámico desde JS si es necesario */
+  grid-template-columns: var(--left-w, 280px) 1fr var(--right-w, 300px);
+  transition: grid-template-columns var(--transition-speed) var(--transition-curve);
+  height: 100%;
+  width: 100%;
+  background: transparent;
+  position: relative;
 }
 
-/* 7. GRADIENTES DE TEXTO */
-.analyst-terminal-root .text-gradient-gold {
-  background: linear-gradient(to right, #f59e0b, #fbbf24, #fef3c7);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  display: inline-block;
+/* Control por Atributos (Vinculado a tu Layout.jsx) */
+.layout-grid[data-left="collapsed"] { --left-w: 50px; }
+.layout-grid[data-right="collapsed"] { --right-w: 50px; }
+
+/* ==================================================
+   CONTENEDORES (SIDEBARS & MAIN)
+================================================== */
+.layout-sidebar-left,
+.layout-sidebar-right {
+  position: relative;
+  min-width: 0;
+  height: 100%;
+  background: var(--aska-panel);
+  border-right: 1px solid var(--aska-border);
+  z-index: 10;
+  transition: width var(--transition-speed) var(--transition-curve);
 }
-.analyst-terminal-root button:active {
-  transform: scale(0.98);
-  filter: brightness(1.2) saturate(1.2);
-  transition: all 0.1s ease;
+
+.layout-sidebar-right {
+  border-right: none;
+  border-left: 1px solid var(--aska-border);
+}
+
+.layout-main {
+  position: relative;
+  min-width: 0; /* Vital para que el flexbox no rompa el grid */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: rgba(0, 0, 0, 0.2);
+  z-index: 5;
+}
+
+/* Área de scroll personalizada */
+.layout-main-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-gutter: stable; /* Evita saltos de layout al aparecer el scroll */
+}
+
+/* ==================================================
+   SCROLLBAR ESTILO ARASAKA
+================================================== */
+.layout-main-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.layout-main-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.layout-main-scroll::-webkit-scrollbar-thumb {
+  background: var(--aska-cyan-dim);
+  border-radius: 0;
+  border: 1px solid transparent;
+}
+
+.layout-main-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--aska-cyan);
+}
+
+/* ==================================================
+   INTERFACES DE BOTONES (MIL-SPEC)
+================================================== */
+.analyst-terminal-root button {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 10px;
+  background: rgba(0, 234, 255, 0.05);
+  border: 1px solid var(--aska-cyan-dim);
+  color: var(--aska-cyan);
+  padding: 8px 12px;
+  transition: all 0.2s ease;
 }
 
 .analyst-terminal-root button:hover {
-  box-shadow: 0 0 15px rgba(14, 165, 233, 0.2);
-  border-color: var(--cyber-sky) !important;
+  background: var(--aska-cyan);
+  color: black;
+  box-shadow: 0 0 15px var(--aska-cyan-dim);
+}
+
+/* ==================================================
+   ADAPTABILIDAD (BREAKPOINTS)
+================================================== */
+
+/* TABLETS: Colapso automático de sidebar derecha */
+@media (max-width: 1280px) {
+  .layout-grid {
+    grid-template-columns: var(--left-w, 260px) 1fr 0px;
+  }
+  .layout-sidebar-right {
+    display: none;
+  }
+}
+
+/* MÓVILES: Full screen main con sidebars flotantes */
+@media (max-width: 768px) {
+  .layout-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .layout-sidebar-left {
+    position: fixed;
+    top: 60px; /* Debajo del Header */
+    bottom: 40px; /* Sobre el Footer */
+    left: 0;
+    width: 280px;
+    z-index: 100;
+    transform: translateX(-100%);
+    box-shadow: 20px 0 50px rgba(0,0,0,0.8);
+  }
+
+  .layout-sidebar-left[data-mobile="open"] {
+    transform: translateX(0);
+  }
+}
+
+/* ==================================================
+   UTILIDADES
+================================================== */
+.text-aska-cyan { color: var(--aska-cyan); }
+.text-aska-red { color: var(--aska-red); }
+
+.glitch-border {
+  border: 1px solid var(--aska-cyan-dim);
+  position: relative;
+}
+
+.glitch-border::after {
+  content: '';
+  position: absolute;
+  top: -1px; left: -1px; right: -1px; bottom: -1px;
+  border: 1px solid var(--aska-cyan);
+  opacity: 0;
+  transition: opacity 0.1s;
+}
+
+.glitch-border:hover::after {
+  opacity: 0.5;
+  animation: border-flicker 0.3s infinite;
+}
+
+@keyframes border-flicker {
+  0% { opacity: 0.1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 0.2; }
 }

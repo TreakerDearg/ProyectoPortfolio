@@ -7,7 +7,7 @@ import { Footer } from "../layout/Footer";
 import { DecodingText } from './components-p/DecodingText';
 import { TerminalLogger } from './components-p/TerminalLogger';
 import { DataNodeStatus } from './components-p/DataNodeStatus'; // Nuevo
-import styles from '@/app/analyst/styles/Projects.module.css';
+import styles from '../styles/Projects.module.css';
 
 export default function ProjectsPage() {
   const [hoveredId, setHoveredId] = useState(null);

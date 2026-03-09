@@ -1,149 +1,200 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+
+// Sistemas
 import { NetworkCanvas } from '../systems/NetworkCanvas';
 import { NodeSearch } from '../systems/NodeSearch';
 import { DataTraffic } from '../systems/DataTraffic';
-import { SecurityLogs } from '../systems/SecurityLogs'; 
-import { NetworkOverview } from '../systems/NetworkOverview'; // <--- Nueva Importación
+import { SecurityLogs } from '../systems/SecurityLogs';
+import AnalyticFlow from '../systems/AnalyticFlow';
+import SystemRoot from '../systems/SystemRoot';
+
+// Contexto y Estilos
 import { useAnalysis } from '../context/AnalysisContext';
-import styles from '@/app/analyst/styles/MainSystem.module.css';
+import { Maximize2, Activity, ShieldCheck, AlertCircle, Terminal as TerminalIcon, Cpu } from 'lucide-react';
+import styles from '../styles/MainSystem.module.css';
 
-export const MainSystem = ({ children }) => {
-  const { activeView } = useAnalysis();
+export const MainSystem = () => {
+  const { activeView, kernelMetrics, systemStatus } = useAnalysis();
   const [isSyncing, setIsSyncing] = useState(false);
+  const [glitch, setGlitch] = useState(false);
 
+  // Efecto de transición: Estética de carga de Arasaka
   useEffect(() => {
     setIsSyncing(true);
-    const timer = setTimeout(() => setIsSyncing(false), 1200);
-    return () => clearTimeout(timer);
+    setGlitch(true);
+    const syncTimer = setTimeout(() => setIsSyncing(false), 800);
+    const glitchTimer = setTimeout(() => setGlitch(false), 250);
+    return () => {
+      clearTimeout(syncTimer);
+      clearTimeout(glitchTimer);
+    };
   }, [activeView]);
 
+  const isCritical = systemStatus !== 'NOMINAL';
+
   return (
-    <div className={styles.mainContainer}>
+    <div className={`
+      ${styles.container} 
+      ${glitch ? styles.glitchActive : ''} 
+      ${isCritical ? styles.stateCritical : ''}
+    `}>
       
-      {/* CAPA 0: ATMÓSFERA PROFUNDA */}
+      {/* ===== CAPA 0: ATMÓSFERA HUD (Overlay Global) ===== */}
       <div className={styles.atmosphere}>
-        <div className={styles.radarSweep} />
-        <div className={styles.coordinateGrid} />
+        <div className={styles.gridOverlay} />
+        <div className={styles.scanline} />
         <div className={styles.vignette} />
       </div>
-      
-      {/* CAPA 1: SISTEMAS DE VISUALIZACIÓN */}
+
+      {/* ===== CAPA 1: VIEWPORT DINÁMICO ===== */}
       <main className={styles.viewport}>
         <AnimatePresence mode="wait">
           
           {activeView === 'Network_Map' && (
             <motion.div 
-              key="network"
-              initial={{ opacity: 0, scale: 1.05 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="w-full h-full relative"
+              key="network" 
+              initial={{ opacity: 0 }} 
+              animate={{ opacity: 1 }} 
+              exit={{ opacity: 0 }} 
+              className={styles.canvasWrapper}
             >
+              {/* El minimapa ahora está dentro de NetworkCanvas */}
               <NetworkCanvas />
             </motion.div>
           )}
 
           {activeView === 'Security_Logs' && (
             <motion.div 
-              key="logs"
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -40 }}
-              className={styles.logOverlay}
+              key="logs" 
+              initial={{ opacity: 0, scale: 0.98 }} 
+              animate={{ opacity: 1, scale: 1 }} 
+              exit={{ opacity: 0, scale: 1.02 }} 
+              className={styles.fullOverlay}
             >
-              <div className={styles.contentWrapper}>
-                <SecurityLogs />
+              <SecurityLogs />
+            </motion.div>
+          )}
+
+          {activeView === 'Analytic_Flow' && (
+            <motion.div 
+              key="flow" 
+              initial={{ opacity: 0, x: 20 }} 
+              animate={{ opacity: 1, x: 0 }} 
+              exit={{ opacity: 0, x: -20 }} 
+              className={styles.dashboardContainer}
+            >
+              <div className={styles.glassPanel}>
+                <PanelHeader title="NEURAL_STREAM" icon={<Activity size={14} />} view={activeView} />
+                <div className={styles.panelBody}><AnalyticFlow /></div>
               </div>
             </motion.div>
           )}
 
-          {/* VISTA DASHBOARD (CHILDREN) */}
-          {activeView !== 'Network_Map' && activeView !== 'Security_Logs' && (
+          {activeView === 'System_Root' && (
             <motion.div 
-              key="fallback"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className={styles.dashboardView}
+              key="root" 
+              initial={{ opacity: 0, y: 20 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              exit={{ opacity: 0, y: -20 }} 
+              className={styles.dashboardContainer}
             >
               <div className={styles.glassPanel}>
-                <div className={styles.panelHeader}>
-                   <div className={styles.bracketLabel}>
-                     <span className={styles.pulseDot} />
-                     DATA_STREAM_OUTPUT
-                   </div>
-                   <span className={styles.hexCode}>ID_0x{activeView.length}F</span>
-                </div>
-                
-                <div className={styles.innerContent}>
-                   {children || (
-                     <div className={styles.standby}>
-                        <div className={styles.geometry}>⌬</div>
-                        <p>STANDBY_MODE_ACTIVE</p>
-                     </div>
-                   )}
-                </div>
+                <PanelHeader title="KERNEL_ACCESS" icon={<Cpu size={14} />} view={activeView} />
+                <div className={styles.panelBody}><SystemRoot /></div>
               </div>
             </motion.div>
           )}
+
         </AnimatePresence>
       </main>
 
-      {/* CAPA UI: HUD DE CONTROL Y MINI-MAPA */}
-      <div className={styles.hudLayer}>
-        {/* Superior: Búsqueda y Mini-Mapa */}
-        <div className="flex justify-between items-start pointer-events-none">
-          <div className="pointer-events-auto">
+      {/* ===== CAPA 2: INTERFAZ TÁCTICA (HUD EXTERNO) ===== */}
+      <div className={styles.hudOverlay}>
+        
+        {/* HEADER TÁCTICO */}
+        <section className={styles.hudTop}>
+          <div className={styles.hudTopLeft}>
+            <div className={styles.sysBranding}>
+              <span className={styles.corpName}></span>
+              <span className={styles.verTag}></span>
+            </div>
             <NodeSearch />
           </div>
-
-          {/* Renderizado condicional del mini-mapa solo en el Mapa de Red */}
-          <AnimatePresence>
-            {activeView === 'Network_Map' && (
-              <div className="pointer-events-auto">
-                <NetworkOverview />
+          
+          <div className={styles.hudTopRight}>
+            <div className={styles.statusGroup}>
+              <div className={styles.syncStatus}>
+                {isSyncing ? (
+                  <div className={styles.syncing}>
+                    <div className={styles.loaderCircle} />
+                    <span>UPLINKING_DATA...</span>
+                  </div>
+                ) : (
+                  <div className={styles.synced}>
+                    <ShieldCheck size={12} className={styles.secureIcon} />
+                    <span>ENCRYPTED_SESSION</span>
+                  </div>
+                )}
               </div>
-            )}
-          </AnimatePresence>
-          
-          <AnimatePresence>
-            {isSyncing && (
-              <motion.div 
-                initial={{ opacity: 0, y: -10 }} 
-                animate={{ opacity: 1, y: 0 }} 
-                exit={{ opacity: 0 }}
-                className={styles.syncIndicator}
-              >
-                <div className={styles.loadingBar} />
-                <span className="text-purple-400">NEURAL_LINK_SYNCING</span>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-        
-        {/* Inferior: Tráfico y Estado */}
-        <div className="flex justify-between items-end">
-          <DataTraffic />
-          
-          <motion.div layout className={styles.terminalStatus}>
-            <div className={styles.statusInfo}>
-                <span className={styles.statusLabel}>TERMINAL_ACTIVE</span>
-                <span className={styles.activeViewName}>{activeView.replace('_', ' ')}</span>
+              <div className={`${styles.alertIndicator} ${isCritical ? styles.active : ''}`}>
+                <AlertCircle size={14} />
+              </div>
             </div>
-            <div className={styles.verticalDivider} />
-            <div className={styles.connectionBadge}>
-                <span className="text-sky-500">CONNECTED</span>
-                <span className="opacity-40">STABLE_LINK</span>
+          </div>
+        </section>
+
+        {/* FOOTER TÁCTICO */}
+        <section className={styles.hudBottom}>
+          <div className={styles.hudBottomLeft}>
+            <DataTraffic isCritical={isCritical} />
+          </div>
+
+          <div className={styles.hudBottomRight}>
+            <div className={styles.metadataCluster}>
+              <div className={styles.metaEntry}>
+                <span className={styles.metaLabel}>MEM_USE</span>
+                <span className={styles.metaValue}>
+                  {kernelMetrics?.memory?.used ?? '0.0'}GB
+                </span>
+              </div>
+              <div className={styles.metaEntry}>
+                <span className={styles.metaLabel}>SYSTEM_INTEGRITY</span>
+                <span className={`${styles.metaValue} ${isCritical ? styles.dangerText : styles.safeText}`}>
+                  {isCritical ? 'BREACH_DETECTED' : 'SECURE'}
+                </span>
+              </div>
             </div>
-          </motion.div>
-        </div>
+            
+            <div className={styles.activeViewDisplay}>
+              <div className={styles.viewIdentity}>
+                <span className={styles.subLabel}>INTERFACE_MODULE</span>
+                <span className={styles.mainLabel}>{activeView.replace('_', ' ')}</span>
+              </div>
+              <div className={styles.moduleIcon}>
+                <TerminalIcon size={18} />
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
 
-      {/* CAPA 60: MARCO DE SEGURIDAD */}
-      <div className={styles.frameDecoration} />
+      {/* ELEMENTOS DECORATIVOS DE CHASIS */}
+      <div className={styles.cornerFrame} />
     </div>
   );
 };
+
+const PanelHeader = ({ title, icon, view }) => (
+  <header className={styles.panelHeader}>
+    <div className={styles.headerTitle}>
+      {icon}
+      <span>{title} <span className={styles.sep}>//</span> {view}</span>
+    </div>
+    <div className={styles.headerControls}>
+      <span className={styles.clock}>{new Date().toLocaleTimeString('en-GB')}</span>
+      <Maximize2 size={12} className={styles.headerBtn} />
+    </div>
+  </header>
+);

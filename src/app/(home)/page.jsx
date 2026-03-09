@@ -3,17 +3,17 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import useSystemState from '@/hooks/useSystemState'
+import useSystemState from '../../hooks/useSystemState'
 
-import SystemBoot from '@/components/core/SystemBoot'
-import Terminal from '@/components/terminal/Terminal'
-import RoleSelector from '@/components/core/RoleSelector'
-import ModuleCard from '@/components/Modules/ModuleCard'
-import FullstackBootTransition from '@/components/transitions/FullstackBootTransition'
+import SystemBoot from '../../components/core/SystemBoot'
+import Terminal from '../../components/terminal/Terminal'
+import RoleSelector from '../../components/core/RoleSelector'
+import ModuleCard from '../../components/Modules/ModuleCard'
+import FullstackBootTransition from '../../components/transitions/FullstackBootTransition'
 
-import { roles } from '@/lib/roles'
-import { modules } from '@/lib/modules'
-import s from '@/styles/HomePage.module.css'
+import { roles } from '../../lib/roles'
+import { modules } from '../..//lib/modules'
+import s from '../../styles/HomePage.module.css'
 
 const MODULE_ROUTES = {
   fullstack: '/fullstack',

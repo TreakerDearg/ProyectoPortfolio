@@ -1,0 +1,107 @@
+.radarWrapper {
+  position: absolute;
+  top: 25px;
+  right: 25px; /* Lo anclamos a la derecha superior como pediste */
+  z-index: 1000;
+  pointer-events: all;
+}
+
+.radarContainer {
+  width: 200px;
+  background: rgba(8, 8, 9, 0.9);
+  border: 1px solid rgba(255, 0, 60, 0.3);
+  font-family: 'JetBrains Mono', monospace;
+  /* El ángulo característico de Arasaka */
+  clip-path: polygon(0 0, 85% 0, 100% 15%, 100% 100%, 15% 100%, 0 85%);
+  backdrop-filter: blur(5px);
+}
+
+.scannerHeader {
+  padding: 8px 10px;
+  background: rgba(255, 0, 60, 0.05);
+  border-bottom: 1px solid rgba(255, 0, 60, 0.2);
+}
+
+.terminalText {
+  color: #ff003c;
+  font-size: 9px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.radarMap {
+  position: relative;
+  height: 140px;
+  background: 
+    linear-gradient(rgba(255, 0, 60, 0.05) 1px, transparent 1px) 0 0 / 15px 15px,
+    linear-gradient(90deg, rgba(255, 0, 60, 0.05) 1px, transparent 1px) 0 0 / 15px 15px;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(255, 0, 60, 0.1);
+}
+
+.radarDot {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: #ff003c;
+  box-shadow: 0 0 5px #ff003c;
+  cursor: pointer;
+  z-index: 5;
+}
+
+/* El rectángulo que representa tu pantalla actual */
+.viewportIndicator {
+  position: absolute;
+  width: 50px; /* Tamaño relativo del viewport */
+  height: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.02);
+  pointer-events: none;
+  /* Aseguramos que el centro del indicador sea el punto de referencia */
+  margin-left: -25px; 
+  margin-top: -15px;
+}
+
+.scannerFooter {
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.coordGroup {
+  display: flex;
+  justify-content: space-between;
+}
+
+.dataPoint {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  font-size: 7px;
+  color: #666;
+}
+
+.value {
+  font-size: 10px;
+  color: #fff;
+}
+
+.statusInfo {
+  font-size: 8px;
+  color: #ff003c;
+  border-top: 1px dashed rgba(255, 0, 60, 0.2);
+  padding-top: 4px;
+  text-align: right;
+}
+
+.blink {
+  color: #ff003c;
+  margin-right: 4px;
+  animation: blinker 1s step-end infinite;
+}
+
+@keyframes blinker { 50% { opacity: 0; } }
+

@@ -1,12 +1,12 @@
 'use client'
 
-import BootLog from '@/components/terminal/BootLog'
-import CommandList from '@/components/terminal/CommandList'
-import CommandInput from '@/components/terminal/CommandInput'
-import { useTerminal } from '@/hooks/useTerminal'
-import useSystemState from '@/hooks/useSystemState'
+import BootLog from '../../components/terminal/BootLog'
+import CommandList from '../../components/terminal/CommandList'
+import CommandInput from '../../components/terminal/CommandInput'
+import { useTerminal } from '../../hooks/useTerminal'
+import useSystemState from '../../hooks/useSystemState'
 
-import s from '@/styles/Terminal.module.css'
+import s from '../../styles/Terminal.module.css'
 
 export default function Terminal() {
   const { commands } = useSystemState()

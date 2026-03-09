@@ -1,3 +1,5 @@
+/* footer.module.css */
+
 .footerContainer {
   height: 3.5rem; /* 56px */
   background-color: #030407;
@@ -8,7 +10,16 @@
   font-family: var(--font-mono);
   position: relative;
   z-index: 50;
-  overflow: hidden;
+  overflow-x: auto; /* Permite scroll horizontal si es necesario en móvil */
+  overflow-y: hidden;
+  white-space: nowrap; /* Evita que los elementos se rompan en línea */
+  min-width: 0;
+  padding: 0 0.5rem;
+}
+
+/* Ocultar scrollbar en navegadores webkit (opcional) */
+.footerContainer::-webkit-scrollbar {
+  display: none;
 }
 
 .topDataLine {
@@ -18,31 +29,35 @@
   width: 100%;
   height: 1px;
   background: linear-gradient(90deg, transparent, rgba(14, 165, 233, 0.3), transparent);
+  pointer-events: none;
 }
 
 .sectionCell {
-  padding: 0 1.5rem;
+  padding: 0 1rem;
   border-right: 1px solid rgba(255, 255, 255, 0.05);
   height: 100%;
   display: flex;
   align-items: center;
   background: rgba(255, 255, 255, 0.01);
+  flex-shrink: 0; /* Evita que se encojan demasiado */
 }
 
 .labelTech {
-  font-size: 7px;
+  font-size: clamp(6px, 2vw, 7px);
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.15em;
   color: #475569;
+  white-space: nowrap;
 }
 
 .statusValue {
   color: #10b981;
-  font-size: 10px;
+  font-size: clamp(8px, 2.5vw, 10px);
   font-weight: 900;
   letter-spacing: 0.1em;
   text-shadow: 0 0 8px rgba(16, 185, 129, 0.3);
+  white-space: nowrap;
 }
 
 .statusDotLarge {
@@ -52,6 +67,7 @@
   border-radius: 50%;
   box-shadow: 0 0 10px #10b981;
   animation: pulse 2s infinite;
+  flex-shrink: 0;
 }
 
 @keyframes pulse {
@@ -61,10 +77,11 @@
 }
 
 .mainframeId {
-  font-size: 8px;
+  font-size: clamp(6px, 2vw, 8px);
   font-weight: 900;
   letter-spacing: 0.5em;
   color: #1e293b;
+  white-space: nowrap;
 }
 
 .bracketDecoration {
@@ -78,21 +95,23 @@
 .dot { width: 2px; height: 2px; background: #1e293b; border-radius: 50%; }
 
 .geoValue {
-  font-size: 10px;
+  font-size: clamp(8px, 2.5vw, 10px);
   color: #cbd5e1;
   font-weight: 800;
   letter-spacing: 0.05em;
+  white-space: nowrap;
 }
 
 /* TIME BLOCK */
 .timeBlock {
   height: 100%;
-  padding: 0 2rem;
+  padding: 0 1rem;
   background: rgba(14, 165, 233, 0.05);
   border-left: 2px solid rgba(14, 165, 233, 0.2);
   display: flex;
   align-items: center;
   position: relative;
+  flex-shrink: 0;
 }
 
 .timeGlow {
@@ -103,11 +122,12 @@
 }
 
 .timeValue {
-  font-size: 16px;
+  font-size: clamp(12px, 4vw, 16px);
   font-weight: 900;
   color: #fff;
   letter-spacing: 0.05em;
   text-shadow: 0 0 10px rgba(14, 165, 233, 0.4);
+  white-space: nowrap;
 }
 
 .timeSpinner {
@@ -119,6 +139,8 @@
   align-items: center;
   justify-content: center;
   position: relative;
+  flex-shrink: 0;
+  margin-left: 0.5rem;
 }
 
 .spinnerCore {
@@ -140,7 +162,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 1.5rem;
+  padding: 0 1rem;
   border-left: 1px solid rgba(255, 255, 255, 0.05);
   height: 100%;
   justify-content: center;
@@ -150,6 +172,7 @@
     transparent 100%
   );
   position: relative;
+  flex-shrink: 0;
 }
 
 /* Decoración de tornillo técnico en la esquina de la celda */
@@ -176,6 +199,7 @@
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 2px;
+  flex-shrink: 0;
 }
 
 /* Efecto de Brackets Angulares al hacer Hover */
@@ -204,14 +228,11 @@
   right: -2px;
   border-bottom: 1.5px solid currentColor;
   border-right: 1.5px solid currentColor;
-  /* Eliminamos el círculo anterior y lo cambiamos por este bracket */
-  border-radius: 0; 
-  transform: scale(1.5);
 }
 
 .socialLink:hover {
   background: rgba(14, 165, 233, 0.05);
-  color: #f8fafc; /* Blanco técnico en hover */
+  color: #f8fafc;
   border-color: rgba(14, 165, 233, 0.3);
   filter: drop-shadow(0 0 5px rgba(14, 165, 233, 0.4));
 }
@@ -235,3 +256,114 @@
   100% { transform: translate(0); }
 }
 
+/* ===== MEDIA QUERIES ===== */
+@media (max-width: 1024px) {
+  .footerContainer {
+    height: auto;
+    min-height: 3.5rem;
+    flex-wrap: wrap;
+    white-space: normal;
+    padding: 0.25rem;
+  }
+  
+  .sectionCell, .socialCell, .timeBlock {
+    padding: 0 0.75rem;
+  }
+  
+  .mainframeId {
+    letter-spacing: 0.3em;
+  }
+}
+
+@media (max-width: 768px) {
+  .footerContainer {
+    justify-content: flex-start;
+  }
+  
+  /* Ocultar elementos que ocupan mucho espacio en tablet/móvil */
+  .bracketDecoration,
+  .timeSpinner,
+  .geoValue {
+    display: none;
+  }
+  
+  .timeBlock {
+    padding: 0 0.75rem;
+  }
+  
+  .timeValue {
+    font-size: 14px;
+  }
+  
+  .socialCell {
+    padding: 0 0.5rem;
+  }
+  
+  .socialLink {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+@media (max-width: 640px) {
+  .footerContainer {
+    overflow-x: auto;
+    white-space: nowrap;
+    flex-wrap: nowrap;
+    padding: 0;
+  }
+  
+  .sectionCell, .socialCell, .timeBlock {
+    padding: 0 0.5rem;
+  }
+  
+  .labelTech {
+    font-size: 5px;
+  }
+  
+  .statusValue {
+    font-size: 7px;
+  }
+  
+  .timeValue {
+    font-size: 12px;
+  }
+  
+  .socialLink {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .socialLink svg {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+/* ===== PREFIERE MOVIMIENTO REDUCIDO ===== */
+@media (prefers-reduced-motion: reduce) {
+  .statusDotLarge,
+  .spinnerCore,
+  .socialLink,
+  .socialLink svg,
+  .socialLink::before,
+  .socialLink::after,
+  .timeSpinner {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  .statusDotLarge {
+    opacity: 0.8;
+    transform: none;
+  }
+  
+  .spinnerCore {
+    transform: scale(1);
+    opacity: 1;
+  }
+  
+  .socialLink:hover svg {
+    animation: none;
+  }
+}
