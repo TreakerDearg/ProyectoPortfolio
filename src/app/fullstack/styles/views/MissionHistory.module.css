@@ -1,0 +1,107 @@
+.historyContainer {
+  padding: 2rem;
+  color: #00ff9d;
+  font-family: 'VT323', monospace;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 255, 157, 0.02) 0%,
+    transparent 100%
+  );
+}
+
+.header {
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.title {
+  font-size: 24px;
+  letter-spacing: 2px;
+  text-shadow: 0 0 8px rgba(0, 255, 157, 0.5);
+  animation: flicker 3s infinite;
+}
+
+.line {
+  height: 1px;
+  background: linear-gradient(90deg, #00ff9d, transparent);
+  margin-top: 8px;
+  width: 100%;
+  opacity: 0.3;
+}
+
+.historyTable {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 8px;
+  font-size: 18px;
+}
+
+.historyTable th {
+  text-align: left;
+  padding: 10px;
+  font-size: 14px;
+  opacity: 0.5;
+  letter-spacing: 1px;
+  border-bottom: 1px solid rgba(0, 255, 157, 0.2);
+}
+
+.row {
+  transition: all 0.2s ease;
+  cursor: crosshair;
+  background: rgba(0, 255, 157, 0.03);
+}
+
+.row:hover {
+  background: rgba(0, 255, 157, 0.1);
+  transform: scale(1.01) translateX(5px);
+  box-shadow: -5px 0 0 #00ff9d;
+}
+
+.row td {
+  padding: 15px 10px;
+}
+
+.id { color: #00ff9d; font-weight: bold; }
+.event { opacity: 0.9; }
+.target { font-family: 'JetBrains Mono', monospace; font-size: 14px; opacity: 0.7; }
+.date { opacity: 0.6; }
+
+/* Estados de Misión */
+.statusOk {
+  color: #00ff9d;
+  text-shadow: 0 0 10px rgba(0, 255, 157, 0.8);
+}
+
+.statusWait {
+  color: #ff9d00;
+  animation: blink 1s steps(2) infinite;
+}
+
+/* --- ANIMACIONES DE TERMINAL --- */
+@keyframes flicker {
+  0% { opacity: 0.97; }
+  5% { opacity: 0.88; }
+  10% { opacity: 0.9; }
+  15% { opacity: 0.7; }
+  20% { opacity: 0.95; }
+  100% { opacity: 1; }
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* Efecto de escaneo de fila */
+.row::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(transparent, rgba(0, 255, 157, 0.05), transparent);
+  pointer-events: none;
+  opacity: 0;
+}
+
+.row:hover::after {
+  opacity: 1;
+}

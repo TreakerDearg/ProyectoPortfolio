@@ -1,35 +1,105 @@
-// src/app/bartender/(Bar)/layout.jsx
+"use client";
+import { AnimatePresence, motion } from "framer-motion";
+import { SystemProvider, useSystem } from "../context/SystemContext";
+import RetroHeader from "../layout/RetroHeader";
+import RetroFooter from "../layout/RetroFooter";
+import StatsPanel from "../layout/StatsPanel";
+import MissionLogSidebar from "../layout/MissionLog";
+import ProyectosView from "../views/ProyectosView";
+import MissionHistoryView from "../views/MissionHistoryView";
+import BootSequence from "../components/effects/BootSequence"; // Nueva importación
 
-export default function FullstackLayout({ children }) {
+import styles from "../styles/layout/RetroLayout.module.css";
+import "../styles/retro-effects.css";
+
+export default function RetroLayout({ children }) {
   return (
-    <div className="min-h-screen bg-[#020617] text-slate-300 font-mono relative overflow-hidden">
-      {/* Capas Atmosféricas */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(168,85,247,0.05),transparent)] pointer-events-none" />
-      <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
-      
-      {/* Header de Estado */}
-      <header className="border-b border-purple-500/20 p-4 flex justify-between items-center bg-black/40 backdrop-blur-md">
-        <div className="flex items-center gap-3">
-          <div className="size-2 bg-purple-500 animate-pulse shadow-[0_0_8px_#a855f7]" />
-          <span className="text-[10px] tracking-[0.3em] font-bold text-purple-400">SYSTEM_OS_V.2.0</span>
-        </div>
-        <div className="text-[9px] text-slate-500">
-          STATUS: <span className="text-green-500">ONLINE</span>
-        </div>
-      </header>
+    <SystemProvider>
+      <LayoutContent>{children}</LayoutContent>
+    </SystemProvider>
+  );
+}
 
-      {/* Contenedor de Contenido */}
-      <main className="max-w-7xl mx-auto p-6 relative z-10">
-        {/* Aquí es donde Next.js inyecta el contenido de page.jsx */}
-        {children}
-      </main>
+function LayoutContent({ children }) {
+  const { systemStatus, currentView, isBooting, setIsBooting } = useSystem();
+  const isOff = systemStatus === "OFFLINE";
 
-      {/* Footer HUD */}
-      <footer className="fixed bottom-0 w-full border-t border-purple-500/10 p-2 bg-black/60 text-[8px] flex justify-center gap-8 text-slate-600">
-        <span>CORE_TEMP: 32°C</span>
-        <span>ENCRYPT: AES-256</span>
-        <span>LOC: POSADAS_AR</span>
-      </footer>
+  // Si el sistema está en proceso de arranque, mostramos la secuencia táctica
+  if (isBooting) {
+    return <BootSequence onComplete={() => setIsBooting(false)} />;
+  }
+
+  const isFullWidth = currentView === "GOTO_PROJ";
+  const isDashboard = currentView === "MISSION_LOG";
+
+  return (
+    <div className={styles.outerChasis}>
+      <div className={styles.monitorBezel}>
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={isOff ? { scaleY: 0.002, opacity: 0 } : { scaleY: 1, opacity: 1 }}
+          transition={{ duration: 0.4 }}
+          className={`${styles.mainDisplay} crt-screen`}
+        >
+          <div className={styles.interfaceWrapper}>
+            <RetroHeader />
+
+            <div className={`flex-grow grid h-full overflow-hidden transition-all duration-700 ease-in-out ${
+              isFullWidth ? "grid-cols-1" : isDashboard ? "grid-cols-12 gap-4" : "grid-cols-12"
+            }`}>
+              
+              <AnimatePresence>
+                {!isFullWidth && (
+                  <motion.aside 
+                    initial={{ x: -400, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    exit={{ x: -400, opacity: 0 }}
+                    className="col-span-3 border-r border-[#00ff9d11] bg-[#00ff9d03]"
+                  >
+                    <StatsPanel />
+                  </motion.aside>
+                )}
+              </AnimatePresence>
+
+              <main className={`
+                ${isFullWidth ? "col-span-1" : isDashboard ? "col-span-9" : "col-span-6"} 
+                h-full flex flex-col relative transition-all duration-700
+              `}>
+                <div className={styles.contentScroll}>
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={currentView}
+                      initial={{ opacity: 0, filter: "blur(10px)" }}
+                      animate={{ opacity: 1, filter: "blur(0px)" }}
+                      exit={{ opacity: 0, filter: "blur(10px)" }}
+                      className="h-full"
+                    >
+                      {currentView === "SYSTEM_INIT" && children}
+                      {currentView === "GOTO_PROJ" && <ProyectosView />}
+                      {currentView === "MISSION_LOG" && <MissionHistoryView />}
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+              </main>
+
+              <AnimatePresence>
+                {(!isFullWidth && !isDashboard) && (
+                  <motion.aside 
+                    initial={{ x: 400, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    exit={{ x: 400, opacity: 0 }}
+                    className="col-span-3 border-l border-[#00ff9d11] bg-[#00000022]"
+                  >
+                    <MissionLogSidebar />
+                  </motion.aside>
+                )}
+              </AnimatePresence>
+            </div>
+
+            <RetroFooter />
+          </div>
+        </motion.div>
+      </div>
     </div>
   );
 }
