@@ -1,105 +1,77 @@
 "use client";
-import { AnimatePresence, motion } from "framer-motion";
-import { SystemProvider, useSystem } from "../context/SystemContext";
-import RetroHeader from "../layout/RetroHeader";
-import RetroFooter from "../layout/RetroFooter";
-import StatsPanel from "../layout/StatsPanel";
-import MissionLogSidebar from "../layout/MissionLog";
-import ProyectosView from "../views/ProyectosView";
-import MissionHistoryView from "../views/MissionHistoryView";
-import BootSequence from "../components/effects/BootSequence"; // Nueva importación
+import React from "react";
+import styles from "../styles/terminal.module.css";
+import { SystemProvider } from "../context/SystemContext";
 
-import styles from "../styles/layout/RetroLayout.module.css";
-import "../styles/retro-effects.css";
+import { MainHeader } from "../layout/MainHeader";
+import { MainFooter } from "../layout/MainFooter";
+import { LeftPanel } from "../layout/LeftPanel";
+import { RightPanel } from "../layout/RightPanel";
+import { Screw } from "../components/deco-layout/Screw";
+import { StatusLed } from "../components/deco-layout/StatusLed";
 
 export default function RetroLayout({ children }) {
   return (
     <SystemProvider>
-      <LayoutContent>{children}</LayoutContent>
-    </SystemProvider>
-  );
-}
+      <div className={styles.container}>
+        <div className={styles.frame}>
+          <MainHeader />
 
-function LayoutContent({ children }) {
-  const { systemStatus, currentView, isBooting, setIsBooting } = useSystem();
-  const isOff = systemStatus === "OFFLINE";
+          <div className={styles.workspace}>
+            <LeftPanel />
 
-  // Si el sistema está en proceso de arranque, mostramos la secuencia táctica
-  if (isBooting) {
-    return <BootSequence onComplete={() => setIsBooting(false)} />;
-  }
+            <main className={styles.monitor}>
+              <div className={styles.monitorInner}>
+                {/* Bisel del monitor con desgaste y vidrio */}
+                <div className={styles.bezel}>
+                  {/* Capas de desgaste (rayones, suciedad) */}
+                  <div className={styles.bezelWear} />
+                  <div className={styles.bezelScratches} />
+                  <div className={styles.bezelDust} />
 
-  const isFullWidth = currentView === "GOTO_PROJ";
-  const isDashboard = currentView === "MISSION_LOG";
+                  {/* NUEVA CAPA: vidrio sobre el bisel (para efecto de cristal) */}
+                  <div className={styles.bezelGlass} />
 
-  return (
-    <div className={styles.outerChasis}>
-      <div className={styles.monitorBezel}>
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={isOff ? { scaleY: 0.002, opacity: 0 } : { scaleY: 1, opacity: 1 }}
-          transition={{ duration: 0.4 }}
-          className={`${styles.mainDisplay} crt-screen`}
-        >
-          <div className={styles.interfaceWrapper}>
-            <RetroHeader />
+                  {/* Tornillos decorativos en las esquinas del bisel */}
+                  <Screw size="xs" type="flat" className={styles.bezelScrewTL} rotation={0} />
+                  <Screw size="xs" type="flat" className={styles.bezelScrewTR} rotation={90} />
+                  <Screw size="xs" type="flat" className={styles.bezelScrewBL} rotation={180} />
+                  <Screw size="xs" type="flat" className={styles.bezelScrewBR} rotation={270} />
 
-            <div className={`flex-grow grid h-full overflow-hidden transition-all duration-700 ease-in-out ${
-              isFullWidth ? "grid-cols-1" : isDashboard ? "grid-cols-12 gap-4" : "grid-cols-12"
-            }`}>
-              
-              <AnimatePresence>
-                {!isFullWidth && (
-                  <motion.aside 
-                    initial={{ x: -400, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    exit={{ x: -400, opacity: 0 }}
-                    className="col-span-3 border-r border-[#00ff9d11] bg-[#00ff9d03]"
-                  >
-                    <StatsPanel />
-                  </motion.aside>
-                )}
-              </AnimatePresence>
+                  {/* Pantalla */}
+                  <div className={styles.screenContent}>
+                    <div className={styles.crtOverlay} />
+                    <div className={styles.screenInner}>
+                      {children}
+                    </div>
+                  </div>
 
-              <main className={`
-                ${isFullWidth ? "col-span-1" : isDashboard ? "col-span-9" : "col-span-6"} 
-                h-full flex flex-col relative transition-all duration-700
-              `}>
-                <div className={styles.contentScroll}>
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={currentView}
-                      initial={{ opacity: 0, filter: "blur(10px)" }}
-                      animate={{ opacity: 1, filter: "blur(0px)" }}
-                      exit={{ opacity: 0, filter: "blur(10px)" }}
-                      className="h-full"
-                    >
-                      {currentView === "SYSTEM_INIT" && children}
-                      {currentView === "GOTO_PROJ" && <ProyectosView />}
-                      {currentView === "MISSION_LOG" && <MissionHistoryView />}
-                    </motion.div>
-                  </AnimatePresence>
+                  {/* Capa de cristal con reflejos (sobre la pantalla) */}
+                  <div className={styles.glassOverlay}>
+                    <div className={styles.glassLight} />
+                    <div className={styles.glassDust} />
+                    <div className={styles.glassVignette} />
+                  </div>
                 </div>
-              </main>
 
-              <AnimatePresence>
-                {(!isFullWidth && !isDashboard) && (
-                  <motion.aside 
-                    initial={{ x: 400, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    exit={{ x: 400, opacity: 0 }}
-                    className="col-span-3 border-l border-[#00ff9d11] bg-[#00000022]"
-                  >
-                    <MissionLogSidebar />
-                  </motion.aside>
-                )}
-              </AnimatePresence>
-            </div>
+                {/* LEDs de calibración y estado */}
+                <div className={styles.monitorStatus}>
+                  <div className={styles.calibrationDots}>
+                    <span />
+                    <span />
+                    <span />
+                  </div>
+                  <StatusLed status="online" size="xxs" className={styles.powerLed} />
+                </div>
+              </div>
+            </main>
 
-            <RetroFooter />
+            <RightPanel />
           </div>
-        </motion.div>
+
+          <MainFooter />
+        </div>
       </div>
-    </div>
+    </SystemProvider>
   );
 }

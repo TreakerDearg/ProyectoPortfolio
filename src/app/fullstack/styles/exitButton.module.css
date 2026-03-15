@@ -1,161 +1,237 @@
-@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
-
+/* =========================================
+   EXIT BUTTON CONTAINER
+========================================= */
 .exitContainer {
-  display: flex;
-  align-items: center;
-  height: 100%;
-}
-
-.retroExitBtn {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 6px 18px;
-  background: #0a0a0a;
-  border: 1.5px solid #00ff9d;
-  color: #00ff9d;
-  font-family: 'VT323', monospace;
-  /* Corte angular estilo HUD militar */
-  clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
-  cursor: pointer;
+  justify-content: center;
 }
 
-/* EFECTO DE LUZ DE ESCANEO AL PASAR EL CURSOR */
-.retroExitBtn::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -150%;
-  width: 150%;
-  height: 100%;
-  background: linear-gradient(
-    90deg, 
-    transparent, 
-    rgba(0, 255, 157, 0.15), 
-    transparent
-  );
-  z-index: 1;
-}
-
-.retroExitBtn:hover::before {
-  left: 150%;
-  transition: 0.6s;
-}
-
-.retroExitBtn:hover {
-  box-shadow: 
-    inset 0 0 15px rgba(0, 255, 157, 0.2),
-    0 0 20px rgba(0, 255, 157, 0.3);
-  background: rgba(0, 255, 157, 0.05);
-}
-
-/* --- ESTADO CRÍTICO (OFFLINE / SHUTDOWN) --- */
-.criticalState {
-  border-color: #ff9d00;
-  color: #ff9d00;
-  background: rgba(255, 157, 0, 0.05);
-  animation: alarmFlicker 2s infinite;
-}
-
-.criticalState:hover {
-  box-shadow: 
-    inset 0 0 15px rgba(255, 157, 0, 0.2),
-    0 0 25px rgba(255, 157, 0, 0.4);
-  background: rgba(255, 157, 0, 0.1);
-}
-
-/* --- DETALLES DE HARDWARE (MECÁNICOS) --- */
-.hardwareSlot {
+/* =========================================
+   INDUSTRIAL BUTTON (base)
+========================================= */
+.industrialBtn {
+  position: relative;
+  width: 170px;
+  height: 58px;
   display: flex;
-  flex-direction: column;
-  gap: 3px;
-  opacity: 0.8;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: #0b0b0b;
+  border: 1px solid #2a2a2a;
+  border-radius: 4px;
+  cursor: pointer;
+  overflow: hidden;
+  font-family: monospace;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.9), 0 0 6px rgba(0, 0, 0, 0.6);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  contain: layout paint;
+  will-change: transform;
 }
 
-.slotDetail {
-  width: 3px;
+.industrialBtn:hover {
+  border-color: #ffb642;
+  box-shadow: 0 0 8px rgba(255, 182, 66, 0.25), inset 0 0 10px rgba(0, 0, 0, 0.9);
+}
+
+/* Versión compacta para el footer */
+.footerButton {
+  width: auto;            /* Ancho flexible */
+  min-width: 140px;       /* Ancho mínimo para que no se encoja demasiado */
+  height: 46px;           /* Altura reducida para que quepa en 78px (con espacio) */
+  padding: 15px -60px;       /* Padding más pequeño */
+  gap: 4px;               /* Espacio entre elementos internos */
+}
+
+.footerButton .mainLabel {
+  font-size: 9px;         /* Texto principal más pequeño */
+}
+
+.footerButton .tag,
+.footerButton .subLabel {
+  font-size: 6px;         /* Textos secundarios reducidos */
+}
+
+.footerButton .iconFrame {
+  width: 28px;            /* Icono más compacto */
+  height: 24px;
+}
+
+.footerButton .iconPower,
+.footerButton .iconAlert {
+  width: 12px;            /* Tamaño del icono */
+  height: 12px;
+}
+
+/* =========================================
+   METAL TEXTURE
+========================================= */
+.metalGrain {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02)),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.02) 0px, rgba(255, 255, 255, 0.02) 1px, transparent 1px, transparent 3px);
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+/* =========================================
+   STRUCTURAL SCREWS (genéricos)
+========================================= */
+.screw {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #1b1b1b;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+/* Posicionamiento de los cuatro tornillos */
+.industrialBtn .screw:nth-child(2) { top: 2px; left: 2px; }   /* TL */
+.industrialBtn .screw:nth-child(3) { top: 2px; right: 2px; }  /* TR */
+.industrialBtn .screw:nth-child(4) { bottom: 2px; left: 2px; } /* BL */
+.industrialBtn .screw:nth-child(5) { bottom: 2px; right: 2px; } /* BR */
+
+/* =========================================
+   BUTTON CONTENT (horizontal layout)
+========================================= */
+.buttonContent {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  height: 100%;
+}
+
+/* =========================================
+   LED MODULE
+========================================= */
+.statusLed {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #111;
+  border: 1px solid #222;
+}
+
+.ledInner {
+  width: 8px;
   height: 8px;
-  background: currentColor;
-  border-radius: 1px;
+  border-radius: 50%;
 }
 
-.infoWrapper {
+.ledGreen .ledInner {
+  background: #4ade80;
+  box-shadow: 0 0 6px #4ade80, 0 0 12px rgba(74, 222, 128, 0.7);
+}
+
+.ledRed .ledInner {
+  background: #f87171;
+  box-shadow: 0 0 6px #f87171, 0 0 12px rgba(248, 113, 113, 0.7);
+  animation: alertPulse 1.4s infinite;
+}
+
+/* =========================================
+   TEXT GROUP
+========================================= */
+.textGroup {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  text-align: left;
+  gap: 2px;
+  flex: 1;
 }
 
-.topRow {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.userTag {
-  font-size: 10px;
+.tag {
+  font-size: 7px;
+  letter-spacing: 0.18em;
+  color: #ffb642;
   opacity: 0.7;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-.statusIndicator {
-  width: 6px;
-  height: 6px;
-  background: currentColor;
-  border-radius: 50%;
-  box-shadow: 0 0 5px currentColor;
-}
-
-.pulsePoint {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  background: currentColor;
-  animation: pulse 1.5s infinite;
 }
 
 .mainLabel {
-  font-size: 16px;
+  font-size: 11px;
   font-weight: bold;
-  letter-spacing: 1.5px;
-  line-height: 1;
-  margin-top: 2px;
+  letter-spacing: 0.12em;
+  color: #ffb642;
+  line-height: 1.2;
 }
 
-/* --- ICONO Y CÓDIGOS --- */
+.subLabel {
+  font-size: 7px;
+  letter-spacing: 0.14em;
+  color: #8a8a8a;
+}
+
+/* =========================================
+   ICON MODULE
+========================================= */
 .iconModule {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-left: 1px solid rgba(0, 255, 157, 0.2);
-  padding-left: 12px;
-  height: 24px;
 }
 
-.criticalState .iconModule {
-  border-left-color: rgba(255, 157, 0, 0.3);
+.iconHousing {
+  width: 34px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #050505;
+  border: 1px solid #2a2a2a;
+  border-radius: 3px;
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.9);
 }
 
-.serialCode {
-  position: absolute;
-  bottom: 2px;
-  right: 8px;
-  font-size: 8px;
-  opacity: 0.3;
-  letter-spacing: 1px;
+.iconPower {
+  color: #ffb642;
+  filter: drop-shadow(0 0 5px rgba(255, 182, 66, 0.6));
 }
 
-/* --- ANIMACIONES --- */
-@keyframes pulse {
-  0% { transform: scale(1); opacity: 0.8; }
-  100% { transform: scale(2.5); opacity: 0; }
+.iconAlert {
+  color: #f87171;
+  filter: drop-shadow(0 0 5px rgba(248, 113, 113, 0.6));
 }
 
-@keyframes alarmFlicker {
-  0%, 100% { opacity: 1; border-width: 1.5px; }
-  50% { opacity: 0.8; border-width: 2px; filter: brightness(1.2); }
+/* =========================================
+   STATES
+========================================= */
+.normal {
+  border-color: #2a2a2a;
+}
+
+.critical {
+  border-color: #7f1d1d;
+  box-shadow: 0 0 10px rgba(248, 113, 113, 0.25), inset 0 0 12px rgba(0, 0, 0, 0.9);
+}
+
+/* =========================================
+   ANIMATIONS
+========================================= */
+@keyframes alertPulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+/* =========================================
+   RESPONSIVE (ajustes adicionales)
+========================================= */
+@media (max-width: 700px) {
+  .industrialBtn:not(.footerButton) {
+    width: 150px;
+    height: 54px;
+  }
+  .industrialBtn:not(.footerButton) .mainLabel {
+    font-size: 10px;
+  }
 }

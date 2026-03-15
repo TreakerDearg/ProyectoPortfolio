@@ -1,0 +1,209 @@
+/* =========================================
+   STATUS LED - INDUSTRIAL MAINFRAME STYLE
+   RobCo / Vault-Tec / IBM 1950s
+========================================= */
+
+.wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Share Tech Mono', monospace;
+  position: relative;
+}
+
+/* =========================================
+   TAMAÑOS (variables y clases)
+========================================= */
+.xs { --led-size: 12px; --font-size: 6px; }
+.sm { --led-size: 16px; --font-size: 7px; }
+.md { --led-size: 20px; --font-size: 8px; }
+.lg { --led-size: 28px; --font-size: 9px; }
+.xl { --led-size: 36px; --font-size: 10px; }
+
+/* =========================================
+   UNIDAD DEL LED (montaje mecánico)
+========================================= */
+.ledUnit {
+  position: relative;
+  width: var(--led-size);
+  height: var(--led-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Bezel: anillo de metal que sostiene el LED */
+.bezel {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #4a4a4a, #1a1a1a);
+  box-shadow: 
+    inset 0 -2px 3px rgba(0,0,0,0.8),
+    inset 0 2px 3px rgba(255,255,255,0.1),
+    0 2px 4px rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+/* Cuerpo del LED (lente) */
+.ledBody {
+  position: relative;
+  width: 70%;
+  height: 70%;
+  border-radius: 50%;
+  background: #222;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.1s ease, box-shadow 0.1s ease;
+  overflow: hidden;
+}
+
+/* Núcleo emisor (el punto brillante) */
+.innerChip {
+  width: 40%;
+  height: 40%;
+  border-radius: 50%;
+  background: currentColor;
+  filter: blur(1px);
+  opacity: 0.8;
+}
+
+/* Reflejo de la lente (con animación de movimiento) */
+.lensReflection {
+  position: absolute;
+  top: 15%;
+  left: 15%;
+  width: 30%;
+  height: 30%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.25) 0%, transparent 70%);
+  pointer-events: none;
+  will-change: transform;
+  animation: lensMove 6s infinite ease-in-out;
+}
+
+/* Aura de luz (glow) */
+.glow {
+  position: absolute;
+  inset: -30%;
+  border-radius: 50%;
+  z-index: 1;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+/* =========================================
+   COLORES DEL LED (según tipo)
+========================================= */
+.green .ledBody.active {
+  background: #7cff00;
+  box-shadow: inset 0 0 8px #7cff00, 0 0 8px #7cff00;
+}
+.green .innerChip {
+  color: #7cff00;
+}
+.green .glow {
+  background: radial-gradient(circle, rgba(124,255,0,0.6) 0%, transparent 70%);
+}
+
+.amber .ledBody.active {
+  background: #ffb300;
+  box-shadow: inset 0 0 8px #ffb300, 0 0 8px #ffb300;
+}
+.amber .innerChip {
+  color: #ffb300;
+}
+.amber .glow {
+  background: radial-gradient(circle, rgba(255,179,0,0.6) 0%, transparent 70%);
+}
+
+.red .ledBody.active {
+  background: #ff5252;
+  box-shadow: inset 0 0 8px #ff5252, 0 0 8px #ff5252;
+}
+.red .innerChip {
+  color: #ff5252;
+}
+.red .glow {
+  background: radial-gradient(circle, rgba(255,82,82,0.6) 0%, transparent 70%);
+}
+
+/* LED inactivo (apagado) */
+.ledBody:not(.active) {
+  background: #1a1a1a;
+  box-shadow: inset 0 0 4px #000;
+}
+.ledBody:not(.active) .innerChip {
+  opacity: 0.2;
+  filter: blur(0);
+}
+
+/* =========================================
+   ETIQUETA TEXTO
+========================================= */
+.textStack {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.label {
+  font-size: var(--font-size);
+  letter-spacing: 0.1em;
+  color: #aaa;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.indicatorLine {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #ffb300, transparent);
+  opacity: 0.3;
+}
+
+/* =========================================
+   ANIMACIONES
+========================================= */
+@keyframes lensMove {
+  0% { transform: translate(-1px, -1px); }
+  50% { transform: translate(1px, 1px); }
+  100% { transform: translate(-1px, -1px); }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+/* =========================================
+   VARIACIONES INDUSTRIALES (desgaste, envejecimiento)
+========================================= */
+/* Versión "industrial" con acabado más mate */
+.industrial .bezel {
+  background: radial-gradient(circle at 30% 30%, #3a3c36, #0d0e0d);
+}
+.industrial .ledBody {
+  border: 1px solid rgba(0,0,0,0.5);
+}
+.industrial .lensReflection {
+  opacity: 0.15;
+}
+
+/* Simulación de envejecimiento (pequeñas imperfecciones) */
+.aged {
+  filter: contrast(0.9) brightness(0.8);
+}
+.aged .bezel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(100,50,0,0.2) 0%, transparent 70%);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}

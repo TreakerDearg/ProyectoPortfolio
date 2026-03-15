@@ -1,126 +1,159 @@
 "use client";
-
-import { createContext, useContext, useState, useEffect, useCallback } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
 const SystemContext = createContext();
 
+// Valores iniciales
+const INITIAL_STATE = {
+  systemStatus: "ONLINE",        // ONLINE, OFFLINE, MAINTENANCE, BOOTING
+  uptime: 0,
+  cpuLoad: 45,
+  memUsage: 62,
+  temp: 58,
+  radiationLevel: 12,
+  geigerActive: true,
+  radDanger: false,
+  exhaustIntensity: "normal",    // normal, high, critical
+  linkEst: true,
+  syncLock: false,
+  networkActivity: [3, 5, 2, 7, 4, 6], // valores para las barras
+};
+
 export function SystemProvider({ children }) {
-  /* =========================
-      ESTADOS DE NÚCLEO
-  ========================= */
-  const [currentView, setCurrentView] = useState("SYSTEM_INIT");
-  const [selectedMission, setSelectedMission] = useState(null);
-  const [systemStatus, setSystemStatus] = useState("BOOTING"); // ONLINE, OFFLINE, BOOTING
-  const [isBooting, setIsBooting] = useState(true);
+  const [systemStatus, setSystemStatus] = useState(INITIAL_STATE.systemStatus);
+  const [uptime, setUptime] = useState(INITIAL_STATE.uptime);
+  const [cpuLoad, setCpuLoad] = useState(INITIAL_STATE.cpuLoad);
+  const [memUsage, setMemUsage] = useState(INITIAL_STATE.memUsage);
+  const [temp, setTemp] = useState(INITIAL_STATE.temp);
+  const [radiationLevel, setRadiationLevel] = useState(INITIAL_STATE.radiationLevel);
+  const [geigerActive, setGeigerActive] = useState(INITIAL_STATE.geigerActive);
+  const [linkEst, setLinkEst] = useState(INITIAL_STATE.linkEst);
+  const [syncLock, setSyncLock] = useState(INITIAL_STATE.syncLock);
+  const [networkActivity, setNetworkActivity] = useState(INITIAL_STATE.networkActivity);
 
-  /* =========================
-      LOGS DE TERMINAL
-  ========================= */
-  const [terminalLogs, setTerminalLogs] = useState([]);
-
-  const addLog = useCallback((message, type = "INFO") => {
-    const timestamp = new Date().toLocaleTimeString('en-GB', { hour12: false });
-    let prefix = ">>";
-    if (type === "ERR") prefix = "!! ERROR !!";
-    if (type === "WARN") prefix = ">> WARN";
-    if (type === "CMD") prefix = "[CMD]";
-    
-    setTerminalLogs(prev => {
-      const newLog = `[${timestamp}] ${prefix} ${message.toUpperCase()}`;
-      return [...prev, newLog].slice(-50); // Buffer de 50 líneas
-    });
+  // Simulador de contador de actividad (uptime)
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setUptime(prev => prev + 1);
+    }, 1000);
+    return () => clearInterval(timer);
   }, []);
 
-  /* =========================
-      MÉTRICAS DINÁMICAS
-  ========================= */
-  const [metrics, setMetrics] = useState({
-    cpu: 0,
-    memory: 0,
-    temp: 0,
-    sync: 0
-  });
-
-  /* =========================
-      ACCIONES DE NAVEGACIÓN
-  ========================= */
-  const changeView = (viewId) => {
-    if (systemStatus === "OFFLINE" && viewId !== "SYSTEM_EXIT") {
-      setSystemStatus("ONLINE");
-    }
-    setCurrentView(viewId);
-    addLog(`navigating_to: ${viewId}`, "CMD");
-  };
-
-  const selectMission = (mission) => {
-    if (mission.status === "LOCKED") {
-      addLog(`access_denied: mission_${mission.id} is encrypted`, "ERR");
-      return false;
-    }
-    setSelectedMission(mission);
-    addLog(`mounting_data_strata: ${mission.title}...`);
-    return true;
-  };
-
-  /* =========================
-      EFECTO DE ARRANQUE (BOOT)
-  ========================= */
+  // Simular fluctuaciones normales del sistema cuando está ONLINE
   useEffect(() => {
-    const bootSequence = [
-      "loading_amber_kernel_v2.1.0",
-      "initializing_robco_protocols",
-      "mounting_local_node_arg_01",
-      "check_biometrics: valid",
-      "system_check: operational",
-      "welcome_back_operator"
-    ];
-
-    bootSequence.forEach((msg, i) => {
-      setTimeout(() => addLog(msg), i * 500);
-    });
-
-    setTimeout(() => {
-      setIsBooting(false);
-      setSystemStatus("ONLINE");
-      setMetrics({ cpu: 12, memory: 34, temp: 32, sync: 99.8 });
-    }, bootSequence.length * 500);
-  }, [addLog]);
-
-  /* =========================
-      SIMULACIÓN DE CARGA REAL
-  ========================= */
-  useEffect(() => {
-    if (isBooting || systemStatus === "OFFLINE") return;
+    if (systemStatus !== "ONLINE") return;
 
     const interval = setInterval(() => {
-      setMetrics(prev => ({
-        cpu: Math.floor(Math.random() * 12) + 8,
-        memory: Math.floor(Math.random() * 5) + 42,
-        temp: Math.floor(Math.random() * 3) + 38,
-        sync: parseFloat((99 + Math.random() * 0.9).toFixed(2))
-      }));
+      // Pequeñas variaciones aleatorias (±3 para cpu, ±2 para otros)
+      setCpuLoad(prev => Math.min(100, Math.max(0, prev + (Math.random() * 6 - 3))));
+      setMemUsage(prev => Math.min(100, Math.max(0, prev + (Math.random() * 4 - 2))));
+      setTemp(prev => Math.min(100, Math.max(0, prev + (Math.random() * 2 - 1))));
+      setRadiationLevel(prev => Math.min(100, Math.max(0, prev + (Math.random() * 2 - 1))));
+
+      // Actualizar actividad de red (simula tráfico)
+      setNetworkActivity(prev => {
+        const newArr = [...prev.slice(1), Math.floor(Math.random() * 8) + 2];
+        return newArr;
+      });
     }, 3000);
 
     return () => clearInterval(interval);
-  }, [isBooting, systemStatus]);
+  }, [systemStatus]);
+
+  // Derivar radDanger de radiationLevel
+  useEffect(() => {
+    // No se usa estado separado, lo calculamos en el value
+  }, [radiationLevel]);
+
+  // Derivar exhaustIntensity de temp
+  useEffect(() => {
+    // No se usa estado separado, lo calculamos en el value
+  }, [temp]);
+
+  // Derivar geigerActive (por ejemplo, siempre true si hay radiación)
+  useEffect(() => {
+    setGeigerActive(radiationLevel > 0);
+  }, [radiationLevel]);
+
+  // Función para forzar un error crítico (simula fallo)
+  const triggerSystemFailure = useCallback(() => {
+    setSystemStatus("OFFLINE");
+    setCpuLoad(0);
+    setMemUsage(0);
+    setTemp(90); // sobrecalentamiento
+    setRadiationLevel(85);
+    setLinkEst(false);
+    setSyncLock(false);
+    // networkActivity se queda como está
+  }, []);
+
+  // Función para reiniciar el sistema
+  const rebootSystem = useCallback(() => {
+    setSystemStatus("BOOTING");
+    setCpuLoad(20);
+    setMemUsage(30);
+    setTemp(40);
+    setRadiationLevel(5);
+    setLinkEst(false);
+    setSyncLock(false);
+    // Después de 2 segundos pasa a ONLINE
+    setTimeout(() => {
+      setSystemStatus("ONLINE");
+      setCpuLoad(45);
+      setMemUsage(62);
+      setTemp(58);
+      setRadiationLevel(12);
+      setLinkEst(true);
+      setSyncLock(false);
+    }, 2000);
+  }, []);
+
+  // Función para simular entrada en mantenimiento
+  const setMaintenance = useCallback(() => {
+    setSystemStatus("MAINTENANCE");
+    // En mantenimiento, algunos valores pueden congelarse o mostrar estados especiales
+  }, []);
+
+  // Valores calculados (derivados) para no duplicar estado
+  const radDanger = radiationLevel > 50;
+  const exhaustIntensity = temp > 75 ? "critical" : temp > 65 ? "high" : "normal";
+
+  const value = {
+    // Estados principales
+    systemStatus,
+    setSystemStatus,
+    uptime,
+    
+    // Telemetría
+    cpuLoad,
+    memUsage,
+    temp,
+    radiationLevel,
+    geigerActive,
+    radDanger,
+    exhaustIntensity,
+    
+    // Indicadores de red/comms
+    linkEst,
+    syncLock,
+    networkActivity,
+    
+    // Funciones de control
+    triggerSystemFailure,
+    rebootSystem,
+    setMaintenance,
+    
+    // Setters individuales (para debugging o casos especiales)
+    setCpuLoad,
+    setMemUsage,
+    setTemp,
+    setRadiationLevel,
+    setLinkEst,
+    setSyncLock,
+  };
 
   return (
-    <SystemContext.Provider
-      value={{
-        // Estados
-        currentView,
-        changeView,
-        selectedMission,
-        setSelectedMission,
-        selectMission,
-        systemStatus,
-        setSystemStatus,
-        terminalLogs,
-        addLog,
-        metrics,
-        isBooting
-      }}
-    >
+    <SystemContext.Provider value={value}>
       {children}
     </SystemContext.Provider>
   );
@@ -128,6 +161,8 @@ export function SystemProvider({ children }) {
 
 export function useSystem() {
   const context = useContext(SystemContext);
-  if (!context) throw new Error("useSystem must be used within a SystemProvider");
+  if (!context) {
+    throw new Error("useSystem debe ser usado dentro de un SystemProvider");
+  }
   return context;
 }

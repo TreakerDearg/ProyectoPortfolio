@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Power, ShieldAlert, Terminal } from 'lucide-react';
+import { Power, ShieldAlert } from 'lucide-react';
 import { useSystem } from "./context/SystemContext";
 import ExitPrompt from './ExitPrompt';
 import styles from './styles/exitButton.module.css';
@@ -22,59 +22,76 @@ export default function ExitButton() {
   return (
     <div className={styles.exitContainer}>
       <motion.button
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
-        whileHover={{ scale: 1.02, x: -5 }}
-        whileTap={{ scale: 0.98 }}
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.96 }}
         onClick={() => setOpen(true)}
-        className={`
-          ${styles.retroExitBtn} 
-          ${isCritical ? styles.criticalState : styles.normalState}
-        `}
+        className={`${styles.industrialBtn} ${isCritical ? styles.critical : styles.normal} ${styles.footerButton}`}
       >
-        {/* INDICADOR DE HARDWARE IZQUIERDO */}
-        <div className={styles.hardwareSlot}>
-          <div className={styles.slotDetail} />
-          <div className={styles.slotDetail} />
-          <div className={styles.slotDetail} />
-        </div>
+        {/* Textura de metal cepillado */}
+        <div className={styles.metalGrain} />
 
-        {/* CONTENEDOR DE INFORMACIÓN TÉCNICA */}
-        <div className={styles.infoWrapper}>
-          <div className={styles.topRow}>
-            <span className={styles.userTag}>
-              {isCritical ? "ERR: SYSTEM_HALTED" : "OP: LEANDRO_DEV"}
+        {/* Tornillos decorativos (simplificados, se posicionarán con CSS) */}
+        <div className={styles.screw} />
+        <div className={styles.screw} />
+        <div className={styles.screw} />
+        <div className={styles.screw} />
+
+        {/* Contenedor principal en fila horizontal */}
+        <div className={styles.buttonContent}>
+          {/* LED de estado */}
+          <div className={`${styles.statusLed} ${isCritical ? styles.ledRed : styles.ledGreen}`}>
+            <div className={styles.ledInner} />
+          </div>
+
+          {/* Grupo de textos */}
+          <div className={styles.textGroup}>
+            <span className={styles.tag}>
+              {isCritical ? "EMERGENCY" : "POWER"}
             </span>
-            <div className={styles.statusIndicator}>
-              <div className={styles.pulsePoint} />
+            <span className={styles.label}>
+              {isCritical ? "SHUTDOWN" : "TERMINATE"}
+            </span>
+            <span className={styles.subLabel}>
+              {isCritical ? "ERR_0xDEADBEEF" : "PRESS"}
+            </span>
+          </div>
+
+          {/* Módulo de icono */}
+          <div className={styles.iconModule}>
+            <div className={styles.iconHousing}>
+              <AnimatePresence mode="wait">
+                {isCritical ? (
+                  <motion.div
+                    key="alert"
+                    initial={{ rotate: -10, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: 10, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <ShieldAlert size={14} className={styles.iconAlert} />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="power"
+                    initial={{ scale: 0.5, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.5, opacity: 0 }}
+                  >
+                    <Power size={14} className={styles.iconPower} />
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
-          
-          <div className={styles.mainLabel}>
-            {isCritical ? "CONFIRM_SHUTDOWN" : "DISCONNECT_NODE"}
-          </div>
-        </div>
-
-        {/* MÓDULO DE ICONO CON ESTILO DE BOTÓN DE PRESIÓN */}
-        <div className={styles.iconModule}>
-          {isCritical ? (
-            <ShieldAlert size={16} className={styles.alertIcon} />
-          ) : (
-            <Power size={16} className={styles.powerIcon} />
-          )}
-        </div>
-
-        {/* DECORACIÓN DE CÓDIGO DE ERROR / REGISTRO */}
-        <div className={styles.serialCode}>
-          {isCritical ? "0xDEADBEEF" : "0x000F-12"}
         </div>
       </motion.button>
 
-      {/* PORTAL PARA EL PROMPT DE SALIDA */}
       {mounted && open && createPortal(
         <AnimatePresence mode="wait">
-          <ExitPrompt 
-            onCancel={() => setOpen(false)} 
+          <ExitPrompt
+            onCancel={() => setOpen(false)}
             isCritical={isCritical}
           />
         </AnimatePresence>,

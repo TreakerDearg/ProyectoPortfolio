@@ -1,0 +1,125 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  user-select: none;
+}
+
+/* Tamaños de la unidad completa */
+.sm { --led-dim: 10px; --font-size: 7px; }
+.md { --led-dim: 14px; --font-size: 9px; }
+.lg { --led-dim: 20px; --font-size: 11px; }
+
+.ledUnit {
+  position: relative;
+  width: var(--led-dim);
+  height: var(--led-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* El marco metálico donde se inserta el LED */
+.bezel {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  padding: 2px;
+  background: linear-gradient(145deg, #111, #333);
+  box-shadow: 
+    0 1px 1px rgba(255,255,255,0.1),
+    inset 0 1px 3px rgba(0,0,0,0.8);
+  z-index: 2;
+}
+
+.ledBody {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(0,0,0,0.5);
+}
+
+/* Colores Base (Apagados) */
+.green { --color-primary: #32ff64; --color-off: #0a1a0a; }
+.amber { --color-primary: #ffb400; --color-off: #1a150a; }
+.red   { --color-primary: #ff3232; --color-off: #1a0a0a; }
+
+.ledBody.green { background: #0a1a0a; }
+.ledBody.amber { background: #1a150a; }
+.ledBody.red   { background: #1a0a0a; }
+
+/* Estados Activos */
+.ledBody.active {
+  background: var(--color-primary);
+  box-shadow: 
+    inset 0 0 8px rgba(0,0,0,0.6),
+    0 0 4px var(--color-primary);
+}
+
+/* El filamento o chip interno */
+.innerChip {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 30%; height: 30%;
+  transform: translate(-50%, -50%);
+  background: rgba(255,255,255,0.05);
+  border-radius: 1px;
+  z-index: 3;
+}
+
+.active .innerChip {
+  background: #fff;
+  box-shadow: 0 0 10px #fff;
+}
+
+/* Reflejo de luz en la lente de plástico */
+.lensReflection {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.2) 0%, transparent 60%);
+  z-index: 4;
+}
+
+/* Resplandor externo (Glow) */
+.glow {
+  position: absolute;
+  inset: -100%; /* Se expande más allá del LED */
+  z-index: 1;
+  pointer-events: none;
+  filter: blur(12px);
+}
+
+.glow.green { background: radial-gradient(circle, rgba(50, 255, 100, 0.4) 0%, transparent 70%); }
+.glow.amber { background: radial-gradient(circle, rgba(255, 180, 0, 0.4) 0%, transparent 70%); }
+.glow.red   { background: radial-gradient(circle, rgba(255, 50, 50, 0.4) 0%, transparent 70%); }
+
+/* Texto y Etiqueta Industrial */
+.textStack {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  font-size: var(--font-size);
+  font-weight: 900;
+  color: #444;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-family: 'ui-monospace', monospace;
+}
+
+.active + .textStack .label {
+  color: #888;
+  text-shadow: 0 0 5px rgba(255,255,255,0.1);
+}
+
+.indicatorLine {
+  width: 30px;
+  height: 2px;
+  background: #111;
+  margin-top: 3px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}

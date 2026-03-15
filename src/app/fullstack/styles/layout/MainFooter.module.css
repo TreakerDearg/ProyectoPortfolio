@@ -1,0 +1,401 @@
+/* =========================================
+   FOOTER CHASSIS
+========================================= */
+.footerChassis {
+  width: 100%;
+  height: 90px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  padding: 0 26px;
+  background: #0a0a0a;
+  border-top: 2px solid #1d1d1d;
+  box-shadow: inset 0 10px 25px rgba(0, 0, 0, 0.8), 0 -5px 20px rgba(0, 0, 0, 0.6);
+  position: relative;
+  font-family: monospace;
+  overflow: hidden;
+  gap: 28px;
+  contain: layout paint;
+  will-change: transform;
+}
+
+/* =========================================
+   STRUCTURAL SCREWS
+========================================= */
+.screwTL {
+  position: absolute;
+  top: 8px;
+  left: 14px;
+}
+.screwTR {
+  position: absolute;
+  top: 8px;
+  right: 14px;
+}
+
+/* =========================================
+   LEFT ZONE
+========================================= */
+.footerLeft {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  min-width: 0;
+}
+
+/* =========================================
+   MODULE (DATA_UPLINKS)
+========================================= */
+.moduleSection {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.moduleHeader {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-left: 4px;
+}
+.headerIcon {
+  color: #b87a1d;
+  opacity: 0.7;
+}
+.moduleTitle {
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #ffb642;
+  opacity: 0.7;
+}
+.moduleBody {
+  display: flex;
+  gap: 8px;
+  background: #050505;
+  padding: 6px 10px;
+  border: 1px solid #1e1e1e;
+  border-radius: 3px;
+  position: relative;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.9);
+}
+.moduleScrew {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+}
+
+/* =========================================
+   IO PORT
+========================================= */
+.ioPort {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+.ioPort:hover {
+  transform: translateY(-1px);
+}
+.portInternal {
+  width: 34px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #020202;
+  border: 1px solid #242424;
+  border-radius: 3px;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.9);
+  transition: all 0.2s ease;
+}
+.ioPort:hover .portInternal {
+  border-color: #ffb642;
+  box-shadow: 0 0 6px rgba(255, 182, 66, 0.4), inset 0 0 6px rgba(0, 0, 0, 0.9);
+}
+.phosphorIcon {
+  color: #ffb642;
+  filter: drop-shadow(0 0 4px rgba(255, 182, 66, 0.6));
+}
+.portLabel {
+  font-size: 7px;
+  letter-spacing: 0.14em;
+  color: #a3a3a3;
+  opacity: 0.6;
+}
+
+/* =========================================
+   CENTER CORE BUS
+========================================= */
+.footerCore {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+}
+.coreColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.coreHeader {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-left: 2px;
+}
+.coreIcon {
+  color: #ffb642;
+  opacity: 0.5;
+  animation: corePulse 2s infinite;
+}
+.coreLabel {
+  font-size: 7px;
+  letter-spacing: 0.2em;
+  color: #9c9c9c;
+  text-transform: uppercase;
+}
+.memoryLed {
+  width: 6px;
+  height: 6px;
+  background: #ffb642;
+  border-radius: 50%;
+  box-shadow: 0 0 6px #ffb642, 0 0 10px rgba(255, 182, 66, 0.6);
+}
+
+/* =========================================
+   POWER DIVIDER (con etiqueta)
+========================================= */
+.powerDivider {
+  width: 36px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0c0c0c;
+  border: 1px solid #1f1f1f;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.9);
+}
+.hazardStripes {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(45deg, #ffb642 0px, #ffb642 4px, #0a0a0a 4px, #0a0a0a 8px);
+  opacity: 0.15;
+}
+.powerLabel {
+  position: relative;
+  font-size: 8px;
+  font-weight: bold;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #ffb642;
+  background: rgba(10, 10, 10, 0.7);
+  padding: 2px 4px;
+  border-radius: 2px;
+  box-shadow: 0 0 6px rgba(255, 182, 66, 0.4);
+  z-index: 1;
+}
+
+/* =========================================
+   RIGHT ZONE (contiene Security, Vault y Terminal)
+========================================= */
+.footerRight {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  justify-self: end;
+  flex-wrap: nowrap; /* Evita que los elementos bajen a otra línea */
+  max-width: 100%;   /* Permite que se encoja si es necesario */
+}
+
+/* =========================================
+   SECURITY READOUT
+========================================= */
+.securityReadout {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.statusBadge {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 6px;
+  background: #070707;
+  border: 1px solid #202020;
+  border-radius: 2px;
+}
+.statusPing {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ffb642;
+  opacity: 0.2;
+  animation: statusPing 2s infinite;
+}
+.statusLed {
+  width: 6px;
+  height: 6px;
+  background: #ffb642;
+  border-radius: 50%;
+  box-shadow: 0 0 6px #ffb642, 0 0 12px rgba(255, 182, 66, 0.6);
+}
+.statusText {
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  color: #ffb642;
+  opacity: 0.8;
+}
+.protocolLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 7px;
+  letter-spacing: 0.15em;
+  color: #6b6b6b;
+  opacity: 0.5;
+}
+
+/* =========================================
+   EXIT VAULT
+========================================= */
+.vaultChassis {
+  position: relative;
+  padding: 15px;
+  background: #050505;
+  border: 1px solid #2a2a2a;
+  border-radius: 4px;
+  box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.9), 0 0 6px rgba(0, 0, 0, 0.5);
+}
+.vaultInner {
+  padding: 15px;
+}
+/* Tornillos del vault */
+.vaultTL { position: absolute; top: -3px; left: -3px; }
+.vaultTR { position: absolute; top: -3px; right: -3px; }
+.vaultBL { position: absolute; bottom: -3px; left: -3px; }
+.vaultBR { position: absolute; bottom: -3px; right: -3px; }
+
+/* =========================================
+   TERMINAL MODULE (nuevo)
+========================================= */
+.terminalModule {
+  position: relative;
+  background: #050505;
+  border: 1px solid #2a2a2a;
+  border-radius: 4px;
+  padding: 4px;
+  box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.9), 0 0 6px rgba(0, 0, 0, 0.5);
+  min-width: 70px;          /* Ancho mínimo para que se vea legible */
+  display: flex;
+  flex-direction: column;
+}
+.terminalHeader {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 4px;
+  border-bottom: 1px solid #1f1f1f;
+  margin-bottom: 2px;
+}
+.terminalIcon {
+  color: #ffb642;
+  opacity: 0.8;
+  width: 10px;
+  height: 10px;
+}
+.terminalLabel {
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #ffb642;
+  opacity: 0.9;
+}
+.terminalBody {
+  padding: 2px 4px;
+  font-size: 7px;
+  color: #a3a3a3;
+  letter-spacing: 0.05em;
+  background: #020202;
+  border-radius: 2px;
+  text-align: center;
+}
+.terminalText {
+  color: #ffb642;
+  opacity: 0.9;
+}
+/* Tornillos decorativos para el terminal (opcionales) */
+.terminalScrewTL {
+  position: absolute;
+  top: -3px;
+  left: -3px;
+}
+.terminalScrewTR {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+}
+
+/* =========================================
+   ANIMATIONS
+========================================= */
+@keyframes corePulse {
+  0% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+  100% { opacity: 0.3; }
+}
+@keyframes statusPing {
+  0% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+  70% {
+    transform: scale(3);
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+/* Cuando el ancho es <= 1100px, se oculta el centro */
+@media (max-width: 1100px) {
+  .footerCore {
+    display: none;
+  }
+  .footerChassis {
+    grid-template-columns: auto auto; /* izquierda y derecha */
+  }
+  /* Ajustar la columna derecha para que sus elementos no se salgan */
+  .footerRight {
+    gap: 16px; /* Reducimos el gap para que quepan mejor */
+  }
+}
+
+/* Cuando el ancho es <= 720px, se oculta la izquierda */
+@media (max-width: 720px) {
+  .footerLeft {
+    display: none;
+  }
+  .footerChassis {
+    grid-template-columns: 1fr auto; /* solo derecha visible, la izquierda ocupa espacio pero oculta */
+    padding: 0 18px;
+  }
+  .footerRight {
+    gap: 12px; /* Reducimos aún más el gap */
+  }
+  /* Si es necesario, podemos achicar ligeramente el terminal */
+  .terminalModule {
+    min-width: 60px;
+    transform: scale(0.95); /* Ajuste fino */
+  }
+}

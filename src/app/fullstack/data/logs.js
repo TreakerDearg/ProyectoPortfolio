@@ -1,0 +1,46 @@
+import { Terminal, AlertTriangle, Shield, CheckCircle } from 'lucide-react';
+
+export const logsData = [
+  { id: 1, time: "09:42", zone: "SECTOR 7", message: "GEIGER COUNT NOMINAL", type: "info" },
+  { id: 2, time: "09:47", zone: "ATRIUM", message: "AIR FILTER OK", type: "success" },
+  { id: 3, time: "09:53", zone: "DOOR 42C", message: "SECURED", type: "success" },
+  { id: 4, time: "10:02", zone: "REACTOR", message: "TEMPERATURE RISING", type: "warning" },
+  { id: 5, time: "10:05", zone: "COMMS", message: "SIGNAL LOST", type: "danger" },
+  { id: 6, time: "10:08", zone: "ATRIUM", message: "RADIATION SPIKE", type: "danger" },
+  { id: 7, time: "10:12", zone: "SECTOR 3", message: "WATER PURIFIER ONLINE", type: "success" },
+  { id: 8, time: "10:15", zone: "REACTOR", message: "CORE PRESSURE NORMAL", type: "info" },
+  { id: 9, time: "10:19", zone: "DOOR 7A", message: "MANUAL OVERRIDE", type: "warning" },
+  { id: 10, time: "10:22", zone: "COMMS", message: "INCOMING TRANSMISSION", type: "info" },
+  { id: 11, time: "10:27", zone: "SECTOR 5", message: "GECK STABLE", type: "success" },
+  { id: 12, time: "10:31", zone: "REACTOR", message: "COOLANT LEAK DETECTED", type: "danger" },
+  { id: 13, time: "10:34", zone: "ATRIUM", message: "EVACUATION DRILL", type: "warning" },
+  { id: 14, time: "10:38", zone: "DOOR 42C", message: "AUTHENTICATION REQUIRED", type: "warning" },
+  { id: 15, time: "10:42", zone: "COMMS", message: "ENCRYPTION ACTIVE", type: "info" },
+  { id: 16, time: "10:46", zone: "SECTOR 7", message: "RADIOACTIVE DECAY", type: "info" },
+  { id: 17, time: "10:49", zone: "REACTOR", message: "ROD POSITION ADJUSTED", type: "success" },
+  { id: 18, time: "10:53", zone: "ATRIUM", message: "POWER FLUCTUATION", type: "warning" },
+  { id: 19, time: "10:57", zone: "COMMS", message: "OUTPOST 3 OFFLINE", type: "danger" },
+  { id: 20, time: "11:02", zone: "SECTOR 3", message: "HYDROPONICS OK", type: "success" },
+  { id: 21, time: "11:06", zone: "DOOR 7A", message: "MALFUNCTION", type: "danger" },
+  { id: 22, time: "11:09", zone: "REACTOR", message: "BACKUP GENERATOR ONLINE", type: "success" },
+  { id: 23, time: "11:13", zone: "COMMS", message: "RADIO SILENCE", type: "info" },
+  { id: 24, time: "11:17", zone: "SECTOR 5", message: "MUTATION DETECTED", type: "danger" },
+  { id: 25, time: "11:21", zone: "ATRIUM", message: "SECURITY BREACH", type: "danger" },
+  { id: 26, time: "11:25", zone: "REACTOR", message: "EMERGENCY SHUTDOWN", type: "warning" },
+  { id: 27, time: "11:29", zone: "COMMS", message: "SIGNAL REGAINED", type: "success" },
+  { id: 28, time: "11:33", zone: "SECTOR 7", message: "AIR QUALITY DROPPING", type: "warning" },
+  { id: 29, time: "11:37", zone: "DOOR 42C", message: "HATCH OPEN", type: "info" },
+  { id: 30, time: "11:41", zone: "REACTOR", message: "CORE TEMP CRITICAL", type: "danger" },
+  { id: 31, time: "11:45", zone: "ATRIUM", message: "ALL CLEAR", type: "success" },
+  { id: 32, time: "11:49", zone: "COMMS", message: "NEW ORDER RECEIVED", type: "info" },
+  { id: 33, time: "11:53", zone: "SECTOR 3", message: "FILTER REPLACED", type: "success" },
+  { id: 34, time: "11:57", zone: "REACTOR", message: "STABLE", type: "info" },
+];
+
+// Mapeo de tipos a íconos (opcional, se usa en el componente)
+export const typeIcons = {
+  info: Terminal,
+  warning: AlertTriangle,
+  danger: Shield,
+  success: CheckCircle,
+};

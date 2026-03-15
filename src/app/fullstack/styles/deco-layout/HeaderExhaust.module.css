@@ -1,0 +1,368 @@
+/* =========================================
+   HEADER EXHAUST MODULE
+   Estilo industrial / térmico
+   Versión mejorada con partículas y efectos
+========================================= */
+
+/* Contenedor principal del exhaust.
+   Ocupa el 100% del espacio asignado por .exhaustContainer (48x30 o 56x36 px)
+   Se posiciona relativamente para que los elementos absolutos se ajusten a él.
+*/
+.exhaustChassis {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #060606;
+  border: 1px solid #2a2a2a;
+  border-radius: 4px;
+  overflow: hidden; /* Evita que partículas se salgan del contenedor */
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px; /* Reducido para aprovechar mejor el espacio */
+  font-family: 'Share Tech Mono', monospace;
+}
+
+/* =========================================
+   THERMAL CORE (núcleo de calor)
+========================================= */
+.thermalCore {
+  position: relative;
+  width: 100%;
+  height: 40%; /* Ocupa el 40% de la altura del contenedor */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+}
+
+/* Capa de resplandor térmico (color dinámico desde JS) */
+.heatGlow {
+  position: absolute;
+  width: 80%;
+  height: 80%;
+  border-radius: 50%;
+  filter: blur(12px);
+  opacity: 0.8;
+  transition: background-color 0.3s ease;
+  z-index: 1;
+}
+
+/* Efecto de calima / distorsión (estático) */
+.heatHaze {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.03) 0px,
+    rgba(255, 255, 255, 0.03) 2px,
+    transparent 2px,
+    transparent 6px
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Turbina rotativa (fan) */
+.fanRotor {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #1a1a1a;
+  border: 2px solid #333;
+  position: relative;
+  z-index: 3;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.8);
+}
+
+/* Aspas de la turbina (dibujadas con pseudo-elementos) */
+.fanRotor::before,
+.fanRotor::after {
+  content: '';
+  position: absolute;
+  background: #555;
+  border-radius: 1px;
+  box-shadow: 0 0 4px #777;
+}
+
+.fanRotor::before {
+  top: 50%;
+  left: 2px;
+  right: 2px;
+  height: 2px;
+  transform: translateY(-50%);
+}
+
+.fanRotor::after {
+  left: 50%;
+  top: 2px;
+  bottom: 2px;
+  width: 2px;
+  transform: translateX(-50%);
+}
+
+/* =========================================
+   FIN ARRAY (aletas de disipación)
+========================================= */
+.finArray {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  height: 30%;
+  gap: 2px;
+  padding: 0 4px;
+  z-index: 2;
+}
+
+.coolingFin {
+  position: relative;
+  width: 6px;
+  height: 16px;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 1px;
+  transform: skewX(-5deg);
+  overflow: hidden;
+}
+
+.finBevel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.finShadow {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+/* =========================================
+   STEAM FIELD (partículas de vapor)
+========================================= */
+.steamField {
+  position: absolute;
+  top: 20%;
+  left: 0;
+  width: 100%;
+  height: 60%;
+  pointer-events: none;
+  z-index: 5;
+  overflow: hidden;
+}
+
+.steamParticle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  filter: blur(2px);
+  bottom: 0;
+  left: 10%;
+}
+
+/* Posiciones aleatorias para las partículas (se pueden generar desde JS, pero aquí damos variedad) */
+.steamParticle:nth-child(odd) {
+  left: 30%;
+}
+.steamParticle:nth-child(3) {
+  left: 50%;
+}
+.steamParticle:nth-child(4) {
+  left: 70%;
+}
+.steamParticle:nth-child(5) {
+  left: 85%;
+}
+.steamParticle:nth-child(6) {
+  left: 20%;
+}
+
+/* =========================================
+   SPARK FIELD (chispas, solo en crítico)
+========================================= */
+.sparkField {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 6;
+  overflow: hidden;
+}
+
+.sparkParticle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: #ffaa00;
+  border-radius: 50%;
+  filter: blur(1px);
+  box-shadow: 0 0 6px #ffaa00;
+  bottom: 10%;
+  left: 50%;
+}
+
+/* =========================================
+   READOUT (LED y etiqueta numérica)
+========================================= */
+.decoOverlay {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 2px;
+  z-index: 10;
+}
+
+.readout {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #0a0a0a;
+  padding: 2px 6px;
+  border: 1px solid #2a2a2a;
+  border-radius: 3px;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.8);
+}
+
+.statusLed {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981; /* color por defecto, sobrescrito por estilo inline */
+  box-shadow: 0 0 8px currentColor;
+  transition: background-color 0.2s ease;
+}
+
+.serialNumber {
+  font-size: 6px;
+  letter-spacing: 0.1em;
+  color: #ffb300;
+  opacity: 0.9;
+  white-space: nowrap;
+  text-shadow: 0 0 4px rgba(255, 179, 0, 0.4);
+}
+
+/* =========================================
+   RADIATION BAR (barra de radiación)
+========================================= */
+.radBar {
+  width: 90%;
+  height: 2px;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 1px;
+  margin: 2px auto;
+  overflow: hidden;
+}
+
+.radFill {
+  height: 100%;
+  background: #ef4444;
+  box-shadow: 0 0 4px #ef4444;
+  transition: width 0.3s ease;
+}
+
+/* =========================================
+   WARNING LABEL (etiqueta de advertencia)
+========================================= */
+.warningLabel {
+  font-size: 5px;
+  letter-spacing: 0.1em;
+  text-align: center;
+  color: #ffb300;
+  opacity: 0.7;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.warningText {
+  color: #f59e0b;
+}
+.criticalText {
+  color: #ef4444;
+  font-weight: bold;
+}
+
+/* =========================================
+   DIAGNOSTIC PANEL (modo diagnóstico)
+========================================= */
+.diagnosticPanel {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.85);
+  color: #0f0;
+  font-size: 5px;
+  display: flex;
+  justify-content: space-around;
+  padding: 2px 0;
+  border-top: 1px solid #333;
+  z-index: 20;
+  backdrop-filter: blur(2px);
+  letter-spacing: 0.05em;
+}
+
+.diagnosticPanel span {
+  color: #0f0;
+  text-shadow: 0 0 4px #0f0;
+}
+
+/* =========================================
+   ANIMACIONES ADICIONALES
+   (Las principales están en JS con Framer Motion)
+========================================= */
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+/* Microinteracción para el hover del contenedor (opcional) */
+.exhaustChassis:hover {
+  border-color: #ffb642;
+  box-shadow: inset 0 0 12px #000, 0 0 8px rgba(255, 182, 66, 0.3);
+}
+
+/* =========================================
+   AJUSTES DE TAMAÑO PARA DIFERENTES CONTENEDORES
+   (Si el .exhaustContainer es más pequeño, esto ayuda)
+========================================= */
+
+/* Selector de alta especificidad para contenedores compactos */
+.exhaustContainer[style*="width: 48px"] .exhaustChassis {
+  /* Reducimos el grosor del borde y el padding para ganar espacio */
+  border-width: 1px;
+  padding: 2px;
+  
+  /* Ajustamos la escala para que el contenido no se desborde */
+  transform: scale(0.9);
+  transform-origin: center;
+  
+  /* Optimizamos la opacidad para que no se vea saturado en tamaño pequeño */
+  opacity: 0.9;
+}
+
+/* Modificador para la rejilla interna cuando el padre es pequeño */
+.exhaustContainer[style*="width: 48px"] .meshOverlay {
+  background-size: 3px 3px; /* Rejilla más fina para 48px */
+  opacity: 0.3;
+}
+
+/* MODIFICAR AQUÍ: 
+   Si quieres que el chasis sea más oscuro en modo compacto, 
+   cambia el background-color abajo. 
+*/
+.exhaustContainer[style*="width: 48px"] .exhaustChassis {
+  background-color: #050505; 
+}

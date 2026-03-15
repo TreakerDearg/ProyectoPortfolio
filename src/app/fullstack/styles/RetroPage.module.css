@@ -1,0 +1,465 @@
+/* =========================================
+   RETRO PAGE - PIP-BOY STYLE CONSOLE
+   Vault-Tec / RobCo / IBM 1950s
+   ========================================= */
+
+/* =========================================
+   CRT CONTAINER - SCROLLABLE
+   ========================================= */
+.crtContainer {
+  position: relative;
+  width: 100%;
+  height: 100vh; /* Ocupa toda la altura de la ventana */
+  overflow-y: auto; /* Scroll vertical si el contenido excede */
+  background: #0a0a0a;
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+  scroll-behavior: smooth; /* Scroll suave */
+}
+
+/* Scrollbar personalizada para el contenedor principal */
+.crtContainer::-webkit-scrollbar {
+  width: 8px;
+}
+.crtContainer::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+.crtContainer::-webkit-scrollbar-thumb {
+  background: #2a2a2a;
+  border-radius: 4px;
+  border: 1px solid #ffb300;
+}
+.crtContainer::-webkit-scrollbar-thumb:hover {
+  background: #3a3a3a;
+}
+
+/* Capa de scanlines (efecto de tubo) - fija en la pantalla */
+.scanlines {
+  position: fixed; /* Cambiado a fixed para que siempre cubra la ventana */
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.2) 0px,
+    rgba(0, 0, 0, 0.2) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0.3;
+  mix-blend-mode: multiply;
+}
+
+/* =========================================
+   TERMINAL CHASSIS
+   ========================================= */
+.terminalChassis {
+  position: relative;
+  width: 100%;
+  min-height: 100%; /* Ocupa al menos toda la altura */
+  background: #0c0c0c;
+  border: 2px solid #2a2a2a;
+  border-radius: 12px;
+  box-shadow: 
+    inset 0 0 30px rgba(0, 0, 0, 0.9),
+    0 0 0 2px #1a1a1a,
+    0 10px 30px rgba(0, 0, 0, 0.8);
+  overflow: hidden;
+  z-index: 1;
+  margin: 0 auto; /* Centrado */
+  max-width: 1800px; /* Ancho máximo */
+}
+
+/* Tornillos decorativos en esquinas */
+.screwTL,
+.screwTR,
+.screwBL,
+.screwBR {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  z-index: 20;
+}
+.screwTL { top: 6px; left: 6px; }
+.screwTR { top: 6px; right: 6px; }
+.screwBL { bottom: 6px; left: 6px; }
+.screwBR { bottom: 6px; right: 6px; }
+
+/* Rejilla técnica de fondo */
+.techGrid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(255, 179, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 179, 0, 0.03) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* =========================================
+   MAIN LAYOUT
+   ========================================= */
+.mainLayout {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%; /* Ocupa toda la altura disponible */
+  padding: 20px;
+  z-index: 5;
+}
+
+/* Selector de vistas (pestañas) */
+.viewSelector {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #2a2a2a;
+  padding-bottom: 8px;
+  flex-wrap: wrap; /* Para móviles */
+}
+
+.viewTab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: #0a0a0a;
+  border: 1px solid #2a2a2a;
+  border-radius: 4px 4px 0 0;
+  color: #888;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+}
+
+.viewTab:hover {
+  background: #1a1a1a;
+  border-color: #ffb300;
+  color: #ffb300;
+}
+
+.activeTab {
+  background: #1a1a1a;
+  border-bottom-color: #ffb300;
+  color: #ffb300;
+  border-bottom: 2px solid #ffb300;
+}
+
+.tabLed {
+  margin-left: auto;
+}
+
+/* Área de contenido dinámico (scroll interno) */
+.contentArea {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 4px;
+  min-height: 300px; /* Altura mínima para evitar colapsos */
+}
+
+/* Scrollbar estilo retro */
+.contentArea::-webkit-scrollbar {
+  width: 6px;
+}
+.contentArea::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+.contentArea::-webkit-scrollbar-thumb {
+  background: #2a2a2a;
+  border-radius: 3px;
+}
+.contentArea::-webkit-scrollbar-thumb:hover {
+  background: #3a3a3a;
+}
+
+/* =========================================
+   CONTENIDO DE LAS VISTAS
+   ========================================= */
+.viewContent {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.contentHeader {
+  margin-bottom: 8px;
+}
+
+.mainTitle {
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  color: #ffb300;
+  text-shadow: 0 0 10px #ffb300;
+  line-height: 1;
+  margin: 0;
+}
+
+.titleUnderline {
+  height: 2px;
+  width: 80px;
+  background: linear-gradient(90deg, #ffb300, transparent);
+  margin-top: 4px;
+}
+
+/* =========================================
+   SYSTEM INFO (HOME)
+   ========================================= */
+.systemInfo {
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.9);
+}
+
+.infoHeader {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #ffb300;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #2a2a2a;
+  padding-bottom: 4px;
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.infoItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  background: #0a0a0a;
+  border: 1px solid #2a2a2a;
+  border-radius: 4px;
+  flex-wrap: wrap;
+}
+
+.infoLabel {
+  font-size: 8px;
+  color: #888;
+  text-transform: uppercase;
+  min-width: 30px;
+}
+
+.infoBar {
+  flex: 1;
+  height: 6px;
+  background: #1a1a1a;
+  border-radius: 3px;
+  overflow: hidden;
+  min-width: 50px;
+}
+
+.infoBarFill {
+  height: 100%;
+  background: #ffb300;
+  border-radius: 3px;
+  transition: width 0.2s ease;
+}
+
+.infoValue {
+  font-size: 9px;
+  color: #ffb300;
+  min-width: 35px;
+  text-align: right;
+}
+
+/* =========================================
+   ACTIVITY GRAPH
+   ========================================= */
+.activityGraph {
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.graphHeader {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  color: #ffb300;
+  margin-bottom: 10px;
+}
+
+.graphBars {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 40px;
+}
+
+.graphBar {
+  flex: 1;
+  background: #ffb300;
+  opacity: 0.7;
+  border-radius: 2px 2px 0 0;
+  transition: height 0.2s ease;
+}
+.graphBar:hover {
+  opacity: 1;
+  background: #ffc107;
+}
+
+
+/* =========================================
+   FOOTER DE LA PÁGINA (fijo en la parte inferior del contenido)
+   ========================================= */
+.footer {
+  position: relative; /* Cambiado a relative para que no flote */
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10px;
+  color: #888;
+  border-top: 1px solid #2a2a2a;
+  padding-top: 8px;
+  z-index: 5;
+}
+
+.footerLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footerIcon {
+  color: #ffb300;
+}
+
+.footerSeparator {
+  color: #333;
+}
+
+.footerRight {
+  display: flex;
+  align-items: center;
+}
+
+.blinkingCursor {
+  font-size: 16px;
+  color: #ffb300;
+  animation: blink 1s step-end infinite;
+}
+
+/* =========================================
+   ANIMACIONES
+   ========================================= */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+@media (max-width: 768px) {
+  .mainTitle {
+    font-size: 24px;
+  }
+  .infoGrid {
+    grid-template-columns: 1fr;
+  }
+  .wipItem {
+    flex-wrap: wrap;
+  }
+  .wipTask {
+    flex-basis: 100%;
+    margin-bottom: 4px;
+  }
+  .footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .viewSelector {
+    justify-content: center;
+  }
+}
+
+/* =========================================
+   EFECTOS DE VIDRIO Y FÓSFORO
+========================================= */
+
+/* Fondo con desenfoque y transparencia (efecto vidrio) */
+.terminalChassis {
+  backdrop-filter: blur(2px);
+  background: rgba(10, 10, 10, 0.85);
+  border: 2px solid rgba(255, 179, 0, 0.3);
+  box-shadow: 
+    inset 0 0 30px rgba(0, 0, 0, 0.9),
+    0 0 0 2px rgba(255, 179, 0, 0.2),
+    0 0 20px rgba(255, 179, 0, 0.1);
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Efecto de lente de ojo de pez al hacer hover en el chasis (más sutil) */
+.terminalChassis:hover {
+  transform: perspective(1200px) rotateX(0.3deg) rotateY(0.3deg);
+  border-color: rgba(255, 179, 0, 0.6);
+  box-shadow: 
+    inset 0 0 40px rgba(0, 0, 0, 0.9),
+    0 0 0 3px rgba(255, 179, 0, 0.4),
+    0 0 60px rgba(255, 179, 0, 0.2);
+}
+
+/* Overlay de fósforo (brillo pulsante) */
+.crtContainer::after {
+  content: "";
+  position: fixed; /* Fijo para que cubra toda la ventana */
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 179, 0, 0.15) 0%, transparent 70%);
+  animation: phosphorGlow 5s infinite alternate ease-in-out;
+  z-index: 15;
+}
+
+@keyframes phosphorGlow {
+  0% { opacity: 0.1; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(1.02); }
+  100% { opacity: 0.1; transform: scale(1); }
+}
+
+/* =========================================
+   CURSOR PERSONALIZADO MEJORADO
+   (Punto de mira retro con dos círculos y trazos)
+========================================= */
+
+/* Definimos el cursor como SVG inline */
+@media (min-width: 769px) {
+  .crtContainer, .crtContainer * {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="%23ffb300" stroke-width="2" stroke-dasharray="4 2"/><circle cx="16" cy="16" r="6" fill="none" stroke="%23ffb300" stroke-width="2"/><circle cx="16" cy="16" r="2" fill="%23ffb300"/><line x1="2" y1="16" x2="8" y2="16" stroke="%23ffb300" stroke-width="2"/><line x1="24" y1="16" x2="30" y2="16" stroke="%23ffb300" stroke-width="2"/><line x1="16" y1="2" x2="16" y2="8" stroke="%23ffb300" stroke-width="2"/><line x1="16" y1="24" x2="16" y2="30" stroke="%23ffb300" stroke-width="2"/></svg>') 16 16, auto;
+  }
+}
+
+/* En móvil, cursor por defecto */
+@media (max-width: 768px) {
+  .crtContainer, .crtContainer * {
+    cursor: auto;
+  }
+}
+
+/* Elementos interactivos (botones, enlaces) usan el mismo cursor pero con puntero */
+@media (min-width: 769px) {
+  :global(button),
+  :global(a),
+  :global([role="button"]) {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="%23ffb300" stroke-width="2" stroke-dasharray="4 2"/><circle cx="16" cy="16" r="6" fill="none" stroke="%23ffb300" stroke-width="2"/><circle cx="16" cy="16" r="2" fill="%23ffb300"/><line x1="2" y1="16" x2="8" y2="16" stroke="%23ffb300" stroke-width="2"/><line x1="24" y1="16" x2="30" y2="16" stroke="%23ffb300" stroke-width="2"/><line x1="16" y1="2" x2="16" y2="8" stroke="%23ffb300" stroke-width="2"/><line x1="16" y1="24" x2="16" y2="30" stroke="%23ffb300" stroke-width="2"/></svg>') 16 16, pointer;
+  }
+}
+
+/* Ajuste para que los elementos no interactivos mantengan el cursor por defecto */
+.crtContainer {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="%23ffb300" stroke-width="2" stroke-dasharray="4 2"/><circle cx="16" cy="16" r="6" fill="none" stroke="%23ffb300" stroke-width="2"/><circle cx="16" cy="16" r="2" fill="%23ffb300"/><line x1="2" y1="16" x2="8" y2="16" stroke="%23ffb300" stroke-width="2"/><line x1="24" y1="16" x2="30" y2="16" stroke="%23ffb300" stroke-width="2"/><line x1="16" y1="2" x2="16" y2="8" stroke="%23ffb300" stroke-width="2"/><line x1="16" y1="24" x2="16" y2="30" stroke="%23ffb300" stroke-width="2"/></svg>') 16 16, auto;
+}
+

@@ -1,0 +1,615 @@
+/* =========================================
+   RIGHT PANEL - RETRO INDUSTRIAL TELEMETRY
+   Vault-Tec / RobCo / IBM 1950s
+   MEJORA COMPLETA Y FINAL
+========================================= */
+
+.rightAside {
+  width: 280px;
+  height: 100%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 14px;
+  background: #0b0b0b;
+  border-left: 2px solid #1c1c1c;
+  box-shadow: 
+    inset 10px 0 30px rgba(0, 0, 0, .9),
+    inset 0 0 40px rgba(0, 0, 0, .7);
+  overflow: hidden;
+  font-family: 'Share Tech Mono', 'JetBrains Mono', monospace;
+  contain: layout paint;
+  will-change: transform;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+/* Efecto CRT scanlines (más sutil, con variación) */
+.rightAside::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.03) 0px,
+    rgba(0, 0, 0, 0.03) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0.6;
+  mix-blend-mode: overlay;
+}
+
+/* Efecto de desgaste ligero (más realista) */
+.rightAside::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 70% 30%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.4) 100%);
+  pointer-events: none;
+  z-index: 11;
+  mix-blend-mode: multiply;
+}
+
+/* =========================================
+   TORNILLOS ESTRUCTURALES (más realistas)
+========================================= */
+.screwTopLeft,
+.screwTopRight,
+.screwBottomLeft,
+.screwBottomRight {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: radial-gradient(circle at 40% 40%, #5a5a5a, #202020);
+  border-radius: 50%;
+  box-shadow: 
+    inset -2px -2px 4px #000,
+    inset 2px 2px 3px rgba(255,255,255,0.1),
+    0 2px 6px rgba(0,0,0,0.8);
+  z-index: 20;
+}
+.screwTopLeft { top: 6px; left: 6px; }
+.screwTopRight { top: 6px; right: 6px; }
+.screwBottomLeft { bottom: 6px; left: 6px; }
+.screwBottomRight { bottom: 6px; right: 6px; }
+
+/* =========================================
+   ESTADOS DE ALERTA DEL PANEL (más intensos)
+========================================= */
+.rightAside.state-warning {
+  box-shadow: inset 0 0 40px rgba(255, 170, 0, 0.3);
+  border-left-color: #ffaa00;
+}
+.rightAside.state-danger {
+  box-shadow: inset 0 0 50px rgba(255, 51, 0, 0.4);
+  border-left-color: #ff3300;
+}
+
+/* =========================================
+   PANEL SHELL (CUERPO PRINCIPAL) - más textura
+========================================= */
+.panelShell {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 14px;
+  gap: 20px;
+  border-radius: 12px;
+  background: #0c0c0c;
+  background-image: radial-gradient(circle at 20% 30%, #151515 0%, #090909 90%);
+  border: 1px solid #2a2a2a;
+  box-shadow: 
+    inset 0 0 30px rgba(0, 0, 0, .95),
+    0 0 20px rgba(0, 0, 0, .8);
+  overflow: hidden;  /* importante: el scroll lo gestiona el hijo scrollContainer */
+  z-index: 2;
+}
+
+/* Rejilla técnica de fondo (más definida) */
+.techGrid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(#1e1e1e 1px, transparent 1px),
+    linear-gradient(90deg, #1e1e1e 1px, transparent 1px);
+  background-size: 26px 26px;
+  opacity: 0.08;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* =========================================
+   CONTENEDOR CON SCROLL (NUEVO)
+   Permite desplazar todo el contenido interior
+========================================= */
+.scrollContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 4px; /* espacio para el scrollbar (opcional) */
+  scrollbar-width: thin;
+  scrollbar-color: #ffb300 #1a1a1a;
+  z-index: 1;
+}
+
+/* Estilizado del scrollbar para Chrome/Edge/Safari */
+.scrollContainer::-webkit-scrollbar {
+  width: 6px;
+}
+.scrollContainer::-webkit-scrollbar-track {
+  background: #1a1a1a;
+  border-radius: 3px;
+}
+.scrollContainer::-webkit-scrollbar-thumb {
+  background: #ffb300;
+  border-radius: 3px;
+  box-shadow: inset 0 0 4px #000;
+}
+.scrollContainer::-webkit-scrollbar-thumb:hover {
+  background: #ffc107;
+}
+
+/* =========================================
+   CABECERA DE MÓDULOS (con brillo)
+========================================= */
+.panelHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: #ffb300;
+  text-transform: uppercase;
+  border-bottom: 1px solid #333;
+  padding-bottom: 6px;
+  margin-bottom: 2px;
+}
+.headerIcon {
+  filter: drop-shadow(0 0 6px #ffb300);
+  animation: headerPulse 2.5s infinite;
+}
+
+/* =========================================
+   BUS DE DATOS ANIMADO (mejorado)
+========================================= */
+.dataBusContainer {
+  width: 100%;
+  height: 8px;
+  background: #0a0a0a;
+  border: 1px solid #2a2a2a;
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+  margin: 4px 0 10px;
+}
+.dataFlow {
+  position: absolute;
+  width: 80px;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, #ffb300, transparent);
+  animation: dataFlowAnim 2.5s linear infinite;
+  filter: blur(1px);
+  opacity: 0.9;
+}
+
+/* =========================================
+   TELEMETRÍA (METER BARS) - más contraste
+========================================= */
+.telemetrySection {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.meterWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.meterHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 9px;
+  color: #ffb300;
+  letter-spacing: 0.5px;
+  opacity: 0.95;
+}
+.meterLabel {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.meterValue {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  color: #ccc;
+  background: #111;
+  padding: 2px 6px;
+  border-radius: 3px;
+  border: 1px solid #333;
+}
+
+.meterBars {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 3px;
+}
+
+.barSegment {
+  height: 12px;
+  border-radius: 2px;
+  background: #1a1a1a;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.barGreen {
+  background: #7cff00;
+  box-shadow: 0 0 8px #7cff00;
+}
+.barYellow {
+  background: #ffc107;
+  box-shadow: 0 0 8px #ffc107;
+}
+.barRed {
+  background: #ff5252;
+  box-shadow: 0 0 10px #ff5252;
+}
+.barInactive {
+  background: #222;
+  box-shadow: none;
+  opacity: 0.2;
+}
+
+/* =========================================
+   GRÁFICO DE TENDENCIA CPU (más estilizado)
+========================================= */
+.graphWrapper {
+  margin: 4px 0;
+  padding: 12px 8px;
+  background: #0a0a0a;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  box-shadow: inset 0 0 10px #000;
+}
+.graphLabel {
+  font-size: 8px;
+  color: #888;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.miniGraph {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 42px;
+}
+.graphBar {
+  flex: 1;
+  background: #ffb300;
+  opacity: 0.8;
+  min-height: 2px;
+  border-radius: 1px 1px 0 0;
+  transition: height 0.3s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.2s;
+}
+.graphBar:hover {
+  opacity: 1;
+  background: #ffc107;
+  box-shadow: 0 0 6px #ffb300;
+}
+
+/* =========================================
+   DIVISOR DE PANEL
+========================================= */
+.panelDivider {
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(90deg, transparent, #555, transparent);
+  margin: 10px 0;
+}
+
+/* =========================================
+   SECCIÓN DE INDICADORES LED (grid perfecto)
+========================================= */
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 9px;
+  color: #ffb300;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.headerLine {
+  flex: 1;
+  height: 1px;
+  background: #333;
+}
+.headerText {
+  opacity: 0.9;
+}
+
+.ledGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin: 8px 0 4px;
+}
+.ledCell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 48px;
+  background: rgba(0,0,0,0.2);
+  border-radius: 4px;
+  padding: 4px;
+  transition: background 0.2s;
+}
+.ledCell:hover {
+  background: rgba(255,179,0,0.05);
+}
+
+/* =========================================
+   SECCIÓN DE RED (más dinámica)
+========================================= */
+.networkSection {
+  padding: 12px;
+  background: #0a0a0a;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  box-shadow: inset 0 0 10px #000;
+}
+.networkHeader {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 8px;
+  color: #ffb300;
+  letter-spacing: 0.5px;
+}
+.networkBars {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 32px;
+  margin-top: 8px;
+}
+.networkBar {
+  flex: 1;
+  background: #222;
+  border-radius: 1px;
+  transition: background 0.2s ease, height 0.2s ease;
+}
+.networkBar.active {
+  background: #ffb300;
+  box-shadow: 0 0 10px #ffb300;
+  animation: barPulse 1.2s infinite alternate;
+}
+
+/* =========================================
+   RUNTIME Y RELOJ (más prominente)
+========================================= */
+.runtimeSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 14px;
+  border-top: 1px solid #333;
+  margin-top: auto;
+}
+.runtimeHeader {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9px;
+  color: #ffb300;
+  opacity: 0.9;
+}
+.runtimeDisplay {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  background: #0a0a0a;
+  padding: 6px 10px;
+  border: 1px solid #2a2a2a;
+  border-radius: 4px;
+}
+.runtimeDigits {
+  font-size: 26px;
+  font-weight: 400;
+  letter-spacing: 4px;
+  color: #ffb300;
+  text-shadow: 0 0 10px #ffb300;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.runtimeUnit {
+  font-size: 10px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* =========================================
+   FOOTPRINT Y CONECTOR (más integrados)
+========================================= */
+.moduleFootprint {
+  font-size: 8px;
+  opacity: 0.3;
+  letter-spacing: 2px;
+  color: #ffb300;
+  text-align: right;
+  margin-top: 12px;
+  border-top: 1px dashed #2a2a2a;
+  padding-top: 8px;
+}
+
+.busConnector {
+  position: absolute;
+  top: 50%;
+  left: -6px;
+  width: 6px;
+  height: 70px;
+  background: #ffb300;
+  opacity: 0.25;
+  transform: translateY(-50%);
+  border-radius: 0 3px 3px 0;
+  box-shadow: 0 0 12px #ffb300;
+  pointer-events: none;
+}
+
+/* =========================================
+   NOTA ADHESIVA (STICKY NOTE) CON ASPECTO DEGRADADO
+========================================= */
+.stickyNote {
+  position: relative;
+  margin: 20px 8px 16px 8px;
+  padding: 14px 12px;
+  background: #f4e9c0;  /* color base de papel viejo */
+  background: linear-gradient(145deg, #f7f0d6 0%, #e6d8b5 100%);
+  border: 1px solid #c0a86a;
+  border-radius: 8px 8px 8px 2px;  /* bordes irregulares para simular papel pegado */
+  box-shadow: 
+    0 6px 12px rgba(0,0,0,0.3),
+    inset 0 0 0 1px rgba(255,255,240,0.6),
+    inset 2px 2px 4px rgba(255,255,200,0.8),
+    inset -2px -2px 4px rgba(100,70,20,0.2);
+  transform: rotate(-0.5deg);  /* ligera inclinación */
+  font-family: 'Courier New', 'Share Tech Mono', monospace;
+  font-size: 11px;
+  color: #3a2e1b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 1.4;
+  z-index: 25;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stickyNote:hover {
+  transform: rotate(0deg) scale(1.01);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+}
+
+/* Variante degradada (más desgastada) */
+.stickyNoteDegraded {
+  background: linear-gradient(145deg, #ddd0a8 0%, #b8aa7c 100%);
+  border-color: #9b8b62;
+  color: #2f2a1f;
+  opacity: 0.95;
+  filter: sepia(0.3);
+}
+
+/* Chincheta / Pin */
+.notePin {
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 18px;
+  height: 18px;
+  background: radial-gradient(circle at 30% 30%, #b0b0b0, #5a5a5a);
+  border-radius: 50% 50% 40% 40%;
+  box-shadow: 
+    inset -2px -2px 4px #2a2a2a,
+    inset 2px 2px 4px #e0e0e0,
+    0 2px 4px rgba(0,0,0,0.6);
+  border: 1px solid #888;
+  z-index: 26;
+}
+
+.notePin::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 4px;
+  width: 4px;
+  height: 4px;
+  background: radial-gradient(circle, #fff, #aaa);
+  border-radius: 50%;
+  opacity: 0.8;
+}
+
+/* =========================================
+   GLITCH OVERLAY (errores aleatorios) - más vistoso
+========================================= */
+.glitchOverlay {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  background: rgba(255, 0, 0, 0.2);
+  border: 1px solid #ff4444;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 7px;
+  color: #ff8888;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  animation: glitchBlink 0.8s infinite;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  backdrop-filter: blur(2px);
+  z-index: 30;
+  box-shadow: 0 0 10px rgba(255,0,0,0.3);
+}
+
+/* =========================================
+   ANIMACIONES (todas centralizadas)
+========================================= */
+@keyframes dataFlowAnim {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(300%); }
+}
+
+@keyframes headerPulse {
+  0%, 100% { opacity: 0.7; filter: drop-shadow(0 0 4px #ffb300); }
+  50% { opacity: 1; filter: drop-shadow(0 0 8px #ffb300); }
+}
+
+@keyframes barPulse {
+  from { opacity: 0.6; }
+  to { opacity: 1; }
+}
+
+@keyframes glitchBlink {
+  0%, 100% { opacity: 1; background: rgba(255,0,0,0.2); border-color: #ff4444; }
+  50% { opacity: 0.4; background: rgba(255,0,0,0.4); border-color: #ff0000; }
+}
+
+/* =========================================
+   UTILIDADES Y AJUSTES FINOS
+========================================= */
+.indicatorIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 8px;
+  color: #ffb300;
+  opacity: 0.6;
+  font-size: 12px;
+}
+
+/* Mejora para los LEDs (el componente ya tiene su propio CSS, pero aquí podemos darle un marco) */
+.ledCell .statusLed {
+  transform: scale(1);
+  transition: transform 0.1s;
+}
+.ledCell .statusLed:hover {
+  transform: scale(1.02);
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+@media (max-width: 1200px) {
+  .rightAside { display: none; }
+}

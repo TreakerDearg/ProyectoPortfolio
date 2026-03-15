@@ -1,0 +1,181 @@
+/* =========================================
+   ACTIVITY GRAPH - Mapa de calor y monitor de red
+   Estilo retro-industrial Vault-Tec / RobCo
+========================================= */
+
+.graphContainer {
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.9);
+}
+
+.graphHeader {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px; /* ligeramente más grande */
+  color: #ffb300;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.graphBars {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 48px; /* un poco más alto para mejor visibilidad */
+  padding-bottom: 4px;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.graphBar {
+  flex: 1;
+  border-radius: 2px 2px 0 0;
+  transition: height 0.3s ease, background 0.2s ease;
+  min-height: 4px; /* altura mínima para que siempre se vea */
+}
+
+/* Colores del mapa de calor (más saturados) */
+.barLow {
+  background: #4ade80;
+  opacity: 0.8;
+  box-shadow: 0 0 6px #4ade80;
+}
+.barMedium {
+  background: #fbbf24;
+  opacity: 0.9;
+  box-shadow: 0 0 8px #fbbf24;
+}
+.barHigh {
+  background: #f97316;
+  opacity: 1;
+  box-shadow: 0 0 10px #f97316;
+}
+.barCritical {
+  background: #ef4444;
+  opacity: 1;
+  box-shadow: 0 0 12px #ef4444;
+}
+
+/* Bus de datos (marquee) */
+.dataBus {
+  width: 100%;
+  overflow: hidden;
+  background: #0a0a0a;
+  border: 1px solid #2a2a2a;
+  border-radius: 4px;
+  padding: 10px 0; /* más alto para mejor lectura */
+  white-space: nowrap;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+}
+
+.dataBusContent {
+  display: inline-block;
+  animation: scrollBus 20s linear infinite; /* velocidad lenta y constante */
+  padding-left: 100%; /* comienza fuera de la pantalla por la derecha */
+}
+
+.dataBusMessage {
+  font-size: 11px; /* más grande y legible */
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+  padding: 0 20px;
+  display: inline-block;
+}
+
+/* Colores TX/RX */
+.tx {
+  color: #4ade80;
+  text-shadow: 0 0 6px #4ade80;
+}
+.rx {
+  color: #60a5fa;
+  text-shadow: 0 0 6px #60a5fa;
+}
+
+@keyframes scrollBus {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
+/* Lista de paquetes recientes */
+.packetList {
+  margin-top: 8px;
+  border-top: 1px solid #2a2a2a;
+  padding-top: 12px; /* más espacio superior */
+}
+
+.packetListHeader {
+  font-size: 9px;
+  color: #ffb300;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.packetListItems {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 130px; /* permite ver hasta 5-6 elementos con scroll si es necesario */
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+/* Scrollbar personalizada para la lista */
+.packetListItems::-webkit-scrollbar {
+  width: 5px;
+}
+.packetListItems::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+.packetListItems::-webkit-scrollbar-thumb {
+  background: #2a2a2a;
+  border-radius: 3px;
+}
+.packetListItems::-webkit-scrollbar-thumb:hover {
+  background: #3a3a3a;
+}
+
+.packetListItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 9px; /* ligeramente más grande */
+  color: #ccc;
+  padding: 4px 6px;
+  background: rgba(10, 10, 10, 0.8);
+  border: 1px solid #2a2a2a;
+  border-radius: 4px;
+  transition: border-color 0.2s ease;
+}
+
+.packetListItem:hover {
+  border-color: #ffb300;
+}
+
+.packetPort {
+  min-width: 35px; /* un poco más ancho para puertos de 4 dígitos */
+  color: #ffb300;
+  font-weight: bold;
+  text-align: right;
+}
+
+.packetMsg {
+  color: #aaa;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1; /* ocupa el espacio restante */
+}
+
+/* Ajustes para los iconos dentro de la lista */
+.packetListItem svg {
+  width: 8px;
+  height: 8px;
+}

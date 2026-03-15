@@ -1,0 +1,64 @@
+.featuredCard {
+  background: #0f0f0f;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 8px;
+  color: #888;
+}
+
+.icon {
+  color: #ffb300;
+  opacity: 0.6;
+}
+
+.location {
+  text-transform: uppercase;
+}
+
+.led {
+  margin-left: auto;
+}
+
+.body {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.name {
+  font-size: 10px;
+  font-weight: bold;
+  color: #ffb300;
+  min-width: 100px;
+}
+
+.progressBar {
+  flex: 1;
+  height: 6px;
+  background: #1a1a1a;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: #ffb300;
+  border-radius: 3px;
+}
+
+.progressText {
+  font-size: 8px;
+  color: #ffb300;
+  min-width: 35px;
+  text-align: right;
+}

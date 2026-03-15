@@ -1,0 +1,377 @@
+/* =========================================
+   MAIN HEADER - TERMINAL CHASSIS
+   Estilo industrial RobCo / Vault-Tec
+========================================= */
+.headerChassis {
+  width: 100%;
+  height: 72px;
+  background: #0a0a0a;
+  border-bottom: 2px solid #1c1c1c;
+  box-shadow: 
+    inset 0 -10px 30px rgba(0, 0, 0, 0.8), 
+    0 6px 20px rgba(0, 0, 0, 0.6);
+  font-family: 'Share Tech Mono', monospace;
+  overflow: hidden;
+  position: relative;
+  contain: layout paint;
+  will-change: transform;
+}
+
+/* =========================================
+   HEADER CONTENT - Grid de 3 columnas
+   Izquierda (auto) | Centro (auto) | Derecha (auto)
+   Las columnas laterales se expanden para centrar el contenido
+========================================= */
+.headerContent {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr; /* [Izquierda] [Centro] [Derecha] */
+  align-items: center;
+  height: 100%;
+  padding: 0 24px;
+  width: 100%;
+  gap: 20px; /* Espacio mínimo entre secciones */
+}
+
+/* =========================================
+   LEFT SECTION - ROBCO Terminal + Sensores
+========================================= */
+.leftSection {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  justify-self: start; /* Siempe pegado a la izquierda */
+  min-width: 0; /* Permite que se encoja si es necesario */
+}
+
+/* Módulo principal con efecto CRT */
+.terminalModule {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  background: #050505;
+  border: 1px solid #262626;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+  box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.9);
+  contain: layout paint;
+  will-change: transform;
+}
+
+/* Barrido CRT (scanline) */
+.scanSweep {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 40%;
+  top: -40%;
+  background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.03), transparent);
+  animation: scanSweep 4s linear infinite;
+  pointer-events: none;
+}
+
+/* Icono de radio con resplandor */
+.signalIconWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.iconGlow {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 179, 0, 0.15);
+  filter: blur(10px);
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+.phosphorAmber {
+  color: #ffb300;
+  filter: drop-shadow(0 0 6px rgba(255, 179, 0, 0.6));
+}
+
+.flicker {
+  animation: crtFlicker 2.5s infinite;
+}
+
+/* Información del terminal */
+.terminalInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  line-height: 1.1;
+}
+
+.robcoTitle {
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  color: #ffb300;
+  line-height: 1;
+}
+
+.versionTag {
+  margin-left: 6px;
+  font-size: 11px;
+  opacity: 0.45;
+}
+
+.subIdentifier {
+  font-size: 7px;
+  letter-spacing: 0.12em;
+  color: #ffc107;
+  opacity: 0.55;
+}
+
+/* Rack de diagnóstico (GEIGER y RAD) */
+.diagnosticRack {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px;
+  background: #070807;
+  border: 1px solid #1e1e1e;
+  border-radius: 4px;
+  white-space: nowrap;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.7);
+}
+
+/* =========================================
+   CENTER SECTION - Placa de propiedad
+   Siempre centrada gracias a justify-self: center
+========================================= */
+.centerSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-self: center; /* Centro exacto */
+  pointer-events: none; /* Solo decorativo */
+  min-width: 0;
+}
+
+.batchPlate {
+  padding: 3px 12px;
+  background: #080808;
+  border: 1px solid #2a2a2a;
+  border-radius: 2px;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.8);
+  white-space: nowrap;
+  text-align: center;
+}
+
+.stampedText {
+  font-size: 7px;
+  letter-spacing: 0.18em;
+  color: #ffb300;
+  opacity: 0.6;
+}
+
+.mountStem {
+  width: 2px;
+  height: 8px;
+  background: #1a1a1a;
+  margin-top: 2px;
+}
+
+.centerRivet {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #151515;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.8);
+}
+
+/* =========================================
+   RIGHT SECTION - Telemetría y Módulo de Escape
+   Control de posición con margin-right
+========================================= */
+.rightSection {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  justify-self: end; /* Pegado a la derecha por defecto */
+  min-width: 0;
+
+  /* --- AJUSTE DE POSICIÓN HACIA LA IZQUIERDA ---
+     Aumenta este valor para mover todo el bloque más a la izquierda.
+     Disminúyelo o ponlo a 0 para pegarlo al borde derecho.
+  */
+  margin-right: 65px;
+  /* --------------------------------------------- */
+}
+
+/* Datos ambientales */
+.environmentData {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+  border-right: 1px solid rgba(255, 179, 0, 0.1);
+  padding-right: 12px;
+  white-space: nowrap;
+}
+
+.regionLabel {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #ffb300;
+  opacity: 0.8;
+}
+
+.tempLine {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.tempValue {
+  font-size: 12px;
+  color: #ffb300;
+  font-weight: bold;
+  opacity: 0.9;
+}
+
+.tempIcon {
+  color: #ffb300;
+  opacity: 0.5;
+}
+
+/* =========================================
+   EXHAUST MODULE - Contenedor del componente HeaderExhaust
+   Incluye malla metálica y tornillos decorativos
+========================================= */
+.exhaustContainer {
+  position: relative;
+  width: 90px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #080808;
+  border: 1px solid #1a1a1a;
+  border-radius: 4px;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: inset 0 0 12px #000;
+}
+
+/* Malla metálica (estática) */
+.meshOverlay {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(#1a1a1a 1px, transparent 1px);
+  background-size: 4px 4px;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Efecto de calor pulsante (superpuesto) */
+.meshOverlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(255, 179, 0, 0.15), transparent);
+  animation: heatBreath 4s ease-in-out infinite;
+}
+
+/* Tornillos decorativos (Phillips) */
+.exhaustScrewTL {
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  font-size: 8px;
+  color: #444;
+  opacity: 0.5;
+  z-index: 2;
+}
+.exhaustScrewTR {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  font-size: 8px;
+  color: #444;
+  opacity: 0.5;
+  z-index: 2;
+}
+
+/* =========================================
+   ANIMACIONES
+========================================= */
+@keyframes scanSweep {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(220%); }
+}
+
+@keyframes pulseGlow {
+  0% { opacity: 0.4; }
+  50% { opacity: 0.9; }
+  100% { opacity: 0.4; }
+}
+
+@keyframes crtFlicker {
+  0% { opacity: 0.95; }
+  3% { opacity: 0.8; }
+  6% { opacity: 0.9; }
+  9% { opacity: 0.7; }
+  12% { opacity: 1; }
+  100% { opacity: 0.95; }
+}
+
+@keyframes heatBreath {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.6; }
+}
+
+/* =========================================
+   RESPONSIVE - Ajustes según tamaño de pantalla
+========================================= */
+@media (max-width: 1400px) {
+  /* En pantallas grandes pero no enormes, reducimos el margen derecho */
+  .rightSection {
+    margin-right: 10px;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 1100px) {
+  /* Ocultamos la placa central para dar más espacio */
+  .centerSection {
+    display: none;
+  }
+  .headerContent {
+    grid-template-columns: 1fr 1fr; /* Solo dos columnas */
+  }
+}
+
+@media (max-width: 900px) {
+  /* Ocultamos los datos ambientales, solo dejamos el exhaust */
+  .environmentData {
+    display: none;
+  }
+  .rightSection {
+    gap: 0; /* Eliminamos el gap */
+  }
+}
+
+@media (max-width: 640px) {
+  /* Versión móvil: reducimos altura y fuente */
+  .headerChassis {
+    height: 64px;
+  }
+  .headerContent {
+    padding: 0 14px;
+    gap: 12px;
+  }
+  .robcoTitle {
+    font-size: 15px;
+  }
+  .diagnosticRack {
+    display: none; /* Ocultamos sensores en móvil */
+  }
+}

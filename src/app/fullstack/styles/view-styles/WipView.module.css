@@ -1,0 +1,55 @@
+/* =========================================
+   WIP VIEW - Módulos de desciframiento
+========================================= */
+
+.viewContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 16px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.contentHeader {
+  margin-bottom: 8px;
+}
+
+.mainTitle {
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  color: #ffb300;
+  text-shadow: 0 0 10px #ffb300;
+  line-height: 1;
+  margin: 0;
+}
+
+.titleUnderline {
+  height: 2px;
+  width: 80px;
+  background: linear-gradient(90deg, #ffb300, transparent);
+  margin-top: 4px;
+}
+
+.modulesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+  align-items: start;
+}
+
+/* Scrollbar retro */
+.viewContainer::-webkit-scrollbar {
+  width: 6px;
+}
+.viewContainer::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+.viewContainer::-webkit-scrollbar-thumb {
+  background: #2a2a2a;
+  border-radius: 3px;
+}
+.viewContainer::-webkit-scrollbar-thumb:hover {
+  background: #3a3a3a;
+}

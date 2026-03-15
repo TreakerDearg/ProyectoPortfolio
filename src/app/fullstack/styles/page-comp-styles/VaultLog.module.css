@@ -1,0 +1,51 @@
+.logEntry {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  border-bottom: 1px dashed #2a2a2a;
+}
+
+.logLeft {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.logTime {
+  color: #888;
+  font-size: 8px;
+}
+
+.logZone {
+  color: #ffb300;
+  font-size: 8px;
+  background: rgba(255,179,0,0.1);
+  padding: 2px 4px;
+  border-radius: 2px;
+}
+
+.logMessage {
+  font-size: 8px;
+  color: #aaa;
+}
+
+/* Colores según tipo */
+.info .logMessage {
+  color: #aaa;
+}
+.warning .logMessage {
+  color: #fbbf24;
+}
+.danger .logMessage {
+  color: #ef4444;
+}
+.success .logMessage {
+  color: #4ade80;
+}
+
+/* Iconos */
+.iconInfo { color: #aaa; }
+.iconWarning { color: #fbbf24; }
+.iconDanger { color: #ef4444; }
+.iconSuccess { color: #4ade80; }

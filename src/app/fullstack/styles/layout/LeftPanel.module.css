@@ -1,0 +1,792 @@
+/* =========================================
+   LEFT PANEL - RETRO INDUSTRIAL MODULE
+   Vault-Tec / RobCo / IBM 1950s Style
+   ========================================= */
+
+.leftAside {
+  width: 280px;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, #0b0b0b, #050505);
+  border-right: 2px solid #1c1c1c;
+  box-shadow: 
+    inset -12px 0 40px rgba(0,0,0,0.95),
+    inset 0 0 40px rgba(0,0,0,0.8),
+    0 0 20px rgba(0,0,0,0.7);
+  overflow: hidden;
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+}
+
+/* Scanlines retro */
+.leftAside::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.25) 0px,
+    rgba(0,0,0,0.25) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* =========================================
+   INNER CONTENT - SCROLLABLE
+   ========================================= */
+.innerContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Reducido ligeramente para que quepan más elementos */
+  padding: 20px 14px; /* Padding ajustado */
+  position: relative;
+  z-index: 2;
+  overflow-y: auto; /* Permite scroll si el contenido excede la altura */
+  scrollbar-width: thin;
+  scrollbar-color: #3a3a3a #0a0a0a;
+}
+
+/* Scrollbar personalizada (opcional) */
+.innerContent::-webkit-scrollbar {
+  width: 6px;
+}
+.innerContent::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+.innerContent::-webkit-scrollbar-thumb {
+  background: #3a3a3a;
+  border-radius: 3px;
+}
+
+/* =========================================
+   SCREW POSITIONS (estructurales)
+   ========================================= */
+.screwTop {
+  position: absolute;
+  top: 12px;
+  left: 10px;
+  opacity: 0.35;
+  z-index: 10;
+}
+.screwBottom {
+  position: absolute;
+  bottom: 12px;
+  right: 10px;
+  opacity: 0.35;
+  z-index: 10;
+}
+.screwLeft {
+  position: absolute;
+  top: 50%;
+  left: 5px;
+  transform: translateY(-50%);
+  opacity: 0.3;
+  z-index: 10;
+}
+.screwRight {
+  position: absolute;
+  top: 50%;
+  right: 5px;
+  transform: translateY(-50%);
+  opacity: 0.3;
+  z-index: 10;
+}
+
+/* =========================================
+   COOLING MODULE (Ventilador industrial)
+   ========================================= */
+.coolingModule {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.fanHousing {
+  width: 100%;
+  height: 110px; /* Ligeramente reducido para ahorrar espacio */
+  border-radius: 10px;
+  background: linear-gradient(180deg, #0f0f0f, #090909);
+  border: 1px solid #222;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 
+    inset 0 0 30px rgba(0,0,0,0.95),
+    inset 0 6px 10px rgba(255,255,255,0.03);
+}
+
+/* Rejilla metálica (grill) */
+.fanGrill {
+  position: absolute;
+  inset: 12px;
+  border-radius: 50%;
+  background: repeating-conic-gradient(
+    rgba(255,255,255,0.05) 0deg 8deg,
+    transparent 8deg 16deg
+  );
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.fanBlades {
+  animation: fanSpin 6s linear infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform;
+}
+
+.fanIcon {
+  color: #ffb300;
+  opacity: 0.85;
+  filter: 
+    drop-shadow(0 0 6px rgba(255,179,0,0.5))
+    drop-shadow(0 0 12px rgba(255,179,0,0.2));
+}
+
+/* Remaches del ventilador */
+.fanRivetTL,
+.fanRivetTR,
+.fanRivetBL,
+.fanRivetBR {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  box-shadow: inset 0 1px 2px rgba(255,255,255,0.1);
+  opacity: 0.5;
+}
+.fanRivetTL { top: 8px; left: 8px; }
+.fanRivetTR { top: 8px; right: 8px; }
+.fanRivetBL { bottom: 8px; left: 8px; }
+.fanRivetBR { bottom: 8px; right: 8px; }
+
+/* Sticker de advertencia */
+.warningSticker {
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: rgba(0,0,0,0.7);
+  padding: 2px 4px;
+  border: 1px solid #ff5a3c;
+  border-radius: 2px;
+  font-size: 6px;
+  color: #ff5a3c;
+  letter-spacing: 0.5px;
+  z-index: 3;
+}
+
+.coolingStats {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  gap: 6px;
+}
+
+.meter {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #0a0a0a;
+  padding: 4px 6px;
+  border: 1px solid #2a2a2a;
+  border-radius: 3px;
+  font-size: 8px;
+  color: #aaa;
+  box-shadow: inset 0 0 6px rgba(0,0,0,0.8);
+  flex: 1;
+  justify-content: center;
+}
+
+.meterValue {
+  color: #ffb300;
+  font-weight: bold;
+  margin-left: 2px;
+  text-shadow: 0 0 4px rgba(255,179,0,0.5);
+}
+
+.moduleLabel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 9px; /* Reducido */
+  letter-spacing: 1.5px;
+  color: #ffb300;
+  opacity: 0.7;
+  font-family: monospace;
+}
+
+.labelSub {
+  font-size: 6px;
+  letter-spacing: 1px;
+  color: #888;
+  opacity: 0.6;
+}
+
+/* =========================================
+   MAINFRAME LOGIC PANEL (IBM 7090)
+   ========================================= */
+.logicPanel {
+  background: linear-gradient(180deg, #080808, #050505);
+  border: 1px solid #1e1e1e;
+  border-radius: 6px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+}
+
+.logicHeader {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 9px;
+  color: #ffb300;
+  opacity: 0.8;
+  border-bottom: 1px solid #1a1a1a;
+  padding-bottom: 4px;
+}
+
+.headerBadge {
+  margin-left: auto;
+  font-size: 6px;
+  color: #666;
+  border: 1px solid #333;
+  padding: 2px 4px;
+  border-radius: 2px;
+}
+
+.logicLights {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 4px;
+  justify-items: center;
+  padding: 4px 0;
+}
+
+.logicLed {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #111;
+  border: 1px solid #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ledInner {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  transition: background 0.1s ease, box-shadow 0.1s ease;
+}
+
+/* Ciclo y barra de actividad */
+.cycleCounter {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 7px;
+  color: #888;
+  border-top: 1px solid #1a1a1a;
+  padding-top: 4px;
+}
+.activityBar {
+  flex: 1;
+  height: 4px;
+  background: #1a1a1a;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.activityFill {
+  height: 100%;
+  background: #ffb300;
+  border-radius: 2px;
+  transition: width 0.2s ease;
+}
+
+/* =========================================
+   AIR INTAKE / FILTER SYSTEM
+   ========================================= */
+.intakeSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+}
+
+.ventilationWrapper {
+  padding: 8px;
+  border: 1px solid #1e1e1e;
+  background: linear-gradient(180deg, #090909, #060606);
+  border-radius: 6px;
+  box-shadow: inset 0 0 16px rgba(0,0,0,0.9);
+  position: relative;
+}
+
+.meshOverlay {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(#1a1a1a 1px, transparent 1px);
+  background-size: 4px 4px;
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+.filterFrame {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 8px;
+  background: #0c0c0c;
+  border: 1px solid #2a2a2a;
+  border-radius: 3px;
+  font-size: 8px;
+  color: #aaa;
+}
+
+.filterType {
+  color: #ffb300;
+  font-size: 7px;
+  background: #1a1a1a;
+  padding: 2px 4px;
+  border-radius: 2px;
+}
+
+.airPressure {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 8px;
+  color: #ffb300;
+  background: #0a0a0a;
+  padding: 4px 8px;
+  border: 1px solid #2a2a2a;
+  border-radius: 3px;
+  flex-wrap: wrap;
+}
+.pressureBar {
+  flex: 1;
+  height: 4px;
+  background: #1a1a1a;
+  border-radius: 2px;
+  overflow: hidden;
+  min-width: 60px;
+}
+.pressureFill {
+  height: 100%;
+  background: #ffb300;
+  border-radius: 2px;
+  transition: width 0.2s ease;
+}
+
+/* Tornillos del filtro */
+.filterScrewTL,
+.filterScrewTR {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  opacity: 0.4;
+}
+.filterScrewTL { top: -3px; left: -3px; }
+.filterScrewTR { top: -3px; right: -3px; }
+
+/* =========================================
+   POWER ROUTER (Mainframe Bus Bars)
+   ========================================= */
+.powerRouter {
+  background: linear-gradient(180deg, #080808, #050505);
+  border: 1px solid #1e1e1e;
+  border-radius: 6px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+}
+
+.routerHeader {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 9px;
+  color: #ffb300;
+  border-bottom: 1px solid #1a1a1a;
+  padding-bottom: 4px;
+}
+
+.headerSub {
+  margin-left: auto;
+  font-size: 6px;
+  color: #666;
+  border: 1px solid #333;
+  padding: 2px 4px;
+  border-radius: 2px;
+}
+
+.busLines {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.busLine {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px;
+  background: #0a0a0a;
+  border: 1px solid #2a2a2a;
+  border-radius: 3px;
+  font-size: 8px;
+  color: #aaa;
+  flex-wrap: wrap;
+}
+
+.busLoadBar {
+  flex: 1;
+  height: 4px;
+  background: #1a1a1a;
+  border-radius: 2px;
+  overflow: hidden;
+  min-width: 50px;
+}
+.busLoadFill {
+  height: 100%;
+  background: #ffb300;
+  border-radius: 2px;
+  transition: width 0.2s ease;
+}
+
+.busLed {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #111;
+  border: 1px solid #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fuseBank {
+  display: flex;
+  gap: 4px;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+
+.fuse {
+  width: 14px;
+  height: 3px;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 1px;
+  position: relative;
+}
+.fuse::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 3px;
+  right: 3px;
+  height: 1px;
+  background: #ffb300;
+  opacity: 0.5;
+}
+
+/* =========================================
+   SECURITY TERMINAL LOG (Vault-Tec)
+   ========================================= */
+.accessLog {
+  background: linear-gradient(180deg, #080808, #050505);
+  border: 1px solid #1e1e1e;
+  border-radius: 6px;
+  padding: 8px;
+  font-family: monospace;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+}
+
+.logHeader {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 9px;
+  color: #ffb300;
+  opacity: 0.8;
+  border-bottom: 1px solid #1a1a1a;
+  padding-bottom: 4px;
+}
+
+.lockIcon {
+  margin-left: auto;
+  color: #4ade80;
+  opacity: 0.6;
+}
+
+.logEntries {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 8px;
+  max-height: 60px;
+  overflow-y: auto;
+}
+
+.logItem {
+  color: #d0a548;
+  opacity: 0.75;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.logTime {
+  color: #888;
+  font-size: 7px;
+  min-width: 40px;
+}
+
+.alert {
+  color: #ff5a3c;
+  opacity: 0.95;
+  text-shadow: 0 0 4px rgba(255,90,60,0.4);
+}
+
+.cursor {
+  color: #ffb300;
+  font-size: 10px;
+  margin-top: 2px;
+  animation: blink 1s step-end infinite;
+}
+
+.securityBadge {
+  margin-top: 4px;
+  padding: 2px 4px;
+  background: #0a0a0a;
+  border: 1px solid #333;
+  border-radius: 2px;
+  font-size: 6px;
+  color: #888;
+  text-align: right;
+}
+
+/* =========================================
+   SERVICE PORT PANEL (RobCo Maintenance)
+   ========================================= */
+.servicePort {
+  background: linear-gradient(180deg, #080808, #050505);
+  border: 1px solid #1e1e1e;
+  border-radius: 6px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.serviceHeader {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 9px;
+  color: #ffb300;
+  border-bottom: 1px solid #1a1a1a;
+  padding-bottom: 4px;
+}
+
+.portNumber {
+  margin-left: auto;
+  font-size: 7px;
+  color: #666;
+}
+
+.serviceButtons {
+  display: flex;
+  gap: 6px;
+}
+
+.serviceBtn {
+  flex: 1;
+  background: #0c0c0c;
+  border: 1px solid #2a2a2a;
+  border-radius: 4px;
+  padding: 4px 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #ffb300;
+  font-size: 8px;
+  cursor: pointer;
+  box-shadow: inset 0 0 6px rgba(0,0,0,0.8);
+  transition: all 0.1s ease;
+}
+
+.serviceBtn:hover {
+  border-color: #ffb300;
+  box-shadow: 0 0 8px rgba(255,179,0,0.3);
+}
+
+.btnSub {
+  font-size: 5px;
+  color: #888;
+}
+
+.activityLeds {
+  display: flex;
+  gap: 4px;
+  justify-content: flex-end;
+}
+
+.ledGreen, .ledYellow, .ledRed {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #111;
+  border: 1px solid #333;
+}
+.ledGreen { background: #4ade80; box-shadow: 0 0 4px #4ade80; }
+.ledYellow { background: #fbbf24; box-shadow: 0 0 4px #fbbf24; }
+.ledRed { background: #f87171; box-shadow: 0 0 4px #f87171; }
+
+/* =========================================
+   INDUSTRIAL SERIAL MARK (IBM Vintage Tag)
+   ========================================= */
+.stampedLabel {
+  margin-top: 8px;
+  padding: 4px 6px;
+  background: #0a0a0a;
+  border: 1px solid #2a2a2a;
+  border-radius: 3px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.serialText {
+  font-size: 8px;
+  letter-spacing: 0.5px;
+  color: #ffb300;
+  opacity: 0.7;
+  display: flex;
+  gap: 4px;
+}
+
+.serialDivider {
+  color: #444;
+}
+
+.barcodePlaceholder {
+  display: flex;
+  gap: 2px;
+}
+
+.bar {
+  width: 2px;
+  height: 12px;
+  background: #ffb300;
+  opacity: 0.4;
+}
+.bar:nth-child(2) { width: 3px; }
+.bar:nth-child(4) { width: 4px; }
+
+/* =========================================
+   MAINTENANCE TAG
+   ========================================= */
+.maintenanceTag {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px;
+  background: #0a0a0a;
+  border: 1px solid #2a2a2a;
+  border-radius: 3px;
+  font-size: 7px;
+  color: #888;
+}
+
+.tagSub {
+  margin-left: auto;
+  color: #4ade80;
+  font-size: 6px;
+}
+
+/* =========================================
+   WARNING PLATE (High Voltage)
+   ========================================= */
+.warningPlate {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px;
+  background: #1a0a0a;
+  border: 1px solid #ff5a3c;
+  border-radius: 3px;
+  font-size: 7px;
+  color: #ff5a3c;
+  font-weight: bold;
+}
+
+.warningSub {
+  margin-left: auto;
+  color: #aaa;
+  font-size: 6px;
+  font-weight: normal;
+}
+
+/* =========================================
+   ANIMATIONS
+   ========================================= */
+@keyframes fanSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes ledPulse {
+  0% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* =========================================
+   RESPONSIVE (ocultar en pantallas pequeñas)
+   ========================================= */
+@media (max-width: 1200px) {
+  .leftAside {
+    display: none;
+  }
+}
+
+/* =========================================
+   PERFORMANCE
+   ========================================= */
+.leftAside,
+.fanBlades {
+  will-change: transform;
+  contain: layout paint;
+}

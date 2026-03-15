@@ -1,0 +1,106 @@
+.unitContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  user-select: none;
+}
+
+/* Configuraciones de Tamaño */
+.sm { --slat-h: 2px; --slat-gap: 3px; --font-size: 6px; }
+.md { --slat-h: 3px; --slat-gap: 4px; --font-size: 8px; }
+.lg { --slat-h: 5px; --slat-gap: 6px; --font-size: 10px; }
+
+.grill {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--slat-gap);
+  padding: 6px;
+  background: #050505; /* El vacío interno */
+  border: 2px solid #000;
+  border-radius: 4px;
+  box-shadow: 
+    inset 0 10px 30px rgba(0, 0, 0, 1), /* Sombra de profundidad */
+    0 1px 0 rgba(255, 255, 255, 0.05); /* Brillo del borde superior del chasis */
+  overflow: hidden;
+}
+
+/* El cuerpo de la lama (Slat) */
+.slat {
+  position: relative;
+  height: var(--slat-h);
+  width: 100%;
+  /* Gradiente de metal oxidado/desgastado */
+  background: linear-gradient(
+    to bottom,
+    #2a2c2a 0%,
+    #151715 45%,
+    #000000 100%
+  );
+  border-radius: 1px;
+  z-index: 3;
+}
+
+/* Reflejo en el borde filoso de la lama */
+.slatHighlight {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  pointer-events: none;
+}
+
+/* Sombra proyectada por la lama hacia abajo */
+.slatShadow {
+  position: absolute;
+  bottom: -2px;
+  left: 0; right: 0;
+  height: 2px;
+  background: rgba(0,0,0,0.6);
+  filter: blur(1px);
+  z-index: 2;
+}
+
+/* Orientación Vertical: Giramos el flujo visual */
+.vertical .grill {
+  flex-direction: row;
+}
+.vertical .slat {
+  width: var(--slat-h);
+  height: 100%;
+  background: linear-gradient(to right, #2a2c2a, #000);
+}
+
+/* Etiquetas e Identificadores */
+.labelContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 4px;
+}
+
+.intakeLabel {
+  font-size: var(--font-size);
+  font-weight: 900;
+  color: #333;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+}
+
+.labelDivider {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, #111, transparent);
+}
+
+.serialNumber {
+  font-size: var(--font-size);
+  color: #222;
+  font-family: 'ui-monospace', monospace;
+}
+
+/* Animación sutil de "calor" al pasar el mouse */
+.unitContainer:hover .slat {
+  filter: brightness(1.2) contrast(1.1);
+  transition: filter 0.3s ease;
+}
