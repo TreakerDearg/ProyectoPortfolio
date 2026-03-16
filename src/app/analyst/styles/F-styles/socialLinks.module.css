@@ -1,0 +1,39 @@
+.socialContainer{
+
+  display:flex;
+  align-items:center;
+  gap:10px;
+
+}
+
+.socialLink{
+
+  display:flex;
+  align-items:center;
+  gap:5px;
+
+  font-size:11px;
+  color:#b6faff;
+
+  text-decoration:none;
+
+  transition:all 0.2s ease;
+
+}
+
+.socialLink:hover{
+
+  color:#00eaff;
+
+  text-shadow:0 0 6px #00eaff;
+
+}
+
+.divider{
+
+  width:1px;
+  height:14px;
+
+  background:rgba(0,234,255,0.3);
+
+}

@@ -1,0 +1,177 @@
+/* home.module.css - Estilo escritorio Windows 95 (optimizado) */
+
+/* Fuente clásica de Windows */
+@font-face {
+  font-family: 'MS Sans Serif';
+  src: local('Microsoft Sans Serif'), local('MS Sans Serif');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Contenedor principal del escritorio */
+.desktop {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #008080; /* Verde azulado característico */
+  overflow: hidden;
+  /* Textura sutil de pantalla (opcional) */
+  background-image: radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Cuadrícula de iconos con borde hundido estilo Windows 95 */
+.iconGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 16px;
+  padding: 20px;
+  justify-content: start;
+  align-content: start;
+  height: 100%;
+  overflow-y: auto;
+  border: 2px solid;
+  border-color: #808080 #ffffff #ffffff #808080; /* Efecto hundido */
+  background: #c0c0c0; /* Gris claro para el panel */
+  margin: 8px;
+  box-shadow: inset 1px 1px 0 0 #000000; /* Sombra interior */
+}
+
+/* Scrollbar estilo Windows 95 (más realista) */
+.iconGrid::-webkit-scrollbar {
+  width: 16px;
+  background: #c0c0c0;
+}
+.iconGrid::-webkit-scrollbar-track {
+  background: #c0c0c0;
+  border: 1px solid #808080;
+  box-shadow: inset 1px 1px 0 0 #ffffff, inset -1px -1px 0 0 #404040;
+}
+.iconGrid::-webkit-scrollbar-thumb {
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+}
+.iconGrid::-webkit-scrollbar-thumb:hover {
+  background: #d0d0d0;
+}
+.iconGrid::-webkit-scrollbar-button {
+  background: #c0c0c0;
+  border: 1px solid #808080;
+  height: 16px;
+  box-shadow: inset 1px 1px 0 0 #ffffff, inset -1px -1px 0 0 #404040;
+}
+.iconGrid::-webkit-scrollbar-button:vertical:increment {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8"><path fill="black" d="M0 2 L4 6 L8 2 Z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.iconGrid::-webkit-scrollbar-button:vertical:decrement {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8"><path fill="black" d="M0 6 L4 2 L8 6 Z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Cada icono individual (contenedor de selección) */
+.desktopIcon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80px;
+  cursor: pointer;
+  text-align: center;
+  color: white;
+  text-shadow: 1px 1px 0 black;
+  padding: 8px 4px;
+  border: 2px solid transparent;
+  user-select: none;
+}
+
+/* Efecto hover (resaltado) */
+.desktopIcon:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+}
+
+/* Icono seleccionado (borde punteado) */
+.desktopIcon.selected {
+  background: rgba(0, 0, 128, 0.5);
+  border: 2px dotted white;
+}
+
+/* Efecto al hacer clic (hundido) */
+.desktopIcon:active {
+  border-color: #808080 #ffffff #ffffff #808080;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* Contenedor del icono (marco con relieve y sombra) */
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  box-shadow: 1px 1px 0 0 #000000;
+  margin-bottom: 4px;
+  image-rendering: pixelated;
+}
+
+/* Estilo para los iconos SVG (Lucide) */
+.iconWrapper svg {
+  width: 32px;
+  height: 32px;
+  color: #000000;
+  stroke-width: 1.5;
+  filter: none;
+}
+
+/* Etiqueta de texto debajo del icono */
+.iconLabel {
+  font-size: 12px;
+  font-family: 'MS Sans Serif', 'Microsoft Sans Serif', sans-serif;
+  margin-top: 4px;
+  max-width: 80px;
+  word-wrap: break-word;
+  line-height: 1.2;
+}
+
+/* Contenido de las ventanas (usado dentro de Window) */
+.windowContent {
+  padding: 16px;
+  height: 100%;
+  background: #c0c0c0;
+  font-family: 'MS Sans Serif', sans-serif;
+  font-size: 12px;
+  overflow: auto;
+  border: 2px solid;
+  border-color: #808080 #ffffff #ffffff #808080;
+}
+
+/* Ajustes responsivos para móviles */
+@media (max-width: 768px) {
+  .iconGrid {
+    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+    gap: 8px;
+    padding: 10px;
+    margin: 4px;
+  }
+  .desktopIcon {
+    width: 60px;
+  }
+  .iconWrapper {
+    width: 32px;
+    height: 32px;
+  }
+  .iconWrapper svg {
+    width: 24px;
+    height: 24px;
+  }
+  .iconLabel {
+    font-size: 10px;
+  }
+}

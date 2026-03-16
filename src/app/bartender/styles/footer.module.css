@@ -3,108 +3,538 @@
 .footerContainer {
   flex-shrink: 0;
   width: 100%;
-  /* Padding dinámico para evitar espacios vacíos masivos en móviles */
   padding: clamp(3rem, 10vh, 6rem) 0 2rem 0;
-  margin-top: auto; /* Empuja al fondo en el flex-container del layout */
+  margin-top: auto;
+
   border-top: 1px solid rgba(255, 179, 0, 0.08);
-  background: linear-gradient(to bottom, transparent 0%, rgba(5, 5, 5, 0.8) 100%);
+
+  background:
+    linear-gradient(to bottom, transparent 0%, rgba(5,5,5,0.85) 100%),
+    radial-gradient(circle at top, rgba(255,179,0,0.03), transparent 60%);
+
   display: flex;
   flex-direction: column;
   gap: clamp(1.5rem, 3vw, 2.5rem);
+
   position: relative;
   z-index: 90;
+  overflow: hidden;
 }
 
-/* Detalle visual: Línea de carga láser animada */
+
+/* =========================================
+   SCANNING LASER LINE
+========================================= */
+
 .footerContainer::before {
+
   content: "";
+
   position: absolute;
   top: -1px;
   left: 0;
+
   width: 120px;
   height: 2px;
+
   background: #ffb300;
-  box-shadow: 0 0 15px #ffb300, 0 0 5px #fff;
-  animation: scanLine 8s infinite linear;
+
+  box-shadow:
+    0 0 12px #ffb300,
+    0 0 4px #fff;
+
+  animation: scanLine 10s linear infinite;
+
 }
+
 
 @keyframes scanLine {
-  0% { left: 0; opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { left: calc(100% - 120px); opacity: 0; }
+
+  0% {
+    left: -120px;
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  90% {
+    opacity: 1;
+  }
+
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+
 }
 
+
+/* =========================================
+   SENSOR GRID
+========================================= */
+
 .sensorGrid {
+
   display: grid;
-  /* Mínimo 140px por sensor para evitar colapsos de texto */
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+
   gap: 1.5rem;
+
   padding: 0 1.5rem;
+
   max-width: 1400px;
   margin: 0 auto;
+
   width: 100%;
 }
 
-.deployInfo {
+
+/* =========================================
+   SENSOR BLOCK
+========================================= */
+
+.sensorBlock {
+
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.25rem 1.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.03);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-  background: rgba(255, 255, 255, 0.01);
-  gap: 1.5rem;
-  backdrop-filter: blur(4px); /* Efecto sutil de terminal */
+
+  padding: .8rem 1rem;
+
+  border-left: 1px solid rgba(255,179,0,0.08);
+
+  background: rgba(255,255,255,0.015);
+
+  position: relative;
+
+  transition: all .25s ease;
+
 }
 
-@media (min-width: 768px) {
+
+/* Glow interaction */
+
+.sensorBlock:hover {
+
+  background: rgba(255,179,0,0.04);
+
+  border-left: 1px solid rgba(255,179,0,0.3);
+
+  transform: translateY(-2px);
+
+}
+
+
+/* =========================================
+   SENSOR HEADER
+========================================= */
+
+.sensorHeader {
+
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  margin-bottom: .3rem;
+
+}
+
+
+.sensorLabel {
+
+  font-size: 8px;
+
+  color: #666;
+
+  font-weight: 700;
+
+  letter-spacing: .08em;
+
+  text-transform: uppercase;
+
+}
+
+
+.sensorStatus {
+
+  font-size: 7px;
+
+  font-family: var(--font-mono);
+
+  color: #333;
+
+}
+
+
+/* =========================================
+   SENSOR VALUE
+========================================= */
+
+.sensorValue {
+
+  font-size: 14px;
+
+  font-family: var(--font-mono);
+
+  font-weight: 900;
+
+  letter-spacing: -.02em;
+
+  font-style: italic;
+
+}
+
+
+/* Color states */
+
+.safe { color:#22c55e; }
+
+.warn { color:#f59e0b; }
+
+.cold { color:#60a5fa; }
+
+.neutral { color:#a8a29e; }
+
+
+
+/* =========================================
+   DEPLOY INFO
+========================================= */
+
+.deployInfo {
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  padding: 1.25rem 1.5rem;
+
+  border-top: 1px solid rgba(255,255,255,0.03);
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+
+  background: rgba(255,255,255,0.015);
+
+  backdrop-filter: blur(4px);
+
+  gap: 1.5rem;
+
+}
+
+
+@media (min-width:768px) {
+
   .deployInfo {
     flex-direction: row;
     gap: 0;
   }
+
 }
 
-.statusBadge {
+
+/* =========================================
+   OPERATOR SECTION
+========================================= */
+
+.operatorSection {
+
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  background: rgba(0, 0, 0, 0.6);
-  padding: 0.6rem 1.2rem;
-  border: 1px solid rgba(255, 179, 0, 0.15);
-  /* Esquina cortada estilo militar */
-  clip-path: polygon(0 0, 95% 0, 100% 30%, 100% 100%, 5% 100%, 0 70%);
+  gap: 2.5rem;
+
 }
+
+
+.operatorBlock {
+
+  display: flex;
+  flex-direction: column;
+
+}
+
+
+.operatorName {
+
+  font-family: var(--font-mono);
+
+  font-size: 11px;
+
+  letter-spacing: .15em;
+
+  text-transform: uppercase;
+
+  color: #ffb300;
+
+  font-weight: 800;
+
+}
+
+
+.miniLabel {
+
+  font-size: 8px;
+
+  color: #555;
+
+  text-transform: uppercase;
+
+  letter-spacing: .2em;
+
+}
+
+
+/* =========================================
+   LINK STATUS
+========================================= */
+
+.linkStatus {
+
+  display: flex;
+  flex-direction: column;
+
+  border-left: 1px solid #222;
+
+  padding-left: 1.5rem;
+
+}
+
+
+.linkSignal {
+
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+
+}
+
+
+.signalDot {
+
+  width: 6px;
+  height: 6px;
+
+  border-radius: 50%;
+
+  background: #f59e0b;
+
+  box-shadow: 0 0 8px #f59e0b;
+
+}
+
+
+.signalText {
+
+  font-family: var(--font-mono);
+
+  font-size: 9px;
+
+  color: #888;
+
+  letter-spacing: .15em;
+
+}
+
+
+/* =========================================
+   SYSTEM META
+========================================= */
+
+.systemMeta {
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: flex-end;
+
+  gap: .2rem;
+
+}
+
+
+.metroQuote {
+
+  font-size: 9px;
+
+  color: #777;
+
+  font-style: italic;
+
+}
+
+
+.systemVersion {
+
+  font-family: var(--font-mono);
+
+  font-size: 10px;
+
+  color: #555;
+
+}
+
+
+/* =========================================
+   SOCIAL LINKS
+========================================= */
+
+.socialSection {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  max-width: 1400px;
+
+  padding: 0 1.5rem;
+
+  margin: 0 auto;
+
+  width: 100%;
+
+}
+
+
+.socialLabel {
+
+  font-size: 8px;
+
+  color: #555;
+
+  letter-spacing: .2em;
+
+  text-transform: uppercase;
+
+}
+
+
+.socialLinks {
+
+  display: flex;
+
+  gap: 1rem;
+
+}
+
+
+.socialBtn {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: .4rem;
+
+  padding: .45rem .7rem;
+
+  border: 1px solid rgba(255,255,255,0.05);
+
+  background: rgba(255,255,255,0.02);
+
+  font-size: 9px;
+
+  letter-spacing: .1em;
+
+  text-transform: uppercase;
+
+  color: #666;
+
+  transition: all .2s ease;
+
+}
+
+
+.socialBtn:hover {
+
+  color: #ffb300;
+
+  border: 1px solid rgba(255,179,0,0.4);
+
+  background: rgba(255,179,0,0.06);
+
+  box-shadow: 0 0 10px rgba(255,179,0,0.1);
+
+}
+
+
+/* =========================================
+   BOTTOM BAR
+========================================= */
 
 .bottomBar {
+
   display: flex;
-  flex-direction: column; /* Apilar en móvil */
+
+  flex-direction: column;
+
   justify-content: space-between;
+
   align-items: center;
+
   padding: 0 1.5rem;
+
   gap: 1rem;
+
   font-size: 9px;
-  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+
+  font-family: var(--font-mono);
+
   text-transform: uppercase;
-  color: #444; /* Gris oscuro metálico */
-  letter-spacing: 0.2em;
+
+  color: #444;
+
+  letter-spacing: .2em;
+
   max-width: 1400px;
+
   margin: 0 auto;
+
   width: 100%;
+
 }
 
-@media (min-width: 640px) {
+
+@media (min-width:640px) {
+
   .bottomBar {
     flex-direction: row;
   }
+
 }
 
-/* Helper para el texto en negrita del footer */
-.bottomBar span {
-  transition: color 0.3s ease;
+
+.bottomContent {
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 100%;
+
 }
 
-.bottomBar span:hover {
-  color: #666; /* Efecto interactivo sutil */
+
+.bottomNodes {
+
+  display: flex;
+  align-items: center;
+
+  gap: .8rem;
+
+}
+
+
+.nodeDivider {
+
+  width: 2px;
+  height: 10px;
+
+  background: #222;
+
 }

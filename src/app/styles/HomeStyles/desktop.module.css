@@ -1,0 +1,117 @@
+/* desktop.module.css - Estilo para el escritorio Windows 95 */
+
+/* Contenedor principal del escritorio */
+.desktop {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #008080; /* Color clásico de escritorio */
+  overflow: hidden;
+}
+
+/* Cuadrícula de iconos */
+.iconGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 16px;
+  padding: 20px;
+  justify-content: start;
+  align-content: start;
+  height: 100%;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #c0c0c0 #808080;
+}
+
+/* Scrollbar estilo Windows 95 para la cuadrícula */
+.iconGrid::-webkit-scrollbar {
+  width: 16px;
+}
+.iconGrid::-webkit-scrollbar-track {
+  background: #c0c0c0;
+  border: 1px solid #808080;
+}
+.iconGrid::-webkit-scrollbar-thumb {
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+}
+.iconGrid::-webkit-scrollbar-button {
+  background: #c0c0c0;
+  border: 1px solid #808080;
+  height: 16px;
+}
+
+/* Cada icono individual */
+.desktopIcon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80px;
+  cursor: pointer;
+  text-align: center;
+  color: white;
+  text-shadow: 1px 1px 0 black;
+  padding: 8px 4px;
+  border: 2px solid transparent;
+  user-select: none;
+}
+
+/* Efecto hover (resaltado estilo Windows) */
+.desktopIcon:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+}
+
+/* Icono seleccionado (borde punteado) */
+.desktopIcon.selected {
+  background: rgba(0, 0, 128, 0.5);
+  border: 2px dotted white;
+}
+
+/* Imagen del icono (de Lucide o propia) */
+.iconImage {
+  width: 48px;
+  height: 48px;
+  filter: drop-shadow(2px 2px 0 #404040);
+  pointer-events: none; /* Evita que el SVG interfiera con los clics */
+}
+
+/* Etiqueta de texto debajo del icono */
+.iconLabel {
+  font-size: 12px;
+  font-family: 'MS Sans Serif', sans-serif;
+  margin-top: 4px;
+  max-width: 80px;
+  word-wrap: break-word;
+}
+
+/* Contenido de las ventanas (por si se necesita) */
+.windowContent {
+  padding: 16px;
+  height: 100%;
+  background: #c0c0c0;
+  font-family: 'MS Sans Serif', sans-serif;
+  font-size: 12px;
+  overflow: auto;
+}
+
+/* Ajustes responsivos para móviles */
+@media (max-width: 768px) {
+  .iconGrid {
+    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+    gap: 8px;
+    padding: 10px;
+  }
+  .desktopIcon {
+    width: 60px;
+  }
+  .iconImage {
+    width: 32px;
+    height: 32px;
+  }
+  .iconLabel {
+    font-size: 10px;
+  }
+}

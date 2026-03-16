@@ -1,0 +1,51 @@
+/* RESET BASICO */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ROOT VARIABLES */
+:root {
+  --bg-main: #0e0e11;
+  --text-main: #e4e4e7;
+  --border-subtle: #23232a;
+}
+
+/* BODY BASE */
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, sans-serif;
+  font-family:"JetBrains Mono", monospace;
+  background: var(--bg-main);
+  color: var(--text-main);
+  line-height: 1.5;
+}
+
+/* LINKS */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* MEDIA */
+img,
+video {
+  max-width: 100%;
+  display: block;
+}
+
+/* BUTTON RESET */
+button {
+  font-family: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+}

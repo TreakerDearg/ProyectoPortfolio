@@ -1,134 +1,478 @@
 /* bartender/styles/inventory.module.css */
 
+/* ================================
+   DESIGN TOKENS
+================================ */
+
 .inventoryContainer {
-  /* Usamos padding dinámico basado en el ancho de pantalla */
-  padding: clamp(1rem, 5vw, 4rem);
+  --bg-card: linear-gradient(165deg,#0d0d0d 0%,#050505 100%);
+  --border-subtle: rgba(255,255,255,0.05);
+  --border-soft: rgba(255,255,255,0.03);
+  --text-dim: #6b7280;
+  --text-soft: #9ca3af;
+
+  --space-xs: .4rem;
+  --space-sm: .8rem;
+  --space-md: 1.2rem;
+  --space-lg: 2rem;
+  --space-xl: 3rem;
+
+  padding: clamp(1rem,5vw,4rem);
   min-height: 100vh;
   width: 100%;
   max-width: 1800px;
   margin: 0 auto;
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
+
+  display:flex;
+  flex-direction:column;
+
+  position:relative;
+  z-index:1;
 }
 
-/* HEADER ADAPTATIVO */
+
+/* ================================
+   HEADER
+================================ */
+
 .manifestHeader {
-  display: flex;
-  flex-wrap: wrap; /* Permite que búsqueda y título se apilen en móviles */
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 2rem;
-  margin-bottom: clamp(2rem, 8vw, 5rem);
-  border-bottom: 2px solid rgba(255, 255, 255, 0.05);
-  padding-bottom: 2rem;
+
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:space-between;
+  align-items:flex-end;
+
+  gap:2rem;
+
+  margin-bottom:clamp(2rem,8vw,5rem);
+
+  border-bottom:2px solid var(--border-subtle);
+  padding-bottom:2rem;
 }
 
 .titleGroup {
-  flex: 1 1 300px; /* Crece y se achica según necesidad */
+  flex:1 1 320px;
 }
 
-/* GRID INTELIGENTE */
-.itemGrid {
-  display: grid;
-  /* Crea tantas columnas como quepan, con un mínimo de 300px */
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
-  gap: clamp(1rem, 2vw, 2.5rem);
-  width: 100%;
+
+/* ================================
+   CONTROLS
+================================ */
+
+.controls{
+
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+
+  gap:1rem;
+
+  width:100%;
+  max-width:520px;
 }
 
-/* CARD DE ALTO RENDIMIENTO */
-.itemCard {
-  --u-color: #ffb300;
-  background: linear-gradient(165deg, #0d0d0d 0%, #050505 100%);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  padding: clamp(1.2rem, 3vw, 2rem);
-  position: relative;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 15px 15px 40px rgba(0, 0, 0, 0.6);
-  overflow: hidden;
+.searchInput{
+
+  width:100%;
+
+  background:black;
+  border:1px solid rgba(255,255,255,.08);
+
+  padding:.8rem 1rem .8rem 2.2rem;
+
+  font-size:.7rem;
+  font-family:monospace;
+  letter-spacing:.15em;
+
+  text-transform:uppercase;
+
+  color:#f59e0b;
+
+  transition:all .25s ease;
 }
 
-/* UNIVERSOS DINÁMICOS */
-.itemCard[data-universe="metro"] { --u-color: #ffb300; }
-.itemCard[data-universe="soma"]  { --u-color: #00f2ff; }
-.itemCard[data-universe="ac"]    { --u-color: #ff3c00; }
-
-.itemCard:hover {
-  transform: translateY(-8px) scale(1.01);
-  border-color: color-mix(in srgb, var(--u-color), transparent 60%);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 
-              0 0 15px color-mix(in srgb, var(--u-color), transparent 90%);
+.searchInput::placeholder{
+  color:#555;
 }
 
-/* INDICADOR LATERAL */
-.itemCard::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 4px;
-  height: 100%;
-  background: #151515;
-  transition: all 0.4s ease;
+.searchInput:focus{
+
+  outline:none;
+
+  border-color:#f59e0b;
+
+  box-shadow:0 0 0 1px rgba(245,158,11,.2);
 }
 
-.itemCard:hover::before {
-  background: var(--u-color);
-  box-shadow: 0 0 20px var(--u-color);
+
+
+/* ================================
+   FILTER BAR
+================================ */
+
+.filterBar{
+
+  display:flex;
+
+  gap:.2rem;
+
+  padding:.2rem;
+
+  background:#050505;
+
+  border:1px solid rgba(255,255,255,.08);
+
+  overflow-x:auto;
 }
 
-/* CONTENEDOR DE METADATOS */
-.cardHeader {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+.filterButton{
+
+  font-size:.65rem;
+  font-weight:700;
+
+  padding:.55rem .9rem;
+
+  border:none;
+
+  background:transparent;
+
+  color:#777;
+
+  cursor:pointer;
+
+  transition:all .2s ease;
+
+  white-space:nowrap;
 }
 
-/* BARRA DE PROGRESO INDUSTRIAL */
-.quantityBarContainer {
-  height: 6px;
-  background: #000;
-  border-radius: 10px;
-  margin-top: auto; /* Empuja la barra al final de la card */
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.03);
+.filterButton:hover{
+  color:white;
 }
 
-/* FOOTER INFORMATIVO */
-.cardFooter {
-  margin-top: 1.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.03);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.filterActive{
+
+  background:#f59e0b;
+
+  color:black;
 }
 
-/* MEDIA QUERIES PARA DETALLES FINOS */
-@media (max-width: 480px) {
-  .inventoryContainer {
-    padding: 1rem;
+
+/* ================================
+   MAIN GRID
+================================ */
+
+.inventoryMain{
+  flex:1;
+}
+
+.itemGrid{
+
+  display:grid;
+
+  grid-template-columns:
+  repeat(auto-fill,
+  minmax(min(100%,320px),1fr));
+
+  gap:clamp(1rem,2vw,2.5rem);
+
+  width:100%;
+}
+
+
+
+/* ================================
+   ITEM CARD
+================================ */
+
+.itemCard{
+
+  --u-color:#ffb300;
+
+  background:var(--bg-card);
+
+  border:1px solid var(--border-subtle);
+
+  padding:clamp(1.2rem,3vw,2rem);
+
+  position:relative;
+
+  cursor:pointer;
+
+  display:flex;
+  flex-direction:column;
+
+  transition:
+
+  transform .45s cubic-bezier(.16,1,.3,1),
+  border-color .4s,
+  box-shadow .4s;
+
+  box-shadow:
+  15px 15px 40px rgba(0,0,0,.6);
+
+  overflow:hidden;
+
+  isolation:isolate;
+}
+
+
+/* UNIVERSOS */
+
+.itemCard[data-universe="metro"]{ --u-color:#ffb300;}
+.itemCard[data-universe="soma"]{ --u-color:#00f2ff;}
+.itemCard[data-universe="ac"]{ --u-color:#ff3c00;}
+
+
+/* HOVER */
+
+.itemCard:hover{
+
+  transform:translateY(-8px) scale(1.01);
+
+  border-color:color-mix(in srgb,var(--u-color),transparent 60%);
+
+  box-shadow:
+
+  0 25px 60px rgba(0,0,0,.9),
+  0 0 18px color-mix(in srgb,var(--u-color),transparent 90%);
+}
+
+
+
+/* SIDE INDICATOR */
+
+.itemCard::before{
+
+  content:"";
+
+  position:absolute;
+
+  left:0;
+  top:0;
+
+  width:4px;
+  height:100%;
+
+  background:#151515;
+
+  transition:.4s;
+}
+
+.itemCard:hover::before{
+
+  background:var(--u-color);
+
+  box-shadow:0 0 20px var(--u-color);
+}
+
+
+
+/* ================================
+   CARD HEADER
+================================ */
+
+.cardHeader{
+
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+
+  gap:1rem;
+
+  margin-bottom:1.2rem;
+}
+
+.itemTitle{
+
+  font-size:1.25rem;
+  font-weight:900;
+
+  color:white;
+
+  line-height:1.1;
+
+  text-transform:uppercase;
+
+  transition:color .2s;
+}
+
+.itemCard:hover .itemTitle{
+  color:#f59e0b;
+}
+
+
+
+/* ================================
+   QUANTITY SECTION
+================================ */
+
+.quantitySection{
+
+  margin-top:auto;
+
+  display:flex;
+  flex-direction:column;
+
+  gap:.5rem;
+}
+
+.quantityHeader{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+}
+
+
+
+/* BAR */
+
+.quantityBarContainer{
+
+  height:6px;
+
+  background:black;
+
+  border-radius:10px;
+
+  overflow:hidden;
+
+  border:1px solid var(--border-soft);
+}
+
+
+
+/* ================================
+   FOOTER CARD
+================================ */
+
+.cardFooter{
+
+  margin-top:1.3rem;
+
+  padding-top:.9rem;
+
+  border-top:1px solid var(--border-soft);
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+}
+
+
+
+/* ================================
+   PAGE FOOTER
+================================ */
+
+.inventoryFooter{
+
+  margin-top:4rem;
+
+  padding-top:2rem;
+
+  border-top:1px solid rgba(255,255,255,.06);
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  flex-wrap:wrap;
+
+  gap:2rem;
+}
+
+
+.footerStats{
+
+  display:flex;
+
+  flex-wrap:wrap;
+
+  gap:3rem;
+}
+
+.statBlock{
+
+  display:flex;
+
+  flex-direction:column;
+}
+
+.statBlockDanger{
+
+  display:flex;
+
+  flex-direction:column;
+
+  border-left:1px solid rgba(255,255,255,.08);
+
+  padding-left:2rem;
+}
+
+.footerTerminal{
+
+  text-align:right;
+
+  opacity:.4;
+}
+
+
+
+/* ================================
+   MOBILE
+================================ */
+
+@media (max-width:768px){
+
+  .manifestHeader{
+
+    align-items:flex-start;
+
+    gap:1.5rem;
   }
-  
-  .manifestHeader {
-    text-align: center;
-    justify-content: center;
+
+  .controls{
+    max-width:none;
   }
-  
-  .titleGroup h2 {
-    font-size: 1.8rem;
+
+  .footerTerminal{
+    text-align:center;
+    width:100%;
   }
+
 }
 
-/* Soporte para pantallas táctiles (desactiva transformaciones pesadas) */
-@media (hover: none) {
-  .itemCard:hover {
-    transform: none;
+
+
+@media (max-width:480px){
+
+  .inventoryContainer{
+    padding:1rem;
   }
+
+  .titleGroup h2{
+    font-size:1.8rem;
+  }
+
+}
+
+
+
+/* ================================
+   TOUCH DEVICES
+================================ */
+
+@media (hover:none){
+
+  .itemCard:hover{
+    transform:none;
+  }
+
 }

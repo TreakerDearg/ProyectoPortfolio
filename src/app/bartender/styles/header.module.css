@@ -1,167 +1,619 @@
 /* bartender/styles/header.module.css */
 
+/* =================================
+   DESIGN TOKENS
+================================= */
+
 .headerContainer {
+
+  --accent: #ffb300;
+  --danger: #ff3c00;
+
+  --text-main: #e5e5e5;
+  --text-dim: #555;
+  --text-muted: #444;
+
+  --border-soft: rgba(255,255,255,0.05);
+  --border-subtle: rgba(255,255,255,0.03);
+
+  --panel-bg: rgba(255,255,255,0.02);
+
   position: relative;
   width: 100%;
+
   padding-top: 1.5rem;
   margin-bottom: 2.5rem;
+
   display: flex;
   flex-direction: column;
-  z-index: 50; /* Por debajo del Portal del Drawer (2000) */
-  transition: opacity 0.4s ease, filter 0.4s ease;
+
+  z-index: 50;
+
+  transition:
+  opacity .4s ease,
+  filter .4s ease;
+
   isolation: isolate;
 }
 
-/* Estado atenuado cuando el Drawer está abierto */
+
+
+/* =================================
+   DRAWER DIMMED STATE
+================================= */
+
 .headerDimmed {
-  opacity: 0.4;
+
+  opacity: .4;
   filter: grayscale(1) blur(2px);
-  pointer-events: none; /* Evita clics accidentales en el header mientras el drawer está abierto */
+
+  pointer-events: none;
+
 }
 
+
+
+/* =================================
+   TELEMETRY BAR
+================================= */
+
 .telemetryBar {
+
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+
+  padding-bottom: .75rem;
+
+  border-bottom: 1px solid var(--border-subtle);
+
   font-family: var(--font-mono);
+
   font-size: 9px;
-  letter-spacing: 0.1em;
+  letter-spacing: .12em;
+
+  color: var(--text-muted);
+
+}
+
+
+
+/* LEFT SIDE */
+
+.telemetryLeft {
+
+  display: flex;
+  align-items: center;
+
+  gap: 1.5rem;
+
+}
+
+
+
+.sensorStatus {
+
+  display: flex;
+  align-items: center;
+
+  gap: .4rem;
+
+}
+
+.sensorDot {
+
+  width: 6px;
+  height: 6px;
+
+  border-radius: 50%;
+}
+
+
+
+/* SENSOR TEXT */
+
+.activeSensor {
+
+  color: var(--accent);
+
+  font-weight: 800;
+
+  text-shadow:
+  0 0 12px rgba(255,179,0,.2);
+
+  font-size: 8px;
+
+  letter-spacing: .2em;
+
+}
+
+
+
+/* CPU */
+
+.cpuStat {
+
+  font-size: 9px;
+
+  color: var(--text-dim);
+
+}
+
+.cpuStat span {
+
+  color: var(--text-main);
+
+}
+
+
+
+/* RIGHT SIDE */
+
+.telemetryRight {
+
+  display: flex;
+  align-items: center;
+
+  gap: 1rem;
+
+}
+
+
+
+/* SIGNAL */
+
+.signalBlock {
+
+  display: flex;
+  align-items: center;
+
+  gap: .3rem;
+
+  color: var(--text-dim);
+
+}
+
+.signalActive {
+  color: var(--accent);
+}
+
+.signalIdle {
   color: #444;
 }
 
-.activeSensor {
-  color: #ffb300;
-  font-weight: 800;
-  text-shadow: 0 0 12px rgba(255, 179, 0, 0.2);
-  font-size: 8px;
-  letter-spacing: 0.2em;
+
+
+/* SECURITY */
+
+.securityBlock {
+
+  display: flex;
+  align-items: center;
+
+  gap: .3rem;
+
+  padding: 2px 6px;
+
+  background: rgba(0,0,0,.35);
+
+  border: 1px solid var(--border-soft);
+
 }
+
+.shieldActive {
+  color: #22c55e;
+}
+
+.shieldIdle {
+  color: #444;
+}
+
+
+
+/* =================================
+   MAIN NAV ROW
+================================= */
 
 .mainNavRow {
+
   display: flex;
+
   justify-content: space-between;
+
   align-items: flex-end;
+
   margin-top: 1.25rem;
+
   gap: 2rem;
+
 }
 
-.logoMain {
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  font-weight: 950;
-  line-height: 0.8;
-  letter-spacing: -0.06em;
-  text-transform: uppercase;
-  color: #eee;
-  font-style: italic;
-}
 
-.logoMix {
-  color: transparent;
-  -webkit-text-stroke: 1px #ffb300;
-  font-weight: 900;
-  font-style: normal;
-  margin-left: 4px;
-}
 
-.navModuleContainer {
-  display: flex;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  padding: 0.25rem;
-  border-radius: 2px;
-}
+/* =================================
+   LOGO AREA
+================================= */
 
-.navLink {
-  padding: 0.5rem 1.25rem;
-  font-size: 10px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: #555;
+.logoArea {
+
   display: flex;
   flex-direction: column;
-  transition: all 0.2s ease;
-  border-radius: 1px;
+
+  gap: .4rem;
+
 }
+
+
+
+.terminalTag {
+
+  display: flex;
+  align-items: center;
+
+  gap: .4rem;
+
+  font-size: 9px;
+
+  letter-spacing: .35em;
+
+  color: #666;
+
+  text-transform: uppercase;
+
+}
+
+.terminalIcon {
+
+  color: var(--accent);
+
+  opacity: .6;
+
+}
+
+
+
+/* LOGO */
+
+.logoMain {
+
+  font-size: clamp(2rem,5vw,3.5rem);
+
+  font-weight: 950;
+
+  line-height: .8;
+
+  letter-spacing: -.06em;
+
+  text-transform: uppercase;
+
+  color: var(--text-main);
+
+  font-style: italic;
+
+}
+
+
+
+.logoMix {
+
+  color: transparent;
+
+  -webkit-text-stroke: 1px var(--accent);
+
+  font-weight: 900;
+
+  font-style: normal;
+
+  margin-left: 4px;
+
+}
+
+
+
+/* =================================
+   NAVIGATION AREA
+================================= */
+
+.navigationArea {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 1.5rem;
+
+}
+
+
+
+/* NAV MODULE CONTAINER */
+
+.navModuleContainer {
+
+  display: flex;
+
+  background: var(--panel-bg);
+
+  border: 1px solid var(--border-soft);
+
+  padding: .25rem;
+
+  border-radius: 2px;
+
+}
+
+
+
+/* NAV LINK */
+
+.navLink {
+
+  padding: .55rem 1.25rem;
+
+  font-size: 10px;
+
+  font-weight: 900;
+
+  text-transform: uppercase;
+
+  letter-spacing: .1em;
+
+  color: var(--text-dim);
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: flex-start;
+
+  transition:
+
+  color .2s,
+  background .2s;
+
+  border-radius: 2px;
+
+}
+
+
+
+/* NUMBER */
 
 .navNumber {
+
   font-size: 7px;
+
   color: #333;
+
   margin-bottom: 2px;
+
   font-family: var(--font-mono);
+
 }
 
+
+
+/* HOVER */
+
 .navLink:hover {
-  color: #ffb300;
-  background: rgba(255, 179, 0, 0.05);
+
+  color: var(--accent);
+
+  background: rgba(255,179,0,.05);
+
 }
 
 .navLink:hover .navNumber {
-  color: #ffb300;
+
+  color: var(--accent);
+
 }
+
+
+
+/* =================================
+   CONTROL CLUSTER
+================================= */
+
+.controlCluster {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: .75rem;
+
+  padding-left: 1rem;
+
+  border-left: 1px solid var(--border-soft);
+
+}
+
+
+
+/* RADIO BUTTON */
 
 .radioBtn {
+
   position: relative;
+
   width: 42px;
   height: 42px;
-  background: #ffb300;
+
+  background: var(--accent);
+
   border: none;
+
   display: grid;
+
   place-items: center;
+
   cursor: pointer;
-  box-shadow: 0 0 15px rgba(255, 179, 0, 0.1);
-  clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
+
+  box-shadow:
+
+  0 0 15px rgba(255,179,0,.15);
+
+  clip-path: polygon(
+  10% 0%,100% 0%,
+  90% 100%,0% 100%);
+
 }
+
+
+
+/* RADIO PING */
 
 .radioPing {
+
   position: absolute;
+
   top: 4px;
   right: 4px;
+
   width: 6px;
   height: 6px;
-  background: #ff3c00;
+
+  background: var(--danger);
+
   border-radius: 50%;
-  box-shadow: 0 0 8px #ff3c00;
-  animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+
+  box-shadow: 0 0 8px var(--danger);
+
+  animation: ping 2s cubic-bezier(0,0,.2,1) infinite;
+
 }
+
+
+
+/* PING ANIMATION */
 
 @keyframes ping {
-  75%, 100% {
+
+  75%,100% {
+
     transform: scale(2);
+
     opacity: 0;
+
   }
+
 }
 
-@media (max-width: 768px) {
-  .mainNavRow {
+
+
+/* =================================
+   DATA SCANNER LINE
+================================= */
+
+.dataLine {
+
+  width: 100%;
+
+  height: 1px;
+
+  background: rgba(255,255,255,.05);
+
+  margin-top: 1rem;
+
+  position: relative;
+
+  overflow: hidden;
+
+}
+
+
+
+.dataScanner {
+
+  position: absolute;
+
+  inset: 0;
+
+  width: 140px;
+
+  background:
+
+  linear-gradient(
+  to right,
+  transparent,
+  rgba(255,179,0,.25),
+  transparent);
+
+}
+
+
+
+/* =================================
+   RESPONSIVE
+================================= */
+
+@media (max-width:1024px){
+
+  .logoMain{
+    font-size:2rem;
+  }
+
+  .navLink{
+
+    padding:.5rem .75rem;
+
+    font-size:9px;
+
+  }
+
+}
+
+
+
+@media (max-width:768px){
+
+  .mainNavRow{
+
     flex-direction: column;
+
     align-items: flex-start;
+
     gap: 1.5rem;
+
   }
-  .navModuleContainer {
+
+  .navigationArea{
+
     width: 100%;
+
+    justify-content: space-between;
+
   }
-  .navLink {
+
+  .navModuleContainer{
+
+    width: 100%;
+
+  }
+
+  .navLink{
+
     flex: 1;
+
     align-items: center;
+
   }
+
 }
 
-/* Asegura que la navegación se mantenga alineada y no se rompa con el nuevo botón */
-.mainNavRow nav {
-  display: flex;
-  align-items: center;
-  flex-wrap: nowrap; /* Evita que el botón de salida salte a otra línea */
-}
 
-@media (max-width: 1024px) {
-  .logoMain {
-    font-size: 2rem;
+
+@media (max-width:480px){
+
+  .telemetryBar{
+
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: .5rem;
+
   }
-  .navLink {
-    padding: 0.5rem 0.75rem;
-    font-size: 9px;
-  }
+
 }

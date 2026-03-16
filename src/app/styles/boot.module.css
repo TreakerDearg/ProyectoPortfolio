@@ -1,0 +1,470 @@
+/* boot.module.css - Estilo DOS / Windows 95 auténtico y mejorado */
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+/* Fuentes retro: intentamos usar una fuente local primero, luego VT323 como respaldo */
+@font-face {
+  font-family: 'Perfect DOS VGA';
+  src: url('/fonts/PerfectDOSVGA.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+/* Variables de color: clásico verde sobre negro, sin glows exagerados */
+:root {
+  --primary: #00ff00;          /* Verde fosforescente */
+  --primary-glow: #33ff33;      /* Versión más brillante para detalles sutiles */
+  --secondary: #ffffff;         /* Blanco para prompts y BIOS */
+  --accent: #ff0000;            /* Rojo para errores */
+  --bg: #000000;                /* Fondo negro puro */
+  --text-dim: rgba(0, 255, 0, 0.7);
+  --scanline-dark: rgba(0, 0, 0, 0.4); /* Más definido */
+  --border-glow: 0 0 3px var(--primary); /* Sutil */
+}
+
+/* Pantalla principal */
+.bootScreen {
+  background: var(--bg);
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Perfect DOS VGA', 'VT323', 'Courier New', monospace;
+  color: var(--primary);
+  text-shadow: 0 0 3px var(--primary); /* Solo un toque de glow */
+  position: relative;
+  overflow: hidden;
+  padding: 20px;
+  box-sizing: border-box;
+  image-rendering: pixelated; /* Simula baja resolución */
+  animation: crtBoot 0.6s ease-out, crtFlicker 0.15s infinite alternate;
+}
+
+/* Ruido analógico muy sutil */
+.bootScreen::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-radial-gradient(circle at 30% 40%, rgba(255,255,255,0.02) 0px, transparent 2px);
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.2;
+  mix-blend-mode: overlay;
+}
+
+/* Scanlines más definidas (estilo monitor CRT real) */
+.scanlines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 1px,
+    var(--scanline-dark) 1px,
+    var(--scanline-dark) 2px,
+    transparent 2px,
+    transparent 4px
+  );
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.5;
+  animation: scanMove 12s linear infinite;
+}
+
+/* Quemado de fósforo (burn-in) orgánico */
+.screenBurn {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 70% 30%, var(--primary) 0%, transparent 70%);
+  opacity: 0.05;
+  pointer-events: none;
+  z-index: 1;
+  mix-blend-mode: screen;
+}
+
+/* Curvatura de pantalla estilo CRT (bordes oscuros) mejorada */
+.screenCurve {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.9) 100%);
+  pointer-events: none;
+  z-index: 3;
+  mix-blend-mode: multiply;
+}
+
+/* Terminal principal */
+.bootTerminal {
+  position: relative;
+  z-index: 5;
+  width: 95%;
+  max-width: 1300px;
+  height: 90vh;
+  border: 2px solid var(--primary);
+  padding: 30px;
+  background: var(--bg);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) var(--bg);
+  box-shadow: inset 0 0 20px rgba(0,255,0,0.1); /* Brillo interior más sutil */
+  scroll-behavior: smooth; /* Scroll suave */
+}
+
+/* Scrollbar estilo DOS */
+.bootTerminal::-webkit-scrollbar {
+  width: 12px;
+}
+.bootTerminal::-webkit-scrollbar-track {
+  background: var(--bg);
+  border: 1px solid var(--primary);
+}
+.bootTerminal::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border: 1px solid var(--bg);
+}
+
+/* Líneas de texto base */
+.bootLine {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+  font-size: 1.5rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+  padding-left: 8px;
+  animation: phosphorFade 0.3s ease-out;
+  position: relative;
+}
+
+/* Colores por tipo de línea (se asignan desde el JSX con clases adicionales) */
+.bootLine.biosLine {
+  color: var(--secondary);
+  text-shadow: 0 0 2px #ffffff, 0 0 5px rgba(255,255,255,0.6);
+}
+.bootLine.dosLine {
+  color: var(--primary);
+}
+.bootLine.vxdLine {
+  color: #00ffff; /* Cyan para drivers */
+  text-shadow: 0 0 3px #00ffff;
+}
+.bootLine.errorLine {
+  color: var(--accent);
+  text-shadow: 0 0 3px var(--accent);
+}
+.bootLine.readyLine {
+  color: #ffff00; /* Amarillo para mensajes de listo */
+  text-shadow: 0 0 3px #ffff00;
+}
+
+/* Efecto de aberración cromática al pasar el ratón (opcional, muy CRT) */
+.bootLine:hover::before,
+.bootLine:hover::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: -1;
+}
+.bootLine:hover::before {
+  color: red;
+  transform: translateX(-1px);
+}
+.bootLine:hover::after {
+  color: blue;
+  transform: translateX(1px);
+}
+
+/* Logo ASCII */
+.asciiLogo {
+  font-size: 0.9rem;
+  line-height: 1.3;
+  margin: 10px 0;
+  color: var(--primary);
+  white-space: pre;
+  font-family: 'Perfect DOS VGA', 'VT323', monospace;
+  border: 1px solid var(--primary);
+  padding: 8px;
+  display: inline-block;
+  background: var(--bg);
+}
+
+/* Iconos */
+.lineIcon {
+  width: 1.8rem;
+  height: 1.8rem;
+  color: currentColor; /* Hereda el color de la línea */
+  flex-shrink: 0;
+}
+
+/* Cursor bloque (DOS) */
+.cursorBlock {
+  display: inline-block;
+  width: 0.9rem;
+  height: 1.6rem;
+  background-color: var(--primary);
+  margin-left: 4px;
+  animation: cursorBlink 1s step-end infinite;
+}
+
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Efecto glitch mejorado con RGB split */
+.glitch {
+  animation: glitchSkew 0.15s infinite alternate;
+}
+
+@keyframes glitchSkew {
+  0% { transform: translate(0); filter: hue-rotate(0deg); }
+  20% { transform: translate(-2px, 1px); filter: hue-rotate(20deg); }
+  40% { transform: translate(2px, -1px); filter: hue-rotate(-20deg); }
+  60% { transform: translate(-1px, 2px); filter: hue-rotate(10deg); }
+  80% { transform: translate(1px, -2px); filter: hue-rotate(-10deg); }
+  100% { transform: translate(0); filter: hue-rotate(0deg); }
+}
+
+/* Prompt */
+.prompt {
+  display: inline-block;
+  color: var(--secondary);
+  margin-right: 8px;
+  font-weight: bold;
+}
+
+/* Mensaje de error (pánico) */
+.panic {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  color: var(--accent);
+  background: rgba(255,0,0,0.1);
+  padding: 8px 12px;
+  border: 1px solid var(--accent);
+}
+
+/* Mensaje de BIOS */
+.biosMessage {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--secondary);
+  background: rgba(255,255,255,0.05);
+  padding: 6px 10px;
+  border: 1px solid var(--secondary);
+  margin-top: 10px;
+}
+
+/* Input de comandos (invisible, solo para capturar teclas) */
+.commandInput {
+  display: inline-block;
+  min-width: 10px;
+  background: transparent;
+  border: none;
+  color: var(--primary);
+  font-family: inherit;
+  font-size: inherit;
+  outline: none;
+  caret-color: transparent;
+}
+
+/* Contenedor para input en móvil */
+.mobileInputContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 8px;
+  background: var(--bg);
+  border: 2px solid var(--primary);
+}
+
+.mobileInput {
+  flex: 1;
+  background: var(--bg);
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 4px 6px;
+  outline: none;
+}
+
+.mobileInput::placeholder {
+  color: var(--text-dim);
+}
+
+/* Botones para móvil (opcional) */
+.mobileCommands {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+  justify-content: center;
+}
+.mobileCommands button {
+  background: var(--bg);
+  border: 2px solid var(--primary);
+  color: var(--primary);
+  font-family: 'Perfect DOS VGA', 'VT323', monospace;
+  font-size: 1.2rem;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+.mobileCommands button:active {
+  background: var(--primary);
+  color: var(--bg);
+}
+
+/* Barra de progreso */
+.progressBar {
+  font-family: 'Courier New', monospace;
+  letter-spacing: 2px;
+  color: var(--primary);
+  display: inline-block;
+}
+
+/* LED de disco duro */
+.diskLed {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Perfect DOS VGA', 'VT323', monospace;
+  font-size: 1rem;
+  color: var(--primary);
+  background: rgba(0,0,0,0.7);
+  padding: 4px 8px;
+  border: 1px solid var(--primary);
+}
+.diskLed span {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ff0000;
+  box-shadow: 0 0 6px #ff0000;
+  animation: diskBlink 0.2s infinite;
+}
+
+.diskLed span {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ff0000;
+  box-shadow: 0 0 6px #ff0000;
+  opacity: 0.3; /* por defecto apagado */
+  transition: opacity 0.1s;
+}
+
+.diskLed span.diskLedActive {
+  opacity: 1;
+}
+
+@keyframes diskBlink {
+  0% { opacity: 1; }
+  50% { opacity: 0.3; }
+  100% { opacity: 1; }
+}
+
+/* Animaciones CRT */
+@keyframes crtBoot {
+  0% {
+    transform: scaleY(0.02);
+    opacity: 0;
+  }
+  20% {
+    transform: scaleY(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes scanMove {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 20px; }
+}
+
+@keyframes phosphorFade {
+  0% {
+    opacity: 0;
+    filter: blur(2px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+@keyframes crtFlicker {
+  0% { opacity: 0.98; }
+  50% { opacity: 1; }
+  100% { opacity: 0.97; }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .bootTerminal { padding: 20px; }
+  .bootLine { font-size: 1.3rem; gap: 10px; }
+  .lineIcon { width: 1.5rem; height: 1.5rem; }
+  .asciiLogo { font-size: 0.7rem; }
+}
+
+@media (max-width: 768px) {
+  .bootTerminal { padding: 15px; height: 85vh; }
+  .bootLine { font-size: 1.1rem; margin-bottom: 6px; }
+  .lineIcon { width: 1.2rem; height: 1.2rem; }
+  .prompt { font-size: 1.2rem; }
+  .panic { font-size: 1.3rem; padding: 8px 12px; }
+  .asciiLogo { font-size: 0.55rem; }
+  .cursorBlock { width: 0.7rem; height: 1.2rem; }
+  .diskLed { font-size: 0.8rem; padding: 2px 6px; }
+}
+
+@media (max-width: 480px) {
+  .bootTerminal { padding: 10px; width: 98%; height: 80vh; }
+  .bootLine { font-size: 0.9rem; gap: 6px; }
+  .lineIcon { width: 1rem; height: 1rem; }
+  .prompt { font-size: 1rem; }
+  .panic { font-size: 1.1rem; }
+  .mobileCommands button { font-size: 1rem; padding: 4px 8px; }
+}
+
+/* Accesibilidad: reducir animaciones si se prefiere */
+@media (prefers-reduced-motion: reduce) {
+  .bootScreen,
+  .scanlines,
+  .screenBurn,
+  .bootLine,
+  .cursorBlock,
+  .glitch,
+  .panic,
+  .diskLed span {
+    animation: none !important;
+  }
+}

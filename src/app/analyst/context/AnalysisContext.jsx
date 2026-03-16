@@ -1,5 +1,5 @@
 "use client";
-import React, { createContext, useContext, useState, useCallback, useMemo, useEffect } from 'react';
+import React, { createContext, useContext, useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { 
   INITIAL_NODES, 
   SECURITY_LOGS, 
@@ -10,109 +10,134 @@ import {
 const AnalysisContext = createContext(undefined);
 
 export function AnalysisProvider({ children }) {
+  // --- ESTADOS DE UI / NAVEGACIÓN ---
   const [activeView, setActiveView] = useState('Network_Map');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [systemStatus, setSystemStatus] = useState('NOMINAL');
   const [leftCollapsed, setLeftCollapsed] = useState(false);
   const [rightCollapsed, setRightCollapsed] = useState(false);
   
+  // --- ESTADOS DE DATOS ---
   const [nodes, setNodes] = useState(INITIAL_NODES);
   const [logs, setLogs] = useState(SECURITY_LOGS);
   const [activeStreams, setActiveStreams] = useState(INITIAL_STREAMS);
   const [kernelMetrics, setKernelMetrics] = useState(INITIAL_KERNEL_STATE);
   const [selectedNodeId, setSelectedNodeId] = useState(null);
 
-  // --- SIMULACIÓN DE HARDWARE ---
+  // --- REFERENCIAS PARA CÁLCULOS ---
+  // Usar refs ayuda a evitar re-renders innecesarios en intervalos
+  const statusTimerRef = useRef(null);
+
+  // --- SIMULACIÓN DE HARDWARE (Métricas de Kernel) ---
   useEffect(() => {
-    const interval = setInterval(() => {
+    const hardwareInterval = setInterval(() => {
       setKernelMetrics(prev => ({
         ...prev,
         cpu: {
           ...prev.cpu,
-          baseLoad: parseFloat((prev.cpu.baseLoad + (Math.random() * 2 - 1)).toFixed(2))
+          baseLoad: Math.min(100, Math.max(0, parseFloat((prev.cpu.baseLoad + (Math.random() * 4 - 2)).toFixed(2))))
         },
-        threads: 1200 + Math.floor(Math.random() * 100)
+        threads: 1200 + Math.floor(Math.random() * 250),
+        uptime: (prev.uptime || 0) + 1
       }));
-    }, 3000);
-    return () => clearInterval(interval);
+    }, 2500);
+
+    return () => clearInterval(hardwareInterval);
   }, []);
 
-  // --- NUEVO: GENERADOR DE LOGS ALEATORIOS ---
+  // --- GENERADOR DE EVENTOS DE RED (Logs) ---
+  const addLog = useCallback((eventData) => {
+    const newLog = {
+      id: `L-${crypto.randomUUID().slice(0, 4)}`, // ID más profesional
+      timestamp: new Date().toLocaleTimeString('en-GB', { hour12: false }),
+      ...eventData
+    };
+
+    setLogs(prev => [newLog, ...prev].slice(0, 25)); // Aumentado a 25 para mejor scroll
+
+    if (eventData.level === 'critical') {
+      setSystemStatus('WARNING');
+      if (statusTimerRef.current) clearTimeout(statusTimerRef.current);
+      statusTimerRef.current = setTimeout(() => setSystemStatus('NOMINAL'), 5000);
+    }
+  }, []);
+
   useEffect(() => {
     const logInterval = setInterval(() => {
       const events = [
-        { event: 'DDoS_Mitigation_Active', level: 'warning', status: 'FILTERING' },
-        { event: 'Node_Handshake_Complete', level: 'info', status: 'CLEAN' },
-        { event: 'Encrypted_Tunnel_Opened', level: 'info', status: 'SUCCESS' },
-        { event: 'Heuristic_Anomaly_Detected', level: 'critical', status: 'BLOCKED' },
-        { event: 'Auth_Token_Rotation', level: 'info', status: 'SUCCESS' }
+        { event: 'DDoS_Mitigation_Active', level: 'warning', status: 'FILTERING', origin: 'EXTERNAL_GATEWAY' },
+        { event: 'Node_Handshake_Complete', level: 'info', status: 'CLEAN', origin: 'CORE_NODE' },
+        { event: 'Encrypted_Tunnel_Opened', level: 'info', status: 'SUCCESS', origin: 'NEURAL_LINK' },
+        { event: 'Heuristic_Anomaly_Detected', level: 'critical', status: 'BLOCKED', origin: 'DB_CLUSTER' },
+        { event: 'Auth_Token_Rotation', level: 'info', status: 'SUCCESS', origin: 'SUBNET_0x4' }
       ];
-
-      const origins = ['CORE_NODE', 'EXTERNAL_GATEWAY', 'DB_CLUSTER', 'SUBNET_0x4', 'NEURAL_LINK'];
       
       const randomEvent = events[Math.floor(Math.random() * events.length)];
-      const randomOrigin = origins[Math.floor(Math.random() * origins.length)];
-      
-      const newLog = {
-        id: `L-${Math.floor(1000 + Math.random() * 9000)}`,
-        timestamp: new Date().toLocaleTimeString('en-GB', { hour12: false }),
-        origin: randomOrigin,
-        ...randomEvent
-      };
+      addLog(randomEvent);
+    }, 8000); // Frecuencia ajustada a 8s para no saturar visualmente
 
-      setLogs(prevLogs => {
-        // Mantener solo los últimos 20 logs para optimizar performance
-        const updatedLogs = [newLog, ...prevLogs];
-        return updatedLogs.slice(0, 20);
-      });
+    return () => {
+      clearInterval(logInterval);
+      if (statusTimerRef.current) clearTimeout(statusTimerRef.current);
+    };
+  }, [addLog]);
 
-      // Si el evento es crítico, cambiamos el status del sistema brevemente
-      if (newLog.level === 'critical') {
-        setSystemStatus('WARNING');
-        setTimeout(() => setSystemStatus('NOMINAL'), 4000);
-      }
-    }, 10000); // Cada 10 segundos
-
-    return () => clearInterval(logInterval);
-  }, []);
-
-  // --- MEMOIZACIÓN Y ACCIONES ---
-  const selectedNode = useMemo(() => 
-    nodes.find(n => n.id === selectedNodeId) || null, 
-    [nodes, selectedNodeId]
-  );
+  // --- ACCIONES DEL SISTEMA ---
+  const navigateTo = useCallback((view) => {
+    if (view === activeView) return;
+    setIsAnalyzing(true);
+    setActiveView(view);
+    // Tiempo de "Glitch" o carga de interfaz
+    setTimeout(() => setIsAnalyzing(false), 600);
+  }, [activeView]);
 
   const updateNodePosition = useCallback((id, delta) => {
-    setNodes((currentNodes) =>
-      currentNodes.map((node) =>
+    setNodes(current =>
+      current.map(node =>
         node.id === id ? { ...node, x: node.x + delta.x, y: node.y + delta.y } : node
       )
     );
   }, []);
 
-  const navigateTo = useCallback((view) => {
-    if (view === activeView) return;
-    setIsAnalyzing(true);
-    setActiveView(view);
-    setTimeout(() => setIsAnalyzing(false), 800);
-  }, [activeView]);
-
-  const inspectNode = useCallback((node) => {
-    const id = node?.id || node;
-    setSelectedNodeId(id); 
-    if (!node) setSelectedNodeId(null);
+  const selectNode = useCallback((nodeOrId) => {
+    const id = typeof nodeOrId === 'object' ? nodeOrId?.id : nodeOrId;
+    setSelectedNodeId(id || null);
   }, []);
 
+  // --- MEMOIZACIÓN DE VALORES ---
+  const selectedNode = useMemo(() => 
+    nodes.find(n => n.id === selectedNodeId) || null, 
+    [nodes, selectedNodeId]
+  );
+
   const value = useMemo(() => ({
-    nodes, logs, activeStreams, kernelMetrics, selectedNode, activeView,
-    isAnalyzing, systemStatus, leftCollapsed, rightCollapsed,
-    setLeftCollapsed, setRightCollapsed, updateNodePosition,
-    setSelectedNode: inspectNode, setActiveView: navigateTo,
-    setSystemStatus, setIsAnalyzing, setLogs, setActiveStreams
+    // Datos
+    nodes, 
+    logs, 
+    activeStreams, 
+    kernelMetrics, 
+    selectedNode,
+    
+    // UI State
+    activeView,
+    isAnalyzing, 
+    systemStatus, 
+    leftCollapsed, 
+    rightCollapsed,
+    
+    // Métodos
+    setLeftCollapsed, 
+    setRightCollapsed, 
+    updateNodePosition,
+    setSelectedNode: selectNode, 
+    setActiveView: navigateTo,
+    setSystemStatus,
+    addLog,
+    setActiveStreams
   }), [
-    nodes, logs, activeStreams, kernelMetrics, selectedNode, activeView, 
-    isAnalyzing, systemStatus, leftCollapsed, rightCollapsed, 
-    updateNodePosition, inspectNode, navigateTo
+    nodes, logs, activeStreams, kernelMetrics, selectedNode, 
+    activeView, isAnalyzing, systemStatus, leftCollapsed, rightCollapsed, 
+    updateNodePosition, selectNode, navigateTo, addLog
   ]);
 
   return (
@@ -124,7 +149,7 @@ export function AnalysisProvider({ children }) {
 
 export function useAnalysis() {
   const context = useContext(AnalysisContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useAnalysis debe ser usado dentro de un AnalysisProvider');
   }
   return context;

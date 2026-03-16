@@ -59,36 +59,42 @@ export const Header = ({ isOverclocked = false }) => {
   };
 
   return (
-    <header className={`${styles.headerRoot} ${isOverclocked ? styles.overclock : ''}`} aria-label="System header">
+    <header 
+      className={`${styles.headerRoot} ${isOverclocked ? styles.overclock : ''}`}
+      aria-label="System header"
+    >
+      {/* Capa de scanline (efecto CRT) */}
       <div className={styles.scanline} aria-hidden="true" />
 
-      {/* Línea de energía decorativa (solo visible en desktop) */}
+      {/* Línea de energía decorativa */}
       <div className={styles.powerLine} aria-hidden="true" />
 
-      {/* SECCIÓN IZQUIERDA: SISTEMA + CORPORACIÓN */}
-      <div className="flex items-center gap-2 sm:gap-6 z-10">
+      {/* SECCIÓN IZQUIERDA: IDENTIDAD DEL SISTEMA */}
+      <div className={styles.leftSection}>
+        {/* Badge de nodo */}
         <div className={styles.systemBadge}>
           <div
             className={`${styles.pulseDot} ${prefersReducedMotion ? 'opacity-50' : ''}`}
             style={{ animation: prefersReducedMotion ? 'none' : undefined }}
           />
-          <Terminal size={14} className="text-sky-400" aria-hidden="true" />
-          <span className={`${styles.systemText} ${styles.glitchHover}`}>ANALYST_NODE_01</span>
+          <Terminal size={14} className="text-aska-cyan" aria-hidden="true" />
+          <span className={styles.systemText}>ANALYST_NODE_01</span>
         </div>
 
-        {/* Badge Corporativo (Arasaka/Militech) */}
+        {/* Badge corporativo */}
         <div className={styles.corpBadge}>
-          <Skull size={12} className="text-red-500" />
+          <Skull size={12} className="text-aska-red" />
           <span className={styles.corpName}>ARASAKA</span>
-          <span className={styles.corpSector}>• SEC-7</span>
+          <span className={styles.corpSector}>SEC-7</span>
         </div>
 
-        <div className="hidden xl:flex items-center gap-4">
-          <div className={styles.metaData}>
+        {/* Metadatos adicionales (solo visible en desktop grande) */}
+        <div className={styles.metaGroup}>
+          <div className={styles.metaItem}>
             <span className="opacity-40">USR:</span>
             <span className="text-white font-bold">ROOT</span>
           </div>
-          <div className={styles.metaData}>
+          <div className={styles.metaItem}>
             <Radio
               size={10}
               className={`text-emerald-500 ${prefersReducedMotion ? '' : 'animate-pulse'}`}
@@ -99,7 +105,7 @@ export const Header = ({ isOverclocked = false }) => {
         </div>
       </div>
 
-      {/* SECCIÓN CENTRAL: TELEMETRÍA DINÁMICA CON TOOLTIPS */}
+      {/* SECCIÓN CENTRAL: TELEMETRÍA (TICKER) */}
       <div className={styles.tickerContainer}>
         <div className={styles.tickerContent}>
           {telemetryItems.map((item, i) => {
@@ -110,15 +116,13 @@ export const Header = ({ isOverclocked = false }) => {
                 className={styles.tickerItem}
                 onMouseEnter={() => setShowTooltip(i)}
                 onMouseLeave={() => setShowTooltip(null)}
-                title={item.desc} // fallback
+                title={item.desc} // fallback para navegadores sin tooltip personalizado
               >
-                <span className="opacity-40" aria-hidden="true">
-                  <Icon size={12} />
-                </span>
+                <Icon size={12} className="opacity-40" aria-hidden="true" />
                 <span className={styles.tickerLabel}>{item.label}</span>
                 <span className={`${item.color} font-black`}>[{item.val}]</span>
 
-                {/* Tooltip personalizado (opcional) */}
+                {/* Tooltip personalizado */}
                 {showTooltip === i && (
                   <div className={styles.tooltip} role="tooltip">
                     {item.desc}
@@ -130,15 +134,17 @@ export const Header = ({ isOverclocked = false }) => {
         </div>
       </div>
 
-      {/* SECCIÓN DERECHA: RELOJ, OVERCLOCK INDICATOR Y EXIT */}
-      <div className="flex items-center gap-4 sm:gap-8 z-10">
+      {/* SECCIÓN DERECHA: RELOJ, OVERCLOCK Y EXIT */}
+      <div className={styles.rightSection}>
+        {/* Indicador de overclock (solo si está activo) */}
         {isOverclocked && (
           <div className={styles.overclockIndicator}>
-            <AlertTriangle size={14} className="text-red-500 animate-pulse" />
+            <AlertTriangle size={14} className="text-aska-red animate-pulse" />
             <span className={styles.overclockText}>OVERCLOCK</span>
           </div>
         )}
 
+        {/* Reloj digital */}
         <div className={styles.clockWrapper}>
           <div className="flex flex-col items-end leading-none">
             <span className={styles.timeText}>{sysTime || '--:--:--'}</span>
@@ -147,10 +153,11 @@ export const Header = ({ isOverclocked = false }) => {
           <div className={styles.statusIndicator} aria-hidden="true" />
         </div>
 
+        {/* Botón de salida (estilo militar) */}
         <ExitButton onClick={handleExit} aria-label="Exit system" />
       </div>
 
-      {/* Efecto de barrido de datos (solo decorativo) */}
+      {/* Efecto de barrido de datos (decorativo) */}
       <div className={styles.dataSweep} aria-hidden="true" />
     </header>
   );

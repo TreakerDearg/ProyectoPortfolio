@@ -2,9 +2,10 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PROJECTS_DATA } from '../data/projects';
-import { Header } from "../layout/Header";
-import { Footer } from "../layout/Footer";
+import ArasakaHeader from "../layout/ArasakaHeader";
+import ArasakaFooter from "../layout/ArasakaFooter";
 import { DecodingText } from './components-p/DecodingText';
+import { SystemProvider } from "../context/useSystemState";
 import { TerminalLogger } from './components-p/TerminalLogger';
 import { DataNodeStatus } from './components-p/DataNodeStatus'; // Nuevo
 import styles from '../styles/Projects.module.css';
@@ -13,11 +14,12 @@ export default function ProjectsPage() {
   const [hoveredId, setHoveredId] = useState(null);
 
   return (
+    <SystemProvider>
     <div className={`${styles.localScope} ${styles.mainWrapper}`}>
       <div className={styles.combatOverlay} />
       <div className={styles.analogOverlays}><div className={styles.grain} /><div className={styles.scanlines} /></div>
 
-      <Header />
+      <ArasakaHeader />
       <TerminalLogger />
 
       <main className={styles.viewport}>
@@ -99,7 +101,8 @@ export default function ProjectsPage() {
           </div>
         </section>
       </main>
-      <Footer />
+      <ArasakaFooter />
     </div>
+    </SystemProvider>
   );
 }

@@ -1,0 +1,119 @@
+.footerContainer{
+
+  position:relative;
+
+  height:42px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-top:1px solid rgba(0,234,255,0.25);
+
+  background:#05070a;
+
+  font-family:monospace;
+  font-size:12px;
+
+  color:#b6faff;
+
+}
+
+
+.footerContent{
+
+  display:flex;
+  align-items:center;
+  gap:20px;
+
+  width:100%;
+  max-width:1200px;
+
+  justify-content:space-between;
+
+}
+
+
+.footerLeft,
+.footerCenter,
+.footerRight{
+
+  display:flex;
+  align-items:center;
+  gap:8px;
+
+}
+
+
+/* HUD DIVIDER */
+
+.hudDivider{
+
+  width:1px;
+  height:16px;
+
+  background:rgba(0,234,255,0.3);
+
+}
+
+
+/* LED */
+
+.statusLed{
+
+  width:6px;
+  height:6px;
+
+  border-radius:50%;
+
+  display:inline-block;
+
+}
+
+.online{
+
+  background:#00eaff;
+  box-shadow:0 0 6px #00eaff;
+
+}
+
+.offline{
+
+  background:#ff3a3a;
+
+}
+
+
+/* HUD CORNERS */
+
+.hudCorner{
+
+  position:absolute;
+
+  width:20px;
+  height:20px;
+
+  border-color:#00eaff;
+  border-style:solid;
+
+  opacity:0.6;
+
+}
+
+.cornerLeft{
+
+  left:0;
+  bottom:0;
+
+  border-width:0 0 2px 2px;
+
+}
+
+.cornerRight{
+
+  right:0;
+  bottom:0;
+
+  border-width:0 2px 2px 0;
+
+}

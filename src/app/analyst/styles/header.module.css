@@ -1,44 +1,55 @@
-/* header.module.css - Versión mejorada con nuevos elementos */
+/* ==================================================
+   HEADER ARASAKA - SISTEMA DE CONTROL
+   Basado en variables globales del tema
+================================================== */
 
 .headerRoot {
   height: clamp(3rem, 8vh, 3.5rem);
-  background-color: #030407;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background-color: var(--aska-bg, #030407);
+  border-bottom: 1px solid var(--aska-border, rgba(255, 255, 255, 0.05));
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 clamp(0.75rem, 4vw, 1.5rem);
   position: relative;
   overflow: hidden;
-  font-family: var(--font-mono);
+  font-family: var(--font-mono, monospace);
   width: 100%;
+  z-index: 30; /* Por encima del layout general */
 }
 
+/* Estado overclock */
 .headerRoot.overclock {
-  border-bottom-color: rgba(244, 63, 94, 0.3);
-  box-shadow: 0 2px 10px rgba(244, 63, 94, 0.1);
+  border-bottom-color: rgba(var(--aska-red-rgb, 244, 63, 94), 0.3);
+  box-shadow: 0 2px 10px rgba(var(--aska-red-rgb, 244, 63, 94), 0.1);
 }
 
-/* Efecto de ruido sutil en el fondo */
+/* Fondo con ruido sutil (optimizado) */
 .headerRoot::before {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
   opacity: 0.03;
   pointer-events: none;
+  z-index: 1;
 }
 
+/* Línea de scanline (efecto CRT) */
 .scanline {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 2px;
-  background: rgba(14, 165, 233, 0.1);
-  box-shadow: 0 0 10px rgba(14, 165, 233, 0.2);
+  background: linear-gradient(to bottom, 
+    transparent,
+    var(--aska-cyan-dim, rgba(14, 165, 233, 0.2)),
+    transparent
+  );
   animation: scanlineMove 8s linear infinite;
   z-index: 5;
+  pointer-events: none;
   will-change: transform;
 }
 
@@ -47,7 +58,7 @@
   100% { transform: translateY(3500%); }
 }
 
-/* Línea de energía decorativa */
+/* Línea de energía central */
 .powerLine {
   position: absolute;
   top: 50%;
@@ -56,14 +67,15 @@
   height: 1px;
   background: linear-gradient(90deg, 
     transparent, 
-    rgba(14, 165, 233, 0.2), 
-    rgba(168, 85, 247, 0.2), 
+    var(--aska-cyan-dim, rgba(14, 165, 233, 0.2)), 
+    var(--aska-cyan-dim, rgba(168, 85, 247, 0.2)), 
     transparent
   );
   filter: blur(1px);
   animation: powerPulse 3s ease-in-out infinite;
   pointer-events: none;
   z-index: 4;
+  will-change: opacity, transform;
 }
 
 @keyframes powerPulse {
@@ -80,14 +92,15 @@
   height: 100%;
   background: linear-gradient(90deg, 
     transparent, 
-    rgba(14, 165, 233, 0.05), 
-    rgba(168, 85, 247, 0.05), 
+    var(--aska-cyan-dim, rgba(14, 165, 233, 0.05)), 
+    var(--aska-cyan-dim, rgba(168, 85, 247, 0.05)), 
     transparent
   );
   transform: skewX(-25deg);
   animation: sweepMove 8s linear infinite;
   pointer-events: none;
   z-index: 4;
+  will-change: left;
 }
 
 @keyframes sweepMove {
@@ -95,13 +108,27 @@
   100% { left: 200%; }
 }
 
+/* ==================================================
+   SECCIONES PRINCIPALES
+================================================== */
+.leftSection,
+.rightSection {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.5rem, 2vw, 1.5rem);
+  z-index: 10;
+}
+
+/* ==================================================
+   BADGE DE SISTEMA
+================================================== */
 .systemBadge {
   display: flex;
   align-items: center;
   gap: 0.75rem;
   background: rgba(255, 255, 255, 0.03);
   padding: 0.4rem 0.8rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--aska-border, rgba(255, 255, 255, 0.1));
   border-radius: 2px;
   white-space: nowrap;
 }
@@ -114,11 +141,15 @@
   transition: all 0.2s ease;
 }
 
-/* Efecto glitch en hover */
-.glitchHover:hover {
-  animation: glitchText 0.3s infinite;
-  color: #fff;
-  text-shadow: 2px 0 rgba(255, 0, 0, 0.3), -2px 0 rgba(0, 255, 255, 0.3);
+/* Efecto glitch en hover (solo si no se prefiere movimiento reducido) */
+@media (prefers-reduced-motion: no-preference) {
+  .systemText:hover {
+    animation: glitchText 0.3s infinite;
+    color: #fff;
+    text-shadow: 
+      2px 0 rgba(255, 0, 0, 0.3),
+      -2px 0 rgba(0, 255, 255, 0.3);
+  }
 }
 
 @keyframes glitchText {
@@ -133,9 +164,9 @@
 .pulseDot {
   width: clamp(3px, 1vw, 4px);
   height: clamp(3px, 1vw, 4px);
-  background: #0ea5e9;
+  background: var(--aska-cyan, #0ea5e9);
   border-radius: 50%;
-  box-shadow: 0 0 8px #0ea5e9;
+  box-shadow: 0 0 8px var(--aska-cyan, #0ea5e9);
   animation: dotPulse 2s infinite;
   will-change: opacity, transform;
 }
@@ -145,7 +176,9 @@
   50% { opacity: 0.4; transform: scale(1.2); }
 }
 
-/* Badge corporativo */
+/* ==================================================
+   BADGE CORPORATIVO
+================================================== */
 .corpBadge {
   display: flex;
   align-items: center;
@@ -159,6 +192,7 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   white-space: nowrap;
+  transition: all 0.2s ease;
 }
 
 .corpBadge:hover {
@@ -177,7 +211,16 @@
   font-size: 0.8em;
 }
 
-.metaData {
+/* ==================================================
+   METADATOS (grupo de la izquierda)
+================================================== */
+.metaGroup {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.metaItem {
   font-size: clamp(7px, 1.8vw, 9px);
   letter-spacing: 0.05em;
   display: flex;
@@ -186,7 +229,9 @@
   white-space: nowrap;
 }
 
-/* TICKER SYSTEM */
+/* ==================================================
+   TICKER DE TELEMETRÍA
+================================================== */
 .tickerContainer {
   flex: 1;
   max-width: min(600px, 50vw);
@@ -195,6 +240,7 @@
   position: relative;
   overflow: hidden;
   mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  z-index: 10;
 }
 
 .tickerContent {
@@ -206,22 +252,31 @@
   width: max-content;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .tickerContent {
+    animation: none;
+    transform: translateX(0);
+  }
+}
+
+@keyframes tickerSlide {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
 .tickerItem {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   font-size: clamp(7px, 1.8vw, 9px);
   position: relative;
+  color: var(--text-secondary, #94a3b8);
 }
 
 .tickerLabel {
   color: #64748b;
   font-weight: 800;
-}
-
-@keyframes tickerSlide {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  text-transform: uppercase;
 }
 
 /* Tooltip personalizado */
@@ -231,8 +286,8 @@
   left: 50%;
   transform: translateX(-50%);
   background: rgba(0, 0, 0, 0.95);
-  border: 1px solid rgba(14, 165, 233, 0.3);
-  border-left: 2px solid #0ea5e9;
+  border: 1px solid var(--aska-cyan-dim, rgba(14, 165, 233, 0.3));
+  border-left: 2px solid var(--aska-cyan, #0ea5e9);
   padding: 4px 8px;
   font-size: 8px;
   color: #fff;
@@ -253,15 +308,17 @@
   height: 0;
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;
-  border-top: 4px solid #0ea5e9;
+  border-top: 4px solid var(--aska-cyan, #0ea5e9);
 }
 
-/* CLOCK SYSTEM */
+/* ==================================================
+   RELOJ DIGITAL
+================================================== */
 .clockWrapper {
   display: flex;
   align-items: center;
   gap: clamp(0.5rem, 3vw, 1rem);
-  border-right: 2px solid rgba(14, 165, 233, 0.3);
+  border-right: 2px solid var(--aska-cyan-dim, rgba(14, 165, 233, 0.3));
   padding-right: clamp(0.5rem, 3vw, 1.5rem);
 }
 
@@ -282,14 +339,16 @@
   white-space: nowrap;
 }
 
-/* Indicador de overclock */
+/* ==================================================
+   INDICADOR DE OVERCLOCK
+================================================== */
 .overclockIndicator {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: rgba(244, 63, 94, 0.1);
+  background: rgba(var(--aska-red-rgb, 244, 63, 94), 0.1);
   padding: 0.2rem 0.6rem;
-  border: 1px solid rgba(244, 63, 94, 0.3);
+  border: 1px solid rgba(var(--aska-red-rgb, 244, 63, 94), 0.3);
   border-radius: 2px;
   animation: overclockPulse 1s infinite alternate;
 }
@@ -297,17 +356,17 @@
 .overclockText {
   font-size: 8px;
   font-weight: 900;
-  color: #f43f5e;
+  color: var(--aska-red, #f43f5e);
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
 @keyframes overclockPulse {
-  from { opacity: 0.7; box-shadow: 0 0 5px rgba(244, 63, 94, 0.2); }
-  to { opacity: 1; box-shadow: 0 0 15px rgba(244, 63, 94, 0.4); }
+  from { opacity: 0.7; box-shadow: 0 0 5px rgba(var(--aska-red-rgb, 244, 63, 94), 0.2); }
+  to { opacity: 1; box-shadow: 0 0 15px rgba(var(--aska-red-rgb, 244, 63, 94), 0.4); }
 }
 
-/* Línea de bus de datos inferior mejorada */
+/* Línea inferior de bus de datos */
 .headerRoot::after {
   content: '';
   position: absolute;
@@ -317,54 +376,91 @@
   height: 1px;
   background: linear-gradient(90deg, 
     transparent, 
-    rgba(14, 165, 233, 0.5), 
+    var(--aska-cyan, #0ea5e9), 
     transparent
   );
-  filter: drop-shadow(0 0 2px #0ea5e9);
+  filter: drop-shadow(0 0 2px var(--aska-cyan, #0ea5e9));
+  z-index: 2;
 }
 
-/* ===== MEDIA QUERIES ===== */
-@media (max-width: 640px) {
+/* ==================================================
+   MEDIA QUERIES (coordinadas con layout)
+================================================== */
+@media (max-width: 768px) {
   .headerRoot {
     padding: 0 0.5rem;
+    height: 44px; /* Un poco más compacto */
   }
+  
   .tickerContainer {
     max-width: 200px;
     mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
   }
+  
   .tickerContent {
     animation: tickerSlide 40s linear infinite;
     gap: 1rem;
   }
+  
   .clockWrapper {
     gap: 0.25rem;
     padding-right: 0.5rem;
     border-right-width: 1px;
   }
-  .metaData {
+  
+  .metaGroup {
     display: none;
   }
+  
   .systemBadge {
     padding: 0.2rem 0.4rem;
   }
+  
   .corpBadge {
     display: none; /* Ocultamos badge corporativo en móvil */
   }
+  
   .overclockIndicator {
     padding: 0.1rem 0.3rem;
   }
+  
   .overclockText {
     font-size: 6px;
   }
+  
   .tooltip {
     display: none; /* Ocultamos tooltips en móvil para evitar desbordes */
   }
-  .powerLine, .dataSweep {
+  
+  .powerLine,
+  .dataSweep {
     opacity: 0.3; /* Reducimos efectos en móvil */
+  }
+  
+  /* En móvil, aseguramos que el botón de salida no sea demasiado grande */
+  .rightSection {
+    gap: 0.5rem;
   }
 }
 
-/* ===== PREFIERE MOVIMIENTO REDUCIDO ===== */
+@media (min-width: 769px) and (max-width: 1280px) {
+  /* Ajustes para tablet: podemos mostrar el badge corporativo pero no los metadatos */
+  .metaGroup {
+    display: none;
+  }
+  
+  .tickerContainer {
+    max-width: 400px;
+  }
+  
+  .clockWrapper {
+    padding-right: 1rem;
+  }
+}
+
+/* ==================================================
+   PREFIERE MOVIMIENTO REDUCIDO (accesibilidad)
+================================================== */
 @media (prefers-reduced-motion: reduce) {
   .scanline,
   .pulseDot,
@@ -372,28 +468,30 @@
   .powerLine,
   .dataSweep,
   .overclockIndicator,
-  .glitchHover:hover {
+  .systemText:hover {
     animation: none !important;
     transition: none !important;
   }
+  
   .scanline {
     opacity: 0.2;
   }
-  .tickerContent {
-    transform: translateX(0);
-  }
+  
   .pulseDot {
     opacity: 0.5;
     box-shadow: none;
   }
+  
   .powerLine {
     opacity: 0.1;
   }
+  
   .dataSweep {
     display: none;
   }
+  
   .overclockIndicator {
     animation: none;
-    background: rgba(244, 63, 94, 0.2);
+    background: rgba(var(--aska-red-rgb, 244, 63, 94), 0.2);
   }
 }

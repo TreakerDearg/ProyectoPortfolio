@@ -1,0 +1,149 @@
+.sidebar {
+  background: #c0c0c0;
+  border-right: 2px solid #808080; /* Sombra exterior */
+  padding: 4px;
+  font-family: 'MS Sans Serif', 'Segoe UI', Tahoma, sans-serif;
+  height: 100vh;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+/* El contenedor que emula la ventana */
+.window {
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-shadow: 1px 1px 0px 0px #000000;
+}
+
+.titleBar {
+  background: linear-gradient(90deg, #000080, #1084d0); /* Gradiente clásico de Win98 */
+  color: white;
+  padding: 3px 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: bold;
+  font-size: 11px;
+  user-select: none;
+}
+
+.titleIcon {
+  color: #fff;
+  filter: drop-shadow(1px 1px 0px #000);
+}
+
+/* Contenedor interno con efecto hundido */
+.content {
+  flex: 1;
+  padding: 6px;
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #808080 #ffffff #ffffff #808080; /* Efecto Inset */
+  margin: 2px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  gap: 4px;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.navItem {
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff; /* Efecto Outset */
+  padding: 6px;
+  display: flex;
+  flex-direction: column; /* Icono arriba, texto abajo para ahorrar ancho */
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 10px;
+  width: 100%;
+  min-height: 55px;
+  gap: 4px;
+}
+
+/* Efecto de botón presionado */
+.navItem:active, .navItem.active {
+  background: #e0e0e0;
+  border-color: #808080 #ffffff #ffffff #808080;
+  padding: 7px 5px 5px 7px; /* Desplazamiento de 1px para simular click */
+}
+
+.navItem.active {
+  background: #d0d0d0;
+  font-weight: bold;
+}
+
+.navIcon {
+  color: #000;
+  flex-shrink: 0;
+}
+
+.navLabel {
+  color: #000;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Área de Estado */
+.status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px;
+  background: #c0c0c0;
+  border-top: 2px solid #808080; /* Línea de separación */
+  margin-top: auto;
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  background: #00ff00;
+  border-radius: 50%;
+  box-shadow: inset 1px 1px 0px #005500, 0 0 4px #00ff00;
+  animation: blink 2s infinite linear;
+}
+
+.statusText {
+  font-size: 10px;
+  color: #404040;
+  font-weight: bold;
+}
+
+/* Estilo de Scrollbar Retro */
+.content::-webkit-scrollbar {
+  width: 16px;
+}
+.content::-webkit-scrollbar-track {
+  background: #e0e0e0;
+  box-shadow: inset 1px 1px 0px #808080;
+}
+.content::-webkit-scrollbar-thumb {
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+}
+
+@keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0.4; }
+  100% { opacity: 1; }
+}
+
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+}

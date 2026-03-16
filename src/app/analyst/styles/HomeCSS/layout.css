@@ -1,205 +1,156 @@
-/* ==================================================
-   VARIABLES DE SISTEMA (ARASAKA PROTOCOL)
-================================================== */
-:root {
-  --aska-cyan: #00eaff;
-  --aska-cyan-dim: rgba(0, 234, 255, 0.15);
-  --aska-red: #ff003c; /* Solo para alertas */
-  --aska-bg: #05070a;
-  --aska-panel: rgba(10, 12, 18, 0.8);
-  --aska-border: rgba(0, 234, 255, 0.1);
-  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
-  --transition-speed: 0.45s;
-  --transition-curve: cubic-bezier(0.16, 1, 0.3, 1);
+/* VARIABLES */
+
+:root{
+  --aska-bg:#05070a;
+  --aska-cyan:#00eaff;
+  --aska-dim:rgba(0,234,255,0.25);
 }
 
-.analyst-terminal-root {
-  background-color: var(--aska-bg) !important;
-  color: #a0aec0 !important;
-  font-family: var(--font-mono) !important;
-  height: 100dvh;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  position: relative;
+
+/* RESET */
+
+html,
+body{
+  margin:0;
+  padding:0;
+  height:100%;
+  background:var(--aska-bg);
+  color:white;
+  font-family:monospace;
+  overflow:hidden;
 }
 
-/* ==================================================
-   FONDO TÉCNICO Y SCANLINES
-================================================== */
-.analyst-terminal-root .cyber-bg {
-  position: fixed;
-  inset: 0;
-  background: 
-    radial-gradient(circle at 50% 50%, rgba(0, 234, 255, 0.02) 0%, transparent 70%),
-    linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
-    linear-gradient(90deg, rgba(255, 0, 0, 0.01), rgba(0, 255, 0, 0.005), rgba(0, 0, 255, 0.01));
-  background-size: 100% 100%, 100% 4px, 3px 100%;
-  pointer-events: none;
-  z-index: 0;
+
+/* ROOT CONTAINER */
+
+.arasaka-root-container{
+  display:flex;
+  flex-direction:column;
+  height:100vh;
+  width:100vw;
 }
 
-/* ==================================================
-   GRID LAYOUT EVOLUCIONADO
-================================================== */
-.layout-grid {
-  display: grid;
-  /* Usamos variables para control dinámico desde JS si es necesario */
-  grid-template-columns: var(--left-w, 280px) 1fr var(--right-w, 300px);
-  transition: grid-template-columns var(--transition-speed) var(--transition-curve);
-  height: 100%;
-  width: 100%;
-  background: transparent;
-  position: relative;
+
+/* HEADER */
+
+.arasaka-header{
+  height:60px;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  padding:0 20px;
+
+  border-bottom:1px solid var(--aska-dim);
 }
 
-/* Control por Atributos (Vinculado a tu Layout.jsx) */
-.layout-grid[data-left="collapsed"] { --left-w: 50px; }
-.layout-grid[data-right="collapsed"] { --right-w: 50px; }
-
-/* ==================================================
-   CONTENEDORES (SIDEBARS & MAIN)
-================================================== */
-.layout-sidebar-left,
-.layout-sidebar-right {
-  position: relative;
-  min-width: 0;
-  height: 100%;
-  background: var(--aska-panel);
-  border-right: 1px solid var(--aska-border);
-  z-index: 10;
-  transition: width var(--transition-speed) var(--transition-curve);
+.header-left{
+  font-weight:bold;
+  color:var(--aska-cyan);
 }
 
-.layout-sidebar-right {
-  border-right: none;
-  border-left: 1px solid var(--aska-border);
+.header-center{
+  opacity:0.8;
 }
 
-.layout-main {
-  position: relative;
-  min-width: 0; /* Vital para que el flexbox no rompa el grid */
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  background: rgba(0, 0, 0, 0.2);
-  z-index: 5;
+.header-right{
+  font-size:12px;
+  color:var(--aska-cyan);
 }
 
-/* Área de scroll personalizada */
-.layout-main-scroll {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  scrollbar-gutter: stable; /* Evita saltos de layout al aparecer el scroll */
+
+/* FOOTER */
+
+.arasaka-footer{
+  height:40px;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  padding:0 20px;
+
+  border-top:1px solid var(--aska-dim);
+  font-size:12px;
+  opacity:0.8;
 }
 
-/* ==================================================
-   SCROLLBAR ESTILO ARASAKA
-================================================== */
-.layout-main-scroll::-webkit-scrollbar {
-  width: 4px;
+
+/* MAIN GRID */
+
+.arasaka-main-layout{
+  flex:1;
+
+  display:grid;
+
+  grid-template-columns:
+  220px
+  1fr
+  220px;
+
+  min-height:0;
 }
 
-.layout-main-scroll::-webkit-scrollbar-track {
-  background: transparent;
+
+/* PAGE CONTENT */
+
+.arasaka-content-area{
+  overflow:auto;
+  padding:20px;
 }
 
-.layout-main-scroll::-webkit-scrollbar-thumb {
-  background: var(--aska-cyan-dim);
-  border-radius: 0;
-  border: 1px solid transparent;
+
+/* SIDEBAR LEFT */
+
+.arasaka-sidebar-left{
+  border-right:1px solid var(--aska-dim);
+  padding:15px;
+  overflow:auto;
 }
 
-.layout-main-scroll::-webkit-scrollbar-thumb:hover {
-  background: var(--aska-cyan);
+
+/* SIDEBAR RIGHT */
+
+.arasaka-sidebar-right{
+  border-left:1px solid var(--aska-dim);
+  padding:15px;
+  overflow:auto;
 }
 
-/* ==================================================
-   INTERFACES DE BOTONES (MIL-SPEC)
-================================================== */
-.analyst-terminal-root button {
-  font-family: var(--font-mono);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-size: 10px;
-  background: rgba(0, 234, 255, 0.05);
-  border: 1px solid var(--aska-cyan-dim);
-  color: var(--aska-cyan);
-  padding: 8px 12px;
-  transition: all 0.2s ease;
+
+/* SIDEBAR SECTIONS */
+
+.sidebar-section{
+  margin-bottom:25px;
 }
 
-.analyst-terminal-root button:hover {
-  background: var(--aska-cyan);
-  color: black;
-  box-shadow: 0 0 15px var(--aska-cyan-dim);
+.sidebar-section h3{
+  font-size:12px;
+  color:var(--aska-cyan);
+  margin-bottom:10px;
+  letter-spacing:1px;
 }
 
-/* ==================================================
-   ADAPTABILIDAD (BREAKPOINTS)
-================================================== */
 
-/* TABLETS: Colapso automático de sidebar derecha */
-@media (max-width: 1280px) {
-  .layout-grid {
-    grid-template-columns: var(--left-w, 260px) 1fr 0px;
-  }
-  .layout-sidebar-right {
-    display: none;
-  }
+/* BUTTONS */
+
+.sidebar-section button{
+  width:100%;
+  margin-bottom:6px;
+
+  background:none;
+  border:1px solid transparent;
+
+  color:white;
+  padding:6px;
+  text-align:left;
+
+  cursor:pointer;
+  font-size:12px;
 }
 
-/* MÓVILES: Full screen main con sidebars flotantes */
-@media (max-width: 768px) {
-  .layout-grid {
-    grid-template-columns: 1fr !important;
-  }
-
-  .layout-sidebar-left {
-    position: fixed;
-    top: 60px; /* Debajo del Header */
-    bottom: 40px; /* Sobre el Footer */
-    left: 0;
-    width: 280px;
-    z-index: 100;
-    transform: translateX(-100%);
-    box-shadow: 20px 0 50px rgba(0,0,0,0.8);
-  }
-
-  .layout-sidebar-left[data-mobile="open"] {
-    transform: translateX(0);
-  }
-}
-
-/* ==================================================
-   UTILIDADES
-================================================== */
-.text-aska-cyan { color: var(--aska-cyan); }
-.text-aska-red { color: var(--aska-red); }
-
-.glitch-border {
-  border: 1px solid var(--aska-cyan-dim);
-  position: relative;
-}
-
-.glitch-border::after {
-  content: '';
-  position: absolute;
-  top: -1px; left: -1px; right: -1px; bottom: -1px;
-  border: 1px solid var(--aska-cyan);
-  opacity: 0;
-  transition: opacity 0.1s;
-}
-
-.glitch-border:hover::after {
-  opacity: 0.5;
-  animation: border-flicker 0.3s infinite;
-}
-
-@keyframes border-flicker {
-  0% { opacity: 0.1; }
-  50% { opacity: 0.5; }
-  100% { opacity: 0.2; }
+.sidebar-section button:hover{
+  border:1px solid var(--aska-cyan);
+  color:var(--aska-cyan);
 }
