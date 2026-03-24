@@ -6,39 +6,40 @@ import styles from "../../styles/root-styles/ArmorLayout.module.css";
 export default function ArmorLayout({ children }) {
   return (
     <div className={styles.container}>
-      {/* CAPA DE POST-PROCESADO: Scanlines y Ruido */}
-      <div className={styles.vfxOverlay}>
+      
+      {/* VFX Overlay */}
+      <div className={styles.vfxOverlay} aria-hidden="true">
         <div className={styles.scanlines} />
         <div className={styles.vignette} />
       </div>
 
-      {/* CHASIS MECÁNICO (MARCO) */}
-      <div className={styles.chassisFrame}>
+      {/* Chassis Frame */}
+      <div className={styles.chassisFrame} aria-hidden="true">
         <div className={styles.cornerTL} />
         <div className={styles.cornerTR} />
         <div className={styles.cornerBL} />
         <div className={styles.cornerBR} />
-        
-        {/* Sensores decorativos en los laterales */}
+
         <div className={styles.sideRailLeft} />
         <div className={styles.sideRailRight} />
       </div>
 
-      {/* INTERFAZ OPERATIVA */}
+      {/* Main Interface */}
       <div className={styles.innerInterface}>
         <Header />
 
-        {/* ÁREA DE VISIÓN CENTRAL (VIEWPORT) */}
         <main className={styles.viewportMain}>
-          <div className={styles.scrollGuard}>
-            {children}
+          <div className={styles.viewportContainer}>
+            <div className={styles.scrollGuard}>
+              {children}
+            </div>
           </div>
         </main>
 
         <Footer />
       </div>
 
-      {/* BARRA DE ESTADO DE CARGA DEL SISTEMA (DECORATIVA) */}
+      {/* Bottom System Bar */}
       <div className={styles.bottomLinkBar} />
     </div>
   );

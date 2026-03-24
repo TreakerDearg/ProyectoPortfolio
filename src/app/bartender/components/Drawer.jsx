@@ -1,188 +1,434 @@
-'use client';
-import React, { useEffect, useState } from 'react';
-import { createPortal } from 'react-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { History, Zap, ShieldCheck, Activity, ChevronLeft, Terminal } from 'lucide-react';
-import styles from '../styles/drawer.module.css';
+"use client";
 
-// Componentes internos
-import { ScannerHeader } from './Draw-Comple/ScannerHeader';
-import { SignalGraph } from './Draw-Comple/SignalGraph';
-import { AtomicStructure } from './Draw-Comple/AtomicStructure';
+import React, { useEffect, useState, useMemo } from "react";
+import { createPortal } from "react-dom";
+import { motion, AnimatePresence } from "framer-motion";
+
+import {
+  Zap,
+  ShieldCheck,
+  Activity,
+  ChevronLeft,
+  Terminal,
+  AlertTriangle
+} from "lucide-react";
+
+import styles from "../styles/drawer.module.css";
+
+import { SignalGraph } from "./Draw-Comple/SignalGraph";
+import { AtomicStructure } from "./Draw-Comple/AtomicStructure";
+
+
+/* =========================
+   ANIMATIONS
+========================= */
 
 const panelVariants = {
-  hidden: { x: '100%', opacity: 0.8 },
-  visible: { 
-    x: 0, 
+  hidden: { x: "100%", opacity: 0.6, filter: "blur(4px)" },
+  visible: {
+    x: 0,
     opacity: 1,
+    filter: "blur(0px)",
     transition: {
-      type: 'spring',
-      damping: 25,
-      stiffness: 120,
-      when: "beforeChildren",
-      staggerChildren: 0.08
+      type: "spring",
+      damping: 18,
+      stiffness: 160,
+      staggerChildren: 0.05
     }
   },
-  exit: { 
-    x: '100%', 
+  exit: {
+    x: "100%",
     opacity: 0,
-    transition: { duration: 0.3, ease: "easeInOut" }
+    filter: "blur(6px)",
+    transition: { duration: 0.25 }
   }
 };
 
+
+/* =========================
+   COMPONENT
+========================= */
+
 export const Drawer = ({ item, isOpen, onClose }) => {
   const [mounted, setMounted] = useState(false);
-
-  // Evitar errores de SSR (Server Side Rendering)
+  const [booted, setBooted] = useState(false);
   useEffect(() => {
     setMounted(true);
     return () => setMounted(false);
   }, []);
 
-  // Gestión de bloqueo de scroll y ancho de barra
+
+  /* =========================
+     SYSTEM STATE
+  ========================= */
+
+  const systemState = useMemo(() => {
+    if (!item) return "OFFLINE";
+    if (item.qty < 15) return "CRITICAL";
+    if (item.qty < 40) return "DEGRADED";
+    return "STABLE";
+  }, [item]);
+
+  const stateConfig = {
+    OFFLINE: { color: "gray", glow: false },
+    STABLE: { color: "green", glow: false },
+    DEGRADED: { color: "amber", glow: true },
+    CRITICAL: { color: "red", glow: true }
+  };
+
+  const currentState = stateConfig[systemState];
+  const isCritical = systemState === "CRITICAL";
+
+
+  /* =========================
+     BOOT EFFECT
+  ========================= */
+
   useEffect(() => {
     if (isOpen) {
-      const scrollWidth = window.innerWidth - document.documentElement.clientWidth;
-      document.body.style.overflow = 'hidden';
-      document.body.style.paddingRight = `${scrollWidth}px`;
+      const t = setTimeout(() => setBooted(true), 120);
+      return () => clearTimeout(t);
     } else {
-      document.body.style.overflow = 'unset';
-      document.body.style.paddingRight = '0px';
+      setBooted(false);
     }
-    return () => {
-      document.body.style.overflow = 'unset';
-      document.body.style.paddingRight = '0px';
-    };
   }, [isOpen]);
 
-  if (!mounted || !item) return null;
 
-  const isCritical = item.metadata?.stability === 'CRITICAL' || item.qty < 15;
+  /* =========================
+     SCROLL LOCK
+  ========================= */
 
+  useEffect(() => {
+
+    if (isOpen) {
+      const scrollWidth =
+        window.innerWidth - document.documentElement.clientWidth;
+
+      document.body.style.overflow = "hidden";
+      document.body.style.paddingRight = `${scrollWidth}px`;
+    } else {
+      document.body.style.overflow = "unset";
+      document.body.style.paddingRight = "0px";
+    }
+
+    return () => {
+      document.body.style.overflow = "unset";
+      document.body.style.paddingRight = "0px";
+    };
+
+  }, [isOpen]);
+
+
+  /* =========================
+     ESC KEY CLOSE
+  ========================= */
+
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+    if (isOpen) window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [isOpen, onClose]);
+  if (!mounted || !item || !isOpen) return null;
   const drawerJSX = (
+
     <AnimatePresence>
-      {isOpen && (
-        <div className={styles.drawerOverlay} onClick={onClose}>
-          
-          <motion.div 
-            variants={panelVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            data-universe={item.universe}
-            className={`${styles.drawerContent} ${isCritical ? styles.criticalOverlay : ''}`}
-            onClick={(e) => e.stopPropagation()}
+
+      <div
+        className={styles.drawerOverlay}
+        onClick={onClose}
+      >
+
+        <motion.div
+          variants={panelVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          data-state={systemState}
+          data-color={currentState.color}
+          data-glow={currentState.glow}
+          className={styles.drawerContent}
+          onClick={(e) => e.stopPropagation()}
+        >
+
+          {/* =========================
+             SYSTEM BAR
+          ========================= */}
+
+          <div className={styles.systemBar}>
+
+            <div className={styles.systemLeft}>
+              <Terminal size={12} />
+              <span className={styles.systemCode}>
+                SYS://D6_TERMINAL_NODE
+              </span>
+            </div>
+
+            <div className={styles.systemRight}>
+              <span className={styles.systemState}>
+                [{systemState}]
+              </span>
+
+              <div className={styles.statusWrapper}>
+                <div className={styles.statusDot} />
+                <div className={styles.statusPulse} />
+              </div>
+            </div>
+
+          </div>
+
+
+          {/* =========================
+             EJECT HANDLE
+          ========================= */}
+
+          <button
+            className={styles.ejectHandle}
+            onClick={onClose}
           >
-            {/* 1. BOTÓN DE CIERRE (TIRADOR MECÁNICO) */}
-            <button className={styles.ejectHandle} onClick={onClose}>
-              <div className={styles.handleTrack}>
-                <ChevronLeft size={16} />
-                <span className={styles.handleText}>EJECT_PANEL</span>
-                <div className={styles.handleLed} />
-              </div>
-            </button>
+            <div className={styles.handleTrack}>
+              <ChevronLeft size={16} />
+              <span className={styles.handleText}>
+                EJECT_PANEL
+              </span>
+              <div className={styles.handleLed} />
+            </div>
+          </button>
 
-            {/* 2. CAPAS VISUALES: RUIDO Y ESCANEO */}
-            <div className={styles.grainOverlay} />
 
-            <div className={styles.technicalBody}>
-              {/* SECCIÓN 01: IDENTIFICACIÓN */}
-              <ScannerHeader 
-                name={item.name} 
-                id={item.id} 
-                metadata={item.metadata} 
-              />
+          {/* =========================
+             FX LAYERS
+          ========================= */}
 
-              {/* SECCIÓN 02: MÉTRICAS DE VOLUMEN */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className={styles.dataField}>
-                  <div className={styles.fieldDecoration} />
-                  <span className={styles.label}>Inventory_Volume</span>
-                  <div className="flex items-baseline">
-                    <span className={`${styles.value} ${isCritical ? styles.textCritical : ''}`}>
-                      {item.qty}
-                    </span>
-                    <span className={styles.unit}>%_STOCK</span>
-                  </div>
-                </div>
-                
-                <div className={styles.dataField}>
-                  <div className={styles.fieldDecoration} />
-                  <span className={styles.label}>Registry_UID</span>
-                  <span className={styles.value} style={{fontSize: '1.2rem'}}>{item.code}</span>
-                </div>
-              </div>
+          <div className={styles.scanOverlay} />
+          <div className={styles.grainOverlay} />
 
-              {/* SECCIÓN 03: REGISTRO MOLECULAR */}
-              <div className={styles.logContainer}>
-                <div className="flex items-center gap-2 mb-2 border-b border-white/5 pb-1">
-                  <Terminal size={12} className="text-amber-500" />
-                  <span className={styles.label} style={{marginBottom: 0}}>Composition_Log</span>
-                </div>
-                <p className="text-[11px] leading-relaxed font-mono opacity-80 italic">
-                  {`> ${item.flavorText}`}
-                </p>
-              </div>
 
-              {/* SECCIÓN 04: VISUALIZACIÓN ATÓMICA */}
-              <AtomicStructure 
-                category={item.category} 
-                specs={item.atomicSpecs} 
-                universe={item.universe}
-              />
+          {/* =========================
+             BODY
+          ========================= */}
 
-              {/* SECCIÓN 05: ESTABILIDAD DE SEÑAL */}
-              <SignalGraph 
-                label="Molecular_Stability_Wave" 
-                percentage={item.qty} 
-              />
+          <motion.div
+            animate={{ opacity: booted ? 1 : 0 }}
+            className={styles.technicalBody}
+          >
 
-              {/* SECCIÓN 06: TELEMETRÍA SECUNDARIA */}
-              <div className="mt-auto">
-                <div className="flex justify-between items-center mb-2">
-                  <div className="flex items-center gap-2 text-stone-600">
-                    <Activity size={10} className="animate-pulse" />
-                    <span className="text-[8px] font-bold tracking-widest uppercase">Telemetry_Stream</span>
-                  </div>
-                  <span className="text-[8px] font-mono text-stone-800 italic">REV_2.026.4</span>
-                </div>
-                
-                <div className={`${styles.logContainer} !bg-black/20 !border-none text-stone-500`}>
-                  <p className="text-[9px]">{`> [SYSTEM] ORIGIN: ${item.metadata?.sector || 'SEC_UNKNOWN'}`}</p>
-                  <p className="text-[9px]">{`> [DATA] RAD_LEVEL: ${item.metadata?.radiation}`}</p>
-                </div>
-              </div>
+            {/* =========================
+               HEADER (TERMINAL)
+            ========================= */}
 
-              {/* SECCIÓN 07: PROTOCOLO DE SEGURIDAD */}
-              <div className={`${styles.securityProtocol} ${isCritical ? styles.protocolAlert : ''} p-4 bg-white/5 border border-white/5 rounded-sm`}>
-                <div className="flex items-center gap-3 mb-1">
-                  <ShieldCheck size={16} className={isCritical ? 'text-red-500' : 'text-stone-400'} />
-                  <span className="font-black text-[9px] tracking-widest uppercase">
-                    Protocol_D6 // {isCritical ? 'LOCKDOWN' : 'CLEARANCE_OK'}
+            <section className={styles.sectionPrimary}>
+              <div className={styles.terminalBlock}>
+                <span className={styles.terminalLine}>
+                  Data_Link_Established
+                </span>
+
+                <span className={styles.terminalLine}>
+                  UID_{item.id || "UNKNOWN"}
+                </span>
+
+                <span className={styles.terminalStatus}>
+                  {systemState}
+                </span>
+
+                <h2 className={styles.terminalTitle}>
+                  {item.name}
+                </h2>
+
+                <div className={styles.terminalGroup}>
+                  <span className={styles.terminalLabel}>Origin_Sector</span>
+                  <span className={styles.terminalValue}>
+                    {item.metadata?.sector || "UNKNOWN"}
                   </span>
                 </div>
-                <p className="text-[9px] opacity-50 font-mono">
-                  {isCritical 
-                    ? "CRITICAL: Biohazard detected. Atomic bonds degrading. Automated containment active."
-                    : "STABLE: Registry verified. standard molecular batch ready for dispensing."}
-                </p>
+
+                <div className={styles.terminalGroup}>
+                  <span className={styles.terminalLabel}>Rad_Exposure</span>
+                  <span className={styles.terminalValue}>
+                    {item.metadata?.radiation || "0.00 mSv"}
+                  </span>
+                </div>
               </div>
-            </div>
+            </section>
 
-            {/* SECCIÓN 08: ACCIÓN PRINCIPAL */}
-            <div className={styles.actionFooter}>
-              <button className={`${styles.mainActionButton} ${isCritical ? styles.btnCritical : styles.btnAmber}`}>
-                <Zap size={18} fill="currentColor" />
-                <span>{isCritical ? 'BYPASS_SAFETY_LOCK' : 'DISPENSE_BATCH'}</span>
-              </button>
-            </div>
 
+            {/* =========================
+               METRICS
+            ========================= */}
+
+            <section className={styles.sectionGrid}>
+              <DataField
+                label="Inventory_Volume"
+                value={item.qty}
+                unit="%_STOCK"
+                critical={isCritical}
+              />
+              <DataField
+                label="Registry_UID"
+                value={item.code}
+              />
+            </section>
+
+
+            {/* =========================
+               LOG (TERMINAL STYLE)
+            ========================= */}
+
+            <section className={styles.sectionLog}>
+              <div className={styles.terminalBlock}>
+                <span className={styles.terminalLabel}>
+                  COMPOSITION_LOG
+                </span>
+                <span className={styles.terminalLine}>
+                  INIT_SEQUENCE...
+                </span>
+                <span className={styles.terminalLine}>
+                  PARSING_COMPOUND...
+                </span>
+                <span className={`${styles.terminalLine} ${styles.logHighlight}`}>
+                  {item.flavorText}
+                </span>
+              </div>
+            </section>
+
+
+            {/* =========================
+               ATOMIC
+            ========================= */}
+
+            <section>
+              <AtomicStructure
+                category={item.category}
+                specs={item.atomicSpecs}
+                universe={item.universe}
+              />
+            </section>
+
+
+            {/* =========================
+               SIGNAL
+            ========================= */}
+
+            <section>
+              <SignalGraph
+                label="Molecular_Stability_Wave"
+                percentage={item.qty}
+              />
+            </section>
+
+
+            {/* =========================
+               TELEMETRY
+            ========================= */}
+
+            <section className={styles.telemetrySection}>
+              <div className={styles.terminalBlock}>
+                <span className={styles.terminalLabel}>
+                  TELEMETRY_STREAM
+                </span>
+                <span className={styles.terminalLine}>
+                  ORIGIN: {item.metadata?.sector || "UNKNOWN"}
+                </span>
+                <span className={styles.terminalLine}>
+                  RAD_LEVEL: {item.metadata?.radiation || "N/A"}
+                </span>
+              </div>
+            </section>
+
+
+            {/* =========================
+               SECURITY
+            ========================= */}
+
+            <section
+              className={`
+                ${styles.securityProtocol}
+                ${isCritical ? styles.protocolAlert : ""}
+              `}
+            >
+              <div className={styles.terminalBlock}>
+                <span className={styles.terminalStatus}>
+                  Protocol_D6 // {systemState}
+                </span>
+                <span
+                  className={`
+                    ${styles.terminalValue}
+                    ${isCritical ? styles.terminalValueCritical : ""}
+                  `}
+                >
+                  {isCritical
+                    ? "CRITICAL FAILURE: ATOMIC INSTABILITY DETECTED"
+                    : "SYSTEM STABLE: READY FOR DISPENSING"}
+                </span>
+              </div>
+            </section>
           </motion.div>
-        </div>
-      )}
+
+
+          {/* =========================
+             FOOTER
+          ========================= */}
+
+          <div className={styles.actionFooter}>
+            <motion.button
+              whileTap={{ scale: 0.96 }}
+              className={`
+                ${styles.mainActionButton}
+                ${isCritical ? styles.btnCritical : styles.btnAmber}
+              `}
+            >
+              <div className={styles.buttonInner}>
+                <Zap size={18} />
+                <span className={styles.buttonLabel}>
+                  {isCritical
+                    ? "OVERRIDE_LOCKDOWN"
+                    : "DISPENSE_BATCH"}
+                </span>
+                <div className={styles.buttonGlow} />
+              </div>
+            </motion.button>
+          </div>
+        </motion.div>
+      </div>
     </AnimatePresence>
   );
-
-  // Renderizamos el Drawer en el Portal (document.body)
   return createPortal(drawerJSX, document.body);
 };
+
+
+/* =========================
+   SUB COMPONENT
+========================= */
+
+const DataField = ({ label, value, unit, critical }) => (
+
+  <div
+    className={styles.dataField}
+    data-critical={critical}
+  >
+    <div className={styles.fieldDecoration} />
+    <span className={styles.terminalLabel}>
+      {label}
+    </span>
+    <div className={styles.valueRow}>
+      <span className={styles.terminalValue}>
+        {value}
+      </span>
+      {unit && (
+        <span className={styles.unit}>
+          {unit}
+        </span>
+      )}
+    </div>
+
+    {typeof value === "number" && (
+      <div className={styles.valueBar}>
+        <div
+          className={styles.valueFill}
+          style={{ width: `${value}%` }}
+        />
+      </div>
+    )}
+  </div>
+);

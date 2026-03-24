@@ -1,0 +1,112 @@
+.panel {
+  position: relative;
+  width: 280px;
+  min-width: 260px;
+  height: 100%;
+
+  background: radial-gradient(circle at top, #061111, #020505);
+
+  border-right: 2px solid #000;
+  border-left: 2px solid #0ff;
+
+  padding: 12px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  font-family: monospace;
+  overflow: hidden;
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  font-size: 11px;
+  letter-spacing: 1px;
+
+  color: #76f7d8;
+
+  border-bottom: 1px solid rgba(0,255,200,0.2);
+  padding-bottom: 4px;
+}
+
+/* BLOCK */
+.block {
+  position: relative;
+
+  border: 1px solid rgba(118,181,181,0.2);
+  background: rgba(0,0,0,0.4);
+
+  padding: 8px;
+}
+
+/* HEADER BLOCK */
+.blockHeader {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  font-size: 10px;
+  color: #9fdcdc;
+}
+
+/* CORE */
+.coreStats {
+  margin-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.statRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+}
+
+/* PROGRESS */
+.progressBar {
+  margin-top: 6px;
+  height: 6px;
+
+  background: #111;
+  border: 1px solid rgba(118,181,181,0.2);
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #00ffc3, #00aaff);
+  box-shadow: 0 0 10px #00ffc3;
+}
+
+/* FLOW */
+.flowBars {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  height: 40px;
+  margin-top: 6px;
+}
+
+.bar {
+  width: 4px;
+  background: #00ffc3;
+  box-shadow: 0 0 6px #00ffc3;
+}
+
+/* STREAM */
+.stream {
+  margin-top: 6px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  font-size: 10px;
+  color: #76b5b5;
+}

@@ -2,176 +2,313 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(10, 20, 30, 0.5);
-  backdrop-filter: blur(4px);
+
+  background: rgba(10, 20, 30, 0.55);
+  backdrop-filter: blur(6px);
+
   border: 1px solid rgba(0, 255, 255, 0.2);
-  border-radius: 4px;
-  padding: 8px 16px;
+  border-radius: 6px;
+
+  padding: 8px 14px;
+
   color: #b0e0ff;
   font-family: 'Share Tech Mono', monospace;
+
   position: relative;
   z-index: 10;
-  flex-wrap: wrap;
-  gap: 10px;
-}
 
-.brandSection {
-  display: flex;
-  align-items: center;
   gap: 12px;
 }
 
+/* =========================
+   BRAND SECTION
+========================= */
+.brandSection {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: fit-content;
+}
+
+/* ICONO */
 .iconBox {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+
+  width: 30px;
+  height: 30px;
+
   border: 1px solid #ff3c00;
-  border-radius: 2px;
-  background: rgba(255, 60, 0, 0.1);
+  border-radius: 3px;
+
+  background: rgba(255, 60, 0, 0.08);
+
+  box-shadow: 0 0 8px rgba(255, 60, 0, 0.4);
 }
 
+/* TEXTO */
 .title {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
   letter-spacing: 1px;
+
   margin: 0;
   color: #f0f0f0;
-  text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+
+  text-shadow: 0 0 6px rgba(0, 255, 255, 0.4);
 }
 
 .version {
-  font-size: 12px;
+  font-size: 11px;
   color: #ff3c00;
   margin-left: 6px;
 }
 
 .subLine {
-  font-size: 9px;
+  font-size: 8px;
   color: #6b7280;
   letter-spacing: 1px;
 }
 
+/* =========================
+   CENTER (SEARCH)
+========================= */
 .centerSection {
   flex: 1;
-  max-width: 400px;
-  margin: 0 20px;
+  max-width: 380px;
+
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
+/* SEARCH */
 .searchContainer {
   display: flex;
   align-items: center;
-  background: rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(0, 255, 255, 0.3);
+
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(0, 255, 255, 0.25);
+
   border-radius: 20px;
-  padding: 2px 8px;
+  padding: 2px 10px;
+
   height: 30px;
+
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.searchContainer:focus-within {
+  border-color: #0ff;
+  box-shadow: 0 0 8px rgba(0,255,255,0.4);
 }
 
 .searchIcon {
   color: #0ff;
-  opacity: 0.7;
+  opacity: 0.6;
   margin-right: 6px;
 }
 
 .searchInput {
   background: transparent;
   border: none;
+
   color: #0ff;
   font-family: inherit;
   font-size: 12px;
+
   width: 100%;
   outline: none;
 }
 
 .searchInput::placeholder {
-  color: rgba(0, 255, 255, 0.3);
+  color: rgba(0, 255, 255, 0.25);
   text-transform: uppercase;
   font-size: 10px;
 }
 
+/* CLEAR BUTTON */
 .clearButton {
   background: transparent;
   border: none;
+
   color: #ff3c00;
   cursor: pointer;
+
   display: flex;
   align-items: center;
-  padding: 0 4px;
+
+  opacity: 0.7;
+  transition: opacity 0.2s;
 }
 
+.clearButton:hover {
+  opacity: 1;
+}
+
+/* =========================
+   SCANNER LINE
+========================= */
 .scannerLine {
   position: relative;
   width: 100%;
   height: 2px;
-  background: rgba(0, 255, 255, 0.2);
+
+  background: rgba(0, 255, 255, 0.15);
   overflow: hidden;
 }
 
 .scanningDot {
   position: absolute;
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
+
   background: #0ff;
   border-radius: 50%;
-  top: -4px;
-  filter: blur(3px);
+
+  top: -3px;
+
+  filter: blur(2px);
+  box-shadow: 0 0 8px #0ff;
 }
 
+/* =========================
+   RIGHT SIDE (STATS)
+========================= */
 .hudStats {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+
   font-size: 11px;
+  min-width: fit-content;
 }
 
 .statItem {
   display: flex;
   align-items: center;
   gap: 4px;
-  color: #a0a0a0;
+  color: #9ca3af;
 }
 
 .flickerIcon {
-  animation: flicker 2s infinite;
+  animation: flicker 2.5s infinite;
 }
 
 .statusBadge {
-  background: rgba(0, 255, 255, 0.15);
+  background: rgba(0, 255, 255, 0.12);
   border: 1px solid #0ff;
+
   border-radius: 12px;
-  padding: 2px 8px;
+  padding: 3px 8px;
+
   font-size: 9px;
   font-weight: 600;
+
   color: #0ff;
   text-transform: uppercase;
+
+  transition: all 0.2s;
 }
 
+/* ACTIVO */
+.activeStatus {
+  color: #0ff;
+  text-shadow: 0 0 10px #0ff;
+  border-color: #0ff;
+  background: rgba(0,255,255,0.2);
+  box-shadow: 0 0 12px rgba(0,255,255,0.4);
+}
+
+/* =========================
+   MENU BUTTON
+========================= */
+.menuButton {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 34px;
+  height: 34px;
+
+  border: 1px solid rgba(0,255,255,0.25);
+  background: rgba(0, 20, 30, 0.5);
+
+  color: #0ff;
+  cursor: pointer;
+
+  border-radius: 6px;
+
+  overflow: hidden;
+  transition: all 0.2s;
+}
+
+.menuButton:hover {
+  border-color: #0ff;
+  box-shadow: 0 0 10px rgba(0,255,255,0.4);
+}
+
+.menuActive {
+  background: rgba(0,255,255,0.12);
+  box-shadow: 0 0 14px rgba(0,255,255,0.6);
+}
+
+/* glow */
+.menuGlow {
+  position: absolute;
+  inset: 0;
+
+  background: radial-gradient(circle, rgba(0,255,255,0.25), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.menuButton:hover .menuGlow {
+  opacity: 1;
+}
+
+/* =========================
+   ANIMATIONS
+========================= */
 @keyframes flicker {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.3; }
 }
 
-/* Responsive */
+/* =========================
+   MOBILE (MEJORADO REAL)
+========================= */
 @media (max-width: 768px) {
+
   .hudHeader {
-    flex-direction: column;
-    align-items: stretch;
-    padding: 12px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 10px;
   }
-  .brandSection {
-    justify-content: center;
-  }
+
   .centerSection {
-    max-width: 100%;
-    margin: 0;
+    display: none; /* limpio en mobile */
   }
+
+  .title {
+    font-size: 13px;
+  }
+
+  .subLine {
+    display: none;
+  }
+
   .hudStats {
-    justify-content: center;
-    flex-wrap: wrap;
+    gap: 6px;
+    font-size: 9px;
+  }
+
+  .statusBadge {
+    display: none; /* opcional para limpiar */
   }
 }

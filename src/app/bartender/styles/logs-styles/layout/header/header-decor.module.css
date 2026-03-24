@@ -1,0 +1,151 @@
+/* =========================
+   ROOT WRAPPER
+========================= */
+.wrapper {
+  position: absolute;
+  inset: 0;
+
+  pointer-events: none;
+  overflow: hidden;
+}
+
+
+/* =========================
+   SCANLINES (CRT)
+========================= */
+.scanlines {
+  position: absolute;
+  inset: 0;
+
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255,255,255,0.025),
+    rgba(255,255,255,0.025) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+
+  animation: scanMove 12s linear infinite;
+  opacity: 0.4;
+}
+
+@keyframes scanMove {
+  from { transform: translateY(0); }
+  to { transform: translateY(100%); }
+}
+
+
+/* =========================
+   NOISE (GRAIN)
+========================= */
+.noise {
+  position: absolute;
+  inset: 0;
+
+  background-image: url("../../../../../../../public/textures/noise.png");
+  opacity: 0.05;
+
+  mix-blend-mode: overlay;
+}
+
+
+/* =========================
+   BASE GLOW (AMBIENT)
+========================= */
+.glowBase {
+  position: absolute;
+  inset: 0;
+
+  background: radial-gradient(
+    circle at center,
+    rgba(0, 255, 200, 0.08),
+    transparent 70%
+  );
+
+  opacity: 0.6;
+}
+
+
+/* =========================
+   ENERGY SWEEP
+========================= */
+.energySweep {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+
+  width: 120px;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0, 255, 200, 0.18),
+    transparent
+  );
+
+  filter: blur(6px);
+}
+
+
+/* =========================
+   GLITCH FLASH
+========================= */
+.glitch {
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.25),
+    transparent
+  );
+
+  mix-blend-mode: screen;
+}
+
+
+/* =========================
+   PULSE FIELD
+========================= */
+.pulse {
+  position: absolute;
+  inset: 0;
+
+  background: radial-gradient(
+    circle at 30% 50%,
+    rgba(0, 255, 200, 0.15),
+    transparent 60%
+  );
+}
+
+
+/* =========================
+   PERFORMANCE OPTIMIZATION
+========================= */
+.scanlines,
+.energySweep,
+.glitch,
+.pulse {
+  will-change: transform, opacity;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 768px) {
+
+  .energySweep {
+    width: 80px;
+    filter: blur(4px);
+  }
+
+  .scanlines {
+    opacity: 0.25;
+  }
+
+  .noise {
+    opacity: 0.03;
+  }
+}

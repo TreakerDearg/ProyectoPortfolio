@@ -1,0 +1,492 @@
+/* =========================
+   ROOT TOKENS
+========================= */
+
+:root {
+  --soma-bg: #050808;
+  --soma-panel: #0b1111;
+  --soma-border: #76b5b5;
+  --soma-glow: rgba(118, 181, 181, 0.4);
+
+  /* Windows 95 clásico */
+  --win-gray: #c0c0c0;
+  --win-dark: #808080;
+  --win-light: #ffffff;
+  --win-blue: #000080;
+
+  --danger: #ff4444;
+}
+
+/* =========================
+   WINDOW BASE
+========================= */
+
+.window {
+  position: absolute;
+  width: 440px;
+  min-height: 280px;
+  background: var(--soma-bg);
+  border: 2px solid var(--soma-border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  backdrop-filter: blur(6px);
+  box-shadow:
+    0 10px 40px rgba(0,0,0,0.6),
+    0 0 20px var(--soma-glow),
+    inset 0 0 20px rgba(118,181,181,0.05);
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
+}
+
+.window:hover {
+  box-shadow:
+    0 12px 50px rgba(0,0,0,0.7),
+    0 0 25px var(--soma-glow),
+    inset 0 0 25px rgba(118,181,181,0.08);
+}
+
+.window:focus-within {
+  box-shadow:
+    0 0 0 1px #fff,
+    0 0 35px var(--soma-glow),
+    0 0 60px rgba(118,181,181,0.3);
+}
+
+/* =========================
+   TITLE BAR (Win95)
+========================= */
+
+.titleBar {
+  height: 30px;
+  background: linear-gradient(90deg, #000080 0%, #000060 60%, #000040 100%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 6px;
+  font-size: 11px;
+  color: #fff;
+  cursor: grab;
+  border-bottom: 1px solid #000;
+  position: relative;
+}
+
+.titleBar:active {
+  cursor: grabbing;
+}
+
+.titleBar::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  bottom: 0;
+  background: rgba(255,255,255,0.15);
+}
+
+.titleLeft {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.titleLeft span {
+  font-weight: bold;
+  letter-spacing: 0.6px;
+}
+
+.titleRight {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tag {
+  background: rgba(0,0,0,0.4);
+  padding: 2px 4px;
+  border-radius: 2px;
+  font-size: 8px;
+  font-family: monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Botones de ventana (minimizar, maximizar, cerrar) */
+.sysMenuBtn,
+.windowBtn,
+.closeBtn {
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--win-gray);
+  border: 1px solid var(--win-light);
+  border-right-color: #000;
+  border-bottom-color: #000;
+  cursor: pointer;
+  transition: transform 0.05s ease;
+  font-size: 10px;
+  color: #000;
+}
+
+.sysMenuBtn:hover,
+.windowBtn:hover,
+.closeBtn:hover {
+  background: #d6d6d6;
+}
+
+.sysMenuBtn:active,
+.windowBtn:active,
+.closeBtn:active {
+  transform: translate(1px, 1px);
+  border: 1px solid #000;
+  border-right-color: var(--win-light);
+  border-bottom-color: var(--win-light);
+}
+
+.closeBtn {
+  background: #c0c0c0;
+}
+
+/* =========================
+   MENU BAR (estilo Win95)
+========================= */
+
+.menuBar {
+  background: var(--win-gray);
+  padding: 2px 4px;
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--win-dark);
+  font-size: 11px;
+}
+
+.menuItem {
+  background: transparent;
+  border: none;
+  padding: 2px 6px;
+  font-family: inherit;
+  font-size: 11px;
+  cursor: pointer;
+  color: #000;
+}
+
+.menuItem:hover {
+  background: var(--win-blue);
+  color: white;
+}
+
+/* =========================
+   CONTENT
+========================= */
+
+.content {
+  flex: 1;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 11px;
+  color: #9fd3d3;
+  overflow-y: auto;
+  background: var(--soma-panel);
+  position: relative;
+}
+
+.content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.content::-webkit-scrollbar-thumb {
+  background: rgba(118,181,181,0.4);
+}
+
+/* Secciones */
+.section {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(118,181,181,0.3);
+  padding: 8px;
+  margin-bottom: 6px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 9px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  color: var(--soma-border);
+  border-bottom: 1px solid rgba(118,181,181,0.3);
+  padding-bottom: 4px;
+}
+
+/* Lista de metadatos */
+.metadataList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: rgba(0,0,0,0.2);
+  padding: 8px;
+  border: 1px solid rgba(118,181,181,0.2);
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  color: #b8e0e0;
+}
+
+.metaItem strong {
+  color: var(--soma-border);
+  font-weight: normal;
+}
+
+/* Barra de corrupción (estilo progreso Win95) */
+.corruptionBlock {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0,0,0,0.3);
+  padding: 6px 8px;
+  border: 1px solid rgba(118,181,181,0.2);
+  font-size: 10px;
+}
+
+.progressBar {
+  flex: 1;
+  height: 14px;
+  background: #fff;
+  border: 1px solid #000;
+  border-right-color: #fff;
+  border-bottom-color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--danger);
+  width: 0%;
+  transition: width 0.3s ease;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.3);
+}
+
+.percent {
+  font-family: monospace;
+  min-width: 35px;
+  text-align: right;
+  color: #ff6666;
+}
+
+/* Receta */
+.recipeGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.recipeGrid div {
+  background: rgba(0,0,0,0.2);
+  padding: 6px;
+  text-align: center;
+}
+
+.recipeGrid strong {
+  display: block;
+  font-size: 9px;
+  color: var(--soma-border);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
+.recipeGrid p {
+  font-size: 10px;
+  margin: 0;
+  word-break: break-word;
+}
+
+/* =========================
+   STATUS BAR (estilo Win95)
+========================= */
+
+.statusBar {
+  background: var(--win-gray);
+  border-top: 1px solid var(--win-light);
+  border-bottom: 1px solid var(--win-dark);
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 6px;
+  font-size: 10px;
+  color: #000;
+  font-family: monospace;
+}
+
+.statusLeft {
+  display: flex;
+  gap: 8px;
+}
+
+.statusRight {
+  display: flex;
+  gap: 12px;
+}
+
+/* =========================
+   EFECTOS VISUALES (glow y scanline)
+========================= */
+
+.glow {
+  position: absolute;
+  inset: 0;
+  opacity: 0.08;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+.scanline {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255,255,255,0.02),
+    rgba(255,255,255,0.02) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  pointer-events: none;
+  animation: scanMove 8s linear infinite;
+}
+
+@keyframes scanMove {
+  from { transform: translateY(0); }
+  to { transform: translateY(100%); }
+}
+
+/* =========================
+   MOBILE (BRIEFCASE MODE)
+========================= */
+
+@media (max-width: 768px) {
+  .window {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 85vh;
+    border: none;
+    border-top: 2px solid var(--soma-border);
+    border-radius: 14px 14px 0 0;
+    box-shadow: 0 -10px 40px rgba(0,0,0,0.8), 0 0 20px var(--soma-glow);
+    animation: slideUp 0.28s ease;
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .titleBar {
+    height: 34px;
+    font-size: 12px;
+  }
+
+  .content {
+    font-size: 12px;
+    padding: 16px;
+  }
+
+  .recipeGrid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .statusRight {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .content {
+    padding: 12px;
+  }
+
+  .titleLeft span {
+    font-size: 11px;
+  }
+
+  .menuItem {
+    font-size: 10px;
+    padding: 2px 4px;
+  }
+}
+
+/* =========================
+   RECETA (detallada)
+========================= */
+
+.recipeContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.recipeItem {
+  background: rgba(0,0,0,0.2);
+  padding: 6px 8px;
+  border-left: 2px solid var(--soma-border);
+}
+
+.recipeItem strong {
+  display: block;
+  font-size: 9px;
+  color: var(--soma-border);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.recipeItem p {
+  margin: 0;
+  font-size: 10px;
+  line-height: 1.4;
+  color: #b8e0e0;
+}
+
+.recipeList {
+  margin: 4px 0 0 16px;
+  padding-left: 0;
+  list-style: none;
+}
+
+.recipeList li {
+  font-size: 10px;
+  line-height: 1.4;
+  margin-bottom: 2px;
+  position: relative;
+  padding-left: 12px;
+}
+
+.recipeList li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--soma-border);
+}

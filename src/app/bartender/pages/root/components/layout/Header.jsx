@@ -1,17 +1,33 @@
 "use client";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+
 import LeftPanel from "./Header/LeftPanel";
 import CenterPanel from "./Header/CenterPanel";
 import RightPanel from "./Header/RightPanel";
 import BottomBar from "./Header/BottomBar";
 import CabinEdge from "./Header/CabinEdge";
+
 import styles from '../../../../styles/root-styles/layout/Header.module.css';
 
 export default function Header() {
   const [glitch, setGlitch] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
-  // Glitch global ocasional
+  /* =========================
+     DETECTAR MOBILE
+  ========================= */
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 768);
+    check();
+
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  /* =========================
+     GLITCH EFFECT
+  ========================= */
   useEffect(() => {
     const interval = setInterval(() => {
       if (Math.random() > 0.8) {
@@ -23,27 +39,48 @@ export default function Header() {
   }, []);
 
   return (
-    <motion.header 
+    <motion.header
       className={`${styles.header} ${glitch ? styles.glitchHeader : ''}`}
-      initial={{ opacity: 0, y: -20 }}
+      initial={{ opacity: 0, y: -12 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      whileHover={{ borderColor: "rgba(0, 255, 255, 0.8)" }}
+      transition={{ duration: 0.4 }}
     >
-      {/* Barrido de escaneo global */}
-      <motion.div 
+      {/* Scanline */}
+      <motion.div
         className={styles.headerScanline}
         animate={{ x: ["-100%", "100%"] }}
         transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
       />
 
-      <div className={styles.topSection}>
-        <LeftPanel />
-        <CenterPanel />
-        <RightPanel />
+      <div className={styles.headerInner}>
+        
+        <div className={styles.topSection}>
+
+          {/* LEFT siempre visible */}
+          <div className={styles.left}>
+            <LeftPanel />
+          </div>
+
+          {/* CENTER solo desktop */}
+          {!isMobile && (
+            <div className={styles.center}>
+              <CenterPanel />
+            </div>
+          )}
+
+          {/* RIGHT solo desktop */}
+          {!isMobile && (
+            <div className={styles.right}>
+              <RightPanel />
+            </div>
+          )}
+
+        </div>
+
+        {/* BottomBar opcional: podés decidir */}
+        <BottomBar />
       </div>
 
-      <BottomBar />
       <CabinEdge />
     </motion.header>
   );

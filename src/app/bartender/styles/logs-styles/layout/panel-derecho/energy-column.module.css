@@ -1,0 +1,15 @@
+.energy {
+  position: absolute;
+  left: 0;
+  width: 3px;
+  height: 100%;
+
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    #00ffe1,
+    transparent
+  );
+
+  opacity: 0.4;
+}

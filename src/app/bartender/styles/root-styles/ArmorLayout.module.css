@@ -1,13 +1,22 @@
 .container {
   position: relative;
   width: 100%;
-  min-height: 100vh;
+
+  /* FIX mobile viewport */
+  min-height: 100dvh;
+
   background-color: #0a0d14;
   color: #10b981;
   font-family: 'JetBrains Mono', monospace;
+
   overflow: hidden;
-  padding: 1rem;
+
+  /* padding fluido */
+  padding: clamp(0.5rem, 2vw, 1.5rem);
   box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
 }
 
 /* ---------------- EFECTO SCANLINES ---------------- */
@@ -16,54 +25,74 @@
   inset: 0;
   pointer-events: none;
   z-index: 50;
+
   opacity: 0.05;
+
   background-image: 
     linear-gradient(rgba(0,0,0,0) 50%, rgba(16,255,129,0.04) 50%),
     linear-gradient(90deg, rgba(16,255,129,0.02), rgba(0,255,255,0.01), rgba(16,255,129,0.02));
+
   background-size: 100% 2px, 3px 100%;
+
+  /*  mejora performance */
+  will-change: opacity;
 }
 
 /* ---------------- MARCO EXTERIOR ---------------- */
 .frame {
   position: fixed;
-  inset: 1rem;
+
+  /*  inset fluido */
+  inset: clamp(0.5rem, 2vw, 1rem);
+
   border: 1px solid rgba(16,185,129,0.2);
   pointer-events: none;
   z-index: 40;
-  box-shadow: inset 0 0 40px rgba(16,255,129,0.08);
+
+  box-shadow: inset 0 0 clamp(20px, 4vw, 40px) rgba(16,255,129,0.08);
+
+  /*  evita desbordes raros */
+  overflow: hidden;
 }
 
-/* Esquinas reforzadas */
-.cornerTopLeft {
+/* ---------------- ESQUINAS ---------------- */
+.cornerTopLeft,
+.cornerBottomRight {
   position: absolute;
+
+  width: clamp(30px, 6vw, 60px);
+  height: clamp(30px, 6vw, 60px);
+
+  border-radius: 2px;
+
+  box-shadow: 0 0 clamp(4px, 1vw, 8px) rgba(16,255,129,0.4);
+}
+
+.cornerTopLeft {
   top: -2px;
   left: -2px;
-  width: 60px;
-  height: 60px;
   border-top: 4px solid #10b981;
   border-left: 4px solid #10b981;
-  border-radius: 2px;
-  box-shadow: 0 0 8px rgba(16,255,129,0.4);
 }
 
 .cornerBottomRight {
-  position: absolute;
   bottom: -2px;
   right: -2px;
-  width: 60px;
-  height: 60px;
   border-bottom: 4px solid #10b981;
   border-right: 4px solid #10b981;
-  border-radius: 2px;
-  box-shadow: 0 0 8px rgba(16,255,129,0.4);
 }
 
-/* Laterales decorativos */
-.sideLeft, .sideRight {
+/* ---------------- LATERALES ---------------- */
+.sideLeft,
+.sideRight {
   position: absolute;
   top: 50%;
+
   width: 2px;
-  height: 8rem;
+
+  /*  altura adaptable */
+  height: clamp(4rem, 20vh, 8rem);
+
   background-color: rgba(16,255,129,0.3);
   transform: translateY(-50%);
   border-radius: 1px;
@@ -74,32 +103,71 @@
 
 /* ---------------- PANEL CENTRAL ---------------- */
 .main {
-  flex-grow: 1;
+  flex: 1;
+
   position: relative;
+
   border: 1px solid rgba(16,185,129,0.1);
+
   background-color: rgba(16,185,129,0.08);
   backdrop-filter: blur(4px);
-  box-shadow: inset 0 0 120px rgba(16,255,129,0.08);
+
+  box-shadow: inset 0 0 clamp(60px, 10vw, 120px) rgba(16,255,129,0.08);
+
   overflow-y: auto;
-  border-radius: 0.5rem;
-  padding: 2rem;
+
+  border-radius: clamp(0.3rem, 1vw, 0.6rem);
+
+  /*  padding fluido */
+  padding: clamp(1rem, 2.5vw, 2rem);
+
   transition: all 0.3s ease;
+
+  /*  evita bugs de flex + overflow */
+  min-height: 0;
 }
 
 /* ---------------- SCROLLBAR ---------------- */
 .main::-webkit-scrollbar {
   width: 6px;
 }
+
 .main::-webkit-scrollbar-track {
   background: rgba(16,185,129,0.05);
 }
+
 .main::-webkit-scrollbar-thumb {
   background: rgba(16,185,129,0.35);
   border-radius: 3px;
 }
 
+/* ---------------- SAFE AREA (iPhone etc) ---------------- */
+.container {
+  padding-bottom: calc(env(safe-area-inset-bottom) + clamp(0.5rem, 1vw, 1rem));
+}
+
 /* ---------------- RESPONSIVE ---------------- */
-@media(max-width: 768px) {
-  .main { padding: 1rem; }
-  .frame { inset: 0.5rem; }
+@media (max-width: 768px) {
+
+  .frame {
+    inset: 0.4rem;
+  }
+
+  .main {
+    padding: 1rem;
+  }
+
+  /*  reducir ruido visual en mobile */
+  .scanlines {
+    opacity: 0.03;
+  }
+}
+
+/* ---------------- ULTRA WIDE (PRO) ---------------- */
+@media (min-width: 1600px) {
+
+  .main {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
 }

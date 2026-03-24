@@ -1,138 +1,254 @@
+/* =========================
+   ROOT CONTAINER
+========================= */
 .acContainer {
   position: relative;
-  min-height: 100vh;
-  width: 100vw;
-  overflow: hidden;
+  min-height: 100dvh;
+  width: 100%;
+
+  overflow-x: hidden;
+  overflow-y: hidden;
+
   background-color: #050505;
   background-image: 
     radial-gradient(circle at 20% 30%, rgba(0, 200, 255, 0.08) 0%, transparent 30%),
     linear-gradient(180deg, transparent 60%, #000000 100%);
-  color: #b0e0ff; /* Color base para textos (fallback) */
+
+  color: #b0e0ff;
   font-family: 'Share Tech Mono', monospace;
 }
 
-/* Rejilla holográfica de fondo (debajo del scanline) */
+/* =========================
+   HOLOGRID
+========================= */
 .holoGrid {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
+
   background-image: 
     linear-gradient(rgba(0, 255, 255, 0.06) 1px, transparent 1px),
     linear-gradient(90deg, rgba(0, 255, 255, 0.06) 1px, transparent 1px);
+
   background-size: 50px 50px;
+
   pointer-events: none;
   z-index: 0;
   opacity: 0.5;
 }
 
-/* Efecto de líneas de escaneo CRT (se mantiene, pero ahora sobre la rejilla) */
+/* =========================
+   SCANLINES
+========================= */
 .scanlineOverlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    rgba(18, 16, 16, 0) 50%, 
-    rgba(0, 0, 0, 0.1) 50%
-  ), linear-gradient(
-    90deg, 
-    rgba(255, 0, 0, 0.02), 
-    rgba(0, 255, 0, 0.01), 
-    rgba(0, 0, 255, 0.02)
-  );
+  inset: 0;
+
+  background:
+    linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%),
+    linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
+
   background-size: 100% 3px, 2px 100%;
+
   pointer-events: none;
-  z-index: 100;
+  z-index: 2;
+
   opacity: 0.6;
+  mix-blend-mode: screen;
 }
 
-/* Marco HUD principal */
+/* =========================
+   HUD FRAME
+========================= */
 .hudFrame {
   position: relative;
   z-index: 1;
+
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  padding: 10px;
+
+  min-height: 100dvh;
+  width: 100%;
+
+  padding: clamp(6px, 1vw, 10px);
   box-sizing: border-box;
+
+  overflow: hidden;
+
   border: 1px solid rgba(255, 60, 0, 0.1);
-  background: rgba(8, 15, 20, 0.3); /* Fondo semitransparente sutil */
   border-left: 1px solid rgba(0, 255, 255, 0.2);
   border-right: 1px solid rgba(0, 255, 255, 0.2);
+
+  background: rgba(8, 15, 20, 0.3);
+
   box-shadow: 0 0 40px rgba(0, 180, 255, 0.15);
-  backdrop-filter: blur(2px); /* Desenfoque muy sutil en todo el HUD */
+  backdrop-filter: blur(2px);
 }
 
-/* Layout principal con sidebar y contenido */
+/* =========================
+   MAIN LAYOUT
+========================= */
 .mainLayout {
   flex: 1;
+
   display: grid;
-  grid-template-columns: 240px 1fr;
-  gap: 10px;
+  grid-template-columns: clamp(160px, 18vw, 240px) 1fr;
+
+  gap: clamp(6px, 1vw, 10px);
+
   overflow: hidden;
-  padding: 15px 0;
+
+  padding: clamp(8px, 1vw, 15px) 0;
+
+  min-height: 0;
 }
 
-/* Contenedor del área de contenido (donde va el grid) */
+/* =========================
+   CONTENT AREA
+========================= */
 .contentArea {
   position: relative;
+
+  display: flex;
+  flex-direction: column;
+
+  min-width: 0;
+  min-height: 0;
+
   overflow: hidden;
-  height: 100%;
+
   transition: opacity 0.3s ease, filter 0.3s ease;
 }
 
-/* Panel de vidrio que envuelve el ModuleGrid */
+/* =========================
+   GLASS PANEL
+========================= */
 .glassPanel {
-  height: 100%;
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  min-height: 0;
+
   background: rgba(10, 20, 30, 0.35);
   backdrop-filter: blur(8px);
+
   border: 1px solid rgba(0, 255, 255, 0.3);
   border-radius: 6px;
-  padding: 8px;
+
+  padding: clamp(6px, 1vw, 8px);
+
   box-shadow: 
     0 0 30px rgba(0, 200, 255, 0.2),
     inset 0 0 20px rgba(0, 150, 255, 0.1);
-  overflow: hidden; /* Para que el scroll interno del grid funcione */
+
+  overflow: auto;
 }
 
-/* Estado atenuado cuando el Briefcase está abierto */
+/* SCROLL CUSTOM */
+.glassPanel::-webkit-scrollbar {
+  width: 6px;
+}
+
+.glassPanel::-webkit-scrollbar-thumb {
+  background: rgba(0, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+/* =========================
+   DIMMED STATE
+========================= */
 .dimmed {
-  opacity: 0.25;
-  filter: blur(3px);
+  opacity: 0.3;
+  filter: blur(2px);
   pointer-events: none;
+  transition: all 0.25s ease;
 }
 
-/* Esquinas decorativas */
-.cornerTL, .cornerTR, .cornerBL, .cornerBR {
+/* =========================
+   CORNERS
+========================= */
+.cornerTL,
+.cornerTR,
+.cornerBL,
+.cornerBR {
   position: absolute;
-  width: 45px;
-  height: 45px;
+
+  width: clamp(20px, 3vw, 45px);
+  height: clamp(20px, 3vw, 45px);
+
   border-style: solid;
   border-color: rgba(0, 255, 255, 0.5);
+
   z-index: 20;
   pointer-events: none;
+
   filter: drop-shadow(0 0 5px cyan);
 }
+
 .cornerTL {
   top: 15px;
   left: 15px;
   border-width: 2px 0 0 2px;
 }
+
 .cornerTR {
   top: 15px;
   right: 15px;
   border-width: 2px 2px 0 0;
 }
+
 .cornerBL {
   bottom: 15px;
   left: 15px;
   border-width: 0 0 2px 2px;
 }
+
 .cornerBR {
   bottom: 15px;
   right: 15px;
   border-width: 0 2px 2px 0;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+/* TABLET */
+@media (max-width: 1024px) {
+  .mainLayout {
+    grid-template-columns: 180px 1fr;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+
+  .mainLayout {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .hudFrame {
+    padding: 6px;
+  }
+
+  .glassPanel {
+    padding: 6px;
+  }
+}
+
+/* MOBILE SMALL */
+@media (max-width: 480px) {
+
+  .cornerTL,
+  .cornerTR,
+  .cornerBL,
+  .cornerBR {
+    display: none;
+  }
+
+  .scanlineOverlay {
+    opacity: 0.3;
+  }
 }

@@ -1,69 +1,84 @@
 "use client";
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Shield, Cpu, AlertTriangle } from "lucide-react";
 import styles from '../../../../../styles/root-styles/layout/Header.module.css';
 
 export default function RightPanel() {
   const [armorPoints, setArmorPoints] = useState(9450);
   const [syncRate, setSyncRate] = useState(98.42);
-  const [integrityLevel, setIntegrityLevel] = useState(4);
   const [glitch, setGlitch] = useState(false);
 
-  const formattedArmor = armorPoints.toString().padStart(8, '0');
+  /* ------------------ 🧠 DERIVED STATE ------------------ */
+  const integrityLevel = useMemo(() => {
+    return Math.floor((armorPoints / 10000) * 5);
+  }, [armorPoints]);
 
+  const formattedArmor = useMemo(() => {
+    return armorPoints.toString().padStart(8, '0');
+  }, [armorPoints]);
+
+  const statusLevel = useMemo(() => {
+    if (syncRate > 97) return "stable";
+    if (syncRate > 93) return "warning";
+    return "danger";
+  }, [syncRate]);
+
+  /* ------------------ ⚡ DATA SIMULATION ------------------ */
   useEffect(() => {
     const interval = setInterval(() => {
-      setSyncRate(prev => Math.min(100, Math.max(90, prev + (Math.random() * 3 - 1.5))));
-      setArmorPoints(prev => Math.min(10000, Math.max(8000, prev + Math.floor(Math.random() * 21 - 10))));
+      setSyncRate(prev =>
+        Math.min(100, Math.max(90, prev + (Math.random() * 2 - 1)))
+      );
+
+      setArmorPoints(prev =>
+        Math.min(10000, Math.max(8000, prev + Math.floor(Math.random() * 15 - 7)))
+      );
     }, 4000);
+
     return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    setIntegrityLevel(Math.floor((armorPoints / 10000) * 5));
-  }, [armorPoints]);
-
+  /* ------------------ ⚠️ GLITCH CONTROL ------------------ */
   useEffect(() => {
     const glitchInterval = setInterval(() => {
-      if (Math.random() > 0.7) {
+      if (Math.random() > 0.75) {
         setGlitch(true);
-        setTimeout(() => setGlitch(false), 200);
+        setTimeout(() => setGlitch(false), 180);
       }
-    }, 8000);
+    }, 9000);
+
     return () => clearInterval(glitchInterval);
   }, []);
 
   return (
-    <motion.div 
-      className={styles.rightPanel}
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-    >
+    <div className={styles.rightPanel}>
+
+      {/* ================= CPU / SYNC ================= */}
       <motion.div 
         className={styles.hardwareStats}
-        animate={{ y: [0, -2, 0] }}
-        transition={{ duration: 5, repeat: Infinity }}
+        animate={{ y: [0, -1.5, 0] }}
+        transition={{ duration: 6, repeat: Infinity }}
       >
         <div className={styles.statHeader}>
           <Cpu size={10} className={styles.iconDim} />
           <p className={styles.label}>Neural_Sync</p>
         </div>
+
         <div className={styles.statRow}>
           <motion.p 
-            key={syncRate.toFixed(2)}
-            className={`${styles.stat} ${glitch ? styles.glitchText : ''}`}
-            animate={{ opacity: [1, 0.7, 1] }}
+            className={`${styles.stat} ${styles[statusLevel]} ${glitch ? styles.glitchText : ''}`}
+            animate={{ opacity: [1, 0.75, 1] }}
             transition={{ duration: 2, repeat: Infinity }}
           >
             {syncRate.toFixed(2)}%
           </motion.p>
+
           <div className={styles.miniBarContainer}>
             <motion.div 
-              className={styles.miniBarFill}
+              className={`${styles.miniBarFill} ${styles[statusLevel]}`}
               animate={{ width: `${syncRate}%` }}
-              transition={{ duration: 1.5 }}
-              style={{ backgroundColor: syncRate > 97 ? "#0ff" : "#f97316" }}
+              transition={{ duration: 1.2 }}
             />
           </div>
         </div>
@@ -71,59 +86,64 @@ export default function RightPanel() {
 
       <div className={styles.divider} />
 
+      {/* ================= ARMOR ================= */}
       <motion.div 
         className={styles.hardwareStats}
         animate={{ scale: [1, 1.01, 1] }}
-        transition={{ duration: 3, repeat: Infinity }}
+        transition={{ duration: 4, repeat: Infinity }}
       >
         <div className={styles.statHeader}>
           <Shield size={10} className={styles.iconActive} />
           <p className={styles.label}>Armor_Points</p>
         </div>
+
         <div className={styles.armorDisplay}>
           <motion.p 
-            key={formattedArmor}
             className={`${styles.statLarge} ${glitch ? styles.glitchText : ''}`}
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
+            animate={{ opacity: [1, 0.85, 1] }}
           >
             {formattedArmor}
           </motion.p>
           <div className={styles.unitLabel}>AP</div>
         </div>
+
+        {/* 🔥 SCALE INTELIGENTE */}
         <div className={styles.integrityScale}>
-          {[...Array(5)].map((_, i) => (
-            <motion.div 
-              key={i}
-              className={styles.scaleNotch}
-              animate={i < integrityLevel ? {
-                backgroundColor: ["#0ff", "#fff", "#0ff"],
-                scale: [1, 1.1, 1]
-              } : {}}
-              transition={{ duration: 2, repeat: Infinity, delay: i * 0.2 }}
-              data-active={i < integrityLevel}
-            />
-          ))}
+          {[...Array(5)].map((_, i) => {
+            const active = i < integrityLevel;
+
+            return (
+              <motion.div 
+                key={i}
+                className={`${styles.scaleNotch} ${active ? styles.active : ''}`}
+                animate={active ? { scale: [1, 1.15, 1] } : {}}
+                transition={{ duration: 1.8, repeat: Infinity, delay: i * 0.15 }}
+              />
+            );
+          })}
         </div>
+
+        {/* ⚠️ WARNING DINÁMICO */}
         {integrityLevel <= 2 && (
           <motion.div 
             className={styles.warningBadge}
             animate={{ opacity: [0, 1, 0] }}
             transition={{ duration: 1, repeat: Infinity }}
           >
-            <AlertTriangle size={12} color="#f97316" />
+            <AlertTriangle size={12} />
             <span>LOW_ARMOR</span>
           </motion.div>
         )}
       </motion.div>
 
+      {/* ================= EDGE ================= */}
       <div className={styles.panelEdgeRight}>
         <motion.div 
           className={styles.edgeGlowRight}
-          animate={{ opacity: [0.2, 0.8, 0.2] }}
+          animate={{ opacity: [0.2, 0.7, 0.2] }}
           transition={{ duration: 3, repeat: Infinity }}
         />
       </div>
-    </motion.div>
+    </div>
   );
 }

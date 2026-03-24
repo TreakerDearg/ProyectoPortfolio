@@ -1,0 +1,381 @@
+/* =========================
+   BASE ITEM (OS PANEL)
+========================= */
+
+.item {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+
+  background: #0a0f10;
+
+  /* 🪟 Windows95 bevel */
+  border-top: 2px solid #c0c0c0;
+  border-left: 2px solid #c0c0c0;
+  border-right: 2px solid #000;
+  border-bottom: 2px solid #000;
+
+  overflow: hidden;
+  cursor: pointer;
+
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.2s ease,
+    filter 0.2s ease;
+}
+
+/* tamaños */
+.normal {
+  grid-column: span 1;
+  grid-row: span 1;
+}
+
+.large {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+
+/* =========================
+   STATES (SOMA FEEDBACK)
+========================= */
+
+.stable {
+  filter: brightness(1);
+}
+
+.warning {
+  box-shadow: 0 0 10px rgba(255, 180, 0, 0.25);
+}
+
+.critical {
+  box-shadow:
+    0 0 14px rgba(255, 70, 70, 0.45),
+    inset 0 0 12px rgba(255, 0, 0, 0.15);
+}
+
+/* activo (selected) */
+.active {
+  outline: 1px dashed #76b5b5;
+  outline-offset: -4px;
+
+  box-shadow:
+    inset 0 0 0 1px rgba(118, 181, 181, 0.4),
+    0 0 16px rgba(118, 181, 181, 0.35);
+}
+
+
+/* =========================
+   INTERACTION
+========================= */
+
+.item:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 4px 18px rgba(118, 181, 181, 0.2),
+    inset 0 0 10px rgba(118, 181, 181, 0.05);
+}
+
+.item:active {
+  transform: translateY(1px);
+
+  /* pressed Windows95 */
+  border-top: 2px solid #000;
+  border-left: 2px solid #000;
+  border-right: 2px solid #c0c0c0;
+  border-bottom: 2px solid #c0c0c0;
+}
+
+
+/* =========================
+   TOP BAR (WINDOW95 CORE)
+========================= */
+
+.topBar {
+  height: 22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 6px;
+
+  font-size: 10px;
+  font-weight: bold;
+
+  /* 🧠 SOMA gradient */
+  background: linear-gradient(
+    90deg,
+    #001010,
+    #002222,
+    #001010
+  );
+
+  color: #d6ffff;
+
+  border-bottom: 1px solid rgba(118, 181, 181, 0.2);
+}
+
+.topLeft {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.title {
+  letter-spacing: 0.5px;
+}
+
+.tag {
+  font-size: 9px;
+  color: #76b5b5;
+  opacity: 0.8;
+}
+
+
+/* =========================
+   BODY
+========================= */
+
+.body {
+  flex: 1;
+
+  padding: 8px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  font-size: 10px;
+  color: #b6dcdc;
+}
+
+/* texto */
+.content {
+  line-height: 1.4;
+  opacity: 0.85;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+}
+
+/* meta */
+.meta {
+  margin-top: auto;
+
+  display: flex;
+  justify-content: space-between;
+
+  font-size: 9px;
+  opacity: 0.55;
+}
+
+
+/* =========================
+   FOOTER (SYSTEM BAR)
+========================= */
+
+.footer {
+  border-top: 1px solid rgba(118, 181, 181, 0.15);
+
+  padding: 6px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  font-size: 9px;
+
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.status {
+  font-weight: bold;
+  letter-spacing: 0.6px;
+  color: #76b5b5;
+}
+
+
+/* =========================
+   CORRUPTION BAR
+========================= */
+
+.corruptionWrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.corruptionBar {
+  flex: 1;
+  height: 6px;
+
+  background: #000;
+
+  border-top: 1px solid #c0c0c0;
+  border-left: 1px solid #c0c0c0;
+  border-right: 1px solid #000;
+  border-bottom: 1px solid #000;
+
+  overflow: hidden;
+}
+
+.corruptionFill {
+  height: 100%;
+
+  background: linear-gradient(
+    90deg,
+    #ff0000,
+    #ff4444,
+    #ff0000
+  );
+
+  box-shadow: 0 0 8px rgba(255, 0, 0, 0.7);
+}
+
+.corruptionText {
+  font-size: 9px;
+  color: #ff6666;
+}
+
+
+/* =========================
+   CRITICAL OVERLAY (GLITCH)
+========================= */
+
+.dangerOverlay {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 11px;
+  font-weight: bold;
+
+  color: #ff2a2a;
+
+  background: rgba(255, 0, 0, 0.05);
+
+  pointer-events: none;
+
+  animation: glitch 0.8s infinite;
+}
+
+@keyframes glitch {
+  0% { opacity: 0.2; transform: translateX(0); }
+  25% { opacity: 0.6; transform: translateX(1px); }
+  50% { opacity: 0.9; transform: translateX(-1px); }
+  75% { opacity: 0.6; transform: translateX(1px); }
+  100% { opacity: 0.2; transform: translateX(0); }
+}
+
+
+/* =========================
+   FX LAYERS
+========================= */
+
+.glow {
+  position: absolute;
+  inset: 0;
+
+  opacity: 0.06;
+  mix-blend-mode: screen;
+
+  pointer-events: none;
+}
+
+/* scanlines */
+.scanline {
+  position: absolute;
+  inset: 0;
+
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255,255,255,0.03),
+    rgba(255,255,255,0.03) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+
+  animation: scanMove 10s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes scanMove {
+  from { transform: translateY(0); }
+  to { transform: translateY(100%); }
+}
+
+/* noise */
+.noise {
+  position: absolute;
+  inset: 0;
+
+  background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+  opacity: 0.05;
+
+  pointer-events: none;
+}
+
+
+/* =========================
+   📱 MOBILE (SIMPLIFIED OS CARD)
+========================= */
+
+.mobileOverlay {
+  display: none;
+}
+
+@media (max-width: 768px) {
+
+  .item {
+    border: 1px solid rgba(118, 181, 181, 0.3);
+  }
+
+  .topBar,
+  .body,
+  .footer {
+    display: none;
+  }
+
+  .mobileOverlay {
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+
+    gap: 6px;
+
+    height: 100%;
+
+    font-size: 12px;
+    color: #9fdcdc;
+  }
+}
+
+
+/* =========================
+   GRID (IMPROVED)
+========================= */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+
+  gap: 12px;
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}

@@ -1,656 +1,395 @@
-/* Header.module.css */
+/* =========================================================
+    HEADER SYSTEM v2 — ROBUST / RESPONSIVE / CLEAN
+========================================================= */
 
-.header {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  background: rgba(10, 20, 30, 0.6);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(0, 255, 255, 0.2);
-  border-radius: 4px;
-  padding: 8px 12px;
-  margin-bottom: 8px;
-  font-family: 'Share Tech Mono', monospace;
-  color: #b0e0ff;
-  overflow: hidden;
-  transition: border-color 0.2s;
+/* ----------------  VARIABLES GLOBALES ---------------- */
+:root {
+  --c-bg: rgba(10, 20, 30, 0.6);
+  --c-border: rgba(0, 255, 255, 0.2);
+
+  --c-stable: #0ff;
+  --c-processing: #3b82f6;
+  --c-warning: #f97316;
+  --c-danger: #ef4444;
+
+  --c-text: #b0e0ff;
+  --c-dim: #8a8f99;
+
+  --blur: blur(8px);
 }
 
+/* ----------------  BASE HEADER ---------------- */
+.header {
+  position: relative;
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  background: var(--c-bg);
+  backdrop-filter: var(--blur);
+
+  border: 1px solid var(--c-border);
+  border-radius: 4px;
+
+  padding: clamp(6px, 1vw, 10px) clamp(10px, 2vw, 16px);
+  margin-bottom: clamp(6px, 1vw, 10px);
+
+  font-family: 'Share Tech Mono', monospace;
+  color: var(--c-text);
+
+  overflow: hidden;
+  z-index: 20;
+}
+
+/* evita overflow raro 🔧 */
+.header * {
+  min-width: 0;
+}
+
+/* ----------------  GLITCH ---------------- */
 .glitchHeader {
   animation: glitch-bg 0.2s infinite;
 }
 
+/* ----------------  SCANLINE ---------------- */
 .headerScanline {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+  inset: 0;
+
+  width: 40%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0, 255, 255, 0.1),
+    transparent
+  );
+
   pointer-events: none;
   z-index: 0;
 }
 
+/* =========================================================
+    LAYOUT PRINCIPAL
+========================================================= */
+
 .topSection {
-  display: flex;
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(0, 1.4fr)
+    minmax(0, 1fr);
+
   align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  z-index: 1;
+  gap: clamp(8px, 2vw, 20px);
+
   position: relative;
+  z-index: 1;
 }
 
-/* ---------- LeftPanel ---------- */
+/* =========================================================
+    LEFT PANEL
+========================================================= */
+
 .leftPanel {
   display: flex;
   align-items: center;
-  gap: 16px;
-  flex: 1;
+  gap: clamp(6px, 1.5vw, 14px);
+
+  flex-wrap: wrap;
 }
 
 .backButtonContainer {
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: rgba(0, 0, 0, 0.4);
+  gap: 6px;
+
   padding: 4px 8px;
+
+  background: rgba(0,0,0,0.4);
+  border: 1px solid var(--c-border);
   border-radius: 4px;
-  border: 1px solid rgba(0, 255, 255, 0.2);
-  transition: background 0.2s;
+
+  transition: 0.2s ease;
 }
 
 .backButtonContainer:hover {
-  background: rgba(0, 255, 255, 0.1);
-}
-
-.backButton {
-  display: flex;
-  align-items: center;
+  background: rgba(0,255,255,0.1);
 }
 
 .sessionMeta {
   display: flex;
-  align-items: center;
+  flex-wrap: wrap;
   gap: 4px;
-  font-size: 10px;
-  color: #8a8f99;
-}
 
-.metaLabel {
-  opacity: 0.7;
+  font-size: clamp(8px, 0.8vw, 10px);
+  color: var(--c-dim);
 }
 
 .metaValue {
-  color: #0ff;
-  font-weight: 600;
-  text-shadow: 0 0 5px #0ff;
+  color: var(--c-stable);
+  text-shadow: 0 0 4px var(--c-stable);
 }
 
+/* 🔹 vector */
 .returnVector {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  min-width: 180px;
+
+  min-width: clamp(110px, 18vw, 180px);
 }
 
 .vectorHeader {
   display: flex;
-  align-items: center;
   gap: 6px;
-  font-size: 9px;
-  color: #8a8f99;
-}
-
-.vectorLabel {
-  text-transform: uppercase;
-}
-
-.vectorIcon {
-  color: #0ff;
-  filter: drop-shadow(0 0 4px #0ff);
+  font-size: clamp(7px, 0.7vw, 9px);
+  color: var(--c-dim);
 }
 
 .vectorBarContainer {
   display: flex;
   align-items: center;
-  gap: 8px;
-  position: relative;
+  gap: 6px;
 }
 
 .statusNode {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  background: #0ff;
-  box-shadow: 0 0 8px #0ff;
 }
 
 .barTrack {
   flex: 1;
   height: 4px;
-  background: rgba(0, 255, 255, 0.2);
+  background: rgba(0,255,255,0.2);
   border-radius: 2px;
   overflow: hidden;
-  position: relative;
 }
 
 .vectorBar {
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, #0ff, transparent);
 }
 
-.vectorData {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 9px;
-  color: #b0e0ff;
-}
+/* =========================================================
+    CENTER PANEL (CORE)
+========================================================= */
 
-.vectorText {
-  color: #8a8f99;
-}
-
-.vectorPercent {
-  font-weight: 600;
-  min-width: 32px;
-  text-align: right;
-}
-
-.panelEdge {
-  position: relative;
-  width: 2px;
-  height: 40px;
-  background: rgba(0, 255, 255, 0.3);
-  margin-left: auto;
-}
-
-.edgeGlow {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: #0ff;
-  filter: blur(4px);
-  opacity: 0.3;
-}
-
-/* ---------- CenterPanel ---------- */
 .centerPanel {
   display: flex;
   flex-direction: column;
   align-items: center;
-  flex: 1;
-  position: relative;
-  padding: 0 20px;
-}
 
-.scanlineOverlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.05), transparent);
-  pointer-events: none;
-  z-index: 0;
-}
-
-.fcsStatus {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 9px;
-  color: #0ff;
-  background: rgba(0, 255, 255, 0.1);
-  padding: 2px 8px;
-  border-radius: 12px;
-  border: 1px solid rgba(0, 255, 255, 0.3);
-  margin-bottom: 4px;
-}
-
-.fcsIcon {
-  width: 10px;
-  height: 10px;
-}
-
-.fcsText {
-  font-weight: 600;
-  text-transform: uppercase;
-}
-
-.logoContainer {
   text-align: center;
-  margin: 4px 0;
+  padding: 0 clamp(6px, 2vw, 20px);
 }
 
+/* logo */
 .logo {
-  font-size: 22px;
+  font-size: clamp(14px, 2vw, 22px);
   font-weight: 700;
   letter-spacing: 2px;
+
   color: #fff;
-  text-shadow: 0 0 10px #0ff;
-  margin: 0;
-  line-height: 1;
+  text-shadow: 0 0 8px var(--accent, #0ff);
 }
 
 .version {
-  font-size: 12px;
-  color: #0ff;
-  margin-left: 6px;
-  opacity: 0.8;
+  font-size: clamp(9px, 1vw, 12px);
+  color: var(--accent, #0ff);
 }
 
-.logoUnderline {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  margin-top: 2px;
-}
-
-.logoUnderline span {
-  height: 2px;
-  background: #0ff;
-  box-shadow: 0 0 6px #0ff;
-}
-
-.logoUnderline span:first-child,
-.logoUnderline span:last-child {
-  width: 30px;
-}
-
-.logoUnderline span:nth-child(2) {
-  width: 10px;
-  border-radius: 50%;
-  height: 6px;
-}
-
-.neuralLink {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 9px;
-  margin-top: 2px;
-}
-
-.neuralIcon {
-  color: #0ff;
-  filter: drop-shadow(0 0 4px #0ff);
-}
-
-.neuralData {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: #8a8f99;
-}
-
-.syncDots {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-}
-
+/* dots */
 .dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
+  background: rgba(0,255,255,0.2);
 }
 
+.activeDot {
+  background: var(--accent);
+  box-shadow: 0 0 6px var(--accent);
+}
+
+/* progress */
 .neuralProgress {
   height: 2px;
-  background: #0ff;
-  margin-top: 4px;
-  border-radius: 1px;
-  align-self: stretch;
+  background: var(--accent);
+  border-radius: 2px;
 }
 
-/* ---------- RightPanel ---------- */
+/* =========================================================
+    RIGHT PANEL
+========================================================= */
+
 .rightPanel {
   display: flex;
   align-items: center;
-  gap: 16px;
-  flex: 1;
   justify-content: flex-end;
+
+  flex-wrap: wrap;
+  gap: clamp(6px, 1.5vw, 14px);
 }
 
 .hardwareStats {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  min-width: 110px;
-}
 
-.statHeader {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 8px;
-  color: #8a8f99;
-}
-
-.iconDim {
-  color: #8a8f99;
-}
-
-.iconActive {
-  color: #0ff;
-  filter: drop-shadow(0 0 4px #0ff);
-}
-
-.label {
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.statRow {
-  display: flex;
-  align-items: center;
-  gap: 6px;
+  min-width: clamp(80px, 14vw, 120px);
 }
 
 .stat {
-  font-size: 12px;
+  font-size: clamp(9px, 1vw, 12px);
   font-weight: 600;
+
   color: #fff;
-  min-width: 50px;
   text-align: right;
 }
 
+/* barra */
 .miniBarContainer {
-  flex: 1;
   height: 3px;
-  background: rgba(0, 255, 255, 0.2);
+  background: rgba(0,255,255,0.2);
   border-radius: 2px;
   overflow: hidden;
 }
 
 .miniBarFill {
   height: 100%;
-  background: #0ff;
-  border-radius: 2px;
 }
 
-.divider {
-  width: 1px;
-  height: 30px;
-  background: rgba(0, 255, 255, 0.3);
-  margin: 0 8px;
-}
+/* =========================================================
+   BOTTOM BAR
+========================================================= */
 
-.armorDisplay {
-  display: flex;
-  align-items: baseline;
-  gap: 4px;
-}
-
-.statLarge {
-  font-size: 16px;
-  font-weight: 700;
-  color: #fff;
-  text-shadow: 0 0 5px #0ff;
-  letter-spacing: 1px;
-}
-
-.unitLabel {
-  font-size: 8px;
-  color: #8a8f99;
-  text-transform: uppercase;
-}
-
-.integrityScale {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  margin-top: 4px;
-}
-
-.scaleNotch {
-  width: 12px;
-  height: 4px;
-  background: rgba(0, 255, 255, 0.2);
-  border-radius: 1px;
-  transition: background 0.2s;
-}
-
-.scaleNotch[data-active="true"] {
-  background: #0ff;
-  box-shadow: 0 0 6px #0ff;
-}
-
-.warningBadge {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  background: rgba(249, 115, 22, 0.2);
-  border: 1px solid #f97316;
-  border-radius: 12px;
-  padding: 2px 6px;
-  font-size: 7px;
-  color: #fdba74;
-  margin-top: 4px;
-  white-space: nowrap;
-}
-
-.panelEdgeRight {
-  position: relative;
-  width: 2px;
-  height: 40px;
-  background: rgba(0, 255, 255, 0.3);
-}
-
-.edgeGlowRight {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: #0ff;
-  filter: blur(4px);
-  opacity: 0.3;
-}
-
-.glitchText {
-  animation: glitch 0.2s infinite;
-}
-
-/* ---------- BottomBar ---------- */
 .bottomBar {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+
+  flex-wrap: wrap;
+  gap: 8px;
+
   padding: 4px 8px;
   margin-top: 4px;
-  background: rgba(0, 0, 0, 0.3);
-  border-top: 1px solid rgba(0, 255, 255, 0.2);
-  font-size: 9px;
-  position: relative;
-  z-index: 1;
+
+  background: rgba(0,0,0,0.3);
+  border-top: 1px solid var(--c-border);
+
+  font-size: clamp(8px, 0.8vw, 9px);
 }
 
-.glitch {
-  animation: glitch-bg 0.15s infinite;
-}
+/* =========================================================
+    CABIN EDGE
+========================================================= */
 
-.signalGroup {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.dots {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-}
-
-.commsIcon {
-  color: #0ff;
-  filter: drop-shadow(0 0 4px #0ff);
-}
-
-.statusTicker {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: #b0e0ff;
-}
-
-.tag {
-  color: #8a8f99;
-  text-transform: uppercase;
-}
-
-.value {
-  color: #0ff;
-  font-weight: 600;
-}
-
-.separator {
-  color: #4a5568;
-  font-weight: 300;
-}
-
-.valueStable {
-  color: #4ade80;
-}
-
-.warning {
-  color: #f97316;
-}
-
-.locationTag {
-  color: #8a8f99;
-  text-transform: uppercase;
-}
-
-.rightStatus {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.feedContainer {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  color: #8a8f99;
-}
-
-.pulseIcon {
-  color: #0ff;
-  filter: drop-shadow(0 0 4px #0ff);
-}
-
-.liveFeed {
-  text-transform: uppercase;
-}
-
-.versionBox {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  background: rgba(0, 255, 255, 0.1);
-  padding: 2px 6px;
-  border-radius: 12px;
-  border: 1px solid rgba(0, 255, 255, 0.3);
-  color: #0ff;
-  font-size: 8px;
-}
-
-.versionText {
-  font-weight: 600;
-}
-
-.bottomScanline {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, #0ff, transparent);
-  pointer-events: none;
-}
-
-/* ---------- CabinEdge ---------- */
 .cabinEdge {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+
+  flex-wrap: wrap;
+  gap: 6px;
+
   margin-top: 2px;
   padding: 2px 0;
-  border-top: 1px solid rgba(0, 255, 255, 0.2);
-  position: relative;
-  z-index: 1;
+
+  border-top: 1px solid var(--c-border);
 }
 
-.cabinEdgeLeft,
-.cabinEdgeRight {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+/* =========================================================
+    ESTADOS (GLOBAL SYSTEM)
+========================================================= */
+
+.stable { --accent: var(--c-stable); }
+.processing { --accent: var(--c-processing); }
+.warning { --accent: var(--c-warning); }
+.danger { --accent: var(--c-danger); }
+
+/* nodos */
+.statusNode.stable { background: var(--c-stable); box-shadow: 0 0 6px var(--c-stable); }
+.statusNode.warning { background: var(--c-warning); box-shadow: 0 0 6px var(--c-warning); }
+.statusNode.danger { background: var(--c-danger); box-shadow: 0 0 6px var(--c-danger); }
+
+/* barras */
+.miniBarFill.stable { background: var(--c-stable); }
+.miniBarFill.warning { background: var(--c-warning); }
+.miniBarFill.danger { background: var(--c-danger); }
+
+.vectorBar.stable {
+  background: linear-gradient(90deg, transparent, var(--c-stable), transparent);
 }
 
-.edgeDetail {
-  width: 40px;
-  height: 4px;
-  background: rgba(0, 255, 255, 0.3);
-  border-radius: 2px;
+/* =========================================================
+    RESPONSIVE REAL (IMPORTANTE)
+========================================================= */
+
+/* tablet */
+@media (max-width: 900px) {
+  .topSection {
+    grid-template-columns: 1fr;
+  }
+
+  .centerPanel {
+    order: -1;
+  }
+
+  .rightPanel {
+    justify-content: flex-start;
+  }
 }
 
-.notches {
-  display: flex;
-  align-items: center;
-  gap: 4px;
+/* mobile */
+@media (max-width: 600px) {
+
+  .header {
+    padding: 6px;
+  }
+
+  .leftPanel {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .returnVector {
+    width: 100%;
+  }
+
+  .vectorText {
+    display: none; /* limpia UI */
+  }
+
+  .bottomBar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cabinEdge {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
-.notch {
-  width: 8px;
-  height: 2px;
-  background: rgba(0, 255, 255, 0.5);
-  border-radius: 1px;
+/* ultra small devices 🔥 */
+@media (max-width: 380px) {
+
+  .logo {
+    font-size: 12px;
+  }
+
+  .stat {
+    font-size: 9px;
+  }
+
+  .hardwareStats {
+    min-width: 70px;
+  }
 }
 
-.edgeGlow {
-  width: 20px;
-  height: 2px;
-  background: #0ff;
-  filter: blur(2px);
-  margin-left: 4px;
-}
-
-.angleIndicator {
-  font-size: 8px;
-  color: #0ff;
-  text-shadow: 0 0 4px #0ff;
-  margin-left: 8px;
-  min-width: 30px;
-  text-align: right;
-}
-
-/* ---------- Animaciones globales ---------- */
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
-
-@keyframes glitch {
-  0% { transform: translate(0); }
-  20% { transform: translate(-1px, 1px); }
-  40% { transform: translate(1px, -1px); }
-  60% { transform: translate(-1px, 0); }
-  80% { transform: translate(1px, 1px); }
-  100% { transform: translate(0); }
-}
+/* =========================================================
+    ANIMACIONES
+========================================================= */
 
 @keyframes glitch-bg {
-  0% { background-position: 0 0; filter: hue-rotate(0deg); }
-  20% { background-position: 5px 0; filter: hue-rotate(10deg); }
-  40% { background-position: -5px 0; filter: hue-rotate(-10deg); }
-  60% { background-position: 0 5px; filter: hue-rotate(5deg); }
-  80% { background-position: 0 -5px; filter: hue-rotate(-5deg); }
-  100% { background-position: 0 0; filter: hue-rotate(0deg); }
+  0% { filter: hue-rotate(0deg); }
+  50% { filter: hue-rotate(10deg); }
+  100% { filter: hue-rotate(0deg); }
 }

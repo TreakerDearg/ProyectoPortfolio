@@ -1,242 +1,432 @@
 /* --- CONTENEDOR MAESTRO --- */
 .mainContainer {
   position: relative;
-  display: block;
+  display: inline-block;
+
   outline: none;
   background: transparent;
   border: none;
   padding: 0;
+
   cursor: pointer;
   z-index: 10;
+
   font-family: 'Share Tech Mono', monospace;
+
+  flex-shrink: 0;
+  touch-action: manipulation;
 }
 
-/* 1. HUD OVERLAY (FCS Targeting) */
+/* modo flotante */
+.floating {
+  position: fixed;
+  top: clamp(70px, 10vh, 110px);
+  left: clamp(10px, 2vw, 30px);
+  z-index: 30;
+}
+
+/* tamaños */
+.sm { transform: scale(0.85); }
+.md { transform: scale(1); }
+.lg { transform: scale(1.15); }
+
+/* --- HUD --- */
 .hudOverlay {
   position: absolute;
   inset: -8px;
   pointer-events: none;
+
   opacity: 0;
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
+  will-change: transform, opacity;
 }
 
-.targetCornerTL, .targetCornerBR {
+.targetCornerTL,
+.targetCornerBR {
   position: absolute;
-  width: 10px;
-  height: 10px;
+  width: clamp(8px, 1vw, 12px);
+  height: clamp(8px, 1vw, 12px);
+
   border-color: #0ff;
   border-style: solid;
-  filter: drop-shadow(0 0 5px #0ff);
+
+  filter: drop-shadow(0 0 4px #0ff);
 }
 
-.targetCornerTL { top: 0; left: 0; border-width: 2px 0 0 2px; }
-.targetCornerBR { bottom: 0; right: 0; border-width: 0 2px 2px 0; }
+.targetCornerTL {
+  top: 0;
+  left: 0;
+  border-width: 2px 0 0 2px;
+}
+
+.targetCornerBR {
+  bottom: 0;
+  right: 0;
+  border-width: 0 2px 2px 0;
+}
 
 .mainContainer:hover .hudOverlay {
   opacity: 1;
   inset: -4px;
 }
 
-/* --- ESTILO METRO: VÁLVULA INDUSTRIAL PESADA --- */
+/* =========================================================
+    METRO STYLE (industrial, oxidado)
+========================================================= */
 .btnMetro {
-  --bronze: #451a03;
-  --rust: #a4470e;
-  --amber: #ffab00;
-  background: #000;
+  --bronze: #3a1602;
+  --amber: #ffb300;
+
+  background: linear-gradient(145deg, #000, #050505);
   border: 2px solid var(--bronze);
+
   padding: 2px;
-  box-shadow: 4px 4px 0px #000;
   position: relative;
+
+  box-shadow:
+    4px 4px 0px #000,
+    inset 0 0 6px rgba(255, 120, 0, 0.15);
+}
+
+/* textura desgaste */
+.btnMetro::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(255,255,255,0.02) 0px,
+    rgba(255,255,255,0.02) 2px,
+    transparent 2px,
+    transparent 6px
+  );
+
+  pointer-events: none;
 }
 
 .innerMetro {
-  background: linear-gradient(180deg, #1a1005 0%, #050505 100%);
-  border: 1px solid rgba(164, 71, 14, 0.3);
-  padding: 8px 16px;
+  background: linear-gradient(180deg, #1a1005, #050505);
+  border: 1px solid rgba(164, 71, 14, 0.4);
+
+  padding: clamp(6px, 1vw, 10px) clamp(12px, 2vw, 18px);
+
   display: flex;
   align-items: center;
   gap: 12px;
+
   color: var(--amber);
+
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.7);
 }
 
 .textStack {
   display: flex;
   flex-direction: column;
-  text-align: left;
 }
 
-.mainText { font-size: 11px; font-weight: 900; letter-spacing: 2px; }
-.subText { font-size: 7px; opacity: 0.5; }
+.mainText {
+  font-size: clamp(9px, 1vw, 12px);
+  font-weight: 900;
+  letter-spacing: 2px;
 
-.iconPulse {
-  transition: all 0.4s ease;
+  text-shadow: 0 0 6px rgba(255, 170, 0, 0.4);
 }
 
-.mainContainer:hover .iconPulse {
-  color: #fff;
-  filter: drop-shadow(0 0 8px #ff4500);
-  transform: rotate(-90deg);
+.subText {
+  font-size: clamp(6px, 0.7vw, 8px);
+  opacity: 0.5;
 }
 
-/* --- ESTILO SOMA: INTERRUPTOR DE PANEL TÁCTICO --- */
+.metroGlow {
+  position: absolute;
+  inset: 0;
+
+  background: radial-gradient(circle, rgba(255,140,0,0.15), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.mainContainer:hover .metroGlow {
+  opacity: 1;
+}
+
+.mainContainer:active .btnMetro {
+  transform: translate(1px, 1px);
+}
+
+/* =========================================================
+    SOMA STYLE (orgánico, vivo)
+========================================================= */
 .btnSoma {
   --soma-cyan: #76b5b5;
-  background: #141a1d;
+
+  background: radial-gradient(circle at 30% 20%, #1c262b, #0b0f11);
   padding: 2px;
+
   border: 1px solid #2a353a;
   position: relative;
   overflow: hidden;
+
+  box-shadow:
+    inset 0 0 12px rgba(118, 181, 181, 0.08),
+    0 0 6px rgba(118, 181, 181, 0.1);
+}
+
+/* textura orgánica */
+.bioNoise {
+  position: absolute;
+  inset: 0;
+
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+
+  mix-blend-mode: overlay;
+  pointer-events: none;
 }
 
 .innerSoma {
-  padding: 10px 20px;
+  padding: clamp(8px, 1vw, 12px) clamp(14px, 2vw, 22px);
+
   display: flex;
   align-items: center;
   gap: 12px;
-  background: #0d1113;
+
+  background: linear-gradient(180deg, #0f1417, #090c0e);
   border-left: 4px solid var(--soma-cyan);
-  transition: all 0.3s ease;
+
+  position: relative;
+  z-index: 2;
+
+  box-shadow:
+    inset 0 0 10px rgba(0,0,0,0.6),
+    inset 0 0 4px rgba(118,181,181,0.1);
 }
 
 .bioScanner {
   position: absolute;
   top: 0;
-  left: -100%;
-  width: 100%;
+  left: -120%;
+
+  width: 120%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(118, 181, 181, 0.1), transparent);
-  z-index: 1;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(118, 181, 181, 0.12),
+    rgba(118, 181, 181, 0.2),
+    transparent
+  );
+
+  filter: blur(2px);
 }
 
 .mainContainer:hover .bioScanner {
-  animation: scanBiometric 1.5s infinite;
+  animation: scanBiometric 1.5s linear infinite;
+}
+
+.iconContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--soma-cyan);
+  filter: drop-shadow(0 0 4px rgba(118,181,181,0.6));
 }
 
 .somaLabel {
-  font-size: 10px;
+  font-size: clamp(8px, 0.9vw, 11px);
   font-weight: 800;
+
   color: var(--soma-cyan);
   letter-spacing: 1px;
+
+  text-shadow: 0 0 4px rgba(118,181,181,0.4);
+}
+
+.statusRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.statusText {
+  font-size: clamp(7px, 0.8vw, 10px);
+  color: rgba(118, 181, 181, 0.7);
 }
 
 .ledPulse {
   width: 6px;
   height: 6px;
+
   background: var(--soma-cyan);
   border-radius: 50%;
-  box-shadow: 0 0 10px var(--soma-cyan);
-  animation: somaFlicker 2s infinite;
+
+  box-shadow:
+    0 0 6px var(--soma-cyan),
+    0 0 12px rgba(118,181,181,0.5);
 }
 
-/* --- ESTILO AC: PALANCA DE EYECCIÓN CRÍTICA --- */
+/* =========================================================
+    ARMORED CORE STYLE (militar)
+========================================================= */
 .btnAC {
   --ac-red: #ce1212;
-  transform: skewX(-15deg);
-  background: #111;
+
+  transform: skewX(-12deg);
+  background: linear-gradient(145deg, #0a0a0a, #1a1a1a);
+
   border: 1px solid var(--ac-red);
   padding: 3px;
+
   position: relative;
+
+  box-shadow:
+    inset 0 0 6px rgba(206,18,18,0.3),
+    0 0 6px rgba(0,0,0,0.8);
+}
+
+.btnAC::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    120deg,
+    transparent 40%,
+    rgba(255,255,255,0.05) 50%,
+    transparent 60%
+  );
+
+  pointer-events: none;
 }
 
 .innerAC {
-  background: linear-gradient(135deg, var(--ac-red) 0%, #7a0b0b 100%);
-  padding: 10px 24px;
+  background: linear-gradient(135deg, var(--ac-red), #5c0a0a);
+
+  padding: clamp(8px, 1vw, 12px) clamp(18px, 2vw, 26px);
+
   display: flex;
   align-items: center;
   gap: 12px;
+
   color: #fff;
+
   clip-path: polygon(0 0, 100% 0, 95% 100%, 0% 100%);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+
+  box-shadow:
+    inset 0 0 10px rgba(0,0,0,0.6),
+    0 0 6px rgba(206,18,18,0.4);
 }
 
 .warningStripes {
   position: absolute;
-  top: -18px;
+  top: -16px;
   left: 0;
+
   font-size: 8px;
   font-weight: 900;
+
   color: var(--ac-red);
+
   display: flex;
   align-items: center;
   gap: 5px;
-  animation: blink 0.5s infinite;
+
+  text-shadow: 0 0 6px rgba(206,18,18,0.8);
+
+  animation: blink 0.6s infinite;
 }
 
-/* Remaches mecánicos */
-.boltTL, .boltBR {
+/* remaches */
+.boltTL,
+.boltBR {
   position: absolute;
+
   width: 4px;
   height: 4px;
+
   background: #333;
   border-radius: 50%;
+
   border: 1px solid #000;
 }
+
 .boltTL { top: 2px; left: 2px; }
 .boltBR { bottom: 2px; right: 2px; }
 
 .industrialWear {
   position: absolute;
   inset: 0;
-  background: linear-gradient(45deg, transparent 45%, rgba(255,255,255,0.05) 50%, transparent 55%);
+
+  background: linear-gradient(
+    45deg,
+    transparent 45%,
+    rgba(255,255,255,0.04) 50%,
+    transparent 55%
+  );
+
   pointer-events: none;
 }
 
-/* --- TOOLTIP TÁCTICO --- */
-.alertTooltip {
-  position: absolute;
-  bottom: -45px;
-  left: 0;
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-}
-
-.tooltipLine {
-  width: 1px;
-  height: 20px;
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.tooltipContent {
-  background: rgba(0, 0, 0, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 4px 8px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.tooltipMain { font-size: 9px; color: #fff; font-weight: bold; }
-.tooltipSub { font-size: 7px; color: rgba(255, 255, 255, 0.4); }
-
-/* --- ENERGÍA LATERAL --- */
+/* =========================================================
+    ENERGY LINK
+========================================================= */
 .energyLink {
   position: absolute;
-  left: -12px;
+
+  left: -10px;
   top: 50%;
   transform: translateY(-50%);
+
   width: 2px;
   height: 0%;
-  background: #0ff;
+
+  background: linear-gradient(
+    180deg,
+    transparent,
+    currentColor,
+    transparent
+  );
+
+  opacity: 0.8;
+
+  box-shadow:
+    0 0 6px currentColor,
+    0 0 12px currentColor;
+
   transition: all 0.3s ease;
-  box-shadow: 0 0 10px #0ff;
 }
 
-/* --- ANIMACIONES --- */
+/* =========================================================
+    ANIMACIONES
+========================================================= */
 @keyframes somaFlicker {
   0%, 100% { opacity: 1; filter: brightness(1); }
-  50% { opacity: 0.3; filter: brightness(1.5); }
+  50% { opacity: 0.3; filter: brightness(1.4); }
 }
 
 @keyframes scanBiometric {
-  from { left: -100%; }
-  to { left: 100%; }
+  from { left: -120%; }
+  to { left: 120%; }
 }
 
 @keyframes blink {
   50% { opacity: 0.2; }
 }
 
-@keyframes pulseBright {
-  50% { filter: brightness(1.5); }
+/* =========================================================
+    RESPONSIVE
+========================================================= */
+@media (max-width: 768px) {
+
+  .floating {
+    top: 80px;
+    left: 10px;
+    transform: scale(0.9);
+  }
+
+  .warningStripes {
+    top: -14px;
+  }
 }

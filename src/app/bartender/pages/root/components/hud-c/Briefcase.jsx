@@ -1,6 +1,6 @@
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Terminal, MapPin, Shield, Zap, Cpu, AlertTriangle, Activity, Wifi, Radio, XCircle, ZapOff, Beaker } from "lucide-react";
+import { X, Terminal, MapPin, Shield, Zap, Cpu, AlertTriangle, Activity, Wifi, Radio, XCircle,Beaker } from "lucide-react";
 import { useMemo } from "react";
 import styles from "../../../../styles/root-styles/c-styles-comps/Briefcase.module.css";
 

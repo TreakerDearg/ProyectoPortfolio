@@ -1,0 +1,153 @@
+/* =========================
+   ROOT
+========================= */
+.status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 2px 8px;
+
+  border: 1px solid #1f3a3a;
+  background: #020505;
+
+  font-family: monospace;
+  font-size: 10px;
+  color: #9fdcdc;
+
+  box-shadow: inset 0 0 6px rgba(0, 255, 200, 0.05);
+
+  position: relative;
+}
+
+/* =========================
+   ICON + PULSE
+========================= */
+.iconWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon {
+  color: #00ff9c;
+  z-index: 2;
+}
+
+.pulse {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: rgba(0, 255, 156, 0.2);
+  z-index: 1;
+}
+
+/* =========================
+   TEXT
+========================= */
+.textBlock {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.label {
+  font-size: 8px;
+  color: #6aa9a9;
+  letter-spacing: 1px;
+}
+
+.value {
+  font-size: 10px;
+  color: #cdeaea;
+}
+
+/* =========================
+   SIGNAL BARS
+========================= */
+.bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 10px;
+}
+
+.bars span {
+  width: 2px;
+  height: 4px;
+  background: #00ff9c;
+
+  animation: signal 1.2s infinite;
+}
+
+.bars span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.bars span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes signal {
+  0%, 100% { height: 4px; opacity: 0.4; }
+  50% { height: 10px; opacity: 1; }
+}
+
+/* =========================
+   ALERT (CRITICAL)
+========================= */
+.alert {
+  position: absolute;
+  right: -40px;
+
+  font-size: 9px;
+  color: #ff4444;
+
+  animation: blink 0.8s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+/* =========================
+   STATE COLORS
+========================= */
+.status[data-state="CONNECTED"] .icon {
+  color: #00ff9c;
+}
+
+.status[data-state="CRITICAL"] .icon {
+  color: #ff4444;
+}
+
+.status[data-state="CRITICAL"] {
+  border-color: #5a1a1a;
+  box-shadow: 0 0 6px rgba(255, 68, 68, 0.2);
+}
+
+/* =========================
+   HOVER
+========================= */
+.status:hover {
+  border-color: #2f6666;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 640px) {
+  .bars {
+    display: none;
+  }
+
+  .label {
+    display: none;
+  }
+
+  .status {
+    padding: 2px 6px;
+  }
+}

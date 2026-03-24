@@ -1,0 +1,307 @@
+/* =========================
+   ROOT HEADER
+========================= */
+.header {
+  position: relative;
+
+  width: 100%;
+  height: clamp(42px, 5vh, 56px);
+
+  background: linear-gradient(
+    to bottom,
+    #0a0f10,
+    #050808
+  );
+
+  /* 🪟 Win95 + depth */
+  border-top: 2px solid #c0c0c0;
+  border-bottom: 2px solid #000;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.15),
+    inset 0 -1px 0 rgba(0,0,0,0.6);
+
+  overflow: hidden;
+  z-index: 100;
+
+  font-family: "MS Sans Serif", monospace;
+}
+
+
+/* =========================
+   FX LAYER
+========================= */
+.fxLayer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+
+/* =========================
+   ENERGY FLOW (SOMA)
+========================= */
+.energyFlow {
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0, 255, 200, 0.12),
+    transparent
+  );
+
+  filter: blur(6px);
+  opacity: 0.6;
+
+  animation: flow 7s linear infinite;
+}
+
+@keyframes flow {
+  from { transform: translateX(-120%); }
+  to { transform: translateX(120%); }
+}
+
+
+/* =========================
+   INNER LAYOUT (SMART GRID)
+========================= */
+.inner {
+  position: relative;
+  z-index: 2;
+
+  height: 100%;
+
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+
+  align-items: center;
+  gap: clamp(6px, 1vw, 16px);
+
+  padding: 0 clamp(8px, 2vw, 16px);
+}
+
+
+/* =========================
+   LEFT
+========================= */
+.left {
+  display: flex;
+  align-items: center;
+  gap: clamp(6px, 1vw, 12px);
+
+  min-width: 0; /* evita overflow */
+}
+
+.systemInfo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  font-size: clamp(9px, 0.8vw, 11px);
+
+  color: #76b5b5;
+  white-space: nowrap;
+}
+
+.sysLabel {
+  opacity: 0.6;
+}
+
+.sysState {
+  color: #9fffe0;
+  letter-spacing: 0.5px;
+}
+
+/* DOT */
+.dot {
+  width: 6px;
+  height: 6px;
+
+  background: #00ff9c;
+  border-radius: 50%;
+
+  box-shadow:
+    0 0 6px #00ff9c,
+    0 0 12px rgba(0,255,156,0.4);
+}
+
+
+/* =========================
+   CENTER (CORE)
+========================= */
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  min-width: 0;
+}
+
+.systemCore {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  font-size: clamp(10px, 0.9vw, 12px);
+  letter-spacing: 1px;
+
+  color: #9fdcdc;
+
+  opacity: 0.9;
+}
+
+/* CORE PULSE */
+.corePulse {
+  width: 8px;
+  height: 8px;
+
+  background: #00ff9c;
+  border-radius: 50%;
+
+  box-shadow:
+    0 0 8px #00ff9c,
+    0 0 16px rgba(0,255,156,0.4);
+
+  animation: pulse 1.8s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.5);
+  }
+}
+
+.systemLabel {
+  opacity: 0.85;
+  white-space: nowrap;
+}
+
+
+/* =========================
+   RIGHT
+========================= */
+.right {
+  display: flex;
+  align-items: center;
+  gap: clamp(6px, 1vw, 12px);
+
+  min-width: 0;
+}
+
+/* CLOCK */
+.clockWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+
+  font-size: clamp(9px, 0.8vw, 11px);
+}
+
+.clockLabel {
+  font-size: 8px;
+  opacity: 0.5;
+}
+
+.clock {
+  color: #9fdcdc;
+  letter-spacing: 0.5px;
+}
+
+
+/* =========================
+   DIVIDERS (INTELIGENTES)
+========================= */
+.left::after,
+.right::before {
+  content: "";
+  display: block;
+
+  width: 1px;
+  height: 60%;
+
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(118,181,181,0.25),
+    transparent
+  );
+}
+
+
+/* =========================
+   HOVER FX
+========================= */
+.header:hover {
+  box-shadow:
+    inset 0 0 12px rgba(0,255,200,0.08),
+    0 0 10px rgba(0,255,200,0.15);
+}
+
+
+/* =========================
+   📱 TABLET
+========================= */
+@media (max-width: 1024px) {
+
+  .systemLabel {
+    display: none;
+  }
+
+  .systemInfo {
+    font-size: 9px;
+  }
+
+}
+
+
+/* =========================
+   📱 MOBILE
+========================= */
+@media (max-width: 768px) {
+
+  .header {
+    height: 48px;
+  }
+
+  .inner {
+    grid-template-columns: 1fr auto;
+  }
+
+  .center {
+    display: none;
+  }
+
+  .left {
+    gap: 6px;
+  }
+
+  .systemInfo {
+    display: none; /* simplificamos */
+  }
+
+  .clockWrapper {
+    font-size: 9px;
+  }
+
+}
+
+
+/* =========================
+   📱 SMALL DEVICES
+========================= */
+@media (max-width: 480px) {
+
+  .clockLabel {
+    display: none;
+  }
+
+}

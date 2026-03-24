@@ -1,6 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import BackToHome from '../../../../../components/salida/BackToHome';
 import { ShieldCheck } from "lucide-react";
 import styles from '../../../../../styles/root-styles/layout/Header.module.css';
@@ -8,30 +8,45 @@ import styles from '../../../../../styles/root-styles/layout/Header.module.css';
 export default function LeftPanel() {
   const [vectorPercent, setVectorPercent] = useState(100);
   const [sessionId, setSessionId] = useState("V.IV_RUSTY");
+  const [glitch, setGlitch] = useState(false);
 
+  /* ------------------  DERIVED STATE ------------------ */
+  const vectorStatus = useMemo(() => {
+    if (vectorPercent >= 100) return "stable";
+    if (vectorPercent >= 97) return "warning";
+    return "danger";
+  }, [vectorPercent]);
+
+  /* ------------------  SIMULATION ------------------ */
   useEffect(() => {
     const interval = setInterval(() => {
-      setVectorPercent(95 + Math.floor(Math.random() * 11));
+      setVectorPercent(95 + Math.floor(Math.random() * 8));
     }, 3000);
+
     return () => clearInterval(interval);
   }, []);
 
+  /* ------------------  GLITCH ------------------ */
   useEffect(() => {
     const glitchInterval = setInterval(() => {
-      if (Math.random() > 0.7) {
+      if (Math.random() > 0.75) {
+        setGlitch(true);
         setSessionId("V.1V_RU5TY");
-        setTimeout(() => setSessionId("V.IV_RUSTY"), 150);
+
+        setTimeout(() => {
+          setSessionId("V.IV_RUSTY");
+          setGlitch(false);
+        }, 160);
       }
-    }, 5000);
+    }, 6000);
+
     return () => clearInterval(glitchInterval);
   }, []);
 
   return (
-    <motion.div 
-      className={styles.leftPanel}
-      initial={{ opacity: 0, x: -20 }}
-      animate={{ opacity: 1, x: 0 }}
-    >
+    <div className={styles.leftPanel}>
+
+      {/* ================= BACK + SESSION ================= */}
       <motion.div 
         className={styles.backButtonContainer}
         whileHover={{ scale: 1.02 }}
@@ -39,71 +54,81 @@ export default function LeftPanel() {
         <div className={styles.backButton}>
           <BackToHome variant="ac" />
         </div>
-        <motion.div 
-          className={styles.sessionMeta}
-          animate={{ opacity: [1, 0.8, 1] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        >
+
+        <div className={styles.sessionMeta}>
           <span className={styles.metaLabel}>ID_REF:</span>
           <motion.span 
-            key={sessionId}
-            className={styles.metaValue}
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
+            className={`${styles.metaValue} ${glitch ? styles.glitchText : ''}`}
+            animate={{ opacity: [1, 0.75, 1] }}
+            transition={{ duration: 2, repeat: Infinity }}
           >
             {sessionId}
           </motion.span>
-        </motion.div>
+        </div>
       </motion.div>
 
+      {/* ================= VECTOR ================= */}
       <motion.div 
         className={styles.returnVector}
-        animate={{ y: [0, -2, 0] }}
-        transition={{ duration: 4, repeat: Infinity }}
+        animate={{ y: [0, -1.5, 0] }}
+        transition={{ duration: 5, repeat: Infinity }}
       >
         <div className={styles.vectorHeader}>
           <div className={styles.vectorLabel}>Return_Vector</div>
-          <motion.div animate={{ rotate: [0, 10, -10, 0] }} transition={{ duration: 5, repeat: Infinity }}>
+
+          <motion.div
+            animate={{ rotate: [0, 8, -8, 0] }}
+            transition={{ duration: 6, repeat: Infinity }}
+          >
             <ShieldCheck size={10} className={styles.vectorIcon} />
           </motion.div>
         </div>
+
         <div className={styles.vectorBarContainer}>
+          
+          {/* NODE INTELIGENTE */}
           <motion.div 
-            className={styles.statusNode}
-            animate={{ scale: [1, 1.3, 1], opacity: [0.8, 1, 0.8] }}
+            className={`${styles.statusNode} ${styles[vectorStatus]}`}
+            animate={{ scale: [1, 1.25, 1] }}
             transition={{ duration: 1.5, repeat: Infinity }}
           />
+
+          {/* TRACK */}
           <div className={styles.barTrack}>
             <motion.div 
-              className={styles.vectorBar}
+              className={`${styles.vectorBar} ${styles[vectorStatus]}`}
               animate={{ x: ["-100%", "100%"] }}
-              transition={{ duration: 1.8, repeat: Infinity, ease: "linear" }}
+              transition={{
+                duration: vectorStatus === "stable" ? 2 : 1,
+                repeat: Infinity,
+                ease: "linear"
+              }}
             />
           </div>
-          <motion.div 
-            className={styles.vectorData}
-            animate={{ scale: [1, 1.05, 1] }}
-            transition={{ duration: 2, repeat: Infinity }}
-          >
+
+          {/*  DATA */}
+          <div className={styles.vectorData}>
             <span className={styles.vectorText}>SYSTEM_READY</span>
+
             <motion.span 
-              key={vectorPercent}
-              className={styles.vectorPercent}
-              animate={{ color: vectorPercent === 100 ? "#0ff" : vectorPercent > 100 ? "#4ade80" : "#f97316" }}
+              className={`${styles.vectorPercent} ${styles[vectorStatus]}`}
+              animate={{ scale: [1, 1.05, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
             >
               {vectorPercent}%
             </motion.span>
-          </motion.div>
+          </div>
         </div>
       </motion.div>
 
+      {/* ================= EDGE ================= */}
       <div className={styles.panelEdge}>
         <motion.div 
           className={styles.edgeGlow}
           animate={{ opacity: [0.3, 0.8, 0.3] }}
-          transition={{ duration: 2, repeat: Infinity }}
+          transition={{ duration: 2.5, repeat: Infinity }}
         />
       </div>
-    </motion.div>
+    </div>
   );
 }

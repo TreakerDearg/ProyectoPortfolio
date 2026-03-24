@@ -1,0 +1,329 @@
+/* =========================
+   ROOT WINDOW
+========================= */
+.window {
+  width: 460px;
+  position: absolute;
+  font-family: "MS Sans Serif", monospace;
+  font-size: 11px;
+  color: #cdeaea;
+
+  filter: contrast(1.05) brightness(1.05);
+}
+
+
+/* =========================
+   FRAME (ULTRA WIN95)
+========================= */
+.frame {
+  background: #c0c0c0;
+
+  border-top: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  border-right: 2px solid #000000;
+  border-bottom: 2px solid #000000;
+
+  box-shadow:
+    inset -1px -1px 0 #808080,
+    inset 1px 1px 0 #dfdfdf,
+    0 0 18px rgba(0, 255, 200, 0.08); /* 👈 SOMA glow */
+
+  overflow: hidden;
+  position: relative;
+}
+
+
+/* =========================
+   TITLE BAR
+========================= */
+.titleBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  background: linear-gradient(90deg, #000080, #0a246a);
+  color: #ffffff;
+
+  padding: 2px 4px;
+  height: 20px;
+
+  box-shadow:
+    inset 0 -1px 0 #000;
+}
+
+.dragArea {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  cursor: grab;
+}
+
+.dragArea:active {
+  cursor: grabbing;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.title {
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 0.4px;
+  text-shadow: 0 0 4px rgba(0, 255, 200, 0.2);
+}
+
+
+/* =========================
+   WINDOW BUTTONS (REAL 95)
+========================= */
+.actions {
+  display: flex;
+  gap: 2px;
+}
+
+.actions button {
+  width: 16px;
+  height: 14px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #c0c0c0;
+
+  border-top: 1px solid #fff;
+  border-left: 1px solid #fff;
+  border-right: 1px solid #000;
+  border-bottom: 1px solid #000;
+
+  cursor: pointer;
+}
+
+.actions button:hover {
+  background: #d6d6d6;
+}
+
+.actions button:active {
+  border-top: 1px solid #000;
+  border-left: 1px solid #000;
+  border-right: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+}
+
+
+/* =========================
+   MENU BAR
+========================= */
+.menuBar {
+  display: flex;
+  gap: 16px;
+  padding: 2px 6px;
+
+  background: #c0c0c0;
+  border-bottom: 1px solid #808080;
+
+  font-size: 10px;
+}
+
+.menuBar span:hover {
+  text-decoration: underline;
+}
+
+
+/* =========================
+   BODY
+========================= */
+.body {
+  display: flex;
+  height: 280px;
+
+  background: #070c0d;
+  color: #9fdcdc;
+}
+
+
+/* =========================
+   SIDEBAR (UPGRADED)
+========================= */
+.sidebar {
+  width: 130px;
+  padding: 8px;
+  border-right: 1px solid #1e2c2c;
+
+  background:
+    linear-gradient(#050808, #020505);
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sidebarSection {
+  border: 1px solid #1f3a3a;
+  padding: 6px;
+  background: #020505;
+
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  box-shadow: inset 0 0 6px rgba(0, 255, 200, 0.05);
+}
+
+.label {
+  font-size: 9px;
+  color: #6aa9a9;
+}
+
+.percent {
+  font-size: 9px;
+  color: #9fffe0;
+}
+
+
+/* =========================
+   PROGRESS BAR (MEJORADA)
+========================= */
+.progress {
+  width: 100%;
+  height: 6px;
+
+  background: #111;
+  border: 1px solid #2a3a3a;
+  position: relative;
+
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  transition: width 0.25s ease;
+
+  box-shadow:
+    0 0 6px currentColor,
+    0 0 10px currentColor;
+}
+
+
+/* =========================
+   MAIN CONTENT
+========================= */
+.main {
+  flex: 1;
+  padding: 8px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+
+/* =========================
+   PANELS (SOMA TERMINAL STYLE)
+========================= */
+.panel {
+  border: 1px solid #1f3a3a;
+  background: #020505;
+  padding: 6px;
+
+  box-shadow:
+    inset 0 0 8px rgba(0, 255, 200, 0.06),
+    0 0 6px rgba(0, 255, 200, 0.04);
+}
+
+.panelTitle {
+  font-size: 9px;
+  margin-bottom: 4px;
+  color: #76b5b5;
+
+  border-bottom: 1px dashed rgba(118, 181, 181, 0.3);
+
+  letter-spacing: 0.5px;
+}
+
+
+/* =========================
+   GRID DATA
+========================= */
+.grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 3px 6px;
+  font-size: 10px;
+}
+
+.grid span:first-child {
+  color: #6aa9a9;
+}
+
+
+/* =========================
+   BLOCK (RECIPE)
+========================= */
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 10px;
+}
+
+.block strong {
+  color: #76b5b5;
+  font-size: 9px;
+}
+
+
+/* =========================
+   STATUS BAR
+========================= */
+.statusBar {
+  display: flex;
+  justify-content: space-between;
+
+  background: #c0c0c0;
+  border-top: 1px solid #808080;
+
+  padding: 2px 6px;
+  font-size: 10px;
+
+  box-shadow: inset 0 1px 0 #fff;
+}
+
+
+/* =========================
+   SOMA FX
+========================= */
+.glow {
+  position: absolute;
+  inset: 0;
+  opacity: 0.06;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.scanline {
+  position: absolute;
+  inset: 0;
+
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.25) 3px
+  );
+
+  pointer-events: none;
+}
+
+.noise {
+  position: absolute;
+  inset: 0;
+
+  background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+  opacity: 0.03;
+
+  pointer-events: none;
+}

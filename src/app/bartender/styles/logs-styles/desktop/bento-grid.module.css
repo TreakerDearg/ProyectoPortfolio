@@ -1,0 +1,152 @@
+/* =========================
+   WRAPPER
+========================= */
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 100%;
+}
+
+/* =========================
+   TOP BAR (OS STYLE)
+========================= */
+.topBar {
+  height: 26px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 0 8px;
+
+  background: linear-gradient(90deg, #000080, #000040);
+  color: #fff;
+
+  font-size: 10px;
+}
+
+.systemLabel {
+  white-space: nowrap;
+  opacity: 0.8;
+}
+
+/* SEARCH */
+.search {
+  flex: 1;
+
+  height: 18px;
+
+  background: #000;
+  border: 1px solid #76b5b5;
+
+  color: #76b5b5;
+  font-size: 9px;
+
+  padding: 0 6px;
+
+  outline: none;
+}
+
+.search::placeholder {
+  color: rgba(118,181,181,0.4);
+}
+
+/* =========================
+   FILTERS
+========================= */
+.filtersWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filterGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* primary */
+.filterBtn {
+  font-size: 8px;
+  padding: 4px 6px;
+
+  background: #050808;
+  border: 1px solid rgba(118,181,181,0.2);
+
+  color: #76b5b5;
+  cursor: pointer;
+}
+
+.filterBtn:hover {
+  background: rgba(118,181,181,0.1);
+}
+
+.active {
+  background: #76b5b5;
+  color: #000;
+}
+
+/* secondary */
+.filterBtnAlt {
+  font-size: 8px;
+  padding: 4px 6px;
+
+  background: #111;
+  border: 1px solid rgba(255,255,255,0.1);
+
+  color: #ccc;
+  cursor: pointer;
+}
+
+.activeAlt {
+  background: #fff;
+  color: #000;
+}
+
+/* =========================
+   GRID
+========================= */
+.grid {
+  flex: 1;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+
+  gap: 10px;
+
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+/* =========================
+   EMPTY STATE
+========================= */
+.empty {
+  text-align: center;
+  font-size: 10px;
+  opacity: 0.5;
+}
+
+/* ========================
+    MOBILE
+======================== */
+@media (max-width: 768px) {
+
+  .topBar {
+    flex-direction: column;
+    height: auto;
+    padding: 6px;
+    gap: 6px;
+  }
+
+  .search {
+    width: 100%;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+}

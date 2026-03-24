@@ -1,0 +1,160 @@
+/* =========================
+   WRAPPER
+========================= */
+.wrapper {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 4px 10px;
+
+  background: linear-gradient(
+    to bottom,
+    #c0c0c0,
+    #a8a8a8
+  );
+
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
+  border-right: 2px solid #000;
+  border-bottom: 2px solid #000;
+
+  font-family: "MS Sans Serif", sans-serif;
+
+  overflow: hidden;
+}
+
+
+/* =========================
+   ICON
+========================= */
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 22px;
+  height: 22px;
+
+  background: #000080;
+  color: #fff;
+
+  border: 1px solid #000;
+
+  box-shadow:
+    inset 1px 1px 0 #fff,
+    inset -1px -1px 0 #000;
+}
+
+
+/* =========================
+   TEXT BLOCK
+========================= */
+.textBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+
+/* =========================
+   MAIN LINE
+========================= */
+.mainLine {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.mainText {
+  font-weight: bold;
+  font-size: 11px;
+  letter-spacing: 0.8px;
+  color: #000;
+}
+
+/* CURSOR */
+.cursor {
+  font-size: 11px;
+  font-weight: bold;
+  color: #000;
+}
+
+
+/* =========================
+   SUB TEXT
+========================= */
+.subText {
+  font-size: 9px;
+  color: #333;
+
+  letter-spacing: 0.5px;
+}
+
+
+/* =========================
+   GLOW (SOMA)
+========================= */
+.glow {
+  position: absolute;
+  inset: 0;
+
+  background: radial-gradient(
+    circle at left,
+    rgba(0, 255, 200, 0.15),
+    transparent 70%
+  );
+
+  pointer-events: none;
+}
+
+
+/* =========================
+   GLITCH FLASH
+========================= */
+.glitch {
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+
+  mix-blend-mode: screen;
+}
+
+
+/* =========================
+   HOVER
+========================= */
+.wrapper:hover {
+  box-shadow:
+    inset 0 0 6px rgba(0, 255, 200, 0.2),
+    0 0 8px rgba(0, 255, 200, 0.25);
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 768px) {
+
+  .wrapper {
+    padding: 3px 6px;
+    gap: 6px;
+  }
+
+  .mainText {
+    font-size: 10px;
+  }
+
+  .subText {
+    font-size: 8px;
+  }
+
+}

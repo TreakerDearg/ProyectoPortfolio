@@ -1,0 +1,200 @@
+/* =========================
+   WRAPPER
+========================= */
+.wrapper {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 4px 10px;
+
+  background: linear-gradient(
+    to bottom,
+    #c0c0c0,
+    #a8a8a8
+  );
+
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
+  border-right: 2px solid #000;
+  border-bottom: 2px solid #000;
+
+  font-family: "MS Sans Serif", sans-serif;
+
+  overflow: hidden;
+}
+
+
+/* =========================
+   SIGNAL DOT
+========================= */
+.signal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.signalDot {
+  width: 8px;
+  height: 8px;
+
+  background: #00ff9f;
+
+  border: 1px solid #003b2f;
+
+  box-shadow:
+    0 0 6px rgba(0, 255, 159, 0.7),
+    inset 0 0 2px rgba(0, 0, 0, 0.6);
+}
+
+
+/* =========================
+   INFO BLOCK
+========================= */
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  font-size: 10px;
+}
+
+
+/* =========================
+   TOP ROW
+========================= */
+.topRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.name {
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  color: #000;
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+
+  padding: 1px 4px;
+
+  background: #000080;
+  color: #fff;
+
+  font-size: 9px;
+
+  border: 1px solid #000;
+}
+
+
+/* =========================
+   BOTTOM ROW
+========================= */
+.bottomRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+
+/* STATUS */
+.status {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+
+  color: #003b2f;
+
+  font-weight: bold;
+}
+
+
+/* META */
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+
+  opacity: 0.75;
+  font-size: 9px;
+}
+
+
+/* =========================
+   GLOW FX
+========================= */
+.glow {
+  position: absolute;
+  inset: 0;
+
+  background: radial-gradient(
+    circle at right,
+    rgba(0, 255, 159, 0.15),
+    transparent 60%
+  );
+
+  pointer-events: none;
+}
+
+
+/* =========================
+   SCANLINE FX
+========================= */
+.scanline {
+  position: absolute;
+  inset: 0;
+
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.04),
+    rgba(0, 0, 0, 0.04) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+
+  pointer-events: none;
+}
+
+
+/* =========================
+   HOVER (SUTIL)
+========================= */
+.wrapper:hover {
+  box-shadow:
+    inset 0 0 6px rgba(0, 255, 159, 0.2),
+    0 0 6px rgba(0, 255, 159, 0.2);
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 768px) {
+
+  .wrapper {
+    padding: 3px 6px;
+    gap: 6px;
+  }
+
+  .name {
+    font-size: 9px;
+  }
+
+  .metaItem span {
+    display: none;
+  }
+
+}

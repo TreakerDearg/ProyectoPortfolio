@@ -1,216 +1,367 @@
-/* bartender/styles/drawer.module.css */
+/* =========================================
+   ROOT SYSTEM
+========================================= */
 
 :root {
-  /* Colores base de sistema */
   --metro-amber: #ffb300;
   --metro-red: #dc2626;
-  --metro-amber-glow: rgba(255, 179, 0, 0.4);
-  --metro-red-glow: rgba(220, 38, 38, 0.4);
-  
-  /* Fallback de color de universo */
+
+  --metro-amber-glow: rgba(255, 179, 0, 0.45);
+  --metro-red-glow: rgba(220, 38, 38, 0.45);
+
+  --universe-color: var(--metro-amber);
+  --universe-glow: var(--metro-amber-glow);
+
+  --bg-deep: #020202;
+  --bg-panel: #050505;
+  --bg-glass: rgba(255, 255, 255, 0.03);
+
+  --border-soft: rgba(255, 255, 255, 0.06);
+}
+
+
+/* =========================================
+   STATE SYSTEM (JSX data-color)
+========================================= */
+
+.drawerContent[data-color="amber"] {
   --universe-color: var(--metro-amber);
   --universe-glow: var(--metro-amber-glow);
 }
 
-/* ASIGNACIÓN DINÁMICA DE UNIVERSOS */
-.drawerContent[data-universe="metro"] {
-  --universe-color: var(--metro-amber);
-  --universe-glow: var(--metro-amber-glow);
+.drawerContent[data-color="red"] {
+  --universe-color: var(--metro-red);
+  --universe-glow: var(--metro-red-glow);
 }
 
-.drawerContent[data-universe="soma"] {
-  --universe-color: #00f2ff;
-  --universe-glow: rgba(0, 242, 255, 0.4);
+.drawerContent[data-glow="true"] {
+  box-shadow:
+    -30px 0 80px rgba(0,0,0,0.9),
+    -10px 0 30px var(--universe-glow);
 }
 
-.drawerContent[data-universe="ac"] {
-  --universe-color: #ff3c00;
-  --universe-glow: rgba(255, 60, 0, 0.4);
-}
 
-/* ESTRUCTURA PRINCIPAL DEL OVERLAY */
+/* =========================================
+   OVERLAY
+========================================= */
+
 .drawerOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(12px) grayscale(50%);
-  -webkit-backdrop-filter: blur(12px) grayscale(50%);
-  /* Z-index superior al Header (50-100) */
-  z-index: 2000; 
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(14px) grayscale(60%);
+  z-index: 2000;
   display: flex;
   justify-content: flex-end;
-  touch-action: none;
-  overscroll-behavior: contain;
   cursor: zoom-out;
 }
 
-/* EL PANEL LATERAL */
+
+/* =========================================
+   PANEL
+========================================= */
+
 .drawerContent {
   position: relative;
   width: 100%;
-  max-width: 600px;
+  max-width: 620px;
   height: 100vh;
-  background: #020202;
-  border-left: 2px solid var(--universe-color);
+
   display: flex;
   flex-direction: column;
-  box-shadow: -30px 0 80px rgba(0, 0, 0, 0.9);
-  cursor: default;
-  overflow: hidden; /* Importante para que el escaneo no se salga */
-  
-  /* Textura de líneas de terminal */
-  background-image: repeating-linear-gradient(
-    0deg,
-    rgba(255, 255, 255, 0.01) 0px,
-    rgba(255, 255, 255, 0.01) 1px,
-    transparent 1px,
-    transparent 3px
-  );
+
+  background:
+    radial-gradient(circle at 10% 10%, rgba(255,255,255,0.04), transparent 40%),
+    linear-gradient(to bottom, #030303, #000);
+
+  border-left: 2px solid var(--universe-color);
+
+  overflow: hidden;
 }
 
-/* LÍNEA DE ESCANEO LÁSER */
+
+/* =========================================
+   SCANLINE (MEJORADO)
+========================================= */
+
 .drawerContent::before {
   content: "";
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--universe-color), transparent);
-  opacity: 0.6;
-  z-index: 100;
+  inset: 0;
+
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.015) 0px,
+      rgba(255,255,255,0.015) 1px,
+      transparent 2px,
+      transparent 4px
+    );
+
   pointer-events: none;
-  animation: scanLine 8s linear infinite;
+  z-index: 5;
 }
 
-/* CAPA DE RUIDO VISUAL */
+.drawerContent::after {
+  content: "";
+  position: absolute;
+  top: -20%;
+  left: 0;
+  width: 100%;
+  height: 40%;
+
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--universe-color),
+    transparent
+  );
+
+  opacity: 0.08;
+  animation: scanMove 6s linear infinite;
+}
+
+
+/* =========================================
+   GRAIN
+========================================= */
+
 .grainOverlay {
   position: absolute;
   inset: 0;
+  z-index: 6;
+  opacity: 0.025;
   pointer-events: none;
-  z-index: 5;
-  opacity: 0.03;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* CUERPO TÉCNICO CON SCROLLBAR PERSONALIZADA */
+
+/* =========================================
+   SYSTEM BAR
+========================================= */
+
+.systemBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 0.8rem 1.2rem;
+
+  background: rgba(0,0,0,0.6);
+  border-bottom: 1px solid var(--border-soft);
+
+  font-size: 10px;
+  letter-spacing: 0.2em;
+}
+
+.systemCode {
+  color: var(--universe-color);
+  font-weight: 800;
+}
+
+.systemState {
+  color: #aaa;
+}
+
+.statusWrapper {
+  position: relative;
+  width: 8px;
+  height: 8px;
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  background: var(--universe-color);
+  border-radius: 50%;
+}
+
+.statusPulse {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--universe-color);
+  opacity: 0.4;
+  animation: pulse 1.5s infinite;
+}
+
+
+/* =========================================
+   BODY
+========================================= */
+
 .technicalBody {
-  padding: 3rem 2.5rem;
-  flex-grow: 1;
+  padding: 2.5rem;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
-  scrollbar-width: thin;
-  scrollbar-color: var(--universe-color) transparent;
+  gap: 2.2rem;
 }
 
-.technicalBody::-webkit-scrollbar { width: 4px; }
-.technicalBody::-webkit-scrollbar-thumb { background: var(--universe-color); }
+.sectionPrimary {
+  border-bottom: 1px solid var(--border-soft);
+  padding-bottom: 1.5rem;
+}
 
-/* CAMPOS DE DATOS */
+.sectionGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+}
+
+.sectionLog {
+  background: rgba(0,0,0,0.5);
+  padding: 1rem;
+  border: 1px solid var(--border-soft);
+}
+
+
+/* =========================================
+   DATA FIELD
+========================================= */
+
 .dataField {
   position: relative;
-  padding: 1.25rem;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 1.2rem;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-soft);
+  transition: all 0.3s ease;
+}
+
+.dataField:hover {
+  transform: translateX(-6px);
+  border-color: var(--universe-color);
 }
 
 .fieldDecoration {
   position: absolute;
-  top: 0;
   left: 0;
+  top: 0;
   width: 3px;
   height: 100%;
   background: var(--universe-color);
-  opacity: 0.3;
-  transition: opacity 0.3s;
-}
-
-.dataField:hover {
-  background: color-mix(in srgb, var(--universe-color), transparent 96%);
-  border-color: rgba(255, 255, 255, 0.1);
-  transform: translateX(-5px);
-}
-
-.dataField:hover .fieldDecoration {
-  opacity: 1;
+  opacity: 0.4;
 }
 
 .label {
-  display: block;
   font-size: 9px;
-  color: var(--universe-color);
-  text-transform: uppercase;
   letter-spacing: 0.3em;
-  font-weight: 900;
-  margin-bottom: 8px;
-  opacity: 0.8;
+  color: var(--universe-color);
+  margin-bottom: 6px;
 }
 
 .value {
-  display: block;
-  font-size: clamp(1.5rem, 5vw, 2.2rem);
-  color: #fff;
-  font-family: var(--font-mono);
+  font-size: 2rem;
   font-weight: 900;
-  line-height: 1;
-  letter-spacing: -0.02em;
-  animation: textFlicker 10s infinite;
+  color: white;
 }
 
-/* BOTÓN EJECT (TIRADOR INDUSTRIAL) */
+.valueBar {
+  margin-top: 8px;
+  height: 3px;
+  background: rgba(255,255,255,0.08);
+}
+
+.valueFill {
+  height: 100%;
+  background: var(--universe-color);
+  box-shadow: 0 0 10px var(--universe-glow);
+}
+
+
+/* =========================================
+   LOG STREAM
+========================================= */
+
+.logHeader {
+  display: flex;
+  gap: 8px;
+  font-size: 10px;
+  margin-bottom: 10px;
+  color: var(--universe-color);
+}
+
+.logStream {
+  font-family: monospace;
+  font-size: 11px;
+  color: #aaa;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.logHighlight {
+  color: white;
+}
+
+
+/* =========================================
+   TELEMETRY
+========================================= */
+
+.telemetrySection {
+  font-size: 11px;
+}
+
+.telemetryHeader {
+  color: var(--universe-color);
+  margin-bottom: 6px;
+}
+
+.telemetryLog {
+  color: #aaa;
+}
+
+
+/* =========================================
+   SECURITY
+========================================= */
+
+.securityProtocol {
+  padding: 1rem;
+  border: 1px solid var(--border-soft);
+}
+
+.protocolAlert {
+  border-color: var(--metro-red);
+  box-shadow: 0 0 20px var(--metro-red-glow);
+}
+
+.securityHeader {
+  display: flex;
+  gap: 10px;
+  font-weight: bold;
+}
+
+.securityText {
+  font-size: 11px;
+  color: #aaa;
+}
+
+
+/* =========================================
+   EJECT HANDLE
+========================================= */
+
 .ejectHandle {
   position: absolute;
-  left: -40px;
+  left: -42px;
   top: 50%;
   transform: translateY(-50%);
-  width: 40px;
   height: 180px;
-  background: #080808;
+  width: 40px;
+  background: #0a0a0a;
   border: 1px solid #222;
-  border-right: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 12px 0 0 12px;
-  transition: all 0.3s ease;
-  z-index: 2100;
-  /* El clip-path le da la forma de pestaña mecánica */
-  clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 25% 100%, 0% 50%);
 }
 
 .ejectHandle:hover {
-  left: -45px;
-  background: #111;
   border-color: var(--universe-color);
-}
-
-.handleTrack {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.2rem;
-}
-
-.handleText {
-  writing-mode: vertical-lr;
-  transform: rotate(180deg);
-  font-size: 8px;
-  font-weight: 900;
-  color: #444;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
 }
 
 .handleLed {
   width: 6px;
   height: 6px;
   background: #222;
-  border-radius: 50%;
-  transition: background 0.3s, box-shadow 0.3s;
 }
 
 .ejectHandle:hover .handleLed {
@@ -218,91 +369,449 @@
   box-shadow: 0 0 10px var(--universe-glow);
 }
 
-/* FOOTER DE ACCIONES */
-.actionFooter {
-  position: sticky;
-  bottom: 0;
-  padding: 1.5rem 2.5rem;
-  background: linear-gradient(to top, #020202 85%, transparent);
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-  z-index: 20;
-}
+
+/* =========================================
+   BUTTON
+========================================= */
 
 .mainActionButton {
   width: 100%;
-  padding: 1.25rem;
+  padding: 1.2rem;
+  background: var(--universe-color);
+  color: black;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.buttonInner {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 1rem;
-  font-weight: 900;
-  font-size: 14px;
+  position: relative;
+}
+
+.buttonGlow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, var(--universe-glow), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.mainActionButton:hover .buttonGlow {
+  opacity: 1;
+}
+
+
+/* =========================================
+   ANIMATIONS
+========================================= */
+
+@keyframes scanMove {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(200%); }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.5; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+/* =========================================
+   SIGNAL GRAPH CONTAINER
+========================================= */
+
+.signalContainer {
+  position: relative;
+  padding: 1.2rem;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255,255,255,0.06);
+  overflow: hidden;
+
+  backdrop-filter: blur(6px);
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+.signalContainer:hover {
+  border-color: var(--universe-color);
+  box-shadow: 0 0 25px var(--universe-glow);
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.signalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+.signalLabelBlock {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.signalLed {
+  width: 4px;
+  height: 12px;
+  background: var(--universe-color);
+  animation: signalBlink 1.2s infinite;
+}
+
+.signalLabel {
+  font-size: 9px;
+  font-family: var(--font-mono);
+  letter-spacing: 0.25em;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s;
-  clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%);
+  color: var(--universe-color);
+  opacity: 0.8;
 }
 
-.btnAmber {
-  background: var(--metro-amber);
-  color: #000;
+.signalValue {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
 }
 
-.btnAmber:hover {
-  background: #fff;
-  box-shadow: 0 0 20px rgba(255, 179, 0, 0.4);
+.signalNumber {
+  font-size: 0.9rem;
+  font-weight: 900;
+  color: var(--universe-color);
+  font-family: var(--font-mono);
 }
 
-/* ESTADOS CRÍTICOS */
-.criticalOverlay::after {
+.signalUnit {
+  font-size: 8px;
+  color: rgba(255,255,255,0.4);
+}
+
+
+/* =========================================
+   GRAPH CORE
+========================================= */
+
+.signalGraphCore {
+  position: relative;
+  height: 70px;
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  overflow: hidden;
+}
+
+
+/* GRID LINES */
+
+.signalGrid {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  opacity: 0.08;
+}
+
+.signalGrid::before,
+.signalGrid::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: var(--universe-color);
+}
+
+.signalGrid div {
+  height: 1px;
+  background: var(--universe-color);
+}
+
+
+/* =========================================
+   BARS
+========================================= */
+
+.signalBarWrapper {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  position: relative;
+}
+
+.signalBar {
+  width: 100%;
+  height: 100%;
+
+  background: linear-gradient(
+    to top,
+    transparent,
+    var(--universe-color)
+  );
+
+  border-top: 1px solid rgba(255,255,255,0.3);
+
+  transition: opacity 0.3s ease;
+}
+
+/* Glow real */
+.signalBarGlow {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+
+  background: radial-gradient(
+    circle at bottom,
+    var(--universe-glow),
+    transparent 70%
+  );
+
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+
+/* =========================================
+   ENERGY OVERLAY
+========================================= */
+
+.signalEnergy {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 50% 100%,
+    var(--universe-glow),
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+
+/* =========================================
+   FOOTER
+========================================= */
+
+.signalFooter {
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+
+  display: flex;
+  justify-content: space-between;
+  font-size: 7px;
+  font-family: var(--font-mono);
+}
+
+.signalMeta {
+  display: flex;
+  gap: 10px;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.signalFreq {
+  display: flex;
+  gap: 6px;
+  color: rgba(255,255,255,0.4);
+}
+
+.signalFreq .divider {
+  color: var(--universe-color);
+  opacity: 0.5;
+}
+
+
+/* =========================================
+   SCAN LINE
+========================================= */
+
+.signalScan {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--universe-color),
+    transparent
+  );
+
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+
+/* =========================================
+   ANIMATIONS
+========================================= */
+
+@keyframes signalBlink {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+
+/* =========================================
+   TERMINAL TEXT BLOCK
+========================================= */
+
+.terminalBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  font-family: var(--font-mono);
+  position: relative;
+
+  /* efecto CRT leve */
+  text-shadow: 0 0 2px rgba(255,255,255,0.05);
+}
+
+
+/* =========================================
+   LÍNEAS GENERALES
+========================================= */
+
+.terminalLine {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.7);
+
+  display: flex;
+  gap: 6px;
+}
+
+
+/* prefijo tipo consola */
+.terminalLine::before {
+  content: ">";
+  color: var(--universe-color);
+  opacity: 0.6;
+}
+
+
+/* =========================================
+   LÍNEAS DE ESTADO (STABLE / CRITICAL)
+========================================= */
+
+.terminalStatus {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+
+  color: var(--universe-color);
+}
+
+
+/* =========================================
+   TÍTULO PRINCIPAL
+========================================= */
+
+.terminalTitle {
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+
+  color: white;
+
+  margin: 6px 0 4px 0;
+
+  /* leve glitch scan */
+  animation: textFlicker 8s infinite;
+}
+
+
+/* =========================================
+   LABELS (Origin_Sector, Rad_Exposure...)
+========================================= */
+
+.terminalLabel {
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+
+  color: var(--universe-color);
+  opacity: 0.7;
+}
+
+
+/* =========================================
+   VALORES
+========================================= */
+
+.terminalValue {
+  font-size: 12px;
+  font-weight: 600;
+
+  color: rgba(255,255,255,0.85);
+}
+
+
+/* valor crítico */
+.terminalValueCritical {
+  color: var(--metro-red);
+  text-shadow: 0 0 6px var(--metro-red-glow);
+}
+
+
+/* =========================================
+   BLOQUES AGRUPADOS
+========================================= */
+
+.terminalGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 4px;
+}
+
+
+/* =========================================
+   EFECTO SCAN SOBRE TEXTO
+========================================= */
+
+.terminalBlock::after {
   content: "";
   position: absolute;
   inset: 0;
+
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(255,255,255,0.04),
+    transparent
+  );
+
+  opacity: 0.05;
   pointer-events: none;
-  border: 2px solid rgba(220, 38, 38, 0.2);
-  background: linear-gradient(to right, rgba(220, 38, 38, 0.05), transparent);
-  animation: alarmPulse 2s infinite ease-in-out;
+  animation: textScan 6s linear infinite;
 }
 
-@keyframes alarmPulse {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 0.7; }
+
+/* =========================================
+   ANIMACIONES
+========================================= */
+
+@keyframes textFlicker {
+  0%, 100% { opacity: 1; }
+  48% { opacity: 0.85; }
+  50% { opacity: 0.4; }
+  52% { opacity: 0.9; }
 }
 
-/* RESPONSIVIDAD */
-@media (max-width: 768px) {
-  .drawerContent {
-    max-width: 85%;
-  }
-
-  .technicalBody {
-    padding: 5rem 1.5rem 2rem 1.5rem;
-  }
-
-  .ejectHandle {
-    left: auto;
-    right: 20px;
-    top: 20px;
-    height: 45px;
-    width: auto;
-    padding: 0 15px;
-    transform: none;
-    border: 1px solid var(--universe-color);
-    border-radius: 4px;
-    clip-path: none;
-    background: rgba(0, 0, 0, 0.9);
-  }
-
-  .handleTrack { flex-direction: row; gap: 8px; }
-  .handleText { writing-mode: horizontal-tb; transform: none; color: var(--universe-color); }
-}
-
-@media (max-width: 480px) {
-  .drawerContent {
-    max-width: 100%;
-    border-left: none;
-    border-top: 4px solid var(--universe-color);
-  }
+@keyframes textScan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
 }

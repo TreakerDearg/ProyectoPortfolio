@@ -1,0 +1,67 @@
+/* =========================
+   WRAPPER
+========================= */
+.searchWrapper {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 4px 8px;
+
+  background: #020505;
+  border: 1px solid #1f3a3a;
+
+  font-family: monospace;
+}
+
+/* =========================
+   LABEL
+========================= */
+.label {
+  font-size: 10px;
+  color: #6aa9a9;
+  letter-spacing: 1px;
+}
+
+/* =========================
+   INPUT
+========================= */
+.input {
+  flex: 1;
+
+  background: transparent;
+  border: none;
+  outline: none;
+
+  color: #9fdcdc;
+  font-size: 11px;
+
+  caret-color: transparent;
+}
+
+/* =========================
+   FAKE CURSOR
+========================= */
+.cursor {
+  width: 6px;
+  height: 12px;
+
+  background: #00ff9c;
+
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 50%, 100% { opacity: 1; }
+  25%, 75% { opacity: 0; }
+}
+
+/* =========================
+   FOCUS EFFECT
+========================= */
+.searchWrapper:focus-within {
+  border-color: #2f6666;
+  box-shadow: 0 0 6px rgba(0, 255, 200, 0.2);
+}
