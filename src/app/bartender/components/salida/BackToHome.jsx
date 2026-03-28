@@ -98,7 +98,7 @@ export default function BackToHome({
           </div>
         );
 
-      /* ⚙️ AC */
+      /*  AC */
       case 'ac':
         return (
           <div className={`${styles.btnAC} ${styles[size]}`}>

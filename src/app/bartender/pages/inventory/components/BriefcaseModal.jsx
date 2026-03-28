@@ -1,309 +1,176 @@
-'use client';
-import React, { useMemo, useEffect, useState, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  X, Zap, Beaker, ClipboardList, 
-  Lock, Fingerprint, ShieldCheck,
-  FileSearch, ChevronRight, Share2, Printer
-} from 'lucide-react';
-import { REAL_RECIPES } from '../data/RecipesReal'; 
-import styles from '../../../styles/inventory-styles/briefcase.module.css';
+"use client";
 
-// Subcomponente para el panel de evidencia (memoizado)
-const EvidencePanel = React.memo(({ drink, isUnlocked, realRecipe }) => {
-  return (
-    <div className={styles.paperInner}>
-      <div className={styles.photoContainer}>
-        <div className={styles.tape} />
-        <div className={styles.tape} style={{ bottom: '-5px', right: '10px', transform: 'rotate(45deg)' }} />
-        
-        {drink.image ? (
-          <div className={styles.imageWrapper}>
-            <img 
-              src={drink.image} 
-              alt={`Fotografía de ${drink.name}`} 
-              className={styles.subjectImage}
-              loading="lazy"
-            />
-            <div className={styles.imageOverlay} />
-          </div>
-        ) : (
-          <div className={styles.placeholderVisual}>
-            <Fingerprint size={80} strokeWidth={1} />
-            <p>CORRUPTED_VISUAL_STREAM</p>
-          </div>
-        )}
-        <div className={styles.handwrittenID}>SUBJ_LOG: {drink.id}</div>
-      </div>
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Calendar,
+  HardDrive,
+  Shield,
+  MapPin,
+  StickyNote,
+  Lock,
+  Key,
+  Droplet,
+  DollarSign,
+  Skull,
+  BookOpen,
+  CookingPot,
+  GlassWater,
+  Flame,
+  Info,
+  FileText,
+  BadgeDollarSign,
+} from "lucide-react";
+import styles from "../../../styles/inventory-styles/briefcase-modal.module.css";
+import { REAL_RECIPES } from "../data/RecipesReal";
 
-      <div className={styles.ancientRecipeArea}>
-        {isUnlocked && realRecipe ? (
-          <motion.div 
-            className={styles.realPaper}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <h4 className={styles.paperTitle}>
-              <ClipboardList size={16} /> ANALOG_INSTRUCTIONS
-            </h4>
-            <div className={styles.recipeScroll}>
-              <ul className={styles.ingList}>
-                {realRecipe.ingredients?.map((ing, i) => (
-                  <li key={i}>{ing}</li>
-                ))}
-              </ul>
-              <p className={styles.instructionsText}>{realRecipe.instructions}</p>
-            </div>
-            <div className={styles.bottomStamp}>VERIFIED_BY_POLIS</div>
-          </motion.div>
-        ) : (
-          <div className={styles.lockedIntel}>
-            <Lock size={32} />
-            <p>ENCRYPTION_LAYER_02_ACTIVE</p>
-            <div className={styles.progressMini} />
-          </div>
-        )}
-      </div>
-    </div>
-  );
-});
-EvidencePanel.displayName = 'EvidencePanel';
+export default function BriefcaseModal({ item, onClose }) {
+  // Determine if this is a drink (has desc and id in recipes)
+  const isDrink = item.desc && REAL_RECIPES[item.id];
+  const recipe = isDrink ? REAL_RECIPES[item.id] : null;
 
-// Subcomponente para el panel de inteligencia (memoizado)
-const IntelligencePanel = React.memo(({ drink, isUnlocked }) => {
-  return (
-    <div className={styles.dossierContent}>
-      <div className={styles.headerInfo}>
-        <div className={styles.classification}>UNCLASSIFIED_STATION_RECORD</div>
-        <h2 className={styles.drinkTitle}>{drink.name?.replace(/_/g, ' ')}</h2>
-        <div className={styles.tagCloud}>
-          <span className={styles.flavorTag}>{drink.flavor}</span>
-          <span className={styles.alcoholTag}>{drink.alcohol} ABV</span>
-        </div>
-      </div>
+  // Common metadata (for both drinks and folders)
+  const metadata = [];
 
-      <div className={styles.infoBlock}>
-        <h3><FileSearch size={16} /> LOG_SUMMARY</h3>
-        <p className={styles.descText}>
-          {isUnlocked ? drink.desc : drink.desc.substring(0, 50) + " [REDACTED] ".repeat(5)}
-        </p>
-      </div>
+  if (item.dateArchived) {
+    metadata.push({ icon: Calendar, label: item.dateArchived });
+  }
+  if (item.fileSize) {
+    metadata.push({ icon: HardDrive, label: item.fileSize });
+  }
+  if (item.securityLevel) {
+    metadata.push({ icon: Shield, label: item.securityLevel });
+  }
+  if (item.sector) {
+    metadata.push({ icon: MapPin, label: item.sector });
+  }
+  if (item.price !== undefined) {
+    metadata.push({ icon: DollarSign, label: `${item.price} ₽` });
+  }
+  if (item.alcohol) {
+    metadata.push({ icon: Droplet, label: item.alcohol });
+  }
+  if (item.toxicity !== undefined) {
+    metadata.push({ icon: Skull, label: `${item.toxicity}` });
+  }
+  if (item.flavor) {
+    metadata.push({ icon: Info, label: item.flavor });
+  }
 
-      <div className={styles.infoBlock}>
-        <h3><Beaker size={16} /> CHEMICAL_ANALYSIS</h3>
-        <div className={styles.chemicalGrid}>
-          {drink.ingredients?.map((ing, i) => (
-            <div key={i} className={styles.chemItem}>
-              <ChevronRight size={10} /> {isUnlocked ? ing : "••••••••"}
-            </div>
-          ))}
-        </div>
-      </div>
+  // Check for a hint (drinks sometimes have metadata.hint)
+  const hint = item.metadata?.hint;
+  const hasHint = hint && hint !== "_";
 
-      <div className={styles.toxicityScanner}>
-        <div className={styles.scannerHeader}>
-          <span>RAD_TOXICITY_SCAN</span>
-          <span className={drink.toxicity > 50 ? styles.highRisk : ''}>{drink.toxicity}%</span>
-        </div>
-        <div className={styles.barContainer}>
-          <motion.div 
-            className={styles.barFill}
-            initial={{ width: 0 }}
-            animate={{ width: `${drink.toxicity}%` }}
-            transition={{ delay: 0.5, duration: 1.5 }}
-            style={{ 
-              backgroundColor: drink.toxicity > 40 ? 'var(--hazard-red)' : '#00ff66'
-            }}
-          />
-        </div>
-      </div>
-
-      <div className={styles.actionArea}>
-        <div className={styles.officialStamps}>
-          <div className={styles.circularStamp}>D6_APPROVED</div>
-          {drink.toxicity > 60 && <div className={styles.warningStamp}>BIO_HAZARD</div>}
-        </div>
-        
-        <button 
-          className={styles.dispenseButton}
-          disabled={!isUnlocked}
-          onClick={() => alert("PREPARING_RATION...")}
-          aria-label="Preparar ración"
-        >
-          <Zap size={20} />
-          <div className={styles.btnLabel}>
-            <span className={styles.btnMain}>PREPARE_RATION</span>
-            <span className={styles.btnSub}>Execute D6-Protocol</span>
-          </div>
-        </button>
-      </div>
-    </div>
-  );
-});
-IntelligencePanel.displayName = 'IntelligencePanel';
-
-// Componente principal memoizado
-export const BriefcaseModal = React.memo(({ folder, drinks = [], isUnlocked, onClose }) => {
-  const [activeTab, setActiveTab] = useState('INTELLIGENCE');
-
-  // Bloquear scroll al abrir y asegurar que el botón de cierre sea accesible
-  useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = 'unset'; };
-  }, []);
-
-  // useCallback para las funciones de cierre (aunque no se pasan a hijos)
-  const handleClose = useCallback(() => {
-    onClose();
-  }, [onClose]);
-
-  const handleTabChange = useCallback((tab) => {
-    setActiveTab(tab);
-  }, []);
-
-  const hasDrinks = drinks && drinks.length > 0;
-  
-  const drink = useMemo(() => {
-    if (hasDrinks) return drinks[0];
-    return { 
-      name: "RESTRICTED_PROTOCOL", 
-      desc: "CRITICAL: Physical file missing or incinerated during Station 4 purge. Attempting to recover data from secondary D6 buffers...",
-      id: "ERR_404",
-      toxicity: 99,
-      ingredients: ["REDACTED", "REDACTED", "REDACTED"],
-      flavor: "UNKNOWN",
-      alcohol: "N/A",
-      image: null
-    };
-  }, [hasDrinks, drinks]);
-
-  const realRecipe = useMemo(() => REAL_RECIPES[drink.id], [drink.id]);
-
-  // Animaciones más ligeras en móvil (opcional, se puede detectar)
-  const containerVariants = {
-    hidden: { y: 100, opacity: 0, scale: 0.9, rotateX: -15 },
-    visible: { 
-      y: 0, 
-      opacity: 1, 
-      scale: 1, 
-      rotateX: 0,
-      transition: { type: "spring", damping: 25, stiffness: 120 }
-    },
-    exit: { y: 150, opacity: 0, scale: 0.8, rotateX: 20, transition: { duration: 0.3 } }
-  };
+  // Folder-specific
+  const stickyNote = item.stickyNote;
+  const isLocked = item.isLocked;
 
   return (
-    <AnimatePresence>
-      <div 
-        className={`${styles.modalOverlay} ${isUnlocked ? styles.unlockedTheme : ''}`} 
-        onClick={handleClose}
-        role="dialog"
-        aria-modal="true"
-        aria-label="Expediente D6"
+    <div className={styles.overlay} onClick={onClose}>
+      <motion.div
+        initial={{ scale: 0.85, opacity: 0, rotate: -2 }}
+        animate={{ scale: 1, opacity: 1, rotate: 0 }}
+        transition={{ duration: 0.25, type: "spring", stiffness: 300 }}
+        className={styles.modal}
+        onClick={(e) => e.stopPropagation()}
       >
-        <div className={`${styles.ambientGlow} ${isUnlocked ? styles.glowGreen : styles.glowAmber}`} />
+        {/* Paper layers (back, mid, front) */}
+        <div className={`${styles.paper} ${styles.paperBack}`} />
+        <div className={`${styles.paper} ${styles.paperMid}`} />
+        <div className={`${styles.paper} ${styles.paperFront}`}>
+          {/* Paper clip */}
+          <div className={styles.clip} />
 
-        <motion.div 
-          className={styles.documentFolder}
-          onClick={(e) => e.stopPropagation()}
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          exit="exit"
-        >
-          {/* HEADER TÉCNICO */}
-          <div className={styles.folderHeader}>
-            <div className={styles.topBar}>
-              <div className={styles.systemInfo}>
-                <ShieldCheck size={14} className={styles.pulseIcon} />
-                <span>D6_SECURE_ENCLAVE // {folder.id || 'NODE_UNKNOWN'}</span>
-              </div>
-              <div className={styles.windowControls}>
-                <button 
-                  onClick={() => window.print()} 
-                  className={styles.iconBtn} 
-                  title="Print Dossier"
-                  aria-label="Imprimir expediente"
-                >
-                  <Printer size={16} />
-                </button>
-                <button 
-                  className={styles.iconBtn} 
-                  title="Share Link"
-                  aria-label="Compartir enlace"
-                >
-                  <Share2 size={16} />
-                </button>
-                <button 
-                  className={styles.closeBtn} 
-                  onClick={handleClose}
-                  aria-label="Cerrar"
-                >
-                  <X size={22} />
-                </button>
-              </div>
-            </div>
+          {/* Header */}
+          <div className={styles.header}>
+            <span className={styles.title}>
+              {item.name?.replaceAll("_", " ") || item.title?.replaceAll("_", " ")}
+            </span>
+            <span className={styles.id}>{item.id}</span>
           </div>
 
-          <div className={styles.mainExpediente}>
-            <div className={styles.folderSpine} />
-            <div className={styles.tabEar}>{folder.category || 'DATA'}</div>
+          {/* Description / Sticky note area */}
+          {item.desc && (
+            <p className={styles.desc}>{item.desc}</p>
+          )}
 
-            <div className={styles.gridContainer}>
-              
-              {/* PANEL EVIDENCIA */}
-              <section 
-                className={`${styles.evidencePanel} ${activeTab === 'EVIDENCE' ? styles.tabActive : ''}`}
-                aria-hidden={activeTab !== 'EVIDENCE'}
-              >
-                <EvidencePanel drink={drink} isUnlocked={isUnlocked} realRecipe={realRecipe} />
-              </section>
-
-              {/* PANEL INTELIGENCIA */}
-              <section 
-                className={`${styles.dataPanel} ${activeTab === 'INTELLIGENCE' ? styles.tabActive : ''}`}
-                aria-hidden={activeTab !== 'INTELLIGENCE'}
-              >
-                <IntelligencePanel drink={drink} isUnlocked={isUnlocked} />
-              </section>
+          {/* Sticky note for folders */}
+          {stickyNote && (
+            <div className={styles.stickyNoteWrapper}>
+              <div className={styles.stickyNote}>
+                <StickyNote size={16} className={styles.stickyIcon} />
+                <div className={styles.stickyText}>{stickyNote}</div>
+              </div>
             </div>
+          )}
 
-            {/* NAVEGACIÓN MÓVIL */}
-            <div className={styles.mobileNav}>
-              <button 
-                className={activeTab === 'EVIDENCE' ? styles.active : ''} 
-                onClick={() => handleTabChange('EVIDENCE')}
-                aria-pressed={activeTab === 'EVIDENCE'}
-              >
-                <Fingerprint size={18} />
-                <span>EVIDENCE</span>
-              </button>
-              <button 
-                className={activeTab === 'INTELLIGENCE' ? styles.active : ''} 
-                onClick={() => handleTabChange('INTELLIGENCE')}
-                aria-pressed={activeTab === 'INTELLIGENCE'}
-              >
-                <FileSearch size={18} />
-                <span>INTEL</span>
-              </button>
+          {/* Recipe card (if drink) */}
+          {recipe && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className={styles.recipeCard}
+            >
+              <div className={styles.recipeHeader}>
+                <CookingPot size={18} />
+                <span>{recipe.name}</span>
+              </div>
+              <div className={styles.recipeMethod}>
+                <Flame size={14} />
+                <span>{recipe.method}</span>
+              </div>
+              <div className={styles.recipeIngredients}>
+                <strong>Ingredients:</strong> {recipe.ingredients.join(", ")}
+              </div>
+              <div className={styles.recipeInstructions}>
+                <strong>Instructions:</strong> {recipe.instructions}
+              </div>
+              <div className={styles.recipeGlass}>
+                <GlassWater size={14} />
+                <span>Serve in: {recipe.glass}</span>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Hint (for drinks) */}
+          {hasHint && (
+            <div className={styles.hintWrapper}>
+              <Key size={14} className={styles.hintIcon} />
+              <span className={styles.hintText}>HINT: {hint}</span>
             </div>
+          )}
+
+          {/* Metadata grid */}
+          {metadata.length > 0 && (
+            <div className={styles.metadataGrid}>
+              {metadata.map((meta, idx) => (
+                <div key={idx} className={styles.metadataItem}>
+                  <meta.icon size={12} />
+                  <span>{meta.label}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Footer with stamp and close button */}
+          <div className={styles.footer}>
+            <span className={styles.stamp}>
+              {item.tag || item.securityLevel || "UNCLASSIFIED"}
+            </span>
+            <button className={styles.close} onClick={onClose}>
+              CLOSE
+            </button>
           </div>
 
-          {/* Botón de cierre flotante para móvil (visible si el header no lo está) */}
-          <button 
-            className={styles.mobileCloseFab}
-            onClick={handleClose}
-            aria-label="Cerrar"
-          >
-            <X size={24} />
-          </button>
-
-          <div className={styles.folderGrain} />
-          <div className={styles.dirtOverlays} />
-        </motion.div>
-      </div>
-    </AnimatePresence>
+          {/* Lock indicator for folders */}
+          {isLocked && (
+            <div className={styles.lockBadge}>
+              <Lock size={16} />
+              <span>CLASSIFIED</span>
+            </div>
+          )}
+        </div>
+      </motion.div>
+    </div>
   );
-});
-
-BriefcaseModal.displayName = 'BriefcaseModal';
+}

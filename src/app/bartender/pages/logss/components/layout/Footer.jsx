@@ -1,96 +1,100 @@
+/* eslint-disable react/jsx-no-comment-textnodes */
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
-
+import { useMetro } from "../../context/MetroContext";
 import BackToHome from "../../../../components/salida/BackToHome";
+import styles from "../../../../styles/inventory-styles/layout/footer.module.css";
 
-import FooterStatus from "../footer-comps/FooterStatus";
-import FooterNode from "../footer-comps/FooterNode";
-import FooterDecor from "../footer-comps/FooterDecor";
-
-import styles from "../../../../styles/logs-styles/layout/soma-footer.module.css";
-
-export default function Footer({ activeWindow }) {
-
-  /* =========================
-     SYSTEM STATE
-  ========================= */
-  const status = activeWindow?.app?.status || "CONNECTED";
-  const node = activeWindow?.app?.node || "ARK-01";
-
-  /* =========================
-     CLOCK (REAL TIME)
-  ========================= */
-  const [time, setTime] = useState("");
+export default function HardwareFooter() {
+  const { system } = useMetro();
+  const [time, setTime] = useState(new Date());
+  const [radLevel, setRadLevel] = useState(0.45);
 
   useEffect(() => {
-    const update = () => {
-      const now = new Date();
-      setTime(
-        now.toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-        })
-      );
-    };
-
-    update();
-    const interval = setInterval(update, 1000);
-
-    return () => clearInterval(interval);
+    const timer = setInterval(() => setTime(new Date()), 1000);
+    return () => clearInterval(timer);
   }, []);
 
-  /* =========================
-     RENDER
-  ========================= */
+  useEffect(() => {
+    if (system?.radiation_level) {
+      const rad = parseFloat(system.radiation_level);
+      if (!isNaN(rad)) setRadLevel(rad);
+    }
+  }, [system]);
+
+  const isCritical = radLevel > 0.6;
+  const isWarning = radLevel > 0.4 && radLevel <= 0.6;
+  const isSystemOk = system?.status !== "CRITICAL_SYSTEM_DEGRADATION";
+
+  const barCount = 8;
+  const bars = Array.from({ length: barCount }, (_, i) => {
+    const intensity = Math.min(1, radLevel / 1.0);
+    const height = (i + 1) / barCount * intensity * 80 + 8;
+    return height;
+  });
+
   return (
-    <motion.footer
-      className={styles.footer}
-      data-state={status}
-      initial={{ y: 30, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.35, ease: "easeOut" }}
-    >
-      {/* FX LAYER */}
-      <div className={styles.fxLayer}>
-        <FooterDecor />
+    <footer className={styles.footer}>
+      <div className={styles.scanlines} />
+
+      {/* LEFT: Physical buttons */}
+      <div className={styles.left}>
+        <div className={styles.physicalButtons}>
+          <button className={`${styles.button} ${styles.danger}`} />
+          <button className={`${styles.button} ${styles.neutral}`} />
+          <button className={`${styles.button} ${styles.reset}`} />
+        </div>
       </div>
 
-      {/* CONTENT */}
-      <div className={styles.inner}>
-
-        {/* LEFT */}
-        <div className={styles.left}>
-
-          <BackToHome size="sm" variant="soma" />
-
-          <div className={styles.systemTag}>
-            <span>SYS</span>
-            <span className={styles.dot} />
-            <span>{status}</span>
-          </div>
-
+      {/* CENTER: Industrial bar graph + system info */}
+      <div className={styles.center}>
+        <div className={styles.barGroup}>
+          {bars.map((height, i) => (
+            <motion.div
+              key={i}
+              className={`${styles.bar} ${isCritical ? styles.criticalBar : isWarning ? styles.warningBar : ""}`}
+              animate={{ height }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+            />
+          ))}
         </div>
 
-        {/* CENTER */}
-        <div className={styles.center}>
-          <FooterStatus status={status} />
+        <div className={styles.systemInfo}>
+          <span className={styles.label}>
+            {system?.os_version || "VOS-DARK-33"} // {system?.terminal_id || "D6-HB-2033"}
+          </span>
+          <span className={styles.clock}>
+            {time.toLocaleTimeString([], { hour: '2-digit', minute:'2-digit', second:'2-digit' })}
+          </span>
         </div>
-
-        {/* RIGHT */}
-        <div className={styles.right}>
-
-          <FooterNode node={node} status={status} />
-
-          <div className={styles.clock}>
-            {time}
-          </div>
-
-        </div>
-
       </div>
-    </motion.footer>
+
+      {/* RIGHT: BackToHome button + Status LEDs */}
+      <div className={styles.right}>
+        <BackToHome variant="metro" size="sm" />
+        <div className={styles.ledGroup}>
+          <div className={`${styles.led} ${isSystemOk ? styles.green : styles.red}`}>
+            <motion.div
+              className={styles.ledPulse}
+              animate={{ scale: [1, 1.2, 1] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+            />
+          </div>
+          <span>PWR</span>
+        </div>
+        <div className={styles.ledGroup}>
+          <div className={`${styles.led} ${isWarning ? styles.amber : isCritical ? styles.red : styles.green}`}>
+            <motion.div
+              className={styles.ledPulse}
+              animate={{ scale: [1, 1.1, 1] }}
+              transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
+            />
+          </div>
+          <span>RAD</span>
+        </div>
+      </div>
+    </footer>
   );
 }

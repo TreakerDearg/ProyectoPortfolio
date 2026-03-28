@@ -16,6 +16,7 @@
     "@fontsource/vt323": "^5.2.7",
     "@tailwindcss/forms": "^0.5.11",
     "beep-browser": "^1.0.2",
+    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.27.5",
     "lucide-react": "^0.574.0",

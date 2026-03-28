@@ -1,0 +1,509 @@
+/* Base card (unchanged) */
+.card {
+  position: relative;
+  background: #fdf8e7;
+  border-radius: 8px 4px 4px 8px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  overflow: hidden;
+}
+
+/* Folded corner – base style */
+.corner {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 30px;
+  height: 30px;
+  background: linear-gradient(135deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.2) 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Condition‑specific corners */
+.corner_worn {
+  background: linear-gradient(135deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.35) 100%);
+}
+.corner_damaged {
+  background: linear-gradient(135deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.5) 100%);
+  filter: drop-shadow(0 0 2px rgba(0,0,0,0.5));
+}
+
+/* Tab (unchanged) */
+.tab {
+  position: absolute;
+  top: -8px;
+  left: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #e0c9a0;
+  padding: 4px 12px;
+  border-radius: 12px 12px 0 0;
+  font-weight: bold;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+.tabIcon { display: inline-flex; align-items: center; color: #5e3a1c; }
+.tabText { color: #2c1a0c; }
+
+/* Inner content (unchanged) */
+.inner {
+  padding: 28px 16px 16px 16px;
+  position: relative;
+  z-index: 3;
+}
+
+/* ID wrapper (unchanged) */
+.idWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 0.7rem;
+  margin-bottom: 12px;
+  border-bottom: 1px dashed #d6c29d;
+  padding-bottom: 4px;
+}
+.itemId {
+  font-family: monospace;
+  font-weight: bold;
+  color: #6b4c2c;
+}
+.idStamp {
+  background: #c7b28b;
+  padding: 2px 6px;
+  border-radius: 12px;
+  font-size: 0.6rem;
+  color: #2f2418;
+}
+.idStamp_worn {
+  background: #a3895e;
+  color: #221c12;
+  letter-spacing: 0.5px;
+}
+.idStamp_damaged {
+  background: #8b5a2b;
+  color: #f2c94c;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+/* Name (unchanged) */
+.nameWrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0;
+}
+.paperClip {
+  font-size: 1.2rem;
+  transform: rotate(-15deg);
+  opacity: 0.7;
+}
+.itemName {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #3e2a1a;
+  text-transform: capitalize;
+}
+
+/* Metadata (unchanged) */
+.itemMeta {
+  display: flex;
+  gap: 16px;
+  margin-top: 16px;
+  font-size: 0.75rem;
+  color: #8b6b42;
+}
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+/* ----------------------------------------------------------
+   Condition decals (only appear for worn/damaged)
+   ---------------------------------------------------------- */
+.bulletHole {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  width: 12px;
+  height: 12px;
+  background: radial-gradient(circle, #2c1a0c 10%, #5e3a1c 70%);
+  border-radius: 50%;
+  box-shadow: inset 0 0 2px black, 0 0 0 1px rgba(0,0,0,0.2);
+  transform: rotate(15deg);
+  pointer-events: none;
+  z-index: 4;
+}
+.rustStain {
+  position: absolute;
+  bottom: 40px;
+  right: 10px;
+  width: 35px;
+  height: 25px;
+  background: radial-gradient(ellipse at 30% 40%, #b85c1a, #8b3c1a);
+  opacity: 0.5;
+  filter: blur(2px);
+  border-radius: 60% 40% 50% 50%;
+  pointer-events: none;
+  z-index: 4;
+}
+.tapeMark {
+  position: absolute;
+  top: 40px;
+  right: 5px;
+  width: 50px;
+  height: 12px;
+  background: repeating-linear-gradient(45deg, #c7b28b, #c7b28b 8px, #b89a6a 8px, #b89a6a 16px);
+  opacity: 0.7;
+  transform: rotate(10deg);
+  border-radius: 2px;
+  pointer-events: none;
+  z-index: 4;
+}
+.crease {
+  position: absolute;
+  top: 20px;
+  left: 10px;
+  width: 30px;
+  height: 2px;
+  background: #6b4c2c;
+  opacity: 0.4;
+  transform: rotate(-20deg);
+  border-radius: 1px;
+  pointer-events: none;
+  z-index: 4;
+}
+.smudge {
+  position: absolute;
+  bottom: 30px;
+  left: 10px;
+  width: 45px;
+  height: 20px;
+  background: rgba(0,0,0,0.1);
+  filter: blur(3px);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 4;
+}
+
+/* Secret stamp (unchanged) */
+.secretStamp {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  color: #b33b2c;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 2px 8px;
+  border-radius: 4px;
+  transform: rotate(-8deg);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ----------------------------------------------------------
+   Tag variants (base colors)
+   ---------------------------------------------------------- */
+.premium {
+  background: linear-gradient(145deg, #f7efcf, #eedfbb);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), inset 0 1px 0 #fff9e8;
+}
+.premium .tab {
+  background: #e6b422;
+  color: #2c1a0c;
+}
+.medic {
+  background: #eef5e7;
+}
+.medic .tab {
+  background: #6f9e6f;
+  color: #fff;
+}
+.medic .tabIcon { color: #fff; }
+.secret {
+  background: #2c2a2a;
+  color: #d9c8a9;
+}
+.secret .tab {
+  background: #8b3c3c;
+  color: #f0e6d2;
+}
+.secret .itemName,
+.secret .itemId {
+  color: #e0cfb0;
+}
+.scrap {
+  background: #b7a57a;
+  background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0.02) 0px, rgba(0,0,0,0.02) 2px, transparent 2px, transparent 6px);
+}
+.scrap .tab {
+  background: #ab8a5a;
+  color: #1e1a12;
+}
+.common {
+  background: #f5e6c4;
+}
+.common .tab {
+  background: #d6bd8f;
+}
+
+/* Condition modifiers (overrides for backgrounds, textures) */
+
+.conditionWorn {
+  filter: brightness(0.96) contrast(1.05);
+  background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0.02) 0px, rgba(0,0,0,0.02) 2px, transparent 2px, transparent 6px);
+}
+.conditionDamaged {
+  filter: brightness(0.92) contrast(1.1);
+  background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0.05) 0px, rgba(0,0,0,0.05) 3px, transparent 3px, transparent 8px);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.2), 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* Metadata grid */
+.metadataGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+  font-size: 0.65rem;
+  color: #8b6b42;
+}
+
+.metaItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 2px 6px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+/* Sticky note button */
+.stickyNoteButton {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  cursor: pointer;
+  color: #e0b86e;
+  z-index: 5;
+  transition: transform 0.2s;
+}
+.stickyNoteButton:hover {
+  transform: scale(1.1);
+}
+
+.stickyNotePopup {
+  position: absolute;
+  bottom: 30px;
+  left: 0;
+  background: #fff9e8;
+  border-left: 4px solid #ffcc66;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  padding: 8px 12px;
+  width: 180px;
+  z-index: 10;
+  font-size: 0.75rem;
+  color: #2c1a0c;
+  white-space: pre-line;
+  font-family: monospace;
+}
+
+/* Adjust position for right side if needed */
+@media (min-width: 500px) {
+  .stickyNotePopup {
+    left: auto;
+    right: 0;
+    bottom: 30px;
+  }
+}
+
+/* Condition decals (unchanged) */
+.bulletHole {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  width: 12px;
+  height: 12px;
+  background: radial-gradient(circle, #2c1a0c 10%, #5e3a1c 70%);
+  border-radius: 50%;
+  box-shadow: inset 0 0 2px black, 0 0 0 1px rgba(0,0,0,0.2);
+  transform: rotate(15deg);
+  pointer-events: none;
+  z-index: 4;
+}
+.rustStain {
+  position: absolute;
+  bottom: 40px;
+  right: 10px;
+  width: 35px;
+  height: 25px;
+  background: radial-gradient(ellipse at 30% 40%, #b85c1a, #8b3c1a);
+  opacity: 0.5;
+  filter: blur(2px);
+  border-radius: 60% 40% 50% 50%;
+  pointer-events: none;
+  z-index: 4;
+}
+.tapeMark {
+  position: absolute;
+  top: 40px;
+  right: 5px;
+  width: 50px;
+  height: 12px;
+  background: repeating-linear-gradient(45deg, #c7b28b, #c7b28b 8px, #b89a6a 8px, #b89a6a 16px);
+  opacity: 0.7;
+  transform: rotate(10deg);
+  border-radius: 2px;
+  pointer-events: none;
+  z-index: 4;
+}
+.crease {
+  position: absolute;
+  top: 20px;
+  left: 10px;
+  width: 30px;
+  height: 2px;
+  background: #6b4c2c;
+  opacity: 0.4;
+  transform: rotate(-20deg);
+  border-radius: 1px;
+  pointer-events: none;
+  z-index: 4;
+}
+.smudge {
+  position: absolute;
+  bottom: 30px;
+  left: 10px;
+  width: 45px;
+  height: 20px;
+  background: rgba(0,0,0,0.1);
+  filter: blur(3px);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 4;
+}
+
+/* Secret stamp (unchanged) */
+.secretStamp {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  color: #b33b2c;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 2px 8px;
+  border-radius: 4px;
+  transform: rotate(-8deg);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  z-index: 5;
+}
+
+/* Sticky note color variants */
+.stickyNotePopup_yellow {
+  background: #fff9c4;
+  border-left-color: #ffb74d;
+}
+.stickyNotePopup_gold {
+  background: #fff2d0;
+  border-left-color: #e6b422;
+}
+.stickyNotePopup_green {
+  background: #e8f5e9;
+  border-left-color: #6f9e6f;
+}
+.stickyNotePopup_red {
+  background: #ffebee;
+  border-left-color: #d32f2f;
+}
+.stickyNotePopup_brown {
+  background: #f5e6d3;
+  border-left-color: #ab8a5a;
+}
+
+/* Hint chip */
+.hintChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #1e1a12;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 0.65rem;
+  color: #ffcc88;
+  margin-top: 8px;
+}
+
+/* Burnt edge for damaged items */
+.burntEdge {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 15px;
+  background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);
+  pointer-events: none;
+  z-index: 5;
+}
+.burntEdge::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: repeating-linear-gradient(45deg, #2c1a0c, #2c1a0c 8px, #5e3a1c 8px, #5e3a1c 16px);
+  opacity: 0.7;
+}
+
+/* Sticky note button hover animation */
+.stickyNoteButton {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  cursor: pointer;
+  color: #e0b86e;
+  z-index: 5;
+  transition: transform 0.2s;
+}
+.stickyNoteButton:hover {
+  transform: scale(1.1);
+}
+
+/* Sticky note popup base (unchanged) */
+.stickyNotePopup {
+  position: absolute;
+  bottom: 30px;
+  left: 0;
+  border-left: 4px solid #ffb74d;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  padding: 8px 12px;
+  width: 180px;
+  z-index: 10;
+  font-size: 0.75rem;
+  color: #2c1a0c;
+  white-space: pre-line;
+  font-family: monospace;
+}
+@media (min-width: 500px) {
+  .stickyNotePopup {
+    left: auto;
+    right: 0;
+    bottom: 30px;
+  }
+}

@@ -1,470 +1,215 @@
 /* ============================================================
-   BUNKER MODULE - D6 AMBER PHOSPHOR TERMINAL
-   Estilos principales para InventoryPage - Versión Optimizada
-   ============================================================ */
-
-@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Special+Elite&display=swap');
-
-/* ============================================================
-   VARIABLES Y CONFIGURACIÓN GLOBAL
-   ============================================================ */
+   ROOT VARIABLES (SAFE FOR LAYOUT INTEGRATION)
+============================================================ */
 :root {
   --amber-bright: #ffb300;
   --amber-glow: rgba(255, 179, 0, 0.6);
   --amber-dim: rgba(255, 179, 0, 0.15);
   --amber-ultra-dim: rgba(255, 179, 0, 0.04);
+
   --hazard-red: #ff3c00;
-  --hazard-glow: rgba(255, 60, 0, 0.3);
   --success-green: #00ff41;
-  --success-glow: rgba(0, 255, 65, 0.3);
+
   --bg-deep: #030403;
-  --panel-bg: rgba(7, 8, 9, 0.98);
-  --terminal-font: 'Share Tech Mono', 'Courier New', monospace;
-  --header-height: clamp(70px, 10vh, 120px);
+  --panel-bg: rgba(7, 8, 9, 0.96);
+
+  --terminal-font: 'Share Tech Mono', monospace;
+
   --sidebar-width: clamp(280px, 30vw, 340px);
-  --crt-curve: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ============================================================
-   CONTENEDOR PRINCIPAL Y CAPAS CRT
-   ============================================================ */
+   MAIN CONTAINER (FIX: NO 100vh)
+============================================================ */
 .terminalContainer {
-  width: 100vw;
-  height: 100vh;
-  background: var(--bg-deep);
-  color: var(--amber-bright);
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+
   display: flex;
   flex-direction: column;
+
+  background: var(--bg-deep);
+  color: var(--amber-bright);
   font-family: var(--terminal-font);
+
   position: relative;
   overflow: hidden;
-  mask-image: radial-gradient(circle, white 70%, black 120%);
 }
 
-.terminalGlitch {
-  animation: globalGlitch 0.2s cubic-bezier(.25,.46,.45,.94) both;
-}
-
-@keyframes globalGlitch {
-  0% { transform: translate(0); filter: hue-rotate(0deg); }
-  20% { transform: translate(-3px, 3px) skew(2deg); filter: hue-rotate(90deg) contrast(1.5); }
-  40% { transform: translate(3px, -3px) skew(-2deg); }
-  60% { transform: translate(-3px, 0); }
-  100% { transform: translate(0); filter: hue-rotate(0deg); }
-}
-
-.systemBypassed {
-  box-shadow: inset 0 0 30px var(--success-glow);
-  border-left: 2px solid var(--success-green);
-}
-
+/* ============================================================
+   CRT OVERLAY (NON BLOCKING)
+============================================================ */
 .hardwareOverlays {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  z-index: 10000;
+  z-index: 5;
 }
 
 .amberScanline {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    rgba(18, 16, 1, 0) 50%, 
-    rgba(0, 0, 0, 0.25) 50%
-  ), linear-gradient(
-    90deg, 
-    rgba(255, 0, 0, 0.03), 
-    rgba(0, 255, 0, 0.01), 
-    rgba(0, 0, 255, 0.03)
-  );
+  background:
+    linear-gradient(rgba(0,0,0,0) 50%, rgba(0,0,0,0.25) 50%),
+    linear-gradient(90deg, rgba(255,0,0,0.03), rgba(0,255,0,0.01), rgba(0,0,255,0.03));
   background-size: 100% 3px, 3px 100%;
-  opacity: 0.3;
+  opacity: 0.25;
 }
 
 .crtStatic {
   position: absolute;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)' opacity='0.03'/%3E%3C/svg%3E");
-  opacity: 0.15;
+  opacity: 0.1;
+  background-image: radial-gradient(rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 3px 3px;
 }
 
 .vignette {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.8) 120%);
+  background: radial-gradient(circle, transparent 50%, rgba(0,0,0,0.85) 130%);
 }
 
 /* ============================================================
-   BOOT SCREEN (PANTALLA DE INICIO)
-   ============================================================ */
-.bootingScreen {
-  position: fixed;
-  inset: 0;
-  background: #000;
-  z-index: 10000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--terminal-font);
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-.bootTerminal {
-  width: 100%;
-  max-width: 600px;
-  padding: 20px;
-}
-
-.bootBrand {
-  color: var(--amber-bright);
-  font-size: clamp(1.2rem, 5vw, 1.8rem);
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-.bootProgressContainer {
-  width: 100%;
-  height: 2px;
-  background: #222;
-  margin-bottom: 20px;
-  overflow: hidden;
-}
-
-.bootProgressBar {
-  height: 100%;
-  background: var(--amber-bright);
-  box-shadow: 0 0 10px var(--amber-glow);
-}
-
-.bootLogs {
-  max-height: 200px;
-  overflow-y: auto;
-  font-size: clamp(10px, 3vw, 12px);
-  padding-right: 10px;
-}
-
-.bootLogLine {
-  color: #666;
-  margin-bottom: 4px;
-  word-break: break-word;
-}
-
-/* ============================================================
-   HEADER TÁCTICO (HUD)
-   ============================================================ */
+   HEADER (SAFE)
+============================================================ */
 .hudHeader {
-  height: var(--header-height);
+  flex-shrink: 0;
   background: var(--panel-bg);
-  border-bottom: 2px solid var(--amber-dim);
-  padding: 0 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  position: relative;
-  z-index: 100;
-}
+  border-bottom: 1px solid var(--amber-dim);
 
-.hudHeader::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: var(--amber-bright);
-  box-shadow: 0 0 15px var(--amber-glow);
-  opacity: 0.2;
-}
-
-.headerMainRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 15px;
-  flex-wrap: wrap;
-}
-
-.headerLeft {
-  display: flex;
-  align-items: center;
-  min-width: fit-content;
-}
-
-.brandingGroup {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  flex-wrap: wrap;
-}
-
-.d6LogoAmber {
-  font-size: clamp(24px, 5vw, 32px);
-  font-weight: 900;
-  color: #000;
-  background: var(--amber-bright);
-  padding: 5px 15px;
-  clip-path: polygon(0 0, 100% 0, 85% 100%, 0 100%);
-  box-shadow: 0 0 20px var(--amber-glow);
-  letter-spacing: -1px;
-  white-space: nowrap;
-}
-
-.sysMeta {
-  display: flex;
-  flex-direction: column;
-  font-size: clamp(9px, 2vw, 11px);
-  color: var(--amber-dim);
-}
-
-.sysId, .opStatus {
-  line-height: 1.4;
-}
-
-.headerCenter {
-  flex: 1;
-  min-width: 200px;
-  max-width: 500px;
-  margin: 0 auto;
-}
-
-.headerRight {
-  display: flex;
-  align-items: center;
-  min-width: fit-content;
-}
-
-.telemetryGroup {
-  display: flex;
-  gap: 15px;
-  padding: 5px 15px;
-  background: rgba(0,0,0,0.5);
-  border: 1px solid var(--amber-ultra-dim);
-  clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.telItem {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-width: 50px;
-}
-
-.telItem span {
-  font-size: clamp(12px, 2.5vw, 14px);
-  font-weight: bold;
-}
-
-.telItem label {
-  font-size: 7px;
-  opacity: 0.5;
-  text-transform: uppercase;
-}
-
-.textHazard {
-  color: var(--hazard-red);
-  animation: blinkHazard 0.5s infinite alternate;
-}
-
-@keyframes blinkHazard {
-  from { opacity: 1; }
-  to { opacity: 0.3; }
-}
-
-.radioPulse {
-  color: var(--success-glow);
-  animation: radioWave 2s infinite;
-}
-
-@keyframes radioWave {
-  0% { opacity: 0.2; transform: scale(0.8); }
-  50% { opacity: 1; transform: scale(1.1); }
-  100% { opacity: 0.2; transform: scale(0.8); }
+  padding: 10px 16px;
+  z-index: 20;
 }
 
 /* ============================================================
-   WORKSPACE (SIDEBAR + EXPLORER)
-   ============================================================ */
+   WORKSPACE (CRITICAL FIX AREA)
+============================================================ */
 .workspaceWrapper {
   flex: 1;
+  min-height: 0; /* 🔥 CRITICAL FIX */
+
   display: flex;
   overflow: hidden;
-  background: repeating-linear-gradient(
-    0deg,
-    rgba(255, 179, 0, 0.01) 0px,
-    rgba(255, 179, 0, 0.01) 1px,
-    transparent 1px,
-    transparent 40px
-  );
   position: relative;
 }
 
+/* ============================================================
+   SIDEBAR
+============================================================ */
 .sidebar {
   width: var(--sidebar-width);
-  background: rgba(4, 5, 6, 0.9);
+  flex-shrink: 0;
+
+  background: rgba(5,6,7,0.9);
   border-right: 1px solid var(--amber-dim);
-  box-shadow: 20px 0 50px rgba(0,0,0,0.5);
-  backdrop-filter: blur(10px);
-  z-index: 50;
-  transition: transform 0.4s var(--crt-curve);
+
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+
+  z-index: 15;
 }
 
 .sidebarInner {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  padding-bottom: 20px;
-}
-
-.sidebarModule {
-  margin-bottom: 2px;
-  border-bottom: 1px solid var(--amber-ultra-dim);
-}
-
-.modHeader {
-  background: linear-gradient(90deg, var(--amber-ultra-dim), transparent);
-  padding: 10px 15px;
-  font-size: 12px;
-  font-weight: bold;
-  letter-spacing: 2px;
-  color: var(--amber-glow);
-}
-
-.modBody {
-  padding: 15px;
-}
-
-/* Kernel Log */
-.kernelLog {
-  padding: 15px;
-  font-size: 11px;
-  background: rgba(0,0,0,0.2);
-  line-height: 1.6;
-  max-height: 300px;
-  overflow-y: auto;
-}
-
-.logLine {
-  display: flex;
-  gap: 10px;
-  border-left: 2px solid transparent;
-  padding-left: 5px;
-  transition: all 0.2s;
-  margin-bottom: 4px;
-}
-
-.logLine:hover {
-  background: var(--amber-ultra-dim);
-  border-left-color: var(--amber-bright);
-}
-
-.logTimestamp {
-  opacity: 0.5;
-}
-
-/* File Explorer */
-.fileExplorer {
   flex: 1;
   overflow-y: auto;
-  padding: 40px 30px;
+}
+
+.sidebarInner::-webkit-scrollbar {
+  width: 4px;
+}
+.sidebarInner::-webkit-scrollbar-thumb {
+  background: var(--amber-dim);
+}
+
+/* ============================================================
+   FILE EXPLORER (SCROLL FIX)
+============================================================ */
+.fileExplorer {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+
+  overflow-y: auto;
+  padding: 30px;
+
+  display: flex;
+  flex-direction: column;
+}
+
+/* smooth scroll */
+.fileExplorer {
   scroll-behavior: smooth;
 }
 
+/* scrollbar */
 .fileExplorer::-webkit-scrollbar {
   width: 4px;
 }
 .fileExplorer::-webkit-scrollbar-thumb {
   background: var(--amber-dim);
 }
-.fileExplorer::-webkit-scrollbar-thumb:hover {
-  background: var(--amber-bright);
+
+/* ============================================================
+   GRID
+============================================================ */
+.gridContainer {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.fileGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
 }
 
 /* ============================================================
-   FLOATING ACTION BUTTON (MÓVIL)
-   ============================================================ */
+   FLOAT BUTTON
+============================================================ */
 .floatingSecurityBtn {
-  position: fixed;
-  bottom: 80px;
-  right: 25px;
-  width: 65px;
-  height: 65px;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+
+  width: 60px;
+  height: 60px;
+
   border-radius: 50%;
   background: #0a0a0a;
   border: 2px solid var(--amber-bright);
-  color: var(--amber-bright);
+
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
-  box-shadow: 0 0 20px var(--amber-glow);
-  cursor: pointer;
-  transition: all 0.3s var(--crt-curve);
-  will-change: transform; /* Mejora rendimiento */
-}
 
-.fabActive {
-  background: var(--hazard-red);
-  border-color: #fff;
-  color: #fff;
-  transform: rotate(180deg) scale(0.9);
-}
-
-.fabIcon {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.pulseIcon {
-  animation: pulseSecurity 1.5s infinite;
-}
-
-@keyframes pulseSecurity {
-  0% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.2); opacity: 0.7; color: var(--hazard-red); }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-.fabNotify {
-  position: absolute;
-  top: -12px;
-  right: -12px;
-  background: var(--hazard-red);
-  color: white;
-  font-size: 10px;
-  font-weight: bold;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid #0a0a0a;
-  font-family: var(--terminal-font);
+  z-index: 50;
 }
 
 /* ============================================================
-   FOOTER Y BADGES
-   ============================================================ */
+   FOOTER (SAFE)
+============================================================ */
 .systemFooter {
+  flex-shrink: 0;
+
   height: 40px;
   background: var(--panel-bg);
   border-top: 1px solid var(--amber-dim);
+
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 20px;
-  font-size: clamp(9px, 2vw, 11px);
-  color: var(--amber-dim);
-  flex-wrap: wrap;
-  gap: 10px;
+
+  padding: 0 16px;
+  font-size: 11px;
 }
 
+/* ============================================================
+   STATUS
+============================================================ */
 .statusBox {
   display: flex;
   align-items: center;
@@ -480,267 +225,57 @@
 
 .statusUnlocked {
   background: var(--success-green);
-  box-shadow: 0 0 10px var(--success-glow);
-}
-
-.glowGreen {
-  color: var(--success-green);
-  text-shadow: 0 0 5px var(--success-glow);
-}
-
-.footerCenterInfo {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.radBadge, .locBadge {
-  background: rgba(255, 179, 0, 0.1);
-  border: 1px solid var(--amber-dim);
-  padding: 2px 8px;
-  border-radius: 2px;
-  font-size: clamp(8px, 2vw, 10px);
-}
-
-.separator {
-  width: 1px;
-  height: 15px;
-  background: var(--amber-ultra-dim);
-}
-
-.footerTime {
-  display: flex;
-  align-items: center;
-  gap: 5px;
 }
 
 /* ============================================================
-   GRID CONTAINER (para el explorador de archivos)
-   ============================================================ */
-.gridContainer {
-  width: 100%;
-  max-width: 1600px;
-  margin: 0 auto;
-}
-
-/* ============================================================
-   RESPONSIVIDAD AVANZADA - MÚLTIPLES BREAKPOINTS
-   ============================================================ */
-
-/* Tablets y móviles grandes */
+   MOBILE (REAL FIX)
+============================================================ */
 @media (max-width: 1024px) {
+
   .sidebar {
     position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
+    inset: 0 auto 0 0;
     width: 85%;
-    max-width: 340px;
     transform: translateX(-100%);
-    backdrop-filter: blur(10px);
+    transition: transform 0.3s ease;
   }
 
   .sidebarOpen {
     transform: translateX(0);
   }
 
-  .headerMainRow {
-    gap: 10px;
-  }
-
-  .kernelModule {
-    display: none; /* Oculto en móvil para simplificar */
-  }
-
   .fileExplorer {
-    padding: 20px 15px;
-  }
-
-  .floatingSecurityBtn {
-    display: flex;
+    padding: 16px;
   }
 }
 
-/* Móviles medianos (paisaje y retrato) */
+/* ============================================================
+   SMALL DEVICES
+============================================================ */
 @media (max-width: 768px) {
-  .headerMainRow {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 8px;
-  }
 
-  .headerLeft, .headerRight {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .headerCenter {
-    order: 3;
-    width: 100%;
-    max-width: none;
-    margin-top: 5px;
-  }
-
-  .telemetryGroup {
-    padding: 5px 10px;
-    gap: 8px;
-  }
-
-  .d6LogoAmber {
-    font-size: 22px;
-    padding: 3px 10px;
-  }
-
-  .footerCenterInfo {
-    display: none; /* Ocultamos información extra en móvil pequeño */
-  }
-
-  .systemFooter {
-    justify-content: center;
-    padding: 0 10px;
-  }
-
-  .statusBox {
-    flex: 1;
-    justify-content: center;
-  }
-}
-
-/* Móviles pequeños (menos de 480px) */
-@media (max-width: 480px) {
-  :root {
-    --header-height: 80px;
-  }
-
-  .fileExplorer {
-    padding: 10px 8px;
-  }
-
-  .floatingSecurityBtn {
-    bottom: 60px;
-    right: 15px;
-    width: 55px;
-    height: 55px;
-  }
-
-  .bootBrand {
-    font-size: 1rem;
-  }
-
-  .bootLogs {
-    font-size: 9px;
-  }
-
-  .telemetryGroup {
-    gap: 5px;
-    padding: 3px 8px;
-  }
-
-  .telItem {
-    min-width: 40px;
-  }
-
-  .telItem span {
-    font-size: 11px;
-  }
-
-  .d6LogoAmber {
-    font-size: 20px;
-    padding: 2px 8px;
-  }
-}
-
-/* Móviles muy pequeños (<= 360px) */
-@media (max-width: 360px) {
-  .fileExplorer {
-    padding: 8px 5px;
-  }
-
-  .floatingSecurityBtn {
-    bottom: 50px;
-    right: 10px;
-    width: 48px;
-    height: 48px;
-  }
-
-  .fabNotify {
-    top: -8px;
-    right: -8px;
-    width: 16px;
-    height: 16px;
-    font-size: 8px;
-  }
-
-  .telemetryGroup {
-    flex-wrap: wrap;
-  }
-}
-
-/* Orientación landscape en móviles */
-@media (max-height: 500px) and (orientation: landscape) {
   .hudHeader {
-    height: 60px;
-    padding: 0 10px;
+    padding: 8px;
   }
+
+  .fileGrid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+
+}
+
+/* ============================================================
+   ULTRA SMALL
+============================================================ */
+@media (max-width: 480px) {
 
   .fileExplorer {
     padding: 10px;
   }
 
   .floatingSecurityBtn {
-    bottom: 40px;
-    right: 15px;
+    width: 50px;
+    height: 50px;
   }
 
-  .systemFooter {
-    height: 30px;
-  }
-}
-
-/* Pantallas grandes (1440px+) */
-@media (min-width: 1440px) {
-  .fileExplorer {
-    padding: 50px 40px;
-  }
-
-  .gridContainer {
-    max-width: 1600px;
-  }
-
-  .d6LogoAmber {
-    font-size: 36px;
-  }
-
-  .headerCenter {
-    max-width: 600px;
-  }
-}
-
-/* ============================================================
-   ESTILOS ADICIONALES PARA COMPONENTES INTERNOS (bases)
-   ============================================================ */
-.searchBarContainer {
-  width: 100%;
-}
-
-.fileGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 20px;
-}
-
-.terminalPuzzle {
-  background: rgba(0,0,0,0.5);
-  border: 1px solid var(--amber-dim);
-  padding: 10px;
-}
-
-.loadingFallback {
-  color: var(--amber-bright);
-  padding: 20px;
-  text-align: center;
-  font-family: var(--terminal-font);
-  animation: pulse 1.5s infinite;
 }
