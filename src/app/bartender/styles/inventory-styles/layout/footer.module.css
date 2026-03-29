@@ -1,25 +1,26 @@
+/* ========== BASE ========== */
 .footer {
   position: relative;
-  background: linear-gradient(90deg, #0c0906 0%, #1a130c 100%);
-  border-top: 1px solid #3a2a1c;
+  background: linear-gradient(180deg, #0c0906 0%, #1a130c 100%);
+  border-top: 2px solid #3a2e22;
   padding: 0.5rem 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 1rem;
   font-family: 'Courier New', monospace;
   font-size: 0.7rem;
   color: #cfc7b0;
   z-index: 10;
-  gap: 1rem;
   flex-wrap: wrap;
+  box-shadow: 0 -4px 12px rgba(0,0,0,0.5);
+  overflow: hidden;
 }
 
+/* Líneas de escaneo */
 .scanlines {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   background: repeating-linear-gradient(
     0deg,
     rgba(0, 0, 0, 0.05) 0px,
@@ -30,30 +31,36 @@
   pointer-events: none;
 }
 
+/* Remaches decorativos (solo visibles en desktop) */
+.rivets {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 4px;
+  pointer-events: none;
+}
+.rivets::before,
+.rivets::after {
+  content: '';
+  width: 4px;
+  height: 4px;
+  background: #8b6b42;
+  border-radius: 50%;
+  box-shadow: inset 0 1px 1px rgba(0,0,0,0.5), 0 0 2px #ffdd99;
+}
+
+/* ========== SECCIÓN IZQUIERDA ========== */
 .left {
   display: flex;
   align-items: center;
   gap: 0.8rem;
-  z-index: 2;
-}
-
-.backButton {
-  background: #2a241a;
-  border: 1px solid #5e3a1c;
-  color: #eeddcc;
+  background: rgba(0,0,0,0.3);
   padding: 0.2rem 0.6rem;
-  border-radius: 4px;
-  font-size: 0.7rem;
-  cursor: pointer;
-  transition: all 0.2s;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-.backButton:hover {
-  background: #5e3a1c;
-  color: #fff2e0;
+  border-radius: 6px;
+  border: 1px solid #3a2e22;
 }
 
 .physicalButtons {
@@ -68,150 +75,161 @@
   border: none;
   cursor: pointer;
   transition: all 0.1s ease;
-}
-.button.danger {
-  background: #5a2a2a;
-  box-shadow: inset 0 1px 0 #a55, 0 1px 2px rgba(0,0,0,0.3);
-}
-.button.neutral {
-  background: #3a2a1c;
-  box-shadow: inset 0 1px 0 #b8a070, 0 1px 2px rgba(0,0,0,0.3);
-}
-.button.reset {
-  background: #2a2a1a;
-  box-shadow: inset 0 1px 0 #8b6b42, 0 1px 2px rgba(0,0,0,0.3);
+  box-shadow: inset 0 1px 0 rgba(255,255,200,0.2), 0 1px 2px rgba(0,0,0,0.3);
 }
 .button:active {
   transform: translateY(1px);
-  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.2);
 }
+.danger { background: #6a2a2a; border-bottom: 2px solid #a33; }
+.neutral { background: #3a2a1c; border-bottom: 2px solid #b8a070; }
+.reset { background: #2a2a1a; border-bottom: 2px solid #8b6b42; }
 
+/* ========== SECCIÓN CENTRAL ========== */
 .center {
+  flex: 1;
   display: flex;
   align-items: center;
-  gap: 1rem;
-  flex: 1;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.3);
+  gap: 1rem;
+  background: rgba(0,0,0,0.2);
   padding: 0.2rem 0.8rem;
-  border-radius: 20px;
-  border: 1px solid #3a2a1c;
+  border-radius: 6px;
+  border: 1px solid #3a2e22;
+  min-width: 0;
 }
 
-.barGroup {
+.radMeter {
   display: flex;
-  gap: 2px;
+  align-items: center;
+  gap: 0.6rem;
+}
+.radBars {
+  display: flex;
+  gap: 3px;
   align-items: flex-end;
-  height: 40px;
-  padding: 4px 0;
+  height: 36px;
 }
-
 .bar {
-  width: 8px;
+  width: 6px;
   background: #e0b86e;
-  transition: height 0.2s ease;
   border-radius: 2px 2px 0 0;
+  transition: height 0.2s;
 }
-.bar.warningBar {
-  background: #ffaa44;
-}
-.bar.criticalBar {
-  background: #d63e3e;
+.warningBar { background: #ffaa44; }
+.criticalBar { background: #d63e3e; box-shadow: 0 0 4px #d63e3e; }
+.radValue {
+  font-size: 0.7rem;
+  font-weight: bold;
+  font-family: monospace;
+  color: #ffdd99;
+  min-width: 65px;
 }
 
 .systemInfo {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  line-height: 1.2;
+  align-items: flex-end;
+  gap: 0.1rem;
 }
-.label {
+.os {
   font-size: 0.6rem;
-  letter-spacing: 0.5px;
+  opacity: 0.8;
 }
-.clock {
-  font-family: monospace;
+.time {
   font-size: 0.7rem;
+  font-family: monospace;
   color: #b8a88c;
 }
 
+/* ========== SECCIÓN DERECHA (BOTÓN + LEDS) ========== */
 .right {
   display: flex;
-  gap: 1rem;
-  z-index: 2;
-}
-
-.ledGroup {
-  display: flex;
   align-items: center;
-  gap: 0.3rem;
-  font-size: 0.6rem;
+  gap: 1rem;
+  background: rgba(0,0,0,0.3);
+  padding: 0.2rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid #3a2e22;
 }
 
+.statusLeds {
+  display: flex;
+  gap: 0.5rem;
+}
 .led {
-  position: relative;
-  width: 12px;
-  height: 12px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: #222;
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.4), 0 0 2px rgba(255,255,200,0.2);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.4);
 }
-.led.green {
-  background: #4c8b4c;
-  box-shadow: 0 0 4px #4c8b4c;
-}
-.led.amber {
-  background: #e0a020;
-  box-shadow: 0 0 4px #e0a020;
-}
-.led.red {
-  background: #b33b2c;
-  box-shadow: 0 0 6px #b33b2c;
-}
-.ledPulse {
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  border-radius: 50%;
-  background: inherit;
-  opacity: 0.6;
-  z-index: -1;
-}
+.led.green { background: #4c8b4c; box-shadow: 0 0 3px #4c8b4c; }
+.led.amber { background: #e0a020; box-shadow: 0 0 3px #e0a020; }
+.led.red { background: #b33b2c; box-shadow: 0 0 3px #b33b2c; }
 
+/* ========== RESPONSIVE (MÓVIL) ========== */
 @media (max-width: 768px) {
   .footer {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.5rem;
-    padding: 0.75rem;
-  }
-
-  .left, .center, .right {
-    justify-content: center;
-    width: 100%;
-  }
-
-  .center {
-    order: 2;
-  }
-
-  .right {
-    order: 3;
+    flex-direction: row;
     justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.8rem;
   }
 
+  /* Ocultamos botones físicos y detalles decorativos */
   .left {
-    order: 1;
-    justify-content: flex-start;
+    display: none;
   }
 
-  .physicalButtons {
+  .rivets {
+    display: none;
+  }
+
+  /* Centro: solo el valor de radiación (sin barras) */
+  .center {
+    flex: 0 1 auto;
+    background: none;
+    border: none;
+    padding: 0;
     gap: 0.5rem;
   }
+  .radBars {
+    display: none;
+  }
+  .radValue {
+    font-size: 0.7rem;
+    background: rgba(0,0,0,0.3);
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    border: 1px solid #3a2e22;
+  }
+  .systemInfo {
+    display: none;
+  }
 
-  .barGroup {
-    height: 32px;
+  /* Derecha: botón prominente + LEDs reducidos */
+  .right {
+    background: none;
+    border: none;
+    padding: 0;
+    gap: 0.6rem;
+  }
+  .statusLeds {
+    gap: 0.3rem;
+  }
+  .led {
+    width: 6px;
+    height: 6px;
+  }
+
+  /* Aseguramos que el botón BackToHome sea grande y fácil de pulsar */
+  .right :global(.back-to-home) {
+    padding: 0.4rem 0.9rem;
+    min-width: 85px;
+    font-size: 0.75rem;
+    background: rgba(0,0,0,0.6);
+    border-radius: 24px;
+    backdrop-filter: blur(4px);
   }
 }

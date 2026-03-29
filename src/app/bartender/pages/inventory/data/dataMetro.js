@@ -20,7 +20,7 @@ export const METRO_DRINKS = {
     { id: 'd1', name: "BOURBON_RESERVE", desc: "Hongo negro filtrado por mascara GP-5.", flavor: "Earthy / Chemical", toxicity: 18, alcohol: "45%", price: 5, tag: "STALKER_CHOICE", ingredients: ["Black Mushroom", "Charcoal"], metadata: { hint: "D6" } },
     { id: 'd3', name: "RED_LINE_FUEL", desc: "Mezcla de combate oficial. No apto para cardiacos.", flavor: "Metallic / Spicy", toxicity: 12, alcohol: "25%", price: 3, tag: "STIM", ingredients: ["Adrenaline", "Iron Oxides"] },
     { id: 'd10', name: "STATION_BREW", desc: "Te de musgo fermentado. Consumo civil Vdnkh.", flavor: "Bitter / Grass", toxicity: 5, alcohol: "2%", price: 1, tag: "COMMON", ingredients: ["Edible Moss"] },
-    { id: 'd15', name: "RAT_LIQUOR", desc: "Destilado de emergencia. Tuneles secundarios.", flavor: "Rotten / Sharp", toxicity: 45, alcohol: "80%", price: 2, tag: "SCRAP", ingredients: ["Tail Infusion"] }
+    { id: 'd15', name: "RAT_LIQUOR", desc: "Destilado de emergencia. Tuneles secundarios.", flavor: "Rotten / Sharp", toxicity: 45, alcohol: "80%", price: 452, tag: "SCRAP", ingredients: ["Tail Infusion"] }
   ],
   commerce: [
     { id: 'd7', name: "HANZA_GOLD", desc: "Alcohol de grano puro. Oro liquido.", flavor: "Smooth / Wheat", toxicity: 5, alcohol: "40%", price: 35, tag: "PREMIUM", ingredients: ["Pre-war Rye"] },

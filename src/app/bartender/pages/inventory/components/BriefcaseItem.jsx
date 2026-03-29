@@ -18,15 +18,20 @@ import {
   HardDrive,
   Shield,
   MapPin,
-  StickyNote,
   Info,
   Droplet,
   DollarSign,
   Key,
+  Paperclip,
+  Stamp,
+  Scissors,
+  Bookmark,
+  Coffee,
 } from "lucide-react";
 import { cva } from "class-variance-authority";
 import styles from "../../../styles/inventory-styles/briefcase-item.module.css";
 import BriefcaseModal from "./BriefcaseModal";
+import StickyNote from "./StickyNote";
 
 // --------------------------------------------------------------
 // Helper: get icon for tag / security level
@@ -102,9 +107,7 @@ const getStickyColor = (tag, securityLevel) => {
   }
 };
 
-// --------------------------------------------------------------
-// Variants with cva (tag + condition)
-// --------------------------------------------------------------
+// Variants with cva
 const cardVariants = cva(styles.card, {
   variants: {
     tag: {
@@ -119,12 +122,30 @@ const cardVariants = cva(styles.card, {
       worn:     styles.conditionWorn,
       damaged:  styles.conditionDamaged,
     },
+    tabStyle: {
+      default: styles.tabDefault,
+      folded:  styles.tabFolded,
+      rounded: styles.tabRounded,
+    },
   },
   defaultVariants: {
     tag: "COMMON",
     condition: "pristine",
+    tabStyle: "default",
   },
 });
+
+// --------------------------------------------------------------
+// Helper: decide clip type based on item properties
+// --------------------------------------------------------------
+const getClipType = (item) => {
+  if (item.tag === "SECRET") return "staple";
+  if (item.type === "drink") return "paperclip";
+  if (item.fileSize === "?? GB") return "torn";
+  if (item.condition === "damaged") return "none";
+  if (item.price > 100) return "binder";
+  return "paperclip";
+};
 
 // --------------------------------------------------------------
 // Main Component
@@ -159,6 +180,18 @@ export default function BriefcaseItem({ item, index }) {
   const flavor = item.flavor;
   const hint = item.metadata?.hint;
 
+  // Decide tab style based on tag and condition
+  let tabStyle = "default";
+  if (tag === "SECRET") tabStyle = "folded";
+  if (condition === "worn") tabStyle = "rounded";
+  if (condition === "damaged") tabStyle = "folded";
+
+  // Clip type
+  const clipType = getClipType(item);
+
+  // Random coffee stain presence (based on item properties)
+  const hasCoffeeStain = condition === "worn" || tag === "SCRAP" || (price && price > 50);
+
   // Animation on hover (damaged shake)
   const hoverAnimation = condition === "damaged"
     ? { scale: 1.01, x: [-1, 1, -1, 0], transition: { duration: 0.2, repeat: 1 } }
@@ -172,11 +205,19 @@ export default function BriefcaseItem({ item, index }) {
         transition={{ delay: index * 0.03, type: "spring", stiffness: 300 }}
         whileHover={hoverAnimation}
         whileTap={{ scale: 0.98 }}
-        className={cardVariants({ tag, condition })}
+        className={cardVariants({ tag, condition, tabStyle })}
         onClick={() => setOpen(true)}
       >
         {/* Folded corner */}
         <div className={`${styles.corner} ${styles[`corner_${condition}`]}`} />
+
+        {/* Additional paper layer (simulates folder thickness) */}
+        <div className={styles.paperLayer} />
+
+        {/* Coffee stain (if applicable) */}
+        {hasCoffeeStain && (
+          <div className={styles.coffeeStain} />
+        )}
 
         {/* Main tab */}
         <div className={styles.tab}>
@@ -193,9 +234,16 @@ export default function BriefcaseItem({ item, index }) {
             </span>
           </div>
 
-          {/* Name with paper clip */}
+          {/* Name with dynamic clip */}
           <div className={styles.nameWrapper}>
-            <span className={styles.paperClip}>📎</span>
+            {clipType !== "none" && (
+              <div className={styles.clip}>
+                {clipType === "paperclip" && <Paperclip size={12} className={styles.clipIcon} />}
+                {clipType === "staple" && <Scissors size={12} className={styles.clipIcon} />}
+                {clipType === "binder" && <div className={styles.binderClip} />}
+                {clipType === "torn" && <div className={styles.tornEdge} />}
+              </div>
+            )}
             <span className={styles.itemName}>{name.replaceAll("_", " ")}</span>
           </div>
 
@@ -271,24 +319,43 @@ export default function BriefcaseItem({ item, index }) {
                 animate={{ rotate: showSticky ? [0, -5, 5, 0] : 0 }}
                 transition={{ duration: 0.2 }}
               >
-                <StickyNote size={18} />
+                <Bookmark size={16} />
               </motion.div>
               <AnimatePresence>
                 {showSticky && (
                   <motion.div
-                    className={`${styles.stickyNotePopup} ${styles[`stickyNotePopup_${stickyColor}`]}`}
+                    className={styles.stickyNotePopupWrapper}
                     initial={{ opacity: 0, y: 10, scale: 0.9 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.9 }}
                     transition={{ duration: 0.15 }}
                   >
-                    <div className={styles.stickyNoteContent}>
-                      {stickyNote}
-                    </div>
+                    <StickyNote note={stickyNote} color={stickyColor} size="sm" />
                   </motion.div>
                 )}
               </AnimatePresence>
             </div>
+          )}
+
+          {/* Additional decorative elements */}
+          {tag === "SECRET" && (
+            <div className={styles.confidentialStamp}>
+              <Stamp size={14} />
+              <span>CONFIDENTIAL</span>
+            </div>
+          )}
+          {item.type === "folder" && item.fileSize === "?? GB" && (
+            <div className={styles.redactedStamp}>REDACTED</div>
+          )}
+          {item.isLocked && (
+            <div className={styles.lockIcon}>
+              <Lock size={14} />
+            </div>
+          )}
+
+          {/* Small document corner peek (simulates a loose page) */}
+          {(tag === "PREMIUM" || condition === "worn") && (
+            <div className={styles.pagePeek} />
           )}
 
           {/* Condition decals */}
@@ -304,12 +371,8 @@ export default function BriefcaseItem({ item, index }) {
             <>
               <div className={styles.crease} />
               <div className={styles.smudge} />
+              <div className={styles.waterStain} />
             </>
-          )}
-
-          {/* Secret stamp for secret items */}
-          {(tag === "SECRET" || securityLevel === "TOP_SECRET" || securityLevel === "COSMIC") && (
-            <div className={styles.secretStamp}>CONFIDENTIAL</div>
           )}
         </div>
       </motion.div>

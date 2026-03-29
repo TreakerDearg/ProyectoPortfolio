@@ -6,6 +6,8 @@ import styles from "../../../../styles/inventory-styles/layout/monitor.module.cs
 export default function MonitorFrame({ children }) {
   return (
     <div className={styles.frame}>
+      {/* Curvatura de la pantalla */}
+      <div className={styles.screenCurve} />
 
       <motion.div
         className={styles.screen}
@@ -24,16 +26,18 @@ export default function MonitorFrame({ children }) {
           ease: "easeOut"
         }}
       >
+        {/* Capa de fósforo (glow) */}
+        <div className={styles.phosphorGlow} />
 
-        {/* VIDRIO / SUCIEDAD */}
+        {/* Suciedad / vidrio */}
         <div className={styles.glass} />
 
-        {/* CONTENIDO */}
+        {/* Contenido real */}
         <div className={styles.viewport}>
           {children}
         </div>
 
-        {/* EFECTOS CRT */}
+        {/* Efectos CRT */}
         <div className={styles.effects}>
           <div className={styles.scanlines} />
           <div className={styles.noise} />
@@ -41,8 +45,15 @@ export default function MonitorFrame({ children }) {
           <div className={styles.flicker} />
           <div className={styles.distortion} />
         </div>
-
       </motion.div>
+
+      {/* Tornillos decorativos */}
+      <div className={styles.screws}>
+        <div className={styles.screw} />
+        <div className={styles.screw} />
+        <div className={styles.screw} />
+        <div className={styles.screw} />
+      </div>
     </div>
   );
 }

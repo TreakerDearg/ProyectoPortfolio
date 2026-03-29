@@ -9,25 +9,22 @@ import {
   Cpu,
   Radio,
   HardDrive,
-  Terminal
+  Terminal,
+  Gauge,
+  Battery,
+  Shield
 } from "lucide-react";
+import { useMetro } from "../../context/MetroContext";
 import styles from "../../../../styles/inventory-styles/layout/sidebar-right.module.css";
 
-// Simulated data (could be replaced with real data from context)
-const getSimulatedData = () => ({
-  radiation: Math.random() * 0.8 + 0.2,        // 0.2 - 1.0 Sv/h
-  airFilter: Math.random() * 40 + 50,          // 50% - 90%
-  coreTemp: Math.random() * 15 + 55,           // 55°C - 70°C
-  systemLoad: Math.random() * 30 + 40,          // 40% - 70%
-});
-
+// Formateadores
 const formatRadiation = (val) => `${val.toFixed(2)} Sv/h`;
 const formatTemp = (val) => `${Math.round(val)}°C`;
 const formatPercent = (val) => `${Math.round(val)}%`;
 
-// Terminal messages (cycle through)
+// Mensajes de la terminal (rotativos)
 const terminalMessages = [
-  "> D6_OS v33.2",
+  "> D6_OS v33.2 ACTIVE",
   "> Auth: Artyom_Chyornyj",
   "> CRITICAL: RAD LEAK SECTOR_G",
   "> Air scrubbers at 63%",
@@ -36,103 +33,124 @@ const terminalMessages = [
   "> [REC] Change filters soon",
   "> Signal: POLIS_DOWNLINK",
   "> [OK] Encryption active",
-  "> Waiting for commands..."
+  "> System load: 57%",
+  "> Radiation levels elevated",
+  "> Bunker integrity: 87%",
+  "> Standby for orders..."
 ];
 
 export default function SidebarRight() {
-  const [systemData, setSystemData] = useState(getSimulatedData());
+  const { system } = useMetro();
   const [messageIndex, setMessageIndex] = useState(0);
   const [showTerminal, setShowTerminal] = useState(true);
+  const [typedText, setTypedText] = useState("");
+  const [currentMessage, setCurrentMessage] = useState(terminalMessages[0]);
 
-  // Update system data every 3 seconds
+  // Usar datos reales del sistema (si existen) o simular
+  const [radLevel, setRadLevel] = useState(0.45);
+  const [coreTemp, setCoreTemp] = useState(58);
+  const [systemLoad, setSystemLoad] = useState(54);
+
+  // Leer radiación del contexto
+  useEffect(() => {
+    if (system?.radiation_level) {
+      const rad = parseFloat(system.radiation_level);
+      if (!isNaN(rad)) setRadLevel(rad);
+    }
+  }, [system]);
+
+  // Simular variaciones suaves de temperatura y carga (pueden venir del contexto después)
   useEffect(() => {
     const interval = setInterval(() => {
-      setSystemData(getSimulatedData());
-    }, 3000);
+      setCoreTemp(prev => {
+        const delta = (Math.random() - 0.5) * 0.5;
+        return Math.min(75, Math.max(45, prev + delta));
+      });
+      setSystemLoad(prev => {
+        const delta = (Math.random() - 0.5) * 3;
+        return Math.min(95, Math.max(20, prev + delta));
+      });
+    }, 5000);
     return () => clearInterval(interval);
   }, []);
 
-  // Rotate terminal messages every 2 seconds
+  // Rotar mensajes y efecto máquina de escribir
   useEffect(() => {
-    const interval = setInterval(() => {
+    const messageInterval = setInterval(() => {
       setMessageIndex((prev) => (prev + 1) % terminalMessages.length);
-    }, 2000);
-    return () => clearInterval(interval);
+    }, 4000);
+    return () => clearInterval(messageInterval);
   }, []);
 
-  const { radiation, airFilter, coreTemp, systemLoad } = systemData;
+  useEffect(() => {
+    const newMsg = terminalMessages[messageIndex];
+    setCurrentMessage(newMsg);
+    let i = 0;
+    setTypedText("");
+    const typingInterval = setInterval(() => {
+      if (i <= newMsg.length) {
+        setTypedText(newMsg.slice(0, i));
+        i++;
+      } else {
+        clearInterval(typingInterval);
+      }
+    }, 40);
+    return () => clearInterval(typingInterval);
+  }, [messageIndex]);
 
-  const isRadiationHigh = radiation > 0.6;
-  const isAirFilterLow = airFilter < 60;
+  // Indicadores
+  const isRadiationHigh = radLevel > 0.6;
+  const isRadiationCritical = radLevel > 0.8;
   const isCoreHot = coreTemp > 65;
+  const isLoadHigh = systemLoad > 80;
+
+  // Porcentajes para las barras
+  const radPercent = Math.min(100, (radLevel / 1.2) * 100);
+  const tempPercent = Math.min(100, ((coreTemp - 40) / 35) * 100);
+  const loadPercent = systemLoad;
 
   return (
     <aside className={styles.sidebar}>
       <div className={styles.scanlines} />
+      <div className={styles.rivets} />
 
       <div className={styles.container}>
         {/* Header */}
         <div className={styles.header}>
-          <HardDrive size={14} />
+          <Shield size={14} className={styles.headerIcon} />
           <span>D6 MONITOR</span>
+          <HardDrive size={12} className={styles.headerSecondary} />
         </div>
 
-        {/* System stats grid */}
+        {/* Sistema de radiación principal */}
+        <div className={styles.radPanel}>
+          <div className={styles.radLabel}>
+            <Radio size={12} className={isRadiationHigh ? styles.warningIcon : ""} />
+            <span>RADIATION LEVEL</span>
+          </div>
+          <div className={styles.radGauge}>
+            <motion.div
+              className={`${styles.radFill} ${isRadiationCritical ? styles.criticalFill : isRadiationHigh ? styles.warningFill : ""}`}
+              animate={{ width: `${radPercent}%` }}
+              transition={{ duration: 0.3 }}
+            />
+          </div>
+          <div className={styles.radValue}>
+            {formatRadiation(radLevel)}
+            {isRadiationHigh && (
+              <motion.span
+                animate={{ opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 0.8, repeat: Infinity }}
+                className={styles.alertPulse}
+              >
+                ⚠️
+              </motion.span>
+            )}
+          </div>
+        </div>
+
+        {/* Grid de estadísticas */}
         <div className={styles.statsGrid}>
-          {/* Radiation */}
-          <div className={styles.statCard}>
-            <div className={styles.statHeader}>
-              <Radio size={14} className={isRadiationHigh ? styles.warningIcon : styles.icon} />
-              <span>RADIATION</span>
-            </div>
-            <div className={styles.gaugeContainer}>
-              <motion.div
-                className={`${styles.gaugeFill} ${isRadiationHigh ? styles.criticalFill : ""}`}
-                animate={{ width: `${radiation * 100}%` }}
-                transition={{ duration: 0.5 }}
-              />
-            </div>
-            <div className={styles.statValue}>
-              {formatRadiation(radiation)}
-              {isRadiationHigh && (
-                <motion.span
-                  className={styles.alertPulse}
-                  animate={{ opacity: [0.5, 1, 0.5] }}
-                  transition={{ duration: 1, repeat: Infinity }}
-                >
-                  !!!
-                </motion.span>
-              )}
-            </div>
-          </div>
-
-          {/* Air Filter */}
-          <div className={styles.statCard}>
-            <div className={styles.statHeader}>
-              <Wind size={14} />
-              <span>AIR FILTER</span>
-            </div>
-            <div className={styles.gaugeContainer}>
-              <motion.div
-                className={`${styles.gaugeFill} ${isAirFilterLow ? styles.warningFill : ""}`}
-                animate={{ width: `${airFilter}%` }}
-                transition={{ duration: 0.5 }}
-              />
-            </div>
-            <div className={styles.statValue}>
-              {formatPercent(airFilter)}
-              {isAirFilterLow && (
-                <motion.span
-                  className={styles.alertPulse}
-                  animate={{ opacity: [0.5, 1, 0.5] }}
-                  transition={{ duration: 1, repeat: Infinity }}
-                >
-                  !
-                </motion.span>
-              )}
-            </div>
-          </div>
-
           {/* Core Temp */}
           <div className={styles.statCard}>
             <div className={styles.statHeader}>
@@ -142,21 +160,13 @@ export default function SidebarRight() {
             <div className={styles.gaugeContainer}>
               <motion.div
                 className={`${styles.gaugeFill} ${isCoreHot ? styles.criticalFill : ""}`}
-                animate={{ width: `${(coreTemp - 40) / 40 * 100}%` }}
-                transition={{ duration: 0.5 }}
+                animate={{ width: `${tempPercent}%` }}
+                transition={{ duration: 0.3 }}
               />
             </div>
             <div className={styles.statValue}>
               {formatTemp(coreTemp)}
-              {isCoreHot && (
-                <motion.span
-                  className={styles.alertPulse}
-                  animate={{ opacity: [0.5, 1, 0.5] }}
-                  transition={{ duration: 1, repeat: Infinity }}
-                >
-                  🔥
-                </motion.span>
-              )}
+              {isCoreHot && <span className={styles.warningIcon}>🔥</span>}
             </div>
           </div>
 
@@ -168,16 +178,48 @@ export default function SidebarRight() {
             </div>
             <div className={styles.gaugeContainer}>
               <motion.div
-                className={styles.gaugeFill}
-                animate={{ width: `${systemLoad}%` }}
-                transition={{ duration: 0.5 }}
+                className={`${styles.gaugeFill} ${isLoadHigh ? styles.warningFill : ""}`}
+                animate={{ width: `${loadPercent}%` }}
+                transition={{ duration: 0.3 }}
               />
             </div>
             <div className={styles.statValue}>{formatPercent(systemLoad)}</div>
           </div>
+
+          {/* Air Filter (simulado pero podría venir del contexto) */}
+          <div className={styles.statCard}>
+            <div className={styles.statHeader}>
+              <Wind size={14} />
+              <span>AIR FILTER</span>
+            </div>
+            <div className={styles.gaugeContainer}>
+              <motion.div
+                className={styles.gaugeFill}
+                animate={{ width: "63%" }}
+                transition={{ duration: 0.3 }}
+              />
+            </div>
+            <div className={styles.statValue}>63%</div>
+          </div>
+
+          {/* Battery / Power */}
+          <div className={styles.statCard}>
+            <div className={styles.statHeader}>
+              <Battery size={14} />
+              <span>POWER RES</span>
+            </div>
+            <div className={styles.gaugeContainer}>
+              <motion.div
+                className={styles.gaugeFill}
+                animate={{ width: "78%" }}
+                transition={{ duration: 0.3 }}
+              />
+            </div>
+            <div className={styles.statValue}>78%</div>
+          </div>
         </div>
 
-        {/* Terminal Output */}
+        {/* Terminal con efecto de escritura */}
         <div className={styles.terminal}>
           <div className={styles.terminalHeader}>
             <Terminal size={12} />
@@ -199,20 +241,21 @@ export default function SidebarRight() {
                 className={styles.terminalContent}
               >
                 <div className={styles.terminalLine}>
-                  {terminalMessages[messageIndex]}
+                  <span className={styles.terminalPrompt}>&gt;</span>
+                  <span className={styles.terminalText}>{typedText}</span>
+                  <span className={styles.terminalCursor}>_</span>
                 </div>
-                <div className={styles.terminalCursor}>_</div>
               </motion.div>
             )}
           </AnimatePresence>
         </div>
 
-        {/* Warning Footer */}
+        {/* Footer de advertencia */}
         <div className={styles.footer}>
           <AlertTriangle size={12} className={styles.warningIcon} />
-          <span>RADIATION HAZARD</span>
+          <span>{isRadiationHigh ? "RADIATION HAZARD" : "SYSTEM STANDBY"}</span>
           <motion.div
-            className={styles.pulseDot}
+            className={`${styles.pulseDot} ${isRadiationHigh ? styles.red : styles.green}`}
             animate={{ scale: [1, 1.2, 1] }}
             transition={{ duration: 1, repeat: Infinity }}
           />

@@ -1,130 +1,333 @@
+/* ========== BASE ========== */
 .header {
   position: relative;
-  background: linear-gradient(90deg, #0c0906 0%, #1a130c 100%);
-  border-bottom: 1px solid #3a2a1c;
-  padding: 0.5rem 1rem;
+  background: linear-gradient(90deg, #0a0705 0%, #16100a 100%);
+  border-bottom: 2px solid #3a2e22;
+  padding: 0.4rem 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 0.8rem;
   font-family: 'Courier New', monospace;
   font-size: 0.7rem;
   color: #cfc7b0;
   z-index: 10;
+  flex-wrap: wrap;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
 }
 
+/* Líneas de escaneo */
 .scanlines {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   background: repeating-linear-gradient(
     0deg,
-    rgba(0, 0, 0, 0.05) 0px,
-    rgba(0, 0, 0, 0.05) 1px,
+    rgba(0, 0, 0, 0.08) 0px,
+    rgba(0, 0, 0, 0.08) 1px,
     transparent 1px,
-    transparent 4px
+    transparent 3px
   );
   pointer-events: none;
 }
 
-.left, .center, .right {
+/* Remaches laterales (decorativos) */
+.rivets {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
   display: flex;
-  align-items: center;
-  gap: 1rem;
-  z-index: 2;
+  justify-content: space-between;
+  padding: 0 6px;
+  pointer-events: none;
+}
+.rivets::before,
+.rivets::after {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: #8b6b42;
+  border-radius: 50%;
+  box-shadow: inset 0 1px 1px rgba(0,0,0,0.5), 0 0 2px #ffdd99;
+  margin-top: 4px;
 }
 
+.bolts {
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
+  pointer-events: none;
+}
+.bolt {
+  width: 4px;
+  height: 4px;
+  background: #5e3a1c;
+  border-radius: 50%;
+  box-shadow: 0 0 2px #b8a070;
+}
+
+/* ========== PANEL IZQUIERDO ========== */
+.left {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+.panel {
+  background: rgba(0,0,0,0.4);
+  border: 1px solid #3a2e22;
+  border-radius: 6px;
+  padding: 0.3rem 0.8rem;
+}
+.panelHeader {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.6rem;
+  color: #b89a6a;
+  border-bottom: 1px solid #3a2e22;
+  margin-bottom: 4px;
+  padding-bottom: 2px;
+}
 .indicator {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  background: rgba(0, 0, 0, 0.3);
-  padding: 0.2rem 0.6rem;
-  border-radius: 16px;
-  border: 1px solid #3a2a1c;
+  gap: 6px;
+  font-size: 0.65rem;
+  margin: 2px 0;
 }
-
-.indicator.warning {
-  border-color: #d63e3e;
+.iconPulse {
+  animation: pulse 1.2s infinite;
+}
+.warning {
   color: #ffaa66;
 }
-
-.iconPulse {
-  animation: pulse 1.5s infinite;
-}
-
-.iconDim {
-  opacity: 0.7;
-}
-
 .warningIcon {
   color: #d63e3e;
   animation: pulse 1s infinite;
 }
-
 .warningPulse {
-  margin-left: 0.25rem;
+  margin-left: 4px;
   font-weight: bold;
-  font-size: 0.8rem;
   color: #ffaa44;
 }
 
-@keyframes pulse {
-  0% { opacity: 0.5; }
-  100% { opacity: 1; }
-}
-
-.signalContainer {
+/* ========== PANEL CENTRAL ========== */
+.center {
+  flex: 1;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  background: rgba(0, 0, 0, 0.3);
-  padding: 0.2rem 0.6rem;
-  border-radius: 16px;
-  border: 1px solid #3a2a1c;
+  justify-content: center;
+  gap: 1rem;
+  background: rgba(0,0,0,0.3);
+  padding: 0.2rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #3a2e22;
+  min-width: 0;
+  flex-wrap: wrap;
 }
 
+/* Medidor de radiación */
+.gaugePanel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #1a150f;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+}
+.gaugeLabel {
+  font-size: 0.6rem;
+  color: #b89a6a;
+}
+.gaugeContainer {
+  width: 80px;
+  height: 6px;
+  background: #2a241a;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.gaugeFill {
+  height: 100%;
+  background: #e0b86e;
+  width: 0%;
+  transition: width 0.3s;
+}
+.gaugeFill.warningFill { background: #ffaa44; }
+.gaugeFill.criticalFill { background: #d63e3e; }
+.gaugeValue {
+  font-size: 0.65rem;
+  font-family: monospace;
+  min-width: 35px;
+  color: #ffdd99;
+}
+
+/* Terminal scroll */
+.terminalPanel {
+  background: #0a0705;
+  border: 1px solid #3a2e22;
+  border-radius: 4px;
+  padding: 0.2rem 0.5rem;
+  min-width: 150px;
+}
+.terminalHeader {
+  font-size: 0.55rem;
+  color: #b89a6a;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border-bottom: 1px solid #3a2e22;
+  margin-bottom: 2px;
+}
+.terminalContent {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.65rem;
+  font-family: monospace;
+  white-space: nowrap;
+}
+.cursor {
+  color: #ffaa44;
+}
+.scrollingText {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.blink {
+  animation: blink 1s step-end infinite;
+}
+
+/* Señal */
+.signalPanel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #1a150f;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+}
 .signalBars {
   display: flex;
   gap: 2px;
   align-items: flex-end;
-  height: 12px;
+  height: 14px;
 }
-
 .signalBar {
   width: 3px;
   background: #e0b86e;
   transition: height 0.2s;
 }
-
 .signalIcon {
   opacity: 0.7;
 }
-
 .signalText {
   font-size: 0.6rem;
-  letter-spacing: 0.5px;
 }
 
+/* ========== PANEL DERECHO ========== */
 .right {
-  gap: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: rgba(0,0,0,0.3);
+  padding: 0.2rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid #3a2e22;
 }
-
-.iconSoft {
-  opacity: 0.6;
+.systemInfo {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 0.65rem;
 }
-
+.osVersion {
+  font-size: 0.6rem;
+  opacity: 0.7;
+}
+.statusDotGroup {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
 .statusDot {
-  width: 6px;
-  height: 6px;
-  background: #6f9e6f;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  margin-left: 0.5rem;
-  animation: blink 2s step-end infinite;
+}
+.statusDot.green { background: #4c8b4c; box-shadow: 0 0 4px #4c8b4c; }
+.statusDot.amber { background: #e0a020; box-shadow: 0 0 4px #e0a020; }
+.statusDot.red { background: #b33b2c; box-shadow: 0 0 6px #b33b2c; }
+.alertIcon {
+  opacity: 0.6;
+  color: #b89a6a;
 }
 
+/* ========== ANIMACIONES ========== */
+@keyframes pulse {
+  0% { opacity: 0.6; transform: scale(1); }
+  100% { opacity: 1; transform: scale(1.1); }
+}
 @keyframes blink {
-  0%, 100% { opacity: 1; background: #6f9e6f; }
-  50% { opacity: 0.4; background: #88aa88; }
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 880px) {
+  .center {
+    gap: 0.6rem;
+  }
+  .terminalPanel {
+    min-width: 120px;
+  }
+}
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+    padding: 0.5rem;
+  }
+  .left, .right {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .center {
+    order: 2;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  .gaugePanel, .signalPanel {
+    flex: 1;
+    justify-content: center;
+  }
+  .terminalPanel {
+    flex: 2;
+    min-width: 140px;
+  }
+  .systemInfo {
+    justify-content: flex-start;
+  }
+}
+@media (max-width: 550px) {
+  .center {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.4rem;
+  }
+  .gaugePanel, .signalPanel, .terminalPanel {
+    justify-content: space-between;
+    width: 100%;
+  }
+  .terminalPanel {
+    min-width: auto;
+  }
+  .right {
+    justify-content: space-between;
+  }
 }

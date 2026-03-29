@@ -1,172 +1,182 @@
-/* ============================================================
-   FRAME (METAL / SOPORTE)
-============================================================ */
+/* ========== BASE ========== */
 .frame {
-  flex: 1;
-
-  display: flex;
-
-  min-width: 0;
-  min-height: 0;
-
-  padding: 12px;
-
-  background:
-    linear-gradient(#111, #050505);
-
-  border: 1px solid #000;
-
-  box-shadow:
-    inset 0 0 40px #000,
-    0 0 20px rgba(0,0,0,0.9);
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 0 0 2px #2a241a, 0 0 0 4px #0c0906, 0 8px 24px rgba(0,0,0,0.5);
+  margin: 0 auto;
 }
 
-/* ============================================================
-   SCREEN (CRT BASE)
-============================================================ */
+/* Curvatura externa (simula un monitor convexo) */
+.screenCurve {
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  box-shadow: inset 0 0 30px rgba(0,0,0,0.6), inset 0 0 8px rgba(255,255,200,0.1);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Pantalla principal con curvatura sutil */
 .screen {
   position: relative;
-
-  flex: 1;
-
-  min-width: 0;
-  min-height: 0;
-
+  width: 100%;
+  height: 100%;
+  background: #0a0a0a;
+  border-radius: 20px;
   overflow: hidden;
-
-  background:
-    radial-gradient(circle at center, #0a0a0a, #020202 90%);
-
-  border: 2px solid #111;
-
-  box-shadow:
-    inset 0 0 60px #000,
-    inset 0 0 140px rgba(0,0,0,0.95);
+  transform: perspective(800px) rotateX(1deg);
+  transition: all 0.2s;
+  z-index: 1;
 }
 
-/* ============================================================
-   GLASS (VIDRIO SUCIO 🔥)
-============================================================ */
+/* Capa de fósforo (glow verde/ámbar) */
+.phosphorGlow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 40%, rgba(0,255,0,0.03) 0%, rgba(0,0,0,0.1) 100%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* Vidrio / suciedad */
 .glass {
   position: absolute;
   inset: 0;
-  z-index: 3;
-
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(0,0,0,0.02) 0px,
+    rgba(0,0,0,0.02) 2px,
+    transparent 2px,
+    transparent 8px
+  );
   pointer-events: none;
-
-  background:
-    radial-gradient(circle at 50% 30%, rgba(255,255,255,0.04), transparent 60%),
-    linear-gradient(
-      rgba(255,255,255,0.02),
-      rgba(0,0,0,0.2)
-    );
-
-  mix-blend-mode: overlay;
+  z-index: 4;
 }
 
-/* ============================================================
-   VIEWPORT (CONTENIDO REAL)
-============================================================ */
+/* Contenedor del contenido */
 .viewport {
   position: relative;
-  z-index: 2;
-
-  display: flex;
-  flex-direction: column;
-
   width: 100%;
   height: 100%;
-
-  min-width: 0;
-  min-height: 0;
-
-  overflow: hidden;
+  overflow: auto;
+  z-index: 5;
+  scrollbar-width: thin;
+  scrollbar-color: #e0b86e #2a241a;
+}
+.viewport::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.viewport::-webkit-scrollbar-track {
+  background: #2a241a;
+  border-radius: 3px;
+}
+.viewport::-webkit-scrollbar-thumb {
+  background: #e0b86e;
+  border-radius: 3px;
 }
 
-/* ============================================================
-   EFFECTS (ANALÓGICOS)
-============================================================ */
+/* ========== EFECTOS CRT ========== */
 .effects {
   position: absolute;
   inset: 0;
-  z-index: 1;
-
   pointer-events: none;
+  z-index: 10;
+  border-radius: 20px;
+  overflow: hidden;
 }
 
-/* ============================================================
-   SCANLINES (MÁS SUTIL)
-============================================================ */
+/* Líneas de escaneo */
 .scanlines {
   position: absolute;
   inset: 0;
-
   background: repeating-linear-gradient(
-    to bottom,
-    rgba(255,140,0,0.04),
-    rgba(255,140,0,0.04) 1px,
-    transparent 2px,
-    transparent 4px
+    0deg,
+    rgba(0,0,0,0.2) 0px,
+    rgba(0,0,0,0.2) 1px,
+    transparent 1px,
+    transparent 2px
   );
+  mix-blend-mode: overlay;
+  animation: scanlineMove 8s linear infinite;
 }
 
-/* ============================================================
-   NOISE (GRANO SUCIO)
-============================================================ */
+@keyframes scanlineMove {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 100%; }
+}
+
+/* Ruido analógico */
 .noise {
   position: absolute;
   inset: 0;
-
-  opacity: 0.035;
-
-  background-image: url("https://www.transparenttextures.com/patterns/asfalt-light.png");
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  opacity: 0.08;
+  mix-blend-mode: overlay;
+  animation: noiseShift 0.2s infinite;
+  pointer-events: none;
 }
 
-/* ============================================================
-   VIGNETTE (PANTALLA VIEJA)
-============================================================ */
+@keyframes noiseShift {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(2%, 2%); }
+}
+
+/* Viñeta (oscurecimiento en bordes) */
 .vignette {
   position: absolute;
   inset: 0;
-
-  box-shadow: inset 0 0 180px rgba(0,0,0,0.95);
+  background: radial-gradient(circle at center, transparent 50%, rgba(0,0,0,0.4) 100%);
+  mix-blend-mode: multiply;
 }
 
-/* ============================================================
-   FLICKER (INSESTABLE PERO REALISTA)
-============================================================ */
+/* Parpadeo sutil */
 .flicker {
   position: absolute;
   inset: 0;
-
-  background: rgba(255,255,255,0.015);
-
-  animation: flicker 0.2s infinite;
+  background: rgba(0,0,0,0);
+  animation: flickerAnim 0.15s infinite;
+  mix-blend-mode: overlay;
 }
 
-@keyframes flicker {
-  0% { opacity: 0.01; }
-  50% { opacity: 0.03; }
-  100% { opacity: 0.01; }
+@keyframes flickerAnim {
+  0% { background: rgba(0,0,0,0); }
+  50% { background: rgba(0,0,0,0.02); }
+  100% { background: rgba(0,0,0,0); }
 }
 
-/* ============================================================
-   DISTORTION (SEÑAL)
-============================================================ */
+/* Distorsión tipo fisheye (curvatura sutil) */
 .distortion {
   position: absolute;
   inset: 0;
-
-  background: linear-gradient(
-    transparent,
-    rgba(255,255,255,0.015),
-    transparent
-  );
-
-  animation: distortion 7s linear infinite;
+  background: radial-gradient(ellipse at center, transparent 70%, rgba(0,0,0,0.1) 100%);
+  mix-blend-mode: overlay;
+  transform: scale(1.02);
+  filter: blur(0.3px);
 }
 
-@keyframes distortion {
-  0% { transform: translateY(-100%); }
-  100% { transform: translateY(100%); }
+/* ========== TORNILLOS DECORATIVOS ========== */
+.screws {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 20;
 }
+.screw {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: radial-gradient(circle at 30% 30%, #8b6b42, #5e3a1c);
+  border-radius: 50%;
+  box-shadow: inset 0 1px 1px rgba(0,0,0,0.4), 0 0 2px #ffdd99;
+}
+.screw:nth-child(1) { top: 8px; left: 8px; }
+.screw:nth-child(2) { top: 8px; right: 8px; }
+.screw:nth-child(3) { bottom: 8px; left: 8px; }
+.screw:nth-child(4) { bottom: 8px; right: 8px; }

@@ -19,6 +19,10 @@ import {
   Info,
   FileText,
   BadgeDollarSign,
+  Paperclip,
+  Coffee,
+  Stamp,
+  Scissors,
 } from "lucide-react";
 import styles from "../../../styles/inventory-styles/briefcase-modal.module.css";
 import { REAL_RECIPES } from "../data/RecipesReal";
@@ -64,6 +68,13 @@ export default function BriefcaseModal({ item, onClose }) {
   const stickyNote = item.stickyNote;
   const isLocked = item.isLocked;
 
+  // Coffee stain presence (based on item properties)
+  const hasCoffeeStain = item.condition === "worn" || item.tag === "SCRAP" || (item.price && item.price > 50);
+
+  // Random additional stamps (could be based on item type)
+  const hasApprovedStamp = item.tag === "PREMIUM" || item.securityLevel === "ELITE";
+  const hasRedacted = item.fileSize === "?? GB";
+
   return (
     <div className={styles.overlay} onClick={onClose}>
       <motion.div
@@ -77,8 +88,21 @@ export default function BriefcaseModal({ item, onClose }) {
         <div className={`${styles.paper} ${styles.paperBack}`} />
         <div className={`${styles.paper} ${styles.paperMid}`} />
         <div className={`${styles.paper} ${styles.paperFront}`}>
+          {/* Torn edge at top */}
+          <div className={styles.tornEdge} />
+
+          {/* Folded corner (bottom right) */}
+          <div className={styles.foldedCorner} />
+
           {/* Paper clip */}
-          <div className={styles.clip} />
+          <div className={styles.paperClip}>
+            <Paperclip size={24} />
+          </div>
+
+          {/* Coffee stain (if applicable) */}
+          {hasCoffeeStain && (
+            <div className={styles.coffeeStain} />
+          )}
 
           {/* Header */}
           <div className={styles.header}>
@@ -103,7 +127,7 @@ export default function BriefcaseModal({ item, onClose }) {
             </div>
           )}
 
-          {/* Recipe card (if drink) */}
+          {/* Recipe card (if drink) - styled as a separate sheet */}
           {recipe && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -111,6 +135,7 @@ export default function BriefcaseModal({ item, onClose }) {
               transition={{ delay: 0.1 }}
               className={styles.recipeCard}
             >
+              <div className={styles.recipeTear} />
               <div className={styles.recipeHeader}>
                 <CookingPot size={18} />
                 <span>{recipe.name}</span>
@@ -129,6 +154,7 @@ export default function BriefcaseModal({ item, onClose }) {
                 <GlassWater size={14} />
                 <span>Serve in: {recipe.glass}</span>
               </div>
+              <div className={styles.recipeStamp}>RECIPE</div>
             </motion.div>
           )}
 
@@ -150,6 +176,14 @@ export default function BriefcaseModal({ item, onClose }) {
                 </div>
               ))}
             </div>
+          )}
+
+          {/* Additional stamps */}
+          {hasApprovedStamp && (
+            <div className={styles.approvedStamp}>APPROVED</div>
+          )}
+          {hasRedacted && (
+            <div className={styles.redactedStamp}>REDACTED</div>
           )}
 
           {/* Footer with stamp and close button */}

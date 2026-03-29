@@ -1,43 +1,95 @@
-/* ============================================================
-   CONTAINER
-============================================================ */
 .container {
-  flex: 1;
-  min-height: 0;
-  min-width: 0;
-
+  height: 100%;
   display: flex;
   flex-direction: column;
-
-  gap: 12px;
+  overflow: hidden;
 }
 
-/* ============================================================
-   HEADER (SEARCH BAR)
-============================================================ */
-.header {
+.pageHeader {
   flex-shrink: 0;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #3a2e22;
 }
 
-/* ============================================================
-   CONTENT (GRID ZONE 🔥)
-============================================================ */
+.titleSection h1 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+  color: #e0b86e;
+  margin: 0;
+  text-transform: uppercase;
+  font-family: 'Courier New', monospace;
+  text-shadow: 0 0 4px rgba(224, 184, 110, 0.3);
+}
+
+.titleSection p {
+  font-size: 0.7rem;
+  color: #b89a6a;
+  margin: 0.25rem 0 0 0;
+  letter-spacing: 0.5px;
+}
+
+.statsBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-top: 0.75rem;
+  font-size: 0.7rem;
+  font-family: monospace;
+}
+
+.stat {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 0.2rem 0.8rem;
+  border-radius: 20px;
+  border: 1px solid #3a2e22;
+}
+
+.stat span {
+  color: #b89a6a;
+}
+
+.stat strong {
+  color: #ffdd99;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 0.2rem 0.8rem;
+  border-radius: 20px;
+  border: 1px solid #3a2e22;
+}
+
+.statusLight {
+  width: 8px;
+  height: 8px;
+  background: #44ff44;
+  border-radius: 50%;
+  box-shadow: 0 0 4px #44ff44;
+  animation: pulse 1.5s infinite;
+}
+
+.status.warning .statusLight {
+  background: #ffaa44;
+  box-shadow: 0 0 4px #ffaa44;
+}
+
 .content {
   flex: 1;
   min-height: 0;
-  min-width: 0;
-
-  overflow-y: auto;
-  overflow-x: hidden;
-
-  display: flex;
+  overflow: auto;
 }
 
-/* opcional: suavizar scroll */
-.content::-webkit-scrollbar {
-  width: 6px;
-}
-
-.content::-webkit-scrollbar-thumb {
-  background: #222;
+@keyframes pulse {
+  0% { opacity: 0.4; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1.2); }
 }

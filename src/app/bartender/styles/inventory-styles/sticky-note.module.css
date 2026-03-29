@@ -1,0 +1,118 @@
+.stickyNote {
+  position: relative;
+  background: #fff9c4;
+  border-left: 4px solid #ffb74d;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-family: monospace;
+  color: #2c1a0c;
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+  transition: all 0.2s;
+  overflow: hidden;
+}
+
+/* Color variants */
+.stickyNote.yellow { background: #fff9c4; border-left-color: #ffb74d; }
+.stickyNote.gold { background: #fff2d0; border-left-color: #e6b422; }
+.stickyNote.green { background: #e8f5e9; border-left-color: #6f9e6f; }
+.stickyNote.red { background: #ffebee; border-left-color: #d32f2f; }
+.stickyNote.brown { background: #f5e6d3; border-left-color: #ab8a5a; }
+
+/* Size variants */
+.stickyNote.sm { padding: 6px 10px; font-size: 0.7rem; max-width: 180px; }
+.stickyNote.md { padding: 8px 12px; font-size: 0.75rem; max-width: 220px; }
+.stickyNote.lg { padding: 10px 14px; font-size: 0.8rem; max-width: 260px; }
+
+.iconWrapper {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  color: #ffb74d;
+}
+.content {
+  white-space: pre-line;
+  line-height: 1.4;
+  padding-right: 20px;
+}
+.tear {
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: repeating-linear-gradient(45deg, rgba(0,0,0,0.05) 0px, rgba(0,0,0,0.05) 4px, transparent 4px, transparent 8px);
+  pointer-events: none;
+}
+
+/* Variant: torn */
+.stickyNote.torn {
+  clip-path: polygon(0% 0%, 100% 0%, 100% 85%, 95% 90%, 90% 85%, 85% 90%, 80% 85%, 75% 90%, 70% 85%, 65% 90%, 60% 85%, 55% 90%, 50% 85%, 45% 90%, 40% 85%, 35% 90%, 30% 85%, 25% 90%, 20% 85%, 15% 90%, 10% 85%, 5% 90%, 0% 85%);
+  background: #fef7d0;
+}
+.stickyNote.torn::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 12px;
+  background: repeating-linear-gradient(45deg, rgba(0,0,0,0.1) 0px, rgba(0,0,0,0.1) 2px, transparent 2px, transparent 6px);
+}
+
+/* Variant: burnt */
+.stickyNote.burnt {
+  background: #4a2a1a;
+  color: #e0c8a0;
+  border-left-color: #8b3a1a;
+  box-shadow: inset 0 0 8px rgba(0,0,0,0.5), 0 2px 6px rgba(0,0,0,0.3);
+}
+.stickyNote.burnt .iconWrapper {
+  color: #e0a86e;
+}
+.burnMark {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  background: radial-gradient(circle, #8b3a1a, #4a2a1a);
+  filter: blur(3px);
+  mix-blend-mode: multiply;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+/* Variant: folded */
+.stickyNote.folded {
+  background: #fef7e0;
+  transform: rotate(-2deg);
+  box-shadow: 4px 4px 8px rgba(0,0,0,0.15);
+  border-left-width: 6px;
+}
+.stickyNote.folded::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(135deg, transparent 50%, rgba(0,0,0,0.1) 50%);
+  pointer-events: none;
+}
+
+/* Variant: wet */
+.stickyNote.wet {
+  background: #e6dfc4;
+  filter: blur(0.5px);
+  box-shadow: inset 0 0 0 1px rgba(255,255,200,0.5), 0 2px 6px rgba(0,0,0,0.2);
+  color: #4a3a2a;
+}
+.waterMark {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 30% 40%, rgba(100,120,150,0.15), transparent 70%);
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}

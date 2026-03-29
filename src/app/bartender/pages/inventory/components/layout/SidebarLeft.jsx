@@ -1,11 +1,13 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useContext } from "react";
 import { motion } from "framer-motion";
 import {
-  Package, ShoppingCart, Eye, Syringe, Gauge, Shield, FolderArchive, Terminal,Radio, HardDrive
+  Package, ShoppingCart, Eye, Syringe, Gauge, Shield,
+  FolderArchive, Terminal, Radio, HardDrive, AlertTriangle
 } from "lucide-react";
 import styles from "../../../../styles/inventory-styles/layout/sidebar-left.module.css";
+import { MetroContext } from "../../context/MetroContext";
 
 const CATEGORIES = [
   { id: "all", label: "ALL FILES", icon: FolderArchive },
@@ -17,17 +19,17 @@ const CATEGORIES = [
   { id: "military", label: "MILITARY", icon: Shield },
 ];
 
-export default function SidebarLeft({ active, onChange, data }) {
-  const { allItems, system } = data;
+export default function SidebarLeft({ active, onChange }) {
+  const data = useContext(MetroContext);
+  const { allItems, system } = data || { allItems: [], system: { radiation_level: 0 } };
 
-  // Count items per category
+  // Conteos por categoría
   const counts = useMemo(() => {
     const result = {};
     CATEGORIES.forEach(cat => {
       if (cat.id === "all") {
         result[cat.id] = allItems.length;
       } else {
-        // For other categories, count items where itemCategory (for drinks) or category (for folders) matches
         const count = allItems.filter(item => {
           const itemCat = item.type === 'drink' ? item.itemCategory : item.category;
           return itemCat === cat.id;
@@ -38,24 +40,40 @@ export default function SidebarLeft({ active, onChange, data }) {
     return result;
   }, [allItems]);
 
+  // Indicador de radiación (puede venir del sistema)
+  const radLevel = system?.radiation_level ? parseFloat(system.radiation_level) : 0.45;
+  const isRadCritical = radLevel > 0.6;
+
   return (
     <aside className={`${styles.sidebar} ${styles.open}`}>
+      {/* Capas decorativas */}
       <div className={styles.scanlines} />
+      <div className={styles.rivets} />
+
       <div className={styles.container}>
+        {/* Cabecera tipo panel de control */}
         <div className={styles.header}>
-          <div className={styles.headerIcon}><Terminal size={20} /></div>
+          <div className={styles.headerIcon}>
+            <Terminal size={20} />
+          </div>
           <div className={styles.headerText}>
             <p>D6_TERMINAL</p>
             <span>ARCH_OS v33</span>
           </div>
-          <div className={styles.radiation}>
-            <Radio size={14} />
-            <span>{system.radiation_level}</span>
+          <div className={`${styles.radiation} ${isRadCritical ? styles.critical : ''}`}>
+            <Radio size={14} className={isRadCritical ? styles.pulseIcon : ''} />
+            <span>{system?.radiation_level || "0.45 Sv/h"}</span>
+            {isRadCritical && <AlertTriangle size={10} className={styles.alertIcon} />}
           </div>
         </div>
 
+        {/* Navegación modular */}
         <div className={styles.navWrapper}>
-          <p className={styles.sectionTitle}>SYSTEMS</p>
+          <p className={styles.sectionTitle}>
+            <span>SYSTEMS</span>
+            <span className={styles.sectionBadge}>ACTIVE</span>
+          </p>
+
           <nav className={styles.nav}>
             {CATEGORIES.map(cat => {
               const isActive = cat.id === active;
@@ -65,9 +83,11 @@ export default function SidebarLeft({ active, onChange, data }) {
                 <button
                   key={cat.id}
                   onClick={() => onChange?.(cat.id)}
-                  className={`${styles.item} ${isActive ? styles.active : ""}`}
+                  className={`${styles.item} ${isActive ? styles.active : ''}`}
                 >
-                  <span className={styles.icon}><cat.icon size={16} /></span>
+                  <span className={styles.icon}>
+                    <cat.icon size={16} />
+                  </span>
                   <span className={styles.label}>{cat.label}</span>
                   <span className={styles.total}>{total}</span>
                   {isActive && (
@@ -83,6 +103,7 @@ export default function SidebarLeft({ active, onChange, data }) {
           </nav>
         </div>
 
+        {/* Panel inferior con estado del sistema */}
         <div className={styles.footer}>
           <div className={styles.status}>
             <div className={styles.statusLight} />
@@ -99,6 +120,12 @@ export default function SidebarLeft({ active, onChange, data }) {
             <HardDrive size={12} />
             <p>KEY: D6_{active.slice(0,2).toUpperCase()}•</p>
           </div>
+        </div>
+
+        {/* Remaches inferiores */}
+        <div className={styles.bottomRivets}>
+          <div className={styles.rivet} />
+          <div className={styles.rivet} />
         </div>
       </div>
     </aside>

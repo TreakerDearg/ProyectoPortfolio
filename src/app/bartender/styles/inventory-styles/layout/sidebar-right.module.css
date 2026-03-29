@@ -1,31 +1,54 @@
+/* ========== BASE ========== */
 .sidebar {
+  position: relative;
   width: 260px;
+  height: 100%;
   background: linear-gradient(145deg, #0f0c09 0%, #19120c 100%);
-  border-left: 1px solid #3a2a1c;
+  border-left: 1px solid #3a2e22;
   font-family: 'Courier New', monospace;
   color: #cfc7b0;
-  position: relative;
   overflow-y: auto;
-  height: 100%;
+  transition: transform 0.3s ease;
+  box-shadow: -2px 0 8px rgba(0,0,0,0.3);
 }
 
+/* Líneas de escaneo */
 .scanlines {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   background: repeating-linear-gradient(
     0deg,
-    rgba(0, 0, 0, 0.03) 0px,
-    rgba(0, 0, 0, 0.03) 2px,
-    transparent 2px,
-    transparent 8px
+    rgba(0, 0, 0, 0.05) 0px,
+    rgba(0, 0, 0, 0.05) 1px,
+    transparent 1px,
+    transparent 4px
   );
   pointer-events: none;
-  z-index: 1;
 }
 
+/* Remaches laterales */
+.rivets {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 6px;
+  pointer-events: none;
+}
+.rivets::before,
+.rivets::after {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: #8b6b42;
+  border-radius: 50%;
+  box-shadow: inset 0 1px 1px rgba(0,0,0,0.5), 0 0 2px #ffdd99;
+  margin-top: 4px;
+}
+
+/* Contenedor principal */
 .container {
   padding: 1rem;
   display: flex;
@@ -35,6 +58,7 @@
   z-index: 2;
 }
 
+/* Header */
 .header {
   display: flex;
   align-items: center;
@@ -42,86 +66,111 @@
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 1px;
-  border-bottom: 1px solid #3a2a1c;
+  border-bottom: 1px solid #3a2e22;
   padding-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+.headerIcon {
+  color: #e0b86e;
+}
+.headerSecondary {
+  margin-left: auto;
+  opacity: 0.6;
+}
+
+/* Panel de radiación principal */
+.radPanel {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid #3a2e22;
+  border-radius: 8px;
+  padding: 0.6rem;
+}
+.radLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.65rem;
   margin-bottom: 0.5rem;
 }
-
-.statsGrid {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.statCard {
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid #3a2a1c;
+.radGauge {
+  height: 8px;
+  background: #2a241a;
   border-radius: 4px;
-  padding: 0.5rem;
-  transition: all 0.2s;
+  overflow: hidden;
+  margin: 0.5rem 0;
+}
+.radFill {
+  height: 100%;
+  width: 0%;
+  transition: width 0.3s;
+  background: #e0b86e;
+}
+.radFill.warningFill { background: #ffaa44; }
+.radFill.criticalFill { background: #d63e3e; }
+.radValue {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  font-weight: bold;
+  font-family: monospace;
 }
 
+/* Estadísticas grid */
+.statsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+}
+.statCard {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid #3a2e22;
+  border-radius: 6px;
+  padding: 0.5rem;
+}
 .statHeader {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.7rem;
-  margin-bottom: 0.25rem;
-  color: #b8a070;
+  gap: 0.4rem;
+  font-size: 0.6rem;
+  margin-bottom: 0.3rem;
+  color: #b89a6a;
 }
-
 .gaugeContainer {
-  height: 6px;
-  background: #2a221a;
-  border-radius: 3px;
+  height: 4px;
+  background: #2a241a;
+  border-radius: 2px;
   overflow: hidden;
-  margin: 0.25rem 0;
+  margin: 0.3rem 0;
 }
-
 .gaugeFill {
   height: 100%;
+  width: 0%;
   background: #e0b86e;
-  border-radius: 3px;
-  transition: width 0.3s ease;
+  transition: width 0.3s;
 }
-
-.warningFill {
-  background: #ffaa44;
-  box-shadow: 0 0 4px #ffaa44;
-}
-
-.criticalFill {
-  background: #d63e3e;
-  box-shadow: 0 0 6px #d63e3e;
-}
-
 .statValue {
   font-size: 0.7rem;
   font-family: monospace;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 0.25rem;
 }
-
-.alertPulse {
+.warningIcon {
   color: #ffaa44;
-  font-weight: bold;
-  animation: pulse 1s infinite;
+}
+.criticalFill {
+  background: #d63e3e;
+}
+.warningFill {
+  background: #ffaa44;
 }
 
-@keyframes pulse {
-  0% { opacity: 0.5; }
-  100% { opacity: 1; }
-}
-
+/* Terminal */
 .terminal {
   background: #0a0705;
-  border: 1px solid #3a2a1c;
+  border: 1px solid #3a2e22;
   border-radius: 4px;
-  margin-top: 0.5rem;
 }
-
 .terminalHeader {
   display: flex;
   align-items: center;
@@ -129,10 +178,9 @@
   padding: 0.5rem;
   font-size: 0.7rem;
   background: #1a130c;
-  border-bottom: 1px solid #3a2a1c;
+  border-bottom: 1px solid #3a2e22;
   cursor: pointer;
 }
-
 .toggleTerminal {
   background: none;
   border: none;
@@ -142,52 +190,77 @@
   margin-left: auto;
   font-family: monospace;
 }
-
 .terminalContent {
   padding: 0.5rem;
   font-size: 0.65rem;
   font-family: monospace;
   color: #c0b68a;
-  display: flex;
-  align-items: baseline;
-  gap: 0.25rem;
   overflow-x: auto;
 }
-
 .terminalLine {
-  white-space: pre;
-  word-break: break-all;
+  display: flex;
+  gap: 0.25rem;
+  align-items: baseline;
+  white-space: pre-wrap;
 }
-
+.terminalPrompt {
+  color: #ffaa44;
+}
+.terminalText {
+  word-break: break-word;
+}
 .terminalCursor {
   animation: blink 1s step-end infinite;
 }
-
 @keyframes blink {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
 }
 
+/* Footer */
 .footer {
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   padding-top: 0.5rem;
-  border-top: 1px solid #3a2a1c;
+  border-top: 1px solid #3a2e22;
   display: flex;
   align-items: center;
   gap: 0.5rem;
   font-size: 0.65rem;
-  color: #d63e3e;
+  justify-content: space-between;
 }
-
 .pulseDot {
-  width: 6px;
-  height: 6px;
-  background: #d63e3e;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  margin-left: auto;
-  box-shadow: 0 0 4px #d63e3e;
+}
+.pulseDot.green {
+  background: #4c8b4c;
+  box-shadow: 0 0 4px #4c8b4c;
+}
+.pulseDot.red {
+  background: #b33b2c;
+  box-shadow: 0 0 6px #b33b2c;
+}
+.alertPulse {
+  animation: fadePulse 1s infinite;
+}
+@keyframes fadePulse {
+  0% { opacity: 0.5; }
+  100% { opacity: 1; }
 }
 
-.warningIcon {
-  color: #d63e3e;
+/* Responsive */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    z-index: 60;
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
 }
