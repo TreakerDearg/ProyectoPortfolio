@@ -1,6 +1,10 @@
 "use client";
 import React, { useMemo } from "react";
 import { motion } from "framer-motion";
+import { SecurityIndicator } from "../SecurityIndicator";
+import { EncryptionDisplay } from "../EncryptionDisplay";
+import { FirewallIndicator } from "../FirewallIndicator";
+import { IntrusionDetection } from "../IntrusionDetection";
 import styles from "../../styles/Styles-C/nodes/militechNode.module.css";
 
 export default function MilitechNode({
@@ -8,7 +12,14 @@ export default function MilitechNode({
   isSelected,
   isHovered,
   isSystemAlert,
-  onConnect
+  onConnect,
+  securityLevel = "class_a",
+  encrypted = true,
+  firewallStatus = "active",
+  firewallRules = 8,
+  hasIntrusion = false,
+  intrusionType = "suspicious",
+  intrusionSource = "UNKNOWN"
 }) {
   const {
     name = "BIO_CORE",
@@ -51,6 +62,13 @@ export default function MilitechNode({
       `}
       style={{ "--node-color": color, "--glow-color": glowColor }}
     >
+      {/* ======= INTRUSION DETECTION ======= */}
+      <IntrusionDetection 
+        hasIntrusion={hasIntrusion} 
+        intrusionType={intrusionType} 
+        sourceIP={intrusionSource}
+      />
+
       {/* ======= NÚCLEO METALICO BIOMECÁNICO ======= */}
       <motion.div
         className={styles.core}
@@ -62,9 +80,40 @@ export default function MilitechNode({
         <div className={styles.metalPlate} />
       </motion.div>
 
+      {/* ======= NEURAL PULSE RINGS ======= */}
+      <div className={styles.neuralPulseContainer}>
+        {[...Array(3)].map((_, i) => (
+          <motion.div
+            key={i}
+            className={styles.neuralPulseRing}
+            initial={{ scale: 0, opacity: 0.8 }}
+            animate={{ scale: [0, 1.5, 2], opacity: [0.8, 0.4, 0] }}
+            transition={{
+              duration: 2 + i * 0.5,
+              repeat: Infinity,
+              delay: i * 0.3,
+              ease: "easeOut"
+            }}
+            style={{ borderColor: glowColor }}
+          />
+        ))}
+      </div>
+
       {/* ======= MEMBRANA CYBER ======= */}
       <div className={styles.membrane}>
         <span className={styles.nodeLabel}>{name}</span>
+      </div>
+
+      {/* ======= BIO-SECURITY INDICATORS ======= */}
+      <div className={styles.bioSecurity}>
+        <div className={styles.bioMetric}>
+          <div className={styles.bioRing} />
+          <div className={styles.bioPulse} />
+        </div>
+        <div className={styles.bioStatus}>
+          <span className={styles.bioLabel}>BIO-SEC</span>
+          <span className={styles.bioValue}>ACTIVE</span>
+        </div>
       </div>
 
       {/* ======= VENAS / CIRCUITOS ======= */}
@@ -100,11 +149,16 @@ export default function MilitechNode({
 
       {/* ======= PANEL DE MÉTRICAS ======= */}
       <div className={styles.metricsOverlay}>
+        <SecurityIndicator level={securityLevel} size={10} />
         {Object.entries(metrics).map(([key, value]) => (
           <div key={key} className={styles.metricLine}>
             {key.toUpperCase()}: {value}
           </div>
         ))}
+        <div className={styles.securityInfo}>
+          <EncryptionDisplay encrypted={encrypted} algorithm="RSA-4096" keyRotation={true} />
+          <FirewallIndicator status={firewallStatus} rules={firewallRules} />
+        </div>
       </div>
 
       {/* ======= BOTÓN DE CONEXIÓN ======= */}

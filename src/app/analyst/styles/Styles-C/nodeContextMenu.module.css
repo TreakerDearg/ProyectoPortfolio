@@ -1,0 +1,81 @@
+/* ======================================================
+   NODE CONTEXT MENU
+====================================================== */
+
+.contextMenu {
+  position: fixed;
+  min-width: 180px;
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  border-radius: 8px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(168, 85, 247, 0.2);
+  z-index: 1000;
+  overflow: hidden;
+  font-family: "Courier New", monospace;
+}
+
+.menuHeader {
+  padding: 8px 12px;
+  background: rgba(168, 85, 247, 0.1);
+  border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.nodeName {
+  font-size: 11px;
+  font-weight: 700;
+  color: #e5e7eb;
+  letter-spacing: 0.5px;
+}
+
+.nodeId {
+  font-size: 9px;
+  color: #9ca3af;
+  font-weight: 600;
+}
+
+.menuItems {
+  padding: 4px 0;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  color: #e5e7eb;
+  font-family: "Courier New", monospace;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+}
+
+.menuItem:hover {
+  background: rgba(168, 85, 247, 0.2);
+  color: #fff;
+}
+
+.menuItem:active {
+  background: rgba(168, 85, 247, 0.3);
+}
+
+.danger {
+  color: #ef4444;
+}
+
+.danger:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+}
+
+.danger:active {
+  background: rgba(239, 68, 68, 0.3);
+}

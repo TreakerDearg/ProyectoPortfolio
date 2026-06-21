@@ -1,6 +1,10 @@
 "use client";
 import React, { useMemo } from "react";
 import { motion } from "framer-motion";
+import { SecurityIndicator } from "../SecurityIndicator";
+import { EncryptionDisplay } from "../EncryptionDisplay";
+import { FirewallIndicator } from "../FirewallIndicator";
+import { IntrusionDetection } from "../IntrusionDetection";
 import styles from "../../styles/Styles-C/nodes/kangtaoNode.module.css";
 
 export default function KangTaoNode({
@@ -9,7 +13,14 @@ export default function KangTaoNode({
   isHovered,
   isSystemAlert,
   onConnect,
-  tooltip
+  tooltip,
+  securityLevel = "class_s",
+  encrypted = true,
+  firewallStatus = "active",
+  firewallRules = 16,
+  hasIntrusion = false,
+  intrusionType = "breach",
+  intrusionSource = "UNKNOWN"
 }) {
   const {
     name = "DRONE_AI_LINK",
@@ -56,6 +67,13 @@ export default function KangTaoNode({
       style={{ "--node-color": color, "--glow-color": glowColor }}
       title={tooltip}
     >
+      {/* ================= INTRUSION DETECTION ================= */}
+      <IntrusionDetection 
+        hasIntrusion={hasIntrusion} 
+        intrusionType={intrusionType} 
+        sourceIP={intrusionSource}
+      />
+
       {/* ================= NÚCLEO CENTRAL ================= */}
       <motion.div
         className={styles.core}
@@ -65,6 +83,25 @@ export default function KangTaoNode({
       >
         <div className={styles.innerGlow} style={{ backgroundColor: glowColor }} />
       </motion.div>
+
+      {/* ================= NEURAL PULSE RINGS ================= */}
+      <div className={styles.neuralPulseContainer}>
+        {[...Array(3)].map((_, i) => (
+          <motion.div
+            key={i}
+            className={styles.neuralPulseRing}
+            initial={{ scale: 0, opacity: 0.8 }}
+            animate={{ scale: [0, 1.5, 2], opacity: [0.8, 0.4, 0] }}
+            transition={{
+              duration: 2 + i * 0.5,
+              repeat: Infinity,
+              delay: i * 0.3,
+              ease: "easeOut"
+            }}
+            style={{ borderColor: glowColor }}
+          />
+        ))}
+      </div>
 
       {/* ================= HEXAGONO/ANELLO DE DRONES ================= */}
       <motion.div
@@ -86,12 +123,30 @@ export default function KangTaoNode({
         ))}
       </div>
 
+      {/* ================= DRONE COORDINATION ================= */}
+      <div className={styles.droneCoordination}>
+        <div className={styles.droneStatus}>
+          <span className={styles.droneLabel}>DRONES</span>
+          <span className={styles.droneCount}>6/6</span>
+        </div>
+        <div className={styles.droneFormation}>
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className={styles.droneLink} />
+          ))}
+        </div>
+      </div>
+
       {/* ================= HUD DE METRICAS ================= */}
       <div className={styles.telemetryOverlay}>
+        <SecurityIndicator level={securityLevel} size={10} />
         <div className={styles.metricLine}><span>LOAD:</span><span>{metrics.load}%</span></div>
         <div className={styles.metricLine}><span>FPS:</span><span>{metrics.fps}</span></div>
         <div className={styles.metricLine}><span>USERS:</span><span>{metrics.user_count}</span></div>
         {metrics.target_locked && <div className={styles.metricLine}><span>TARGET:</span><span>LOCKED</span></div>}
+        <div className={styles.securityInfo}>
+          <EncryptionDisplay encrypted={encrypted} algorithm="QUANTUM-512" keyRotation={true} />
+          <FirewallIndicator status={firewallStatus} rules={firewallRules} />
+        </div>
       </div>
 
       {/* ================= ESCANER TÁCTICO ================= */}

@@ -1,0 +1,144 @@
+/* ======================================================
+   THREAT LEVEL INDICATOR
+====================================================== */
+
+.threatContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  border-radius: 8px;
+  backdrop-filter: blur(8px);
+}
+
+.threatHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+}
+
+.threatTitle {
+  font-size: 10px;
+  font-weight: 700;
+  color: #9ca3af;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.threatIndicator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 6px;
+  border: 2px solid;
+  transition: all 0.3s ease;
+}
+
+.threatIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.threatInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.threatLabel {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.threatScore {
+  font-size: 10px;
+  color: #9ca3af;
+  font-family: "Courier New", monospace;
+  font-weight: 600;
+}
+
+.threatFactors {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+}
+
+.factorsTitle {
+  font-size: 9px;
+  color: #9ca3af;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.factorsList {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.factorItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 9px;
+  color: #e5e7eb;
+  font-family: "Courier New", monospace;
+}
+
+.factorBullet {
+  color: #a855f7;
+  font-weight: 700;
+}
+
+.threatMeter {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.meterLabel {
+  font-size: 9px;
+  color: #9ca3af;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.meterTrack {
+  position: relative;
+  height: 8px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.meterFill {
+  height: 100%;
+  border-radius: 4px;
+  transition: all 0.5s ease;
+}
+
+.meterTicks {
+  display: flex;
+  justify-content: space-between;
+  font-size: 8px;
+  color: #6b7280;
+  font-family: "Courier New", monospace;
+  font-weight: 600;
+}

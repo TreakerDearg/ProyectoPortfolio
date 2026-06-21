@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState, useRef, useMemo, useCallback } from 'react';
-import { Activity, Zap, ShieldAlert, BarChart3, Wifi, Server } from 'lucide-react';
+import { Activity, Zap, ShieldAlert, BarChart3, Wifi, Server, ChevronUp, ChevronDown } from 'lucide-react';
+import { useAnalysis } from '../context/AnalysisContext';
 import styles from '../styles/Styles-C/dataTraffic.module.css';
 
 // Hook para detectar preferencia de movimiento reducido
@@ -18,16 +19,36 @@ const usePrefersReducedMotion = () => {
 
 export const DataTraffic = ({ isCritical = false }) => {
   const prefersReducedMotion = usePrefersReducedMotion();
-  
+  const { leftCollapsed, rightCollapsed } = useAnalysis();
+
+  // Mobile detection
+  const [isMobile, setIsMobile] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  // Dynamic z-index based on sidebar states
+  const zIndex = useMemo(() => {
+    if (isMobile) {
+      return (!leftCollapsed || !rightCollapsed) ? 40 : 50;
+    }
+    return 40;
+  }, [isMobile, leftCollapsed, rightCollapsed]);
+
   // Cantidad de barras en el monitor (32 para un look denso)
   const barCount = 32;
-  
+
   // Estado inicial estable
-  const initialBars = useMemo(() => 
-    [...Array(barCount)].map(() => Math.floor(Math.random() * 40 + 20)), 
+  const initialBars = useMemo(() =>
+    [...Array(barCount)].map(() => Math.floor(Math.random() * 40 + 20)),
     []
   );
-  
+
   const [bars, setBars] = useState(initialBars);
   const [metrics, setMetrics] = useState({ stream: 2.44, loss: 0.00 });
   const timerRef = useRef(null);
@@ -70,14 +91,26 @@ export const DataTraffic = ({ isCritical = false }) => {
   }, [updateTelemetry, isCritical, prefersReducedMotion]);
 
   return (
-    <div 
-      className={`${styles.dataTrafficWidget} ${isCritical ? styles.stateCritical : ''}`}
+    <div
+      className={`${styles.dataTrafficWidget} ${isCritical ? styles.stateCritical : ''} ${isMobile ? styles.mobileWidget : ''} ${isCollapsed ? styles.collapsed : ''}`}
+      style={{ zIndex }}
       role="complementary"
       aria-label="Network telemetry monitor"
     >
       {/* Efectos visuales de HUD */}
       <div className={styles.glassReflection} />
       <div className={styles.widgetScanline} />
+
+      {/* Collapse button for mobile */}
+      {isMobile && (
+        <button
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          className={styles.collapseBtn}
+          aria-label={isCollapsed ? "Expand widget" : "Collapse widget"}
+        >
+          {isCollapsed ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+        </button>
+      )}
 
       {/* CABECERA: Status del Canal */}
       <div className={styles.widgetHeader}>

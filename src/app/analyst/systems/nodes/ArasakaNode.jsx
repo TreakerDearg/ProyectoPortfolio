@@ -1,8 +1,13 @@
 "use client";
 import React from "react";
+import { motion } from "framer-motion";
+import { SecurityIndicator } from "../SecurityIndicator";
+import { EncryptionDisplay } from "../EncryptionDisplay";
+import { FirewallIndicator } from "../FirewallIndicator";
+import { IntrusionDetection } from "../IntrusionDetection";
 import styles from "../../styles/Styles-C/nodes/arasakaNode.module.css";
 
-export default function ArasakaNode({ node, isSelected, isHovered, isSystemAlert }) {
+export default function ArasakaNode({ node, isSelected, isHovered, isSystemAlert, securityLevel = "alpha", encrypted = true, firewallStatus = "active", firewallRules = 12, hasIntrusion = false, intrusionType = "unauthorized", intrusionSource = "UNKNOWN" }) {
   const {
     id = "NODE_01",
     name = "NEURAL_ENGINE",
@@ -17,10 +22,17 @@ export default function ArasakaNode({ node, isSelected, isHovered, isSystemAlert
     <div
       className={`${styles.nodeContainer} ${isSelected ? styles.selected : ""} ${isSystemAlert ? styles.alertMode : ""} ${styles[status.toLowerCase()]}`}
     >
+      {/* ================= INTRUSION DETECTION ================= */}
+      <IntrusionDetection 
+        hasIntrusion={hasIntrusion} 
+        intrusionType={intrusionType} 
+        sourceIP={intrusionSource}
+      />
+
       {/* ================= HEADER ================= */}
       <div className={styles.header}>
         <span className={styles.corp}>{company}</span>
-        <span className={styles.security}>SEC:ALPHA</span>
+        <SecurityIndicator level={securityLevel} size={10} />
       </div>
 
       {/* ================= CHASSIS ================= */}
@@ -37,6 +49,38 @@ export default function ArasakaNode({ node, isSelected, isHovered, isSystemAlert
       <div className={styles.circuitLayer}>
         {[...Array(4)].map((_, i) => (
           <div key={i} className={styles.gridLine} />
+        ))}
+      </div>
+
+      {/* ================= ICE VISUALIZATION ================= */}
+      <div className={styles.iceLayer}>
+        <div className={styles.iceGrid}>
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className={styles.iceHex} />
+          ))}
+        </div>
+        <div className={styles.iceCore}>
+          <div className={styles.iceRing} />
+          <div className={styles.icePulse} />
+        </div>
+      </div>
+
+      {/* ================= NEURAL PULSE RINGS ================= */}
+      <div className={styles.neuralPulseContainer}>
+        {[...Array(3)].map((_, i) => (
+          <motion.div
+            key={i}
+            className={styles.neuralPulseRing}
+            initial={{ scale: 0, opacity: 0.8 }}
+            animate={{ scale: [0, 1.5, 2], opacity: [0.8, 0.4, 0] }}
+            transition={{
+              duration: 2 + i * 0.5,
+              repeat: Infinity,
+              delay: i * 0.3,
+              ease: "easeOut"
+            }}
+            style={{ borderColor: color }}
+          />
         ))}
       </div>
 
@@ -70,6 +114,11 @@ export default function ArasakaNode({ node, isSelected, isHovered, isSystemAlert
               </div>
             );
           })}
+        </div>
+
+        <div className={styles.securityInfo}>
+          <EncryptionDisplay encrypted={encrypted} algorithm="AES-256" keyRotation={true} />
+          <FirewallIndicator status={firewallStatus} rules={firewallRules} />
         </div>
 
         {path && (

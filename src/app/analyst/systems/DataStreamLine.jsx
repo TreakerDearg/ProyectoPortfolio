@@ -1,7 +1,8 @@
 "use client";
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useAnalysis } from '../context/AnalysisContext';
+import { Lock, Unlock, Shield, ShieldAlert } from 'lucide-react';
 import styles from '../styles/Styles-C/dataStreamLine.module.css';
 
 // ================= FUNCIÓN AUXILIAR =================
@@ -15,8 +16,9 @@ const getLineStats = (p1, p2) => {
 };
 
 // ================= COMPONENTE =================
-export const DataStreamLine = ({ sourceNode, targetNode, isAlert, load = 50 }) => {
+export const DataStreamLine = ({ sourceNode, targetNode, isAlert, load = 50, encrypted = true, securityLevel = 'normal', company = 'neutral' }) => {
   const { selectedNode } = useAnalysis();
+  const [dataPackets, setDataPackets] = useState([]);
 
   const { x1, y1, x2, y2 } = {
     x1: sourceNode.x,
@@ -37,11 +39,58 @@ export const DataStreamLine = ({ sourceNode, targetNode, isAlert, load = 50 }) =
 
   const streamColor = useMemo(() => {
     if (isAlert) return '#f43f5e'; // rojo crítico
+    if (securityLevel === 'compromised') return '#ef4444'; // rojo comprometido
     if (isSelected) return '#a855f7'; // violeta seleccion
-    return sourceNode.color || '#7c3aed'; // violeta por defecto
-  }, [isAlert, isSelected, sourceNode.color]);
+    
+    // Company-specific colors
+    switch (company.toLowerCase()) {
+      case 'arasaka':
+        return '#ef4444'; // rojo corporativo
+      case 'militech':
+        return '#22c55e'; // verde biológico
+      case 'kangtao':
+        return '#a855f7'; // violeta holográfico
+      case 'neutral':
+        return '#3b82f6'; // azul neutral
+      default:
+        return sourceNode.color || '#7c3aed'; // color por defecto
+    }
+  }, [isAlert, isSelected, sourceNode.color, securityLevel, company]);
+
+  // Bandwidth visualization - thickness based on load
+  const bandwidthWidth = useMemo(() => {
+    return Math.max(1, Math.min(6, (load / 100) * 4 + 1));
+  }, [load]);
 
   const gradientId = `grad-${sourceNode.id}-${targetNode.id}`;
+
+  // Company-specific data packet style
+  const packetStyle = useMemo(() => {
+    switch (company.toLowerCase()) {
+      case 'arasaka':
+        return { shape: 'square' };
+      case 'militech':
+        return { shape: 'circle' };
+      case 'kangtao':
+        return { shape: 'hexagon' };
+      default:
+        return { shape: 'circle' };
+    }
+  }, [company]);
+
+  // Generate data packets
+  useEffect(() => {
+    const packetCount = Math.max(1, Math.floor(load / 20));
+    const newPackets = [];
+    for (let i = 0; i < packetCount; i++) {
+      newPackets.push({
+        id: i,
+        delay: i * (duration / packetCount),
+        progress: (i / packetCount) * 100
+      });
+    }
+    setDataPackets(newPackets);
+  }, [load, duration]);
 
   return (
     <g className={`${styles.streamGroup} ${isSelected ? styles.active : ''}`}>
@@ -58,11 +107,11 @@ export const DataStreamLine = ({ sourceNode, targetNode, isAlert, load = 50 }) =
         </linearGradient>
       </defs>
 
-      {/* ================= CONDUCTO BASE ================= */}
+      {/* ================= CONDUCTO BASE (BANDWIDTH) ================= */}
       <path
         d={`M ${x1} ${y1} L ${x2} ${y2}`}
         stroke={`url(#${gradientId})`}
-        strokeWidth={width}
+        strokeWidth={bandwidthWidth}
         fill="none"
         className={styles.conduitBase}
       />
@@ -71,7 +120,7 @@ export const DataStreamLine = ({ sourceNode, targetNode, isAlert, load = 50 }) =
       <motion.path
         d={`M ${x1} ${y1} L ${x2} ${y2}`}
         stroke={streamColor}
-        strokeWidth={width * 0.4}
+        strokeWidth={bandwidthWidth * 0.4}
         fill="none"
         strokeDasharray="3,12"
         strokeLinecap="round"
@@ -79,11 +128,39 @@ export const DataStreamLine = ({ sourceNode, targetNode, isAlert, load = 50 }) =
         transition={{ duration: duration * 3, repeat: Infinity, ease: "linear" }}
       />
 
+      {/* ================= DATA PACKETS ================= */}
+      {dataPackets.map((packet) => (
+        <motion.g
+          key={packet.id}
+          initial={{ offsetDistance: "0%" }}
+          animate={{ offsetDistance: "100%" }}
+          transition={{
+            duration: duration,
+            repeat: Infinity,
+            delay: packet.delay,
+            ease: "linear"
+          }}
+          style={{
+            offsetPath: `path('M ${x1} ${y1} L ${x2} ${y2}')`,
+            filter: `drop-shadow(0 0 4px ${streamColor})`
+          }}
+          className={styles.dataPacket}
+        >
+          {packetStyle.shape === 'square' ? (
+            <rect x="-3" y="-3" width="6" height="6" fill={streamColor} />
+          ) : packetStyle.shape === 'hexagon' ? (
+            <polygon points="0,-3.5 3,-1.75 3,1.75 0,3.5 -3,1.75 -3,-1.75" fill={streamColor} />
+          ) : (
+            <circle r={3} fill={streamColor} />
+          )}
+        </motion.g>
+      ))}
+
       {/* ================= PULSOS DE DATOS ================= */}
       <motion.path
         d={`M ${x1} ${y1} L ${x2} ${y2}`}
         stroke={streamColor}
-        strokeWidth={width * 1.2}
+        strokeWidth={bandwidthWidth * 1.2}
         fill="none"
         strokeLinecap="round"
         strokeDasharray={`2, ${distance / (load > 0 ? (load / 8) : 1)}`}
@@ -95,6 +172,30 @@ export const DataStreamLine = ({ sourceNode, targetNode, isAlert, load = 50 }) =
         }}
         filter={isSelected || isAlert ? "url(#neonGlow)" : "none"}
       />
+
+      {/* ================= ENCRYPTION STATUS INDICATOR ================= */}
+      <foreignObject x={(x1 + x2) / 2 - 12} y={(y1 + y2) / 2 - 12} width="24" height="24">
+        <div className={styles.encryptionBadge}>
+          {encrypted ? (
+            <Lock size={12} color={securityLevel === 'compromised' ? '#ef4444' : '#22c55e'} />
+          ) : (
+            <Unlock size={12} color="#f59e0b" />
+          )}
+        </div>
+      </foreignObject>
+
+      {/* ================= SECURITY LEVEL INDICATOR ================= */}
+      {securityLevel !== 'normal' && (
+        <foreignObject x={(x1 + x2) / 2 + 12} y={(y1 + y2) / 2 - 12} width="24" height="24">
+          <div className={styles.securityBadge}>
+            {securityLevel === 'compromised' ? (
+              <ShieldAlert size={12} color="#ef4444" />
+            ) : (
+              <Shield size={12} color="#22c55e" />
+            )}
+          </div>
+        </foreignObject>
+      )}
 
       {/* ================= HIT DE SELECCIÓN ================= */}
       {isSelected && (

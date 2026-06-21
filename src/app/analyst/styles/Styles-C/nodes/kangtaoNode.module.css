@@ -128,6 +128,73 @@
   color: #e0e7ff;
 }
 
+/* ================= SECURITY INFO ================= */
+.securityInfo {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(168,85,247,0.25);
+}
+
+/* ================= DRONE COORDINATION ================= */
+.droneCoordination {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 4px 8px;
+  background: rgba(20,10,35,0.85);
+  border: 1px solid rgba(168,85,247,0.25);
+  border-radius: 4px;
+  z-index: 7;
+  backdrop-filter: blur(2px);
+}
+
+.droneStatus {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.droneLabel {
+  font-size: 8px;
+  color: #c4b5fd;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.droneCount {
+  font-size: 9px;
+  color: #a855f7;
+  font-weight: 700;
+}
+
+.droneFormation {
+  display: flex;
+  gap: 3px;
+}
+
+.droneLink {
+  width: 20px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(168,85,247,0.3), rgba(168,85,247,0.8), rgba(168,85,247,0.3));
+  animation: droneLinkPulse 2s ease-in-out infinite;
+}
+
+.droneLink:nth-child(2) {
+  animation-delay: 0.3s;
+}
+
+.droneLink:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+@keyframes droneLinkPulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
 /* ================= BOTÓN DE CONEXIÓN ================= */
 .connectButtonContainer {
   position: absolute;
@@ -186,4 +253,31 @@
   .node { width: 200px; height: 140px; }
   .telemetryOverlay { font-size: 9px; bottom: -50px; }
   .connectButton { font-size: 9px; padding: 3px 8px; }
+}
+
+/* ======================================================
+   NEURAL PULSE RINGS
+====================================================== */
+
+.neuralPulseContainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 200px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.neuralPulseRing {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid;
+  opacity: 0;
 }

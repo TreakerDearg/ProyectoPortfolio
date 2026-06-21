@@ -1,0 +1,87 @@
+/* ======================================================
+   ENCRYPTION DISPLAY
+====================================================== */
+
+.encryptionDisplay {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  backdrop-filter: blur(4px);
+  font-family: "Courier New", monospace;
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+
+.iconContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lockIcon {
+  color: #22c55e;
+}
+
+.unlockIcon {
+  color: #f59e0b;
+}
+
+.algorithmInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.algorithm {
+  font-weight: 600;
+  color: #e5e7eb;
+}
+
+.keyRotation {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #9ca3af;
+}
+
+.keyIcon {
+  color: #6366f1;
+}
+
+.rotationProgress {
+  font-size: 8px;
+  font-weight: 600;
+}
+
+.rotationIcon {
+  animation: rotate 2s linear infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ======================================================
+   ENCRYPTION STATES
+====================================================== */
+
+.encrypted {
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.unencrypted {
+  border-color: rgba(250, 204, 21, 0.3);
+}
+
+.unencrypted .algorithm {
+  color: #facc15;
+}

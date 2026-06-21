@@ -9,7 +9,7 @@ import {
   Database,
   Workflow,
   ShieldAlert,
-  ChevronLeft,
+  PanelLeftClose,
   Zap,
   Activity,
   Menu,
@@ -119,6 +119,18 @@ export default function ArasakaSidebarLeft() {
     setLeftCollapsed(!leftCollapsed);
   };
 
+  // Prevent body scroll when sidebar is open on mobile
+  useEffect(() => {
+    if (isMobile && !leftCollapsed) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobile, leftCollapsed]);
+
   return (
 
     <aside
@@ -127,6 +139,11 @@ export default function ArasakaSidebarLeft() {
         ${leftCollapsed ? styles.collapsed : styles.expanded}
         ${isMobile && !leftCollapsed ? styles.mobileOverlay : ""}
       `}
+      style={{
+        transform: isMobile
+          ? (leftCollapsed ? 'translateX(-100%)' : 'translateX(0)')
+          : (leftCollapsed ? 'translateX(-100%)' : 'translateX(0)')
+      }}
       data-collapsed={leftCollapsed}
       id="arasaka-sidebar"
     >
@@ -155,16 +172,16 @@ export default function ArasakaSidebarLeft() {
 
             {isMobile ? (
               leftCollapsed ? (
-                <Menu size={18} />
+                <Menu size={20} />
               ) : (
-                <X size={18} />
+                <X size={20} />
               )
             ) : (
               <motion.div
-                animate={{ rotate: leftCollapsed ? 180 : 0 }}
+                animate={{ rotate: leftCollapsed ? 0 : 180 }}
                 transition={{ duration: 0.25 }}
               >
-                <ChevronLeft size={16} strokeWidth={3} />
+                <PanelLeftClose size={18} strokeWidth={2} />
               </motion.div>
             )}
 

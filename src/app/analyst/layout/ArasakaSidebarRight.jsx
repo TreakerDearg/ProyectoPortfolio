@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useAnalysis } from "../context/AnalysisContext";
+import { MetricGraph } from "../systems/MetricGraph";
+import { AccessLogs } from "../systems/AccessLogs";
 
 import styles from "../styles/sidebarRight.module.css";
 
@@ -13,7 +15,7 @@ import {
   Database,
   Activity,
   Lock,
-  ChevronRight,
+  PanelRightClose,
   ExternalLink,
   Terminal,
   Scan,
@@ -39,11 +41,41 @@ export default function ArasakaSidebarRight() {
   const {
     selectedNode,
     rightCollapsed,
-    setRightCollapsed
+    setRightCollapsed,
+    nodes
   } = useAnalysis();
 
   const [timestamp, setTimestamp] = useState("");
   const [isMobile, setIsMobile] = useState(false);
+  const [metricData, setMetricData] = useState({
+    load: Array.from({ length: 20 }, () => Math.random() * 100),
+    latency: Array.from({ length: 20 }, () => Math.random() * 100),
+    throughput: Array.from({ length: 20 }, () => Math.random() * 100)
+  });
+
+  // Prevent body scroll when sidebar is open on mobile
+  useEffect(() => {
+    if (isMobile && !rightCollapsed) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobile, rightCollapsed]);
+
+  // Update metric data in real-time
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setMetricData(prev => ({
+        load: [...prev.load.slice(1), Math.random() * 100],
+        latency: [...prev.latency.slice(1), Math.random() * 100],
+        throughput: [...prev.throughput.slice(1), Math.random() * 100]
+      }));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
 
   /* ===============================
@@ -96,6 +128,11 @@ export default function ArasakaSidebarRight() {
         ${rightCollapsed ? styles.collapsed : styles.expanded}
         ${isMobile && !rightCollapsed ? styles.mobileOverlay : ""}
       `}
+      style={{
+        transform: isMobile
+          ? (rightCollapsed ? 'translateX(100%)' : 'translateX(0)')
+          : (rightCollapsed ? 'translateX(100%)' : 'translateX(0)')
+      }}
     >
 
 
@@ -121,19 +158,19 @@ export default function ArasakaSidebarRight() {
             {isMobile ? (
 
               rightCollapsed
-                ? <Menu size={16} />
-                : <X size={16} />
+                ? <Menu size={20} />
+                : <X size={20} />
 
             ) : (
 
               <motion.div
                 animate={{
-                  rotate: rightCollapsed ? 180 : 0
+                  rotate: rightCollapsed ? 0 : 180
                 }}
               >
-                <ChevronRight
-                  size={14}
-                  strokeWidth={3}
+                <PanelRightClose
+                  size={18}
+                  strokeWidth={2}
                 />
               </motion.div>
 
@@ -374,6 +411,35 @@ export default function ArasakaSidebarRight() {
                       </div>
 
                       <div className={styles.forensicsWrapper}>
+                        
+                        {/* Real-time metric graphs */}
+                        <div className={styles.metricsGrid}>
+                          <MetricGraph
+                            data={metricData.load}
+                            color="#a855f7"
+                            height={60}
+                            width={180}
+                            label="LOAD"
+                            unit="%"
+                          />
+                          <MetricGraph
+                            data={metricData.latency}
+                            color="#38bdf8"
+                            height={60}
+                            width={180}
+                            label="LATENCY"
+                            unit="ms"
+                          />
+                          <MetricGraph
+                            data={metricData.throughput}
+                            color="#22c55e"
+                            height={60}
+                            width={180}
+                            label="THROUGHPUT"
+                            unit="MB/s"
+                          />
+                        </div>
+
 
                         <InProcessProjects />
 
@@ -382,6 +448,24 @@ export default function ArasakaSidebarRight() {
                         <DeletedProjects />
 
                       </div>
+
+                    </section>
+
+                    {/* ===============================
+                       ACCESS LOGS
+                    =============================== */}
+
+                    <section className={styles.forensicsSection}>
+
+                      <div className={styles.sectionLabel}>
+
+                        <BarChart3 size={8} />
+
+                        <span>ACCESS_LOGS</span>
+
+                      </div>
+
+                      <AccessLogs nodes={nodes} />
 
                     </section>
 

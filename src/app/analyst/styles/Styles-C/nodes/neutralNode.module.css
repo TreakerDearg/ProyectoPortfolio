@@ -102,10 +102,88 @@
   font-weight: 500;
 }
 
+/* --- SECURITY INFO --- */
+.securityInfo {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--neutral-border);
+}
+
+/* --- TERMINAL PATTERN --- */
+.terminalPattern {
+  margin-top: 6px;
+  padding: 4px 6px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid var(--neutral-border);
+  border-radius: 3px;
+  font-family: var(--neutral-font);
+  font-size: 9px;
+}
+
+.terminalLine {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 2px;
+}
+
+.terminalPrompt {
+  color: var(--neutral-hover);
+  font-weight: 600;
+}
+
+.terminalText {
+  color: var(--neutral-text);
+}
+
+.terminalOutput {
+  color: #10b981;
+  font-weight: 600;
+}
+
+.terminalCursor {
+  display: inline-block;
+  width: 8px;
+  height: 14px;
+  background: var(--neutral-hover);
+  animation: cursorBlink 1s step-end infinite;
+}
+
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
 /* --- RESPONSIVE --- */
 @media(max-width:768px) {
   .neutralContainer { width: 160px; min-height: 80px; padding: 4px 6px; }
   .nodeName { font-size: 11px; }
   .nodeStatus { font-size: 9px; }
   .metricLine { font-size: 9px; }
+}
+
+/* ======================================================
+   NEURAL PULSE RINGS
+====================================================== */
+
+.neuralPulseContainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 200px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.neuralPulseRing {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid var(--neutral-hover);
+  opacity: 0;
 }

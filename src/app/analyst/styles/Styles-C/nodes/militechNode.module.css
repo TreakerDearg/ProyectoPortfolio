@@ -251,6 +251,80 @@
 
 .metricLine { font-weight: 600; }
 
+/* --- SECURITY INFO --- */
+.securityInfo {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(16,185,129,0.25);
+}
+
+/* --- BIO-SECURITY INDICATORS --- */
+.bioSecurity {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  background: rgba(2,6,23,0.85);
+  border: 1px solid rgba(16,185,129,0.25);
+  border-radius: 4px;
+  z-index: 7;
+  backdrop-filter: blur(2px);
+}
+
+.bioMetric {
+  position: relative;
+  width: 16px;
+  height: 16px;
+}
+
+.bioRing {
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--node-color);
+  border-radius: 50%;
+  animation: bioRingPulse 2s ease-in-out infinite;
+}
+
+.bioPulse {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--node-glow), transparent);
+  animation: bioPulse 1.5s ease-in-out infinite;
+}
+
+.bioStatus {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.bioLabel {
+  font-size: 8px;
+  color: var(--node-color);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.bioValue {
+  font-size: 9px;
+  color: #e2e8f0;
+  font-weight: 700;
+}
+
+@keyframes bioRingPulse {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.1); opacity: 1; }
+}
+
+@keyframes bioPulse {
+  0%, 100% { transform: scale(0.8); opacity: 0.4; }
+  50% { transform: scale(1.2); opacity: 0.8; }
+}
+
 /* --- CONNECT BUTTON --- */
 .connectButtonContainer {
   position: absolute;
@@ -307,3 +381,30 @@
 
 /* --- NODO ACTIVO --- */
 .activeNode { filter: drop-shadow(0 0 15px var(--node-glow)); }
+
+/* ======================================================
+   NEURAL PULSE RINGS
+====================================================== */
+
+.neuralPulseContainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 200px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.neuralPulseRing {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid;
+  opacity: 0;
+}

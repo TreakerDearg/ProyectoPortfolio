@@ -283,6 +283,16 @@
 }
 
 /* ======================================================
+   SECURITY INFO
+====================================================== */
+
+.securityInfo {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--arasaka-border);
+}
+
+/* ======================================================
    STATUS LED
 ====================================================== */
 .statusIndicator {
@@ -336,3 +346,99 @@
 @keyframes loadPulse {0%{filter:brightness(1);}50%{filter:brightness(1.4);}100%{filter:brightness(1);} }
 @keyframes ledBlink {0%,100%{opacity:.4;}50%{opacity:1;} }
 @keyframes pulseAlert { 0%,100%{box-shadow:0 0 20px var(--arasaka-red-glow);}50%{box-shadow:0 0 35px var(--arasaka-red-glow);} }
+
+/* ======================================================
+   NEURAL PULSE RINGS
+====================================================== */
+
+.neuralPulseContainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 200px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.neuralPulseRing {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid;
+  opacity: 0;
+}
+
+/* ======================================================
+   ICE VISUALIZATION
+====================================================== */
+
+.iceLayer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0.6;
+}
+
+.iceGrid {
+  position: absolute;
+  inset: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.iceHex {
+  width: 100%;
+  height: 100%;
+  border: 1px solid var(--arasaka-red-soft);
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  animation: icePulse 3s ease-in-out infinite;
+}
+
+.iceCore {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;
+  height: 80px;
+}
+
+.iceRing {
+  position: absolute;
+  inset: 0;
+  border: 2px solid var(--arasaka-red-soft);
+  border-radius: 50%;
+  animation: iceRotate 10s linear infinite;
+}
+
+.icePulse {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--arasaka-red-glow), transparent);
+  animation: icePulseCore 2s ease-in-out infinite;
+}
+
+@keyframes icePulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes iceRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes icePulseCore {
+  0%, 100% { transform: scale(0.8); opacity: 0.4; }
+  50% { transform: scale(1.2); opacity: 0.8; }
+}

@@ -1,0 +1,72 @@
+/* ======================================================
+   SECURITY INDICATOR
+====================================================== */
+
+.securityBadge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  backdrop-filter: blur(4px);
+  font-family: "Courier New", monospace;
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+
+.badgeText {
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* ======================================================
+   SECURITY LEVELS
+====================================================== */
+
+.badgeNormal {
+  border-color: rgba(56, 189, 248, 0.3);
+}
+
+.badgeNormal .iconNormal,
+.badgeNormal .badgeText {
+  color: #38bdf8;
+}
+
+.badgeHigh {
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.badgeHigh .iconHigh,
+.badgeHigh .badgeText {
+  color: #22c55e;
+}
+
+.badgeMedium {
+  border-color: rgba(250, 204, 21, 0.3);
+}
+
+.badgeMedium .iconMedium,
+.badgeMedium .badgeText {
+  color: #facc15;
+}
+
+.badgeCritical {
+  border-color: rgba(239, 68, 68, 0.3);
+  animation: criticalPulse 1s infinite;
+}
+
+.badgeCritical .iconCritical,
+.badgeCritical .badgeText {
+  color: #ef4444;
+}
+
+@keyframes criticalPulse {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(239, 68, 68, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.6);
+  }
+}

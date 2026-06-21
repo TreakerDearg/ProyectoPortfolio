@@ -209,6 +209,49 @@
   .dataGridMini { padding: 8px 12px; }
 }
 
+/* ==================== RESPONSIVE - MOBILE ==================== */
+@media (max-width: 768px) {
+  .mobileWidget {
+    width: clamp(200px, 85vw, 350px);
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 1rem;
+  }
+
+  .mobileWidget.collapsed {
+    height: auto;
+  }
+
+  .mobileWidget.collapsed .barsContainer,
+  .mobileWidget.collapsed .dataGridMini,
+  .mobileWidget.collapsed .widgetFooter {
+    display: none;
+  }
+
+  .collapseBtn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 32px;
+    height: 32px;
+    background: rgba(56, 189, 248, 0.1);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    border-radius: 4px;
+    color: #38bdf8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    z-index: 10;
+  }
+
+  .collapseBtn:hover {
+    background: rgba(56, 189, 248, 0.2);
+    border-color: #38bdf8;
+  }
+}
+
 /* Accesibilidad */
 @media (prefers-reduced-motion: reduce) {
   .barFill { transition: none; }

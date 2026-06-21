@@ -1,0 +1,55 @@
+/* ======================================================
+   NEURAL NETWORK BACKGROUND
+====================================================== */
+
+.neuralNetworkContainer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.neuralCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.neuralOverlay {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+}
+
+/* ======================================================
+   COMPANY-SPECIFIC COLORS
+====================================================== */
+
+.neuralNetworkContainer[data-company="arasaka"] .neuralCanvas {
+  filter: drop-shadow(0 0 10px rgba(220, 38, 38, 0.3));
+}
+
+.neuralNetworkContainer[data-company="militech"] .neuralCanvas {
+  filter: drop-shadow(0 0 10px rgba(34, 197, 94, 0.3));
+}
+
+.neuralNetworkContainer[data-company="kang_tao"] .neuralCanvas {
+  filter: drop-shadow(0 0 10px rgba(168, 85, 247, 0.3));
+}
+
+.neuralNetworkContainer[data-company="neutral"] .neuralCanvas {
+  filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.3));
+}
+
+/* ======================================================
+   RESPONSIVE
+====================================================== */
+
+@media (max-width: 768px) {
+  .neuralNetworkContainer {
+    opacity: 0.5;
+  }
+}

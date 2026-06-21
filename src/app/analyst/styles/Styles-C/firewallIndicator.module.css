@@ -1,0 +1,77 @@
+/* ======================================================
+   FIREWALL INDICATOR
+====================================================== */
+
+.firewallIndicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  backdrop-filter: blur(4px);
+  font-family: "Courier New", monospace;
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+
+.statusText {
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.rulesCount {
+  font-size: 8px;
+  color: #9ca3af;
+}
+
+/* ======================================================
+   FIREWALL STATUS
+====================================================== */
+
+.statusActive {
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.statusActive .iconActive,
+.statusActive .statusText {
+  color: #22c55e;
+}
+
+.statusBypassed {
+  border-color: rgba(250, 204, 21, 0.3);
+  animation: bypassPulse 1s infinite;
+}
+
+.statusBypassed .iconBypassed,
+.statusBypassed .statusText {
+  color: #facc15;
+}
+
+@keyframes bypassPulse {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(250, 204, 21, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(250, 204, 21, 0.6);
+  }
+}
+
+.statusDown {
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.statusDown .iconDown,
+.statusDown .statusText {
+  color: #ef4444;
+}
+
+.statusNormal {
+  border-color: rgba(56, 189, 248, 0.3);
+}
+
+.statusNormal .iconNormal,
+.statusNormal .statusText {
+  color: #38bdf8;
+}

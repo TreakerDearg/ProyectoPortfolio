@@ -10,10 +10,19 @@ export const NodeSearch = React.memo(() => {
   const [isSearching, setIsSearching] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
   const [isOpen, setIsOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   const { nodes, setSelectedNode, setIsAnalyzing } = useAnalysis();
   const inputRef = useRef(null);
   const panelRef = useRef(null);
+
+  // Mobile detection
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   // Atajo de teclado global: CMD/CTRL + F para buscar
   useEffect(() => {
@@ -56,6 +65,17 @@ export const NodeSearch = React.memo(() => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Cerrar al scroll en canvas (mobile)
+  useEffect(() => {
+    const handleScroll = () => {
+      if (isMobile && isOpen) {
+        setQuery("");
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isMobile, isOpen]);
 
   const handleSelectNode = useCallback((node) => {
     if (!node) return;
@@ -119,6 +139,8 @@ export const NodeSearch = React.memo(() => {
   className={styles.cliInput}
   spellCheck="false"
   autoComplete="off"
+  autoCorrect="off"
+  inputMode="search"
 />
 
         <div className={styles.commandHint}>

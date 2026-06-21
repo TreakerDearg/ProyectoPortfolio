@@ -476,3 +476,229 @@
   30%, 50%, 70% { transform: translate3d(-1px, 0, 0); }
   40%, 60% { transform: translate3d(1px, 0, 0); }
 }
+
+/* ==================== RESPONSIVE - MOBILE ==================== */
+.mobileNode {
+  min-width: 140px;
+  min-height: 56px;
+}
+
+@media (max-width: 768px) {
+  .nodeWrapper {
+    width: clamp(140px, 35vw, 200px);
+    height: clamp(56px, 14vw, 80px);
+  }
+
+  .mobileNode {
+    width: 35vw;
+    height: 14vw;
+  }
+
+  /* Ensure touch targets are at least 44px */
+  .mobileNode button,
+  .mobileNode .interactive-element {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+/* ======================================================
+   GLITCH EFFECTS
+====================================================== */
+
+.glitchHover {
+  animation: glitchHover 0.3s infinite;
+}
+
+.glitchSelected {
+  animation: glitchSelected 0.5s infinite;
+}
+
+@keyframes glitchHover {
+  0% {
+    transform: translate(0);
+    filter: hue-rotate(0deg);
+  }
+  20% {
+    transform: translate(-2px, 2px);
+    filter: hue-rotate(90deg);
+  }
+  40% {
+    transform: translate(-2px, -2px);
+    filter: hue-rotate(180deg);
+  }
+  60% {
+    transform: translate(2px, 2px);
+    filter: hue-rotate(270deg);
+  }
+  80% {
+    transform: translate(2px, -2px);
+    filter: hue-rotate(360deg);
+  }
+  100% {
+    transform: translate(0);
+    filter: hue-rotate(0deg);
+  }
+}
+
+@keyframes glitchSelected {
+  0% {
+    transform: translate(0);
+    filter: brightness(1) contrast(1);
+  }
+  25% {
+    transform: translate(-3px, 1px);
+    filter: brightness(1.2) contrast(1.1);
+  }
+  50% {
+    transform: translate(3px, -1px);
+    filter: brightness(0.8) contrast(1.2);
+  }
+  75% {
+    transform: translate(-1px, 3px);
+    filter: brightness(1.1) contrast(0.9);
+  }
+  100% {
+    transform: translate(0);
+    filter: brightness(1) contrast(1);
+  }
+}
+
+/* ======================================================
+   SCANLINE EFFECTS
+====================================================== */
+
+.nodeWrapper::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.15),
+    rgba(0, 0, 0, 0.15) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events: none;
+  z-index: 10;
+  animation: scanlineMove 8s linear infinite;
+}
+
+@keyframes scanlineMove {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(4px);
+  }
+}
+
+/* ======================================================
+   3D PERSPECTIVE AND HOLOGRAPHIC EFFECTS
+====================================================== */
+
+.nodeWrapper {
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.nodeWrapper::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  pointer-events: none;
+  z-index: 11;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.nodeWrapper:hover::after {
+  opacity: 1;
+}
+
+.nodeWrapper:hover {
+  transform: perspective(1000px) rotateX(5deg) rotateY(5deg) scale(1.05);
+  transition: transform 0.3s ease;
+}
+
+.wrapperSelected {
+  transform: perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1.1);
+  box-shadow: 
+    0 0 30px rgba(168, 85, 247, 0.5),
+    0 0 60px rgba(168, 85, 247, 0.3),
+    0 0 90px rgba(168, 85, 247, 0.1);
+  transition: all 0.3s ease;
+}
+
+.connectingMode {
+  border: 2px dashed #a855f7;
+  animation: connectingPulse 1s ease-in-out infinite;
+}
+
+@keyframes connectingPulse {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.6);
+  }
+}
+
+/* ======================================================
+   PARTICLE EFFECTS
+====================================================== */
+
+.nodeWrapper::before {
+  animation: scanlineMove 8s linear infinite;
+}
+
+.nodeWrapper:hover {
+  animation: particleFloat 0.5s ease-in-out infinite;
+}
+
+@keyframes particleFloat {
+  0%, 100% { transform: perspective(1000px) rotateX(5deg) rotateY(5deg) scale(1.05) translateY(0); }
+  50% { transform: perspective(1000px) rotateX(3deg) rotateY(7deg) scale(1.05) translateY(-2px); }
+}
+
+/* ======================================================
+   CHROMATIC ABERRATION
+====================================================== */
+
+.glitchHover {
+  animation: chromaticAberration 0.3s infinite;
+}
+
+@keyframes chromaticAberration {
+  0% {
+    text-shadow: 
+      -2px 0 rgba(255, 0, 0, 0.3),
+      2px 0 rgba(0, 255, 255, 0.3);
+  }
+  25% {
+    text-shadow: 
+      -2px 2px rgba(255, 0, 0, 0.3),
+      2px -2px rgba(0, 255, 255, 0.3);
+  }
+  50% {
+    text-shadow: 
+      0px 2px rgba(255, 0, 0, 0.3),
+      0px -2px rgba(0, 255, 255, 0.3);
+  }
+  75% {
+    text-shadow: 
+      2px 2px rgba(255, 0, 0, 0.3),
+      -2px -2px rgba(0, 255, 255, 0.3);
+  }
+  100% {
+    text-shadow: 
+      2px 0 rgba(255, 0, 0, 0.3),
+      -2px 0 rgba(0, 255, 255, 0.3);
+  }
+}

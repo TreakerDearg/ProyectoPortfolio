@@ -1,0 +1,65 @@
+/* ======================================================
+   NETWORK TOPOLOGY
+====================================================== */
+
+.topologyContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  border-radius: 8px;
+  backdrop-filter: blur(8px);
+}
+
+.topologyHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.topologyTitle {
+  font-size: 10px;
+  font-weight: 700;
+  color: #9ca3af;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.topologyCanvas {
+  width: 200px;
+  height: 150px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  transition: border-color 0.2s ease;
+}
+
+.topologyCanvas:hover {
+  border-color: rgba(168, 85, 247, 0.5);
+}
+
+.topologyLegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 4px;
+  border-top: 1px solid rgba(168, 85, 247, 0.2);
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9px;
+  color: #e5e7eb;
+  font-family: "Courier New", monospace;
+  font-weight: 600;
+}
+
+.legendDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
