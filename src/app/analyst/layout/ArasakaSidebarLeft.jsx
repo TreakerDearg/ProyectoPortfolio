@@ -142,7 +142,7 @@ export default function ArasakaSidebarLeft() {
       style={{
         transform: isMobile
           ? (leftCollapsed ? 'translateX(-100%)' : 'translateX(0)')
-          : (leftCollapsed ? 'translateX(-100%)' : 'translateX(0)')
+          : 'translateX(0)'
       }}
       data-collapsed={leftCollapsed}
       id="arasaka-sidebar"
@@ -178,7 +178,7 @@ export default function ArasakaSidebarLeft() {
               )
             ) : (
               <motion.div
-                animate={{ rotate: leftCollapsed ? 0 : 180 }}
+                animate={{ rotate: leftCollapsed ? 180 : 0 }}
                 transition={{ duration: 0.25 }}
               >
                 <PanelLeftClose size={18} strokeWidth={2} />

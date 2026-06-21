@@ -82,12 +82,7 @@ body{
 .arasaka-main-layout{
   flex:1;
 
-  display:grid;
-
-  grid-template-columns:
-  220px
-  1fr
-  220px;
+  display:flex;
 
   min-height:0;
 }
@@ -96,8 +91,10 @@ body{
 /* PAGE CONTENT */
 
 .arasaka-content-area{
+  flex:1;
   overflow:auto;
   padding:20px;
+  transition: flex 0.3s cubic-bezier(.4,0,.2,1);
 }
 
 

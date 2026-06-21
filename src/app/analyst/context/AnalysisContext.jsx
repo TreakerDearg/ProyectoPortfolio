@@ -15,7 +15,12 @@ export function AnalysisProvider({ children }) {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [systemStatus, setSystemStatus] = useState('NOMINAL');
   const [leftCollapsed, setLeftCollapsed] = useState(false);
-  const [rightCollapsed, setRightCollapsed] = useState(false);
+  const [rightCollapsed, setRightCollapsed] = useState(true);
+  
+  // Panel visibility states
+  const [threatPanelOpen, setThreatPanelOpen] = useState(true);
+  const [securityPanelOpen, setSecurityPanelOpen] = useState(true);
+  const [topologyPanelOpen, setTopologyPanelOpen] = useState(true);
   
   // --- ESTADOS DE DATOS ---
   const [nodes, setNodes] = useState(INITIAL_NODES);
@@ -23,6 +28,15 @@ export function AnalysisProvider({ children }) {
   const [activeStreams, setActiveStreams] = useState(INITIAL_STREAMS);
   const [kernelMetrics, setKernelMetrics] = useState(INITIAL_KERNEL_STATE);
   const [selectedNodeId, setSelectedNodeId] = useState(null);
+
+  // --- AUTO-OPEN RIGHT SIDEBAR ON NODE SELECTION ---
+  useEffect(() => {
+    if (selectedNodeId) {
+      setRightCollapsed(false);
+    } else {
+      setRightCollapsed(true);
+    }
+  }, [selectedNodeId]);
 
   // --- REFERENCIAS PARA CÁLCULOS ---
   // Usar refs ayuda a evitar re-renders innecesarios en intervalos
@@ -104,6 +118,15 @@ export function AnalysisProvider({ children }) {
     setSelectedNodeId(id || null);
   }, []);
 
+  // Auto-show/hide right sidebar based on node selection
+  useEffect(() => {
+    if (selectedNodeId) {
+      setRightCollapsed(false);
+    } else {
+      setRightCollapsed(true);
+    }
+  }, [selectedNodeId]);
+
   // --- MEMOIZACIÓN DE VALORES ---
   const selectedNode = useMemo(() => 
     nodes.find(n => n.id === selectedNodeId) || null, 
@@ -125,6 +148,11 @@ export function AnalysisProvider({ children }) {
     leftCollapsed, 
     rightCollapsed,
     
+    // Panel States
+    threatPanelOpen,
+    securityPanelOpen,
+    topologyPanelOpen,
+    
     // Métodos
     setLeftCollapsed, 
     setRightCollapsed, 
@@ -133,10 +161,14 @@ export function AnalysisProvider({ children }) {
     setActiveView: navigateTo,
     setSystemStatus,
     addLog,
-    setActiveStreams
+    setActiveStreams,
+    setThreatPanelOpen,
+    setSecurityPanelOpen,
+    setTopologyPanelOpen
   }), [
     nodes, logs, activeStreams, kernelMetrics, selectedNode, 
     activeView, isAnalyzing, systemStatus, leftCollapsed, rightCollapsed, 
+    threatPanelOpen, securityPanelOpen, topologyPanelOpen,
     updateNodePosition, selectNode, navigateTo, addLog
   ]);
 

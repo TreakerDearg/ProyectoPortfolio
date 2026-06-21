@@ -8,6 +8,7 @@ import { NodeFilter } from "./NodeFilter";
 import { NetworkTopology } from "./NetworkTopology";
 import { SecurityMonitoring } from "./SecurityMonitoring";
 import { ThreatLevelIndicator } from "./ThreatLevelIndicator";
+import FloatingPanel from "./FloatingPanel";
 import { useAnalysis } from "../context/AnalysisContext";
 import styles from "../styles/Styles-C/networkCanvas.module.css";
 
@@ -15,7 +16,7 @@ const NODE_CENTER = { x: 100, y: 40 };
 const ZOOM_LIMITS = { min: 0.5, max: 3 };
 
 export const NetworkCanvas = ({ initialZoom = 1 }) => {
-  const { nodes = [], activeStreams = [], updateNodePosition, selectedNode, setSelectedNode, systemStatus, addConnection } = useAnalysis();
+  const { nodes = [], activeStreams = [], updateNodePosition, selectedNode, setSelectedNode, systemStatus, addConnection, threatPanelOpen, securityPanelOpen, topologyPanelOpen, setThreatPanelOpen, setSecurityPanelOpen, setTopologyPanelOpen } = useAnalysis();
   const containerRef = useRef(null);
 
   // --- DRAG-TO-CONNECT STATE ---
@@ -317,29 +318,79 @@ export const NetworkCanvas = ({ initialZoom = 1 }) => {
           <button className={styles.zoomBtn} onClick={() => handleZoom(-0.1)}>-</button>
         </div>
 
-        {/* NETWORK TOPOLOGY */}
-        <NetworkTopology
-          nodes={nodes}
-          connections={activeStreams}
-          viewport={{ x: canvasX.get(), y: canvasY.get(), scale: zoom.get() }}
-          onViewportClick={({ x, y }) => {
-            canvasX.set(-x);
-            canvasY.set(-y);
-          }}
-        />
-
-        {/* SECURITY MONITORING */}
-        <SecurityMonitoring
-          nodes={nodes}
-          systemStatus={systemStatus}
-        />
-
-        {/* THREAT LEVEL INDICATOR */}
-        <ThreatLevelIndicator
-          nodes={nodes}
-          systemStatus={systemStatus}
-        />
+        {/* PANEL TOGGLE BUTTONS */}
+        <div className={styles.panelToggles}>
+          <button
+            className={`${styles.panelToggle} ${threatPanelOpen ? styles.panelToggleActive : ''}`}
+            onClick={() => setThreatPanelOpen(!threatPanelOpen)}
+            title="Toggle Threat Panel"
+          >
+            THREAT
+          </button>
+          <button
+            className={`${styles.panelToggle} ${securityPanelOpen ? styles.panelToggleActive : ''}`}
+            onClick={() => setSecurityPanelOpen(!securityPanelOpen)}
+            title="Toggle Security Panel"
+          >
+            SEC
+          </button>
+          <button
+            className={`${styles.panelToggle} ${topologyPanelOpen ? styles.panelToggleActive : ''}`}
+            onClick={() => setTopologyPanelOpen(!topologyPanelOpen)}
+            title="Toggle Topology Panel"
+          >
+            MAP
+          </button>
+        </div>
       </div>
+
+      {/* FLOATING PANELS */}
+      {threatPanelOpen && (
+        <FloatingPanel
+          title="THREAT_LEVEL"
+          position="bottom-right"
+          defaultOpen={true}
+          width="280px"
+        >
+          <ThreatLevelIndicator
+            nodes={nodes}
+            systemStatus={systemStatus}
+          />
+        </FloatingPanel>
+      )}
+
+      {securityPanelOpen && (
+        <FloatingPanel
+          title="SECURITY_MONITOR"
+          position="top-right"
+          defaultOpen={true}
+          width="280px"
+        >
+          <SecurityMonitoring
+            nodes={nodes}
+            systemStatus={systemStatus}
+          />
+        </FloatingPanel>
+      )}
+
+      {topologyPanelOpen && (
+        <FloatingPanel
+          title="NETWORK_TOPOLOGY"
+          position="bottom-left"
+          defaultOpen={true}
+          width="220px"
+        >
+          <NetworkTopology
+            nodes={nodes}
+            connections={activeStreams}
+            viewport={{ x: canvasX.get(), y: canvasY.get(), scale: zoom.get() }}
+            onViewportClick={({ x, y }) => {
+              canvasX.set(-x);
+              canvasY.set(-y);
+            }}
+          />
+        </FloatingPanel>
+      )}
 
       {/* VIEWPORT */}
       <motion.div

@@ -1,10 +1,25 @@
 "use client";
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import styles from "../styles/Styles-C/networkTopology.module.css";
 
 export const NetworkTopology = ({ nodes, connections, viewport, onViewportClick }) => {
   const canvasRef = useRef(null);
+  const containerRef = useRef(null);
+  const [canvasSize, setCanvasSize] = useState({ width: 200, height: 150 });
   const scale = 0.1;
+
+  useEffect(() => {
+    const updateCanvasSize = () => {
+      if (containerRef.current) {
+        const { clientWidth, clientHeight } = containerRef.current;
+        setCanvasSize({ width: clientWidth, height: clientHeight });
+      }
+    };
+
+    updateCanvasSize();
+    window.addEventListener('resize', updateCanvasSize);
+    return () => window.removeEventListener('resize', updateCanvasSize);
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -13,28 +28,28 @@ export const NetworkTopology = ({ nodes, connections, viewport, onViewportClick 
     const ctx = canvas.getContext("2d");
     const dpr = window.devicePixelRatio || 1;
     
-    canvas.width = 200 * dpr;
-    canvas.height = 150 * dpr;
+    canvas.width = canvasSize.width * dpr;
+    canvas.height = canvasSize.height * dpr;
     ctx.scale(dpr, dpr);
 
     const draw = () => {
-      ctx.clearRect(0, 0, 200, 150);
+      ctx.clearRect(0, 0, canvasSize.width, canvasSize.height);
 
       ctx.fillStyle = "rgba(15, 23, 42, 0.9)";
-      ctx.fillRect(0, 0, 200, 150);
+      ctx.fillRect(0, 0, canvasSize.width, canvasSize.height);
 
       ctx.strokeStyle = "rgba(56, 189, 248, 0.1)";
       ctx.lineWidth = 1;
-      for (let i = 0; i < 200; i += 20) {
+      for (let i = 0; i < canvasSize.width; i += 20) {
         ctx.beginPath();
         ctx.moveTo(i, 0);
-        ctx.lineTo(i, 150);
+        ctx.lineTo(i, canvasSize.height);
         ctx.stroke();
       }
-      for (let i = 0; i < 150; i += 20) {
+      for (let i = 0; i < canvasSize.height; i += 20) {
         ctx.beginPath();
         ctx.moveTo(0, i);
-        ctx.lineTo(200, i);
+        ctx.lineTo(canvasSize.width, i);
         ctx.stroke();
       }
 
@@ -74,21 +89,28 @@ export const NetworkTopology = ({ nodes, connections, viewport, onViewportClick 
       });
 
       if (viewport) {
+        const viewportWidth = (window.innerWidth / viewport.scale) * scale;
+        const viewportHeight = (window.innerHeight / viewport.scale) * scale;
+        const viewportX = (-viewport.x * scale);
+        const viewportY = (-viewport.y * scale);
+
         ctx.strokeStyle = "#fff";
         ctx.lineWidth = 2;
         ctx.setLineDash([4, 4]);
-        ctx.strokeRect(
-          (-viewport.x * scale),
-          (-viewport.y * scale),
-          (window.innerWidth / viewport.scale) * scale,
-          (window.innerHeight / viewport.scale) * scale
-        );
+        
+        // Clamp viewport rectangle to canvas bounds
+        const clampedX = Math.max(0, Math.min(viewportX, canvasSize.width - viewportWidth));
+        const clampedY = Math.max(0, Math.min(viewportY, canvasSize.height - viewportHeight));
+        const clampedWidth = Math.min(viewportWidth, canvasSize.width - clampedX);
+        const clampedHeight = Math.min(viewportHeight, canvasSize.height - clampedY);
+        
+        ctx.strokeRect(clampedX, clampedY, clampedWidth, clampedHeight);
         ctx.setLineDash([]);
       }
     };
 
     draw();
-  }, [nodes, viewport]);
+  }, [nodes, viewport, canvasSize]);
 
   const handleClick = (e) => {
     const rect = canvasRef.current.getBoundingClientRect();
@@ -98,13 +120,14 @@ export const NetworkTopology = ({ nodes, connections, viewport, onViewportClick 
   };
 
   return (
-    <div className={styles.topologyContainer}>
+    <div className={styles.topologyContainer} ref={containerRef}>
       <div className={styles.topologyHeader}>
         <span className={styles.topologyTitle}>TOPOLOGY</span>
       </div>
       <canvas
         ref={canvasRef}
         className={styles.topologyCanvas}
+        style={{ width: '100%', height: '100%' }}
         onClick={handleClick}
       />
       <div className={styles.topologyLegend}>

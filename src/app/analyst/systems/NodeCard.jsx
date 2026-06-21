@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useMemo, useCallback, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, useMotionValue } from "framer-motion";
 import { useAnalysis } from "../context/AnalysisContext";
 
 import ArasakaNode from "./nodes/ArasakaNode";
@@ -9,6 +9,13 @@ import KangTaoNode from "./nodes/KangTaoNode";
 import {NeutralNode} from "./nodes/NeutralNode";
 
 import styles from "../styles/Styles-C/nodeCard.module.css";
+
+const VIEWPORT_BOUNDS = {
+  minX: 0,
+  minY: 0,
+  maxX: 4800,
+  maxY: 4800
+};
 
 export const NodeCard = ({
   node,
@@ -22,7 +29,11 @@ export const NodeCard = ({
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const { setSelectedNode } = useAnalysis();
+  
+  const dragX = useMotionValue(node.x);
+  const dragY = useMotionValue(node.y);
 
   // Mobile detection
   useEffect(() => {
@@ -34,6 +45,7 @@ export const NodeCard = ({
 
   // Prevent body scroll during drag on mobile
   const handleDragStart = useCallback(() => {
+    setIsDragging(true);
     if (isMobile) {
       document.body.style.overflow = 'hidden';
       document.body.style.touchAction = 'none';
@@ -41,6 +53,7 @@ export const NodeCard = ({
   }, [isMobile]);
 
   const handleDragEnd = useCallback(() => {
+    setIsDragging(false);
     document.body.style.overflow = '';
     document.body.style.touchAction = '';
   }, []);
@@ -61,10 +74,24 @@ export const NodeCard = ({
     }
   }, [node.company]);
 
-  // Función interna para drag
+  // Función interna para drag con bounds checking
   const onDragInternal = useCallback(
-    (e, info) => handleDrag(node.id, info.delta),
-    [node.id, handleDrag]
+    (e, info) => {
+      const newX = node.x + info.delta.x;
+      const newY = node.y + info.delta.y;
+      
+      // Clamp to viewport bounds
+      const clampedX = Math.max(VIEWPORT_BOUNDS.minX, Math.min(newX, VIEWPORT_BOUNDS.maxX));
+      const clampedY = Math.max(VIEWPORT_BOUNDS.minY, Math.min(newY, VIEWPORT_BOUNDS.maxY));
+      
+      const clampedDelta = {
+        x: clampedX - node.x,
+        y: clampedY - node.y
+      };
+      
+      handleDrag(node.id, clampedDelta);
+    },
+    [node.id, node.x, node.y, handleDrag]
   );
 
   // Connection handlers
@@ -83,7 +110,14 @@ export const NodeCard = ({
   return (
     <motion.div
       drag
-      dragMomentum={false}
+      dragMomentum
+      dragElastic={0.1}
+      dragTransition={{ 
+        power: 0.2,
+        timeConstant: 200,
+        bounceStiffness: 300,
+        bounceDamping: 20
+      }}
       onDrag={onDragInternal}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
@@ -98,7 +132,7 @@ export const NodeCard = ({
         x: node.x,
         y: node.y,
         position: "absolute",
-        zIndex: isSelected ? 100 : 20,
+        zIndex: isDragging ? 150 : (isSelected ? 100 : 20),
         cursor: isConnecting ? "crosshair" : (isHovered ? "grab" : "default"),
         width: isMobile ? "35vw" : "200px",
         height: isMobile ? "14vw" : "80px",

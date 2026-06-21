@@ -86,8 +86,62 @@
 }
 
 .collapsed {
-  width: 72px;
+  width: 60px;
   transform: translateX(100%);
+}
+
+/* Collapsed state with icon dock */
+.collapsed .handleWrapper {
+  left: -24px;
+  right: auto;
+}
+
+.collapsed .collapseHandle {
+  width: 48px;
+  height: 48px;
+  border-radius: 6px 0 0 6px;
+  border-right: none;
+  border-left: 1px solid rgba(0,234,255,.35);
+}
+
+.collapsed .sidebarHeader {
+  display: none;
+}
+
+.collapsed .contentPadding {
+  display: none;
+}
+
+.collapsed .sidebarFooter {
+  display: none;
+}
+
+.collapsed .collapsedIcons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 20px 8px;
+  height: 100%;
+}
+
+.collapsedIcons {
+  display: none;
+}
+
+.collapsed .collapsedIcons {
+  display: flex;
+}
+
+.verticalText {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-size: 8px;
+  letter-spacing: 0.15em;
+  color: rgba(0, 234, 255, 0.6);
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 /* ======================================================
@@ -357,6 +411,9 @@
   flex-direction: column;
 
   min-height: 0;
+  max-height: 100%;
+
+  overflow: hidden;
 
 }
 
@@ -371,6 +428,7 @@
   flex: 1;
 
   overflow-y: auto;
+  overflow-x: hidden;
 
   direction: rtl;
 
@@ -379,6 +437,8 @@
   scrollbar-color:
     rgba(0,234,255,.35)
     transparent;
+
+  min-height: 0;
 
 }
 
@@ -415,6 +475,11 @@
 
   gap: 18px;
 
+  min-height: 0;
+  max-height: 100%;
+
+  overflow: hidden;
+
 }
 
 
@@ -430,6 +495,11 @@
   border: 1px solid rgba(255,255,255,.05);
 
   border-left: 2px solid rgba(0,234,255,.4);
+
+  min-height: 0;
+  flex-shrink: 0;
+
+  overflow: hidden;
 
 }
 
@@ -558,6 +628,8 @@
 
   gap: 10px;
 
+  flex-shrink: 0;
+
 }
 
 
@@ -635,6 +707,9 @@
       rgba(0,0,0,.9)
     );
 
+  flex-shrink: 0;
+  min-height: 0;
+
 }
 
 
@@ -655,6 +730,49 @@
    RESOURCE BARS
 ====================================================== */
 
+.resBarWrapper {
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+
+  min-width: 100%;
+
+}
+
+.resBarInfo {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  font-size: 8px;
+
+  letter-spacing: .05em;
+
+}
+
+.resLabel {
+
+  opacity: .6;
+
+  text-transform: uppercase;
+
+}
+
+.resVal {
+
+  font-family: monospace;
+
+  font-weight: 700;
+
+  color: #00eaff;
+
+}
+
 .barTrack {
 
   height: 3px;
@@ -662,6 +780,8 @@
   background: rgba(255,255,255,.05);
 
   overflow: hidden;
+
+  width: 100%;
 
 }
 
@@ -713,9 +833,14 @@
   border-radius: 6px 0 0 6px;
 }
 
+.telemetryGrid {
+  grid-template-columns: 1fr;
 }
 
-@media (max-width: 480px) {
+}
+
+@media (max-width: 768px) {
+
 .sidebarRoot {
   width: 85vw;
 }
@@ -723,6 +848,123 @@
 .handleWrapper {
   right: -20px;
 }
+
+.contentPadding {
+  padding: 12px;
+  gap: 14px;
+}
+
+.spectrumSection {
+  flex-shrink: 0;
+}
+
+}
+
+@media (max-width: 480px) {
+.sidebarRoot {
+  width: 90vw;
+}
+
+.handleWrapper {
+  right: -18px;
+}
+
+.contentPadding {
+  padding: 10px;
+  gap: 12px;
+}
+
+.telemetryGrid {
+  gap: 8px;
+}
+
+}
+
+/* ======================================================
+   GLASSMORPHISM & HOVER EFFECTS
+====================================================== */
+
+.sidebarRoot {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.4);
+}
+
+/* Enhanced border glow on hover */
+.sidebarRoot:hover {
+  border-left-color: rgba(0, 234, 255, 0.4);
+}
+
+/* Noise texture overlay */
+.sidebarRoot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.dataTile {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(.4,0,.2,1);
+}
+
+.dataTile::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0,234,255,0.05), transparent);
+  transition: left 0.3s ease;
+}
+
+.dataTile:hover::before {
+  left: 100%;
+}
+
+/* Subtle glow on spectrum section */
+.spectrumSection {
+  transition: all 0.3s cubic-bezier(.4,0,.2,1);
+}
+
+.spectrumSection:hover {
+  border-left-color: rgba(0,234,255,0.6);
+  box-shadow: 0 0 12px rgba(0,234,255,0.1);
+}
+
+/* Enhanced collapse handle hover */
+.collapseHandle {
+  transition: all 0.3s cubic-bezier(.4,0,.2,1);
+  position: relative;
+  overflow: hidden;
+}
+
+.collapseHandle::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg, transparent, rgba(0,234,255,0.1), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.collapseHandle:hover::after {
+  opacity: 1;
+}
+
+/* Collapsed icons hover effect */
+.collapsedIcons > * {
+  transition: all 0.3s cubic-bezier(.4,0,.2,1);
+  cursor: pointer;
+}
+
+.collapsedIcons > *:hover {
+  color: #00eaff;
+  transform: scale(1.1);
 }
 
 /* ======================================================
@@ -733,4 +975,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  flex-shrink: 0;
+  min-height: 0;
+  overflow: hidden;
 }

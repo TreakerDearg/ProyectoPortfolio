@@ -141,6 +141,46 @@
   pointer-events: auto;
 }
 
+/* ==================== PANEL TOGGLES ==================== */
+.panelToggles {
+  position: absolute;
+  right: 1.5rem;
+  bottom: 8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  z-index: 120;
+  pointer-events: auto;
+}
+
+.panelToggle {
+  padding: 8px 12px;
+  background: var(--button-bg);
+  border: 1px solid var(--hud-border);
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+}
+
+.panelToggle:hover {
+  background: var(--button-hover);
+  color: #fff;
+  transform: scale(1.05);
+}
+
+.panelToggleActive {
+  background: rgba(168, 85, 247, 0.3);
+  border-color: rgba(168, 85, 247, 0.5);
+  color: #a855f7;
+  box-shadow: 0 0 12px rgba(168, 85, 247, 0.3);
+}
+
 .zoomBtn {
   width: 44px;
   height: 44px;

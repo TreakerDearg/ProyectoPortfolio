@@ -16,7 +16,7 @@ import { Maximize2, Activity, ShieldCheck, AlertCircle, Terminal as TerminalIcon
 import styles from '../styles/MainSystem.module.css';
 
 export const MainSystem = () => {
-  const { activeView, kernelMetrics, systemStatus } = useAnalysis();
+  const { activeView, kernelMetrics, systemStatus, leftCollapsed, rightCollapsed } = useAnalysis();
   const [isSyncing, setIsSyncing] = useState(false);
   const [glitch, setGlitch] = useState(false);
 
@@ -81,7 +81,7 @@ export const MainSystem = () => {
       </header>
 
       {/* VIEWPORT PRINCIPAL (contenido dinámico) */}
-      <main className={styles.viewport}>
+      <main className={`${styles.viewport} ${leftCollapsed && rightCollapsed ? styles.expanded : ''}`}>
         <AnimatePresence mode="wait">
           {activeView === 'Network_Map' && (
             <motion.div
